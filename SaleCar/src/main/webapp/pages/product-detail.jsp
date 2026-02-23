@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="/common/header.jsp" %>
 
@@ -111,21 +112,21 @@
 <body>
 
 <div class="container py-5">
-    <%--    =============== Back ===============--%>
-    <div class="mb-4">
-        <c:choose>
-            <c:when test="${not empty param.returnUrl}">
-                <a href="${param.returnUrl}" class="btn btn-outline-dark btn-sm">
-                    ← Quay lại
-                </a>
-            </c:when>
-            <c:otherwise>
-                <a href="/products" class="btn btn-outline-dark btn-sm">
-                    ← Quay lại
-                </a>
-            </c:otherwise>
-        </c:choose>
-    </div>
+<%--        =============== Back ===============--%>
+        <div class="mb-4">
+            <c:choose>
+<%--                <c:when test="${not empty param.returnUrl}">--%>
+<%--                    <a href="${param.returnUrl}" class="btn btn-outline-dark btn-sm">--%>
+<%--                        ← Quay lại--%>
+<%--                    </a>--%>
+<%--                </c:when>--%>
+                <c:otherwise>
+                    <a href="/home" class="btn btn-outline-dark btn-sm">
+                        ← Quay lại
+                    </a>
+                </c:otherwise>
+            </c:choose>
+        </div>
 
     <br>
 
@@ -163,7 +164,7 @@
         <!-- THÔNG TIN + KHU MUA -->
         <div class="col-lg-6">
 
-            <h1>Ferrari 488 Pista Model 1:18</h1>
+            <h1>${product.name} Model 1:18</h1>
 
             <div class="mb-3">
                 <span class="badge bg-danger">Giảm 20%</span>
@@ -176,8 +177,7 @@
             </div>
 
             <p>
-                Mô hình tỉ lệ 1:18 cao cấp, chất liệu kim loại đúc nguyên khối,
-                chi tiết nội thất sắc nét, chuẩn sưu tầm.
+                ${product.description}
             </p>
 
             <hr>
@@ -185,8 +185,18 @@
             <div class="price-box">
 
                 <div class="mb-2">
-                    <span class="price-current">2.500.000</span>
-                    <span class="price-old ms-2">3.100.000</span>
+                    <span class="price-current">
+                     <p><fmt:formatNumber value="${product.price}"
+                                          type="number"
+                                          groupingUsed="true"/> ₫
+                    </p>
+                    </span>
+                    <span class="price-old ms-2">
+                    <p><fmt:formatNumber value="${product.price}"
+                                         type="number"
+                                         groupingUsed="true"/> ₫
+                    </p>
+                    </span>
                 </div>
 
                 <!-- Voucher -->
