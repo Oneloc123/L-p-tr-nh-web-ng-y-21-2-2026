@@ -5,6 +5,8 @@
   Time: 8:08 AM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ include file="/common/header.jsp" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -102,7 +104,6 @@
     </style>
 </head>
 
-<%@ include file="/common/header.jsp" %>
 <body>
 
 <div class="container-fluid">
@@ -114,6 +115,19 @@
             <!-- Tìm kiếm -->
             <div>
                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+            </div>
+
+<%--            Giảm giá--%>
+            <div>
+                <div class="filter-title">Giảm giá</div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox">
+                    <label class="form-check-label">Giảm giá mới nhất  <img src="https://giaitri321.pro/files/image/ad.gif"></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox">
+                    <label class="form-check-label">Giảm giá nhiều nhất</label>
+                </div>
             </div>
 
             <!-- Phân loại -->

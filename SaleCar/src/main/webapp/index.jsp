@@ -22,13 +22,7 @@
             font-family: 'Cormorant Garamond', serif;
         }
 
-        .navbar {
-            background-color: #000;
-        }
 
-        .navbar a {
-            color: #fff !important;
-        }
 
         .hero {
             background: #111;
