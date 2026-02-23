@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ include file="/common/header.jsp" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -64,7 +67,6 @@
     </style>
 </head>
 
-<%@ include file="/common/header.jsp" %>
 
 <body>
 
