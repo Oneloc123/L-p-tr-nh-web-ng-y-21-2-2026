@@ -18,8 +18,7 @@ public class ProductDAO {
         List<Product> products = new ArrayList<>();
         String query = "select * from product";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query))
-        {
+             PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Product p = new Product(
@@ -30,8 +29,8 @@ public class ProductDAO {
                         rs.getInt("category_id"),
                         rs.getString("description"),
                         rs.getBoolean("status"),
-                        rs.getDate("create_at"),
-                        rs.getDate("update_at")
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
                 );
                 products.add(p);
             }
@@ -42,4 +41,83 @@ public class ProductDAO {
     }
 
 
+    public List<Product> getProductNew() {
+        List<Product> products = new ArrayList<>();
+        String query = "select * from product where status = 1 order by created_at desc limit 4";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getInt("brand_id"),
+                        rs.getInt("category_id"),
+                        rs.getString("description"),
+                        rs.getBoolean("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+
+    }
+
+    public Product getProductByID(int id) {
+        Product p = null;
+        String query = "select * from product where id = ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                 p = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getInt("brand_id"),
+                        rs.getInt("category_id"),
+                        rs.getString("description"),
+                        rs.getBoolean("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return p;
+    }
+
+    public List<Product> getProductHot() {
+        List<Product> products = new ArrayList<>();
+        String query = "select * from product where status = 1 order by price desc limit 4";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getInt("brand_id"),
+                        rs.getInt("category_id"),
+                        rs.getString("description"),
+                        rs.getBoolean("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
 }

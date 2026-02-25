@@ -8,14 +8,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%--<%@ taglib prefix="c" uri="jakarta.tags.core" %>--%>
 <%--<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>--%>
-<%@ include file="/common/header.jsp" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Sản phẩm yêu thích - SaleCar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%@ include file="/common/header.jsp" %>
+    <title>Sản phẩm yêu thích - SaleCar</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">

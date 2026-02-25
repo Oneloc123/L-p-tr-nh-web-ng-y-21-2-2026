@@ -41,7 +41,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">LUXCAR</a>
+            <a class="navbar-brand fw-bold" href="home">LUXCAR</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
                 <span class="navbar-toggler-icon"></span>
@@ -49,9 +49,9 @@
 
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.jsp">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/pages/products.jsp">Sản phẩm</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Yêu thích</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/home">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/favorites">Yêu thích</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
                 </ul>
             </div>
