@@ -5,7 +5,8 @@
   Time: 8:08 AM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ include file="/common/header.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -13,6 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%@ include file="/common/header.jsp" %>
 
     <title>Sản phẩm - LUXCAR</title>
 
@@ -117,12 +119,13 @@
                 <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
             </div>
 
-<%--            Giảm giá--%>
+            <%--            Giảm giá--%>
             <div>
                 <div class="filter-title">Giảm giá</div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Giảm giá mới nhất  <img src="https://giaitri321.pro/files/image/ad.gif"></label>
+                    <label class="form-check-label">Giảm giá mới nhất <img
+                            src="https://giaitri321.pro/files/image/ad.gif"></label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox">
@@ -197,215 +200,38 @@
             <div class="row g-4">
 
                 <!-- CARD 1 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
+                <c:forEach var="p" items="${products}">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card product-card">
 
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
-                                     class="card-img-top" alt="">
+                            <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="product-link">
+                                <div class="product-image-wrapper">
+                                    <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
+                                         class="card-img-top" alt="">
+                                </div>
+                            </a>
+
+                            <div class="card-body text-center">
+
+                                <div>
+                                    <h6>${p.name}</h6>
+                                    <p class="product-price mt-auto">
+                                        <fmt:formatNumber value="${p.price}"
+                                                          type="number"
+                                                          groupingUsed="true"/> ₫
+                                    </p>
+                                </div>
+
+                                <div class="d-flex justify-content-center gap-2 mt-3">
+                                    <button class="btn btn-buy btn-sm">Mua</button>
+                                    <button class="btn star-btn btn-sm">★</button>
+                                </div>
+
                             </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
                         </div>
                     </div>
-                </div>
+                </c:forEach>
 
-
-                <!-- CARD 2 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="card product-card">
-
-                        <a href="product-detail.html" class="product-link">
-                            <div class="product-image-wrapper">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLET_lWcDmg0bCLG53BM9CgOk4Hxyjqenz8w&s"
-                                     class="card-img-top" alt="">
-                            </div>
-                        </a>
-
-                        <div class="card-body text-center">
-
-                            <div>
-                                <h6>Ferrari 488 Pista</h6>
-                                <p class="product-price">2500000</p>
-                            </div>
-
-                            <div class="d-flex justify-content-center gap-2 mt-3">
-                                <button class="btn btn-buy btn-sm">Mua</button>
-                                <button class="btn star-btn btn-sm">★</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Copy thêm sản phẩm -->
 
