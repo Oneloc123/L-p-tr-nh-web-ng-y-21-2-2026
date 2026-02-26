@@ -35,4 +35,28 @@ public class BrandDAO {
         return brands;
 
     }
+
+    public Brand getBrandByID(int brandid) {
+        Brand brand = null;
+        String sql = "select * from brand where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, brandid);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                brand = new Brand(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("link_brand"),
+                        rs.getString("description"),
+                        rs.getString("address"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return brand;
+    }
 }

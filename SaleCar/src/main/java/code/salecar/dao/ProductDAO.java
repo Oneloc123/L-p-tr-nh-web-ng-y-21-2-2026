@@ -28,6 +28,10 @@ public class ProductDAO {
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("description"),
+                        rs.getString("ratio"),
+                        rs.getString("size"),
+                        rs.getString("meterial"),
+                        rs.getString("orign"),
                         rs.getBoolean("status"),
                         rs.getDate("created_at"),
                         rs.getDate("updated_at")
@@ -55,6 +59,10 @@ public class ProductDAO {
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("description"),
+                        rs.getString("ratio"),
+                        rs.getString("size"),
+                        rs.getString("meterial"),
+                        rs.getString("orign"),
                         rs.getBoolean("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
@@ -83,6 +91,10 @@ public class ProductDAO {
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("description"),
+                         rs.getString("ratio"),
+                         rs.getString("size"),
+                         rs.getString("meterial"),
+                         rs.getString("orign"),
                         rs.getBoolean("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
@@ -109,6 +121,10 @@ public class ProductDAO {
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("description"),
+                        rs.getString("ratio"),
+                        rs.getString("size"),
+                        rs.getString("meterial"),
+                        rs.getString("orign"),
                         rs.getBoolean("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")

@@ -9,20 +9,71 @@ public class Product {
     private int brandid;
     private int categoryid;
     private String description;
+    private String ratio;
+    private String size;
+    private String meterial;
+    private String orign;
     private boolean status;
     private Date createat;
     private Date updateat;
 
-    public Product(int id, String name, double price, int brandid, int categoryid, String description, boolean status, Date createat, Date updateat) {
+    private String brandName;
+
+
+    public Product(int id, String name, double price, int brandid, int categoryid, String description, String ratio, String size, String meterial, String orign, boolean status, Date createat, Date updateat) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.brandid = brandid;
         this.categoryid = categoryid;
         this.description = description;
+        this.ratio = ratio;
+        this.size = size;
+        this.meterial = meterial;
+        this.orign = orign;
         this.status = status;
         this.createat = createat;
         this.updateat = updateat;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(String ratio) {
+        this.ratio = ratio;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getMeterial() {
+        return meterial;
+    }
+
+    public void setMeterial(String meterial) {
+        this.meterial = meterial;
+    }
+
+    public String getOrign() {
+        return orign;
+    }
+
+    public void setOrign(String orign) {
+        this.orign = orign;
     }
 
     public int getId() {
