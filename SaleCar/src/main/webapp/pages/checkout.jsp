@@ -17,8 +17,8 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
         /* Main layout & Sidebar (Dùng chung) */
-        .profile-wrapper { display: flex; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: fixed; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
+        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
         .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333333; text-align: center; }
         .sidebar-header h3 { color: #ffffff; font-size: 24px; font-weight: 600; margin: 0; }
         .sidebar-header p { color: #999999; font-size: 14px; margin-top: 5px; }
@@ -32,7 +32,7 @@
         .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
 
         /* Main Content */
-        .main-content { flex: 1; margin-left: 280px; padding: 30px; }
+        .main-content { flex: 1; padding: 30px; }
         .content-header { margin-bottom: 30px; }
         .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
         .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; }
@@ -92,20 +92,20 @@
             <p>Mô hình xe cao cấp</p>
         </div>
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
             </a>
-            <a href="${pageContext.request.contextPath}/user/profile.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
                 <i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span>
             </a>
-            <a href="${pageContext.request.contextPath}/cart.jsp" class="menu-item active">
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item active">
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
-            <a href="${pageContext.request.contextPath}/user/orders.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
                 <i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span>
             </a>
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span>
             </a>
         </div>

@@ -14,6 +14,7 @@ public class favorites extends HttpServlet {
 
 
         request.getRequestDispatcher("/pages/favorites.jsp").forward(request, response);
+
     }
 
     @Override
