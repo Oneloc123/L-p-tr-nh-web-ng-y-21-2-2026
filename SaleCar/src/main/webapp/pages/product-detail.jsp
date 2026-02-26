@@ -231,19 +231,19 @@
         <table class="table mt-3">
             <tr>
                 <th>Tỉ lệ</th>
-                <td>1:18</td>
+                <td>${product.ratio}</td>
             </tr>
             <tr>
                 <th>Chất liệu</th>
-                <td>Hợp kim cao cấp</td>
+                <td>${product.meterial}</td>
             </tr>
             <tr>
                 <th>Hãng</th>
-                <td>Ferrari</td>
+                <td>${product.brandName}</td>
             </tr>
             <tr>
                 <th>Xuất xứ</th>
-                <td>Ý</td>
+                <td>${product.orign}</td>
             </tr>
         </table>
     </div>

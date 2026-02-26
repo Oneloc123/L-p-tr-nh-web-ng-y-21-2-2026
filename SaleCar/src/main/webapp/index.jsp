@@ -84,7 +84,7 @@
     <div class="container">
         <h1 class="display-4">Mô Hình Xe Sang Trọng</h1>
         <p class="lead mt-3">Tinh tế – Đẳng cấp – Chuẩn sưu tầm</p>
-        <a href="#" class="btn btn-outline-light mt-4 px-4">Khám phá ngay</a>
+        <a href="/products" class="btn btn-outline-light mt-4 px-4">Khám phá ngay</a>
     </div>
 </section>
 
