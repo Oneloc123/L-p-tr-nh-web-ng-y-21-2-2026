@@ -115,16 +115,14 @@
 <%--        =============== Back ===============--%>
         <div class="mb-4">
             <c:choose>
-<%--                <c:when test="${not empty param.returnUrl}">--%>
-<%--                    <a href="${param.returnUrl}" class="btn btn-outline-dark btn-sm">--%>
-<%--                        ← Quay lại--%>
-<%--                    </a>--%>
-<%--                </c:when>--%>
-                <c:otherwise>
-                    <a href="/home" class="btn btn-outline-dark btn-sm">
+                    <a href="${returnUrl}" class="btn btn-outline-dark btn-sm">
                         ← Quay lại
                     </a>
-                </c:otherwise>
+<%--                <c:otherwise>--%>
+<%--                    <a href="/home" class="btn btn-outline-dark btn-sm">--%>
+<%--                        ← Quay lại--%>
+<%--                    </a>--%>
+<%--                </c:otherwise>--%>
             </c:choose>
         </div>
 
@@ -164,7 +162,7 @@
         <!-- THÔNG TIN + KHU MUA -->
         <div class="col-lg-6">
 
-            <h1>${product.name} Model 1:18</h1>
+            <h1>${product.name} Model ${product.ratio}</h1>
 
             <div class="mb-3">
                 <span class="badge bg-danger">Giảm 20%</span>
