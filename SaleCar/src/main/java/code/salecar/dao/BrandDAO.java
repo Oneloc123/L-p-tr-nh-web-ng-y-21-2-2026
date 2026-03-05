@@ -59,4 +59,38 @@ public class BrandDAO {
         }
         return brand;
     }
+
+    public int getTotalBrand() {
+        String sql = "SELECT COUNT(*) FROM brand";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<String> getBrandName() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT name from brand";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+
+                list.add(rs.getString("name"));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+
+    }
 }

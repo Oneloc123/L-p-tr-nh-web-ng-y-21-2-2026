@@ -19,13 +19,18 @@
     <title>Sản phẩm - LUXCAR</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <!-- Font luxury đề xuất -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap"
           rel="stylesheet">
 
     <style>
-        body {
+        /* ================= GLOBAL ================= */
+
+        html, body {
+            height: 100%;
+            /*overflow: hidden;!* khóa scroll toàn trang *!*/
             font-family: 'Inter', sans-serif;
             background-color: #f8f9fa;
         }
@@ -34,17 +39,91 @@
             font-family: 'Cormorant Garamond', serif;
         }
 
+        /* Full height layout */
+        .container-fluid {
+            height: 100vh;
+        }
+
+        .row {
+            height: 100%;
+            align-items: flex-start;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
         .sidebar {
             background: #fff;
             padding: 30px;
             border-right: 1px solid #eee;
+
+            height: 100%; /* full column height */
+            overflow-y: auto; /* enable scroll */
         }
+
+        /* Scrollbar style */
+        .sidebar::-webkit-scrollbar,
+        .product-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb,
+        .product-wrapper::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        /* Sticky apply button inside sidebar */
+        .sidebar-footer {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            padding-top: 15px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+
+        /* ================= PRODUCT LIST ================= */
+
+        .product-wrapper {
+            height: 100%;
+            overflow-y: auto;
+            padding: 3rem;
+        }
+
+
+        /* ================= FILTER STYLE ================= */
 
         .filter-title {
             font-weight: 600;
             margin-top: 25px;
             margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
         }
+
+        .filter-title:hover {
+            color: #000;
+        }
+
+        /* Collapse icon */
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .filter-title[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Limit filter height */
+        .filter-scroll {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+
+        /* ================= PRODUCT CARD ================= */
 
         .product-card {
             border: none;
@@ -59,14 +138,14 @@
         }
 
         .product-image-wrapper {
-            height: 250px; /* cố định chiều cao ảnh */
+            height: 250px;
             overflow: hidden;
         }
 
         .product-image-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* quan trọng */
+            object-fit: cover;
         }
 
         .card-body {
@@ -79,6 +158,9 @@
         .product-price {
             font-weight: 500;
         }
+
+
+        /* ================= BUTTON STYLE ================= */
 
         .btn-buy {
             background: #000;
@@ -99,9 +181,29 @@
             color: #fff;
         }
 
-        .product-link {
-            text-decoration: none;
-            color: inherit;
+
+        /* ================= PAGINATION ================= */
+
+        .pagination .page-link {
+            color: #000;
+            border: 1px solid #ddd;
+            transition: 0.3s;
+        }
+
+        .pagination .page-link:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #aaa;
         }
     </style>
 </head>
@@ -109,93 +211,119 @@
 <body>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row align-items-start">
 
         <!-- ================= SIDEBAR FILTER ================= -->
         <div class="col-lg-3 col-md-4 sidebar">
+            <form action="products" method="get">
 
-            <!-- Tìm kiếm -->
-            <div>
-                <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
-            </div>
+                <!-- Tìm kiếm -->
+                <div>
+                    <input name="find" value="${find}" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                </div>
 
-            <%--            Giảm giá--%>
-            <div>
-                <div class="filter-title">Giảm giá</div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Giảm giá mới nhất <img
-                            src="https://giaitri321.pro/files/image/ad.gif"></label>
+                <%--            Giảm giá--%>
+                <div>
+                    <div class="filter-title">Giảm giá</div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Giảm giá mới nhất <img
+                                src="https://giaitri321.pro/files/image/ad.gif"></label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Giảm giá nhiều nhất</label>
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Giảm giá nhiều nhất</label>
-                </div>
-            </div>
 
-            <!-- Phân loại -->
-            <div>
-                <div class="filter-title">Theo Loại</div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Siêu Xe</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Xe Thể Thao</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Xe Cổ Điển</label>
-                </div>
-            </div>
+                <!-- Phân loại -->
+                <div>
+                    <div class="filter-title d-flex justify-content-between align-items-center"
+                         data-bs-toggle="collapse"
+                         data-bs-target="#categoryCollapse"
+                         style="cursor:pointer;">
+                        <span>Theo Loại (${totalCategory})</span>
+                        <i class="toggle-icon bi bi-chevron-down"></i>
+                    </div>
 
-            <!-- Theo hãng -->
-            <div>
-                <div class="filter-title">Theo Hãng</div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Ferrari</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Lamborghini</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Porsche</label>
-                </div>
-            </div>
+                    <div class="collapse " id="categoryCollapse">
+                        <div class="filter-scroll">
 
-            <!-- Giá -->
-            <div>
-                <div class="filter-title">Khoảng Giá</div>
-                <input type="range" class="form-range">
-                <small>0 - 10.000.000</small>
-            </div>
+                            <c:forEach var="cn" items="${categoryName}">
+                                <div class="form-check">
+                                    <input name="category" value="${cn}" class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">${cn}</label>
+                                </div>
+                            </c:forEach>
 
-            <!-- Sản phẩm nổi bật -->
-            <div>
-                <div class="filter-title">Tùy chọn khác</div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Sản phẩm nổi bật</label>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                    <label class="form-check-label">Sản phẩm mới</label>
+
+
+                <!-- Theo hãng -->
+                <div>
+                    <div class="filter-title d-flex justify-content-between align-items-center"
+                         data-bs-toggle="collapse"
+                         data-bs-target="#brandCollapse"
+                         style="cursor:pointer;">
+                        <span>Theo Hãng (${totalBrand})</span>
+                        <i class="toggle-icon bi bi-chevron-down"></i>
+                    </div>
+
+                    <div class="collapse " id="brandCollapse">
+                        <div class="filter-scroll">
+
+                            <c:forEach var="bn" items="${brandName}">
+                                <div class="form-check">
+                                    <input name="brand" value="${bn}" class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">${bn}</label>
+                                </div>
+                            </c:forEach>
+
+                        </div>
+                    </div>
+
                 </div>
-            </div>
 
-            <button class="btn btn-dark w-100 mt-4">Lọc sản phẩm</button>
+                <!-- Giá -->
+                <div>
+                    <div class="filter-title">Khoảng Giá</div>
+                    <input type="range" class="form-range">
+                    <small>0 - 10.000.000</small>
+                </div>
 
+                <%--            <!-- Sản phẩm nổi bật -->--%>
+                <%--            <div>--%>
+                <%--                <div class="filter-title">Tùy chọn khác</div>--%>
+                <%--                <div class="form-check">--%>
+                <%--                    <input class="form-check-input" type="checkbox">--%>
+                <%--                    <label class="form-check-label">Sản phẩm nổi bật</label>--%>
+                <%--                </div>--%>
+                <%--                <div class="form-check">--%>
+                <%--                    <input class="form-check-input" type="checkbox">--%>
+                <%--                    <label class="form-check-label">Sản phẩm mới</label>--%>
+                <%--                </div>--%>
+                <%--            </div>--%>
+
+                <div class="sidebar-footer">
+                    <button type="submit" class="btn btn-dark w-100">Áp dụng bộ lọc</button>
+                </div>
+
+            </form>
         </div>
 
 
         <!-- ================= PRODUCT LIST ================= -->
-        <div class="col-lg-9 col-md-8 p-5">
+        <div class="col-lg-9 col-md-8 p-5 product-wrapper">
+            <%--        Loại đang lọc--%>
+<%--            <div class="mb-3">--%>
+<%--                <span class="badge bg-dark">Ferrari ×</span>--%>
+<%--                <span class="badge bg-dark">Xe Thể Thao ×</span>--%>
+<%--            </div>--%>
 
-            <h2 class="mb-4">Tất Cả Sản Phẩm</h2>
+            <h2 class="mb-4">Tất Cả Sản Phẩm (${totalProduct})</h2>
 
             <div class="row g-4">
 
@@ -214,7 +342,8 @@
                             <div class="card-body text-center">
 
                                 <div>
-                                    <h6>${p.name}</h6>
+                                    <h6>${p.name} </h6>
+                                    <h6>Model ${p.ratio}</h6>
                                     <p class="product-price mt-auto">
                                         <fmt:formatNumber value="${p.price}"
                                                           type="number"
@@ -232,6 +361,78 @@
                     </div>
                 </c:forEach>
 
+                <c:if test="${totalPage > 1}">
+                    <div class="d-flex justify-content-center mt-5">
+                        <nav>
+                            <ul class="pagination">
+
+                                <!-- Previous -->
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       href="products?page=${currentPage - 1}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
+                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
+                                        <<
+                                    </a>
+                                </li>
+
+                                <!-- Trang 1 -->
+                                <li class="page-item ${currentPage == 1 ? 'active' : ''}">
+                                    <a class="page-link"
+                                       href="products?page=1<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
+                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">1</a>
+                                </li>
+
+                                <!-- Dấu ... đầu -->
+                                <c:if test="${currentPage > 3}">
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                </c:if>
+
+                                <!-- Các trang giữa -->
+                                <c:forEach begin="${currentPage - 1}"
+                                           end="${currentPage + 1}"
+                                           var="i">
+                                    <c:if test="${i > 1 && i < totalPage}">
+                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                            <a class="page-link"
+                                               href="products?page=${i}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
+                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
+                                                    ${i}
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </c:forEach>
+
+                                <!-- Dấu ... cuối -->
+                                <c:if test="${currentPage < totalPage - 2}">
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                </c:if>
+
+                                <!-- Trang cuối -->
+                                <li class="page-item ${currentPage == totalPage ? 'active' : ''}">
+                                    <a class="page-link"
+                                       href="products?page=${totalPage}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
+                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
+                                            ${totalPage}
+                                    </a>
+                                </li>
+
+                                <!-- Next -->
+                                <li class="page-item ${currentPage == totalPage ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       href="products?page=${currentPage + 1}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
+                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
+                                        >>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                </c:if>
 
                 <!-- Copy thêm sản phẩm -->
 
@@ -239,8 +440,9 @@
 
         </div>
 
+
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
