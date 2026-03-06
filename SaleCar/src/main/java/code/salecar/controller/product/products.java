@@ -36,6 +36,7 @@ public class products extends HttpServlet {
 
         // Nhận request từ tìm kiếm
         String find = request.getParameter("find");
+        String[] discounts  = request.getParameterValues("discount");
         String[] categories = request.getParameterValues("category");
         String[] brands = request.getParameterValues("brand");
 
@@ -55,8 +56,9 @@ public class products extends HttpServlet {
             totalProduct = ps.getTotalProduct(find, categories, brands);
         }
 
-
+        // Chia số trang để tính tổng
         int totalPage = (int) Math.ceil((double) totalProduct / limit);
+
 
 
         // Menubar
@@ -78,6 +80,7 @@ public class products extends HttpServlet {
         request.setAttribute("totalBrand", totalBrand);
         request.setAttribute("brandName", brandName);
         request.setAttribute("find", find);
+        request.setAttribute("selectedDiscount", discounts);
         request.setAttribute("selectedCategories", categories);
         request.setAttribute("selectedBrands", brands);
 
