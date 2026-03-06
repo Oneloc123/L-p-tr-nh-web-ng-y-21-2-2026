@@ -12,8 +12,100 @@ import java.util.List;
 
 public class DiscountDAO {
 
+
+    public static Discount getProductDiscount(int id) {
+        Discount discount = null;
+        String query = "select * from discount where entity_type = 'product' and entity_id = ?";
+        try (Connection con = (Connection) DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                discount = new Discount(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
+                        rs.getBigDecimal("value"),
+                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
+                        rs.getInt("entity_id"),
+                        rs.getDate("start_at"),
+                        rs.getDate("end_at"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return discount;
+
+    }
+
+    public static Discount getBrandDiscount(int brandid) {
+        Discount discount = null;
+        String query = "select * from discount where entity_type = 'brand' and entity_id = ?";
+        try (Connection con = (Connection) DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);) {
+            ps.setInt(1, brandid);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                discount = new Discount(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
+                        rs.getBigDecimal("value"),
+                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
+                        rs.getInt("entity_id"),
+                        rs.getDate("start_at"),
+                        rs.getDate("end_at"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return discount;
+    }
+
+    public static Discount getCategoryDiscount(int categoryid) {
+        Discount discount = null;
+        String query = "select * from discount where entity_type = 'category' and  entity_id = ?";
+        try (Connection con = (Connection) DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);) {
+            ps.setInt(1, categoryid);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                discount = new Discount(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
+                        rs.getBigDecimal("value"),
+                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
+                        rs.getInt("entity_id"),
+                        rs.getDate("start_at"),
+                        rs.getDate("end_at"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return discount;
+    }
+
     public List<Discount> selectAll() throws Exception {
-        List<Discount>  discounts = new ArrayList<>();
+        List<Discount> discounts = new ArrayList<>();
         String query = "select * from discount";
         List<Discount> list;
         try (Connection con = (Connection) DBConnection.getConnection();
@@ -23,15 +115,15 @@ public class DiscountDAO {
                 Discount discount = new Discount(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getString("value_type"),
+                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
                         rs.getBigDecimal("value"),
-                        rs.getString("entity_type"),
+                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
                         rs.getInt("entity_id"),
                         rs.getDate("start_at"),
                         rs.getDate("end_at"),
-                        rs.getDate("create_at")
-                        );
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
                 discounts.add(discount);
             }
 

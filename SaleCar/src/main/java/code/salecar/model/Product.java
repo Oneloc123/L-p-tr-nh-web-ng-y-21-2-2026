@@ -18,6 +18,9 @@ public class Product {
     private Date updateat;
 
     private String brandName;
+    private String categoryName;
+    private double finalPrice;
+    private Discount discount;
 
 
     public Product(int id, String name, double price, int brandid, int categoryid, String description, String ratio, String size, String meterial, String orign, boolean status, Date createat, Date updateat) {
@@ -34,6 +37,30 @@ public class Product {
         this.status = status;
         this.createat = createat;
         this.updateat = updateat;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
     }
 
     public String getBrandName() {

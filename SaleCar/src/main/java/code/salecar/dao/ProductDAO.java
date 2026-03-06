@@ -195,7 +195,7 @@ public class ProductDAO {
                 "join category ct on pr.category_id = ct.id where 1=1 ";
 
         if (find != null && !find.isEmpty()) {
-            query += " and pr.name like ?" ;
+            query += " and pr.name like ? " ;
         }
 
         if (categories != null) {

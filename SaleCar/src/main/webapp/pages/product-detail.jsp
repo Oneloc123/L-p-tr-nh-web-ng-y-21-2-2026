@@ -184,7 +184,7 @@
 
                 <div class="mb-2">
                     <span class="price-current">
-                     <p><fmt:formatNumber value="${product.price}"
+                     <p><fmt:formatNumber value="${product.finalPrice}"
                                           type="number"
                                           groupingUsed="true"/> ₫
                     </p>

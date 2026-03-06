@@ -219,20 +219,22 @@
 
                 <!-- Tìm kiếm -->
                 <div>
-                    <input name="find" value="${find}" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                    <input name="find" value="${find}" type="text" class="form-control"
+                           placeholder="Tìm kiếm sản phẩm...">
                 </div>
 
                 <%--            Giảm giá--%>
                 <div>
                     <div class="filter-title">Giảm giá</div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
+                        <input name="discount" value="new" class="form-check-input" type="checkbox">
                         <label class="form-check-label">Giảm giá mới nhất <img
-                                src="https://giaitri321.pro/files/image/ad.gif"></label>
+                                src="https://nettruyen.work/assets/images/icon-hot.gif"> </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
-                        <label class="form-check-label">Giảm giá nhiều nhất</label>
+                        <input name="discount" value="more" class="form-check-input" type="checkbox">
+                        <label class="form-check-label">Giảm giá nhiều nhất <img
+                                src="https://nettruyen.work/assets/images/icon-hot.gif"></label>
                     </div>
                 </div>
 
@@ -318,10 +320,10 @@
         <!-- ================= PRODUCT LIST ================= -->
         <div class="col-lg-9 col-md-8 p-5 product-wrapper">
             <%--        Loại đang lọc--%>
-<%--            <div class="mb-3">--%>
-<%--                <span class="badge bg-dark">Ferrari ×</span>--%>
-<%--                <span class="badge bg-dark">Xe Thể Thao ×</span>--%>
-<%--            </div>--%>
+            <%--            <div class="mb-3">--%>
+            <%--                <span class="badge bg-dark">Ferrari ×</span>--%>
+            <%--                <span class="badge bg-dark">Xe Thể Thao ×</span>--%>
+            <%--            </div>--%>
 
             <h2 class="mb-4">Tất Cả Sản Phẩm (${totalProduct})</h2>
 
@@ -345,6 +347,11 @@
                                     <h6>${p.name} </h6>
                                     <h6>Model ${p.ratio}</h6>
                                     <p class="product-price mt-auto">
+                                        <fmt:formatNumber value="${p.finalPrice}"
+                                                          type="number"
+                                                          groupingUsed="true"/> ₫
+                                    </p>
+                                    <p class="product-price mt-auto">
                                         <fmt:formatNumber value="${p.price}"
                                                           type="number"
                                                           groupingUsed="true"/> ₫
@@ -352,8 +359,11 @@
                                 </div>
 
                                 <div class="d-flex justify-content-center gap-2 mt-3">
-                                    <button class="btn btn-buy btn-sm">Mua</button>
-                                    <button class="btn star-btn btn-sm">★</button>
+                                    <button class="btn btn-buy btn-sm"><i class="bi bi-cart-check"></i></button>
+                                    <button class="btn star-btn btn-sm"><i class="bi bi-cart-plus"></i>
+                                    </button>
+                                    <button class="btn star-btn btn-sm"><i class="bi bi-star"></i>
+                                    </button>
                                 </div>
 
                             </div>
