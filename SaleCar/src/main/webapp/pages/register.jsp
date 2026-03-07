@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -154,7 +153,7 @@
         <strong>Lưu ý:</strong> Các trường đánh dấu * là bắt buộc
     </div>
 
-    <form method="post" action="#">
+    <form method="post" action="/register">
         <div class="form-group">
             <label for="fullname">Họ và tên *</label>
             <input type="text" id="fullname" name="fullname"
@@ -187,7 +186,7 @@
 
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
-            <input type="text" id="phone" name="phone"
+            <input type="text" id="phone" name="phonenumber"
                    placeholder="Nhập số điện thoại">
         </div>
 

@@ -58,8 +58,8 @@
             <div class="auth  ">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        Xin chào ${sessionScope.user.name}
-                        <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                        <a href="${pageContext.request.contextPath}/profile">tài khoản</a>
+                        <a href="${pageContext.request.contextPath}/loggout">Logout</a>
                     </c:when>
                     <c:otherwise>
                         <a href="${pageContext.request.contextPath}/login">Login</a>

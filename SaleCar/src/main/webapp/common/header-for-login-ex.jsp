@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: PC
@@ -41,7 +42,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">LUXCAR</a>
+        <a class="navbar-brand fw-bold" href="/home">LUXCAR</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
@@ -50,8 +51,8 @@
         <div class="auth  ">
             <c:choose>
                 <c:when test="${sessionScope.user != null}">
-                    Xin chào ${sessionScope.user.name}
-                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                    <a href="${pageContext.request.contextPath}/profile">tài khoản</a>
+                    <a href="${pageContext.request.contextPath}/loggout">Logout</a>
                 </c:when>
                 <c:otherwise>
                     <a href="${pageContext.request.contextPath}/login">Login</a>

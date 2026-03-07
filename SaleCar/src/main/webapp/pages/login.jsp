@@ -158,7 +158,7 @@
     <h1>LUXCAR</h1>
     <div class="subtitle">ĐĂNG NHẬP HỆ THỐNG</div>
 
-    <form method="post" action="#">
+    <form method="post" action="/login">
         <div class="form-group">
             <label for="username">Tên đăng nhập</label>
             <input type="text" id="username" name="username"
@@ -179,7 +179,7 @@
     </form>
 
     <div class="register-link">
-        Chưa có tài khoản? <a href="register.jsp">ĐĂNG KÝ NGAY</a>
+        Chưa có tài khoản? <a href="/register">ĐĂNG KÝ NGAY</a>
     </div>
 
     <div class="footer-text">
