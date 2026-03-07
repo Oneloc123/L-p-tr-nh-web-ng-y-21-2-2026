@@ -159,6 +159,13 @@
             font-weight: 500;
         }
 
+        .product-price-old {
+            text-decoration: line-through;
+            font-weight: 400;
+            color: #888;
+
+        }
+
 
         /* ================= BUTTON STYLE ================= */
 
@@ -227,12 +234,12 @@
                 <div>
                     <div class="filter-title">Giảm giá</div>
                     <div class="form-check">
-                        <input name="discount" value="new" class="form-check-input" type="checkbox">
+                        <input name="discount" value="newest" class="form-check-input" type="checkbox">
                         <label class="form-check-label">Giảm giá mới nhất <img
                                 src="https://nettruyen.work/assets/images/icon-hot.gif"> </label>
                     </div>
                     <div class="form-check">
-                        <input name="discount" value="more" class="form-check-input" type="checkbox">
+                        <input name="discount" value="highest" class="form-check-input" type="checkbox">
                         <label class="form-check-label">Giảm giá nhiều nhất <img
                                 src="https://nettruyen.work/assets/images/icon-hot.gif"></label>
                     </div>
@@ -291,9 +298,45 @@
 
                 <!-- Giá -->
                 <div>
-                    <div class="filter-title">Khoảng Giá</div>
-                    <input type="range" class="form-range">
-                    <small>0 - 10.000.000</small>
+                    <div class="filter-title d-flex justify-content-between align-items-center"
+                         data-bs-toggle="collapse"
+                         data-bs-target="#priceCollapse"
+                         style="cursor:pointer;">
+                        <span>Theo Giá </span>
+                        <i class="toggle-icon bi bi-chevron-down"></i>
+                    </div>
+
+                    <div class="collapse " id="priceCollapse">
+                        <div class="filter-scroll">
+
+                            <div class="form-check">
+                                <input name="price" value="10000000" class="form-check-input" type="radio">
+                                <label class="form-check-label"> < 10.000.000</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="price" value="50000000" class="form-check-input" type="radio">
+                                <label class="form-check-label"> < 50.000.000</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="price" value="100000000" class="form-check-input" type="radio">
+                                <label class="form-check-label"> < 100.000.000</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="price" value="500000000" class="form-check-input" type="radio">
+                                <label class="form-check-label"> < 500.000.000</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input name="price" value="1000000000" class="form-check-input" type="radio">
+                                <label class="form-check-label"> < 1.000.000.000</label>
+                            </div>
+
+
+                        </div>
+                    </div>
                 </div>
 
                 <%--            <!-- Sản phẩm nổi bật -->--%>
@@ -346,20 +389,21 @@
                                 <div>
                                     <h6>${p.name} </h6>
                                     <h6>Model ${p.ratio}</h6>
-                                    <p class="product-price mt-auto">
-                                        <fmt:formatNumber value="${p.finalPrice}"
-                                                          type="number"
-                                                          groupingUsed="true"/> ₫
-                                    </p>
-                                    <p class="product-price mt-auto">
+                                    <p class="product-price-old mt-auto">
                                         <fmt:formatNumber value="${p.price}"
                                                           type="number"
                                                           groupingUsed="true"/> ₫
                                     </p>
+                                    <h6 class="product-price mt-auto">
+                                        <fmt:formatNumber value="${p.finalPrice}"
+                                                          type="number"
+                                                          groupingUsed="true"/> ₫
+                                    </h6>
+
                                 </div>
 
                                 <div class="d-flex justify-content-center gap-2 mt-3">
-                                    <button class="btn btn-buy btn-sm"><i class="bi bi-cart-check"></i></button>
+                                    <button class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
                                     <button class="btn star-btn btn-sm"><i class="bi bi-cart-plus"></i>
                                     </button>
                                     <button class="btn star-btn btn-sm"><i class="bi bi-star"></i>

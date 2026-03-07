@@ -165,7 +165,7 @@
             <h1>${product.name} Model ${product.ratio}</h1>
 
             <div class="mb-3">
-                <span class="badge bg-danger">Giảm 20%</span>
+                <span class="badge bg-danger">Giảm ${product.ratePrice}%</span>
                 <span class="badge badge-hot">HOT</span>
             </div>
 
