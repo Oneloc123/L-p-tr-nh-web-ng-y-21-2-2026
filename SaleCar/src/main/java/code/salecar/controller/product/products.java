@@ -1,6 +1,7 @@
 package code.salecar.controller.product;
 
 import code.salecar.model.Category;
+import code.salecar.model.Discount;
 import code.salecar.model.Product;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
@@ -10,7 +11,9 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet(name = "products", value = "/products")
@@ -35,30 +38,56 @@ public class products extends HttpServlet {
 
 
         // Nhận request từ tìm kiếm
-        String find = request.getParameter("find");
-        String[] discounts  = request.getParameterValues("discount");
-        String[] categories = request.getParameterValues("category");
-        String[] brands = request.getParameterValues("brand");
+        String[] discounts = request.getParameterValues("discount");
+        boolean newest = false;
+        boolean highest = false;
+        if (discounts != null) {
+            for (String discount : discounts) {
+                if (discount.equalsIgnoreCase("newest")) {
+                    newest = true;
+                }
+                if (discount.equalsIgnoreCase("highest")) {
+                    highest = true;
+                }
+            }
+        }
+        String[] ctpr = request.getParameterValues("category");
+        String[] brpr = request.getParameterValues("brand");
+
+        ProductFilter filter = new ProductFilter();
+
+
+        filter.setKeyword(request.getParameter("find"));
+        filter.setCategories(ctpr == null ? new ArrayList<>() : Arrays.asList(ctpr));
+        filter.setBrands(brpr == null ? new ArrayList<>() : Arrays.asList(brpr));
+        String priceparam = request.getParameter("price");
+        if (priceparam != null && !priceparam.isEmpty()) {
+            filter.setMaxPrice(Double.parseDouble(priceparam));
+        }
+        filter.setSortByHighest(highest);
+        filter.setSortByNewest(newest);
 
 
         List<Product> list;
         int totalProduct = 0;
-        if ((categories == null || categories.length == 0) &&
-                (brands == null || brands.length == 0) &&
-                (find == null || find.isEmpty())) {
 
-            list = ps.getProductsByPage(page, limit);
-            totalProduct = ps.getTotalProduct();
+//        if ((categories == null || categories.length == 0) &&
+//                (brands == null || brands.length == 0) &&
+//                (discounts == null || discounts.length == 0) &&
+//                (find == null || find.isEmpty()) &&
+//                (price == 0)) {
+//
+//            list = ps.getProductsByPage(page, limit);
+//            totalProduct = ps.getTotalProduct();
+//
+//        } else {
 
-        } else {
-
-            list = ps.getProductFilter(find, categories, brands, page, limit);
-            totalProduct = ps.getTotalProduct(find, categories, brands);
-        }
+        list = ps.getProductFilter(filter, page, limit);
+        totalProduct = ps.getTotalProduct(filter);
+//        }
 
         // Chia số trang để tính tổng
         int totalPage = (int) Math.ceil((double) totalProduct / limit);
-
 
 
         // Menubar
@@ -79,10 +108,10 @@ public class products extends HttpServlet {
         request.setAttribute("categoryName", categoryName);
         request.setAttribute("totalBrand", totalBrand);
         request.setAttribute("brandName", brandName);
-        request.setAttribute("find", find);
+        request.setAttribute("find", filter.getKeyword());
         request.setAttribute("selectedDiscount", discounts);
-        request.setAttribute("selectedCategories", categories);
-        request.setAttribute("selectedBrands", brands);
+        request.setAttribute("selectedCategories", filter.getCategories());
+        request.setAttribute("selectedBrands", filter.getBrands());
 
         request.setAttribute("products", list);
         request.setAttribute("currentPage", page);

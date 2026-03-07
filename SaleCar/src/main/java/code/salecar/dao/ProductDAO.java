@@ -1,5 +1,6 @@
 package code.salecar.dao;
 
+import code.salecar.controller.product.ProductFilter;
 import code.salecar.model.Product;
 import code.salecar.utils.DBConnection;
 
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Filter;
 
 public class ProductDAO {
 
@@ -190,44 +192,74 @@ public class ProductDAO {
         return 0;
     }
 
-    public int getTotalProduct(String find,String[] categories, String[] brands) {
-        String query = "select count(*) from product pr join brand br on pr.brand_id = br.id " +
-                "join category ct on pr.category_id = ct.id where 1=1 ";
+    public int getTotalProduct(ProductFilter filter) {
 
-        if (find != null && !find.isEmpty()) {
-            query += " and pr.name like ? " ;
+        List<Object> params = new ArrayList<>();
+
+
+        StringBuilder query = new StringBuilder("select   count(*) from product pr  join brand br on pr.brand_id = br.id  join category ct on pr.category_id = ct.id  where 1=1 ");
+
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            query.append(" and pr.name like ? ");
+            params.add("%" + filter.getKeyword() + "%");
         }
 
-        if (categories != null) {
-            query += " and ct.name in (" + String.join(",", Collections.nCopies(categories.length, "?")) + ")";
+        if (filter.getCategories() != null && filter.getCategories().size() > 0) {
+            query.append(" and ct.name in (")
+                    .append(String.join(",", Collections.nCopies(filter.getCategories().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getCategories());
         }
 
-        if (brands != null) {
-            query += "and br.name in (" + String.join(",", Collections.nCopies(brands.length, "?")) + ")";
+        if (filter.getBrands() != null && filter.getBrands().size() > 0) {
+            query.append(" and br.name in (")
+                    .append(String.join(",", Collections.nCopies(filter.getBrands().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getBrands());
         }
+
+        if (filter.getMaxPrice() > 0) {
+            query.append(" and pr.price <= ? ");
+            params.add(filter.getMaxPrice());
+        }
+
+
+
+
+
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
 
-            int index = 1;
+//            int index = 1;
+//            if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+//                ps.setString(index++, "%" + filter.getKeyword() + "%");
+//            }
+//            if (filter.getCategories() != null && filter.getCategories().size() > 0) {
+//                for (String c : filter.getCategories()) {
+//                    ps.setString(index++, c);
+//                }
+//            }
+//            if (filter.getBrands() != null && filter.getBrands().size() > 0) {
+//                for (String b : filter.getBrands()) {
+//                    ps.setString(index++, b);
+//                }
+//            }
+//
+//            if (filter.getMaxPrice() > 0) {
+//                ps.setDouble(index++, filter.getMaxPrice());
+//            }
+//
+//
+//            int offset = (page - 1) * limit;
+//
+//            ps.setInt(index++, limit);
+//            ps.setInt(index, offset);
 
-            if (find != null && !find.isEmpty()) {
-                ps.setString(index++, "%"+find+"%");
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i+1, params.get(i));
             }
-
-            if (categories != null) {
-                for (String c : categories) {
-                    ps.setString(index++, c);
-                }
-            }
-            if (brands != null) {
-                for (String b : brands) {
-                    ps.setString(index++, b);
-                }
-            }
-
 
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt(1);
             }
@@ -238,50 +270,72 @@ public class ProductDAO {
         return 0;
     }
 
-    public List<Product> getProductFilter(String find, String[] categories, String[] brands, int page, int limit) {
+    public List<Product> getProductFilter(ProductFilter filter) {
         List<Product> products = new ArrayList<>();
 
-        String query = "select * from product pr join brand br on pr.brand_id = br.id " +
-                "join category ct on pr.category_id = ct.id where 1=1 ";
+        List<Object> params = new ArrayList<>();
 
-        if (find != null && !find.isEmpty()) {
-            query += " and pr.name like ? ";
+
+        StringBuilder query = new StringBuilder("select distinct  pr.* from product pr  join brand br on pr.brand_id = br.id  join category ct on pr.category_id = ct.id  where 1=1 ");
+
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            query.append(" and pr.name like ? ");
+            params.add("%" + filter.getKeyword() + "%");
         }
 
-        if (categories != null && categories.length > 0) {
-            query += " and ct.name in (" + String.join(",", Collections.nCopies(categories.length, "?")) + ")";
+        if (filter.getCategories() != null && filter.getCategories().size() > 0) {
+            query.append(" and ct.name in (")
+                    .append(String.join(",", Collections.nCopies(filter.getCategories().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getCategories());
         }
 
-        if (brands != null && brands.length > 0) {
-            query += " and br.name in (" + String.join(",", Collections.nCopies(brands.length, "?")) + ")";
+        if (filter.getBrands() != null && filter.getBrands().size() > 0) {
+            query.append(" and br.name in (")
+                    .append(String.join(",", Collections.nCopies(filter.getBrands().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getBrands());
         }
 
-        query += " order by price desc limit ? offset ?";
+        if (filter.getMaxPrice() > 0) {
+            query.append(" and pr.price <= ? ");
+            params.add(filter.getMaxPrice());
+        }
+
+
+
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
 
-            int index = 1;
+//            int index = 1;
+//            if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+//                ps.setString(index++, "%" + filter.getKeyword() + "%");
+//            }
+//            if (filter.getCategories() != null && filter.getCategories().size() > 0) {
+//                for (String c : filter.getCategories()) {
+//                    ps.setString(index++, c);
+//                }
+//            }
+//            if (filter.getBrands() != null && filter.getBrands().size() > 0) {
+//                for (String b : filter.getBrands()) {
+//                    ps.setString(index++, b);
+//                }
+//            }
+//
+//            if (filter.getMaxPrice() > 0) {
+//                ps.setDouble(index++, filter.getMaxPrice());
+//            }
+//
+//
+//            int offset = (page - 1) * limit;
+//
+//            ps.setInt(index++, limit);
+//            ps.setInt(index, offset);
 
-            if (find != null && !find.isEmpty()) {
-                ps.setString(index++, "%" + find + "%");
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i+1, params.get(i));
             }
-            if (categories != null && categories.length > 0) {
-                for (String c : categories) {
-                    ps.setString(index++, c);
-                }
-            }
-            if (brands != null && brands.length > 0) {
-                for (String b : brands) {
-                    ps.setString(index++, b);
-                }
-            }
-
-
-            int offset = (page - 1) * limit;
-
-            ps.setInt(index++, limit);
-            ps.setInt(index, offset);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

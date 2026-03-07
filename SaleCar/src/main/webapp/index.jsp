@@ -62,14 +62,28 @@
         }
 
         .badge-gif {
-            height: 1.9em;
-            vertical-align: middle;
+            /*height: 1.9em;*/
+            /*vertical-align: middle;*/
         }
 
         .footer {
             background: #000;
             color: #aaa;
             padding: 40px 0;
+        }
+
+        .product-card {
+            border: none;
+            transition: 0.3s;
+            position: relative; /* để badge định vị theo card */
+        }
+
+        .badge-gif {
+            position: absolute;
+            top: 10px;
+            left: 10px;   /* hoặc right:10px nếu muốn góc phải */
+            width: 45px;
+            z-index: 10;
         }
 
     </style>
@@ -127,6 +141,9 @@
             <c:forEach var="p" items="${productHot}">
                 <div class="col-md-3">
                     <div class="card product-card h-100 shadow-sm">
+                        <img
+                                src="https://nettruyen.work/assets/images/icon-hot.gif"
+                                class="badge-gif">
 
                         <img
                             <%--                                src="${p.image}"--%>
@@ -139,9 +156,6 @@
                         <div class="card-body text-center d-flex flex-column">
 
                             <div class="d-flex align-items-center gap-2">
-                                <img
-                                        src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzh6dWZldmNoczNrdW1laGhtdjBnejVsbnN2NWRocGI3cTIwMDNveCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9dHM/hvdEcuSP8Ue7ZnUjhM/giphy.gif"
-                                class="badge-gif">
                                 <h6 class="mb-2">${p.name}</h6>
                             </div>
                                 <%--                            <p> ${p.updateat}</p>--%>
@@ -192,7 +206,7 @@
 
                             <div class="d-flex align-items-center gap-2">
                                 <img
-                                        src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2w5czN5bW1ncjRqNHU0bzRsdDV2aWg5aHQ5Nzdzbnd2aXRrb21xaSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9dHM/oM5kD4MuSqXjhdCiSh/giphy.gif"
+                                        src=""
                                 class="badge-gif">
                                 <h6 class="mb-2">${p.name}</h6>
                             </div>

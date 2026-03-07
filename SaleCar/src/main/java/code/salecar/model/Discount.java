@@ -15,6 +15,8 @@ public class Discount {
     private Date createAt;
     private Date updateAt;
 
+
+
     public Discount(int id, String name, DiscountValueType valueType, BigDecimal value, DiscountEntityType entityType, int entityId, Date startAt, Date endAt, Date createAt, Date updateAt) {
         this.id = id;
         this.name = name;
