@@ -7,9 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Thông tin cá nhân - LUXCAR</title>
 
-    <%-- Include header --%>
-    <%@ include file="/common/header-for-login-ex.jsp" %>
-
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -392,6 +389,8 @@
     </style>
 </head>
 <body>
+<%-- Include header --%>
+<%@ include file="/common/header-for-login-ex.jsp" %>
 <div class="profile-wrapper">
     <!-- Sidebar Menu -->
     <div class="sidebar-menu">
@@ -406,12 +405,12 @@
                 <span>Bảng điều khiển</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/profile.jsp" class="menu-item active">
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
                 <i class="fas fa-user-circle"></i>
                 <span>Thông tin cá nhân</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/profile-edit.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
                 <i class="fas fa-user-edit"></i>
                 <span>Chỉnh sửa thông tin</span>
             </a>
@@ -450,7 +449,7 @@
 
             <div class="menu-divider"></div>
 
-            <a href="${pageContext.request.contextPath}/logout.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Đăng xuất</span>
             </a>
@@ -492,11 +491,11 @@
                     </div>
 
                     <div class="profile-title">
-                        <h2>Nguyễn Văn An</h2>
-                        <span class="role-badge">ROLE_USER</span>
+                        <h2>${user.getFullname()}</h2>
+                        <span class="role-badge">${user.getRole()}</span>
                     </div>
 
-                    <a href="${pageContext.request.contextPath}/user/profile-edit.jsp" class="edit-profile-btn">
+                    <a href="${pageContext.request.contextPath}/profileEdit" class="edit-profile-btn">
                         <i class="fas fa-edit"></i> Chỉnh sửa
                     </a>
                 </div>
@@ -512,66 +511,75 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-label">ID người dùng</div>
-                        <div class="info-value">USR001</div>
+                        <div class="info-value">${user.getId()}</div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Tên đăng nhập</div>
-                        <div class="info-value">nguyenvanan</div>
+                        <div class="info-value">${user.getUsername()}</div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Họ và tên</div>
-                        <div class="info-value">Nguyễn Văn An</div>
+                        <div class="info-value">${user.getFullname()}</div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Email</div>
-                        <div class="info-value">nguyenvanan@email.com</div>
+                        <div class="info-value">${user.getEmail()}</div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Số điện thoại</div>
-                        <div class="info-value">0987654321</div>
+                        <div class="info-value">${user.getPhonenumber()} </div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Vai trò</div>
                         <div class="info-value">
-                            <span class="role-badge">ROLE_USER</span>
+                            <span class="role-badge">${user.getRole()}</span>
                         </div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Trạng thái</div>
                         <div class="info-value">
-                                <span class="status-badge status-active">
-                                    <i class="fas fa-check-circle"></i> Hoạt động
+                            <c:choose>
+                                <c:when test="${user.getStatus()==true}">
+                                    <span class="status-badge status-active">
+                                    <i class="fas fa-check-circle"></i> hoạt động
                                 </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="status-badge status-active">
+                                    <i class="fa-slab-press fa-regular fa-xmark"></i> không hoạt động
+                                </span>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
 
                     <div class="info-item">
                         <div class="info-label">Address ID</div>
-                        <div class="info-value">ADD001</div>
+                        <div class="info-value">${user.getAddressid()}</div>
                     </div>
                 </div>
 
                 <div class="info-item" style="margin-top: 20px;">
                     <div class="info-label">Mô tả</div>
                     <div class="info-value description">
-                        Người dùng đam mê mô hình xe hơi, đặc biệt là các dòng xe thể thao và siêu xe.
+                        ${user.getDescription()}
                     </div>
                 </div>
 
                 <div class="date-info">
                     <div class="date-item">
                         <div class="date-label">Ngày tạo</div>
-                        <div class="date-value">15/01/2024</div>
+                        <div class="date-value">${user.getCreatedat()}</div>
                     </div>
                     <div class="date-item">
                         <div class="date-label">Cập nhật lần cuối</div>
-                        <div class="date-value">20/02/2024</div>
+                        <div class="date-value">${user.getUpdatedat()}</div>
                     </div>
                 </div>
             </div>
@@ -603,28 +611,28 @@
                 </div>
 
                 <!-- Additional sample addresses -->
-                <div style="margin-top: 20px;">
-                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">Địa chỉ khác</h4>
+<%--                <div style="margin-top: 20px;">--%>
+<%--                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">Địa chỉ khác</h4>--%>
 
-                    <div class="address-box" style="margin-top: 0;">
-                        <div class="address-item">
-                            <i class="fas fa-hashtag"></i>
-                            <div><strong>ID:</strong> ADD002</div>
-                        </div>
-                        <div class="address-item">
-                            <i class="fas fa-road"></i>
-                            <div><strong>Đường:</strong> 456 Đường Nguyễn Huệ</div>
-                        </div>
-                        <div class="address-item">
-                            <i class="fas fa-map-pin"></i>
-                            <div><strong>Xã/Phường:</strong> Phường Bến Thành</div>
-                        </div>
-                        <div class="address-item">
-                            <i class="fas fa-city"></i>
-                            <div><strong>Tỉnh/Thành phố:</strong> Quận 1, TP. Hồ Chí Minh</div>
-                        </div>
-                    </div>
-                </div>
+<%--                    <div class="address-box" style="margin-top: 0;">--%>
+<%--                        <div class="address-item">--%>
+<%--                            <i class="fas fa-hashtag"></i>--%>
+<%--                            <div><strong>ID:</strong> ADD002</div>--%>
+<%--                        </div>--%>
+<%--                        <div class="address-item">--%>
+<%--                            <i class="fas fa-road"></i>--%>
+<%--                            <div><strong>Đường:</strong> 456 Đường Nguyễn Huệ</div>--%>
+<%--                        </div>--%>
+<%--                        <div class="address-item">--%>
+<%--                            <i class="fas fa-map-pin"></i>--%>
+<%--                            <div><strong>Xã/Phường:</strong> Phường Bến Thành</div>--%>
+<%--                        </div>--%>
+<%--                        <div class="address-item">--%>
+<%--                            <i class="fas fa-city"></i>--%>
+<%--                            <div><strong>Tỉnh/Thành phố:</strong> Quận 1, TP. Hồ Chí Minh</div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
             </div>
         </div>
     </div>

@@ -462,7 +462,7 @@
 
             <div class="menu-divider"></div>
 
-            <a href="${pageContext.request.contextPath}/logout.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Đăng xuất</span>
             </a>
@@ -485,7 +485,7 @@
 
         <!-- Edit Form Card -->
         <div class="form-card">
-            <form action="#" method="post" enctype="multipart/form-data">
+            <form action="/profileEdit" method="post" >
                 <!-- Avatar Upload Section -->
                 <div class="avatar-upload-section">
                     <div class="current-avatar">
@@ -504,7 +504,7 @@
                 </div>
 
                 <!-- User Information Section (USER table) -->
-                <div class="form-section">
+                <div class="form-section address-box">
                     <h3 class="form-section-title">
                         <i class="fas fa-user"></i> Thông tin tài khoản (USER)
                     </h3>
@@ -512,29 +512,29 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">ID người dùng</label>
-                            <input type="text" class="form-control" value="USR001" readonly disabled>
+                            <input type="text" class="form-control" value="${user.getId()}" readonly disabled>
                             <small class="text-muted">ID không thể thay đổi</small>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Tên đăng nhập</label>
-                            <input type="text" class="form-control" value="nguyenvanan" readonly disabled>
+                            <input type="text" class="form-control" value="${user.getUsername()}" readonly disabled>
                             <small class="text-muted">Tên đăng nhập không thể thay đổi</small>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="fullname" value="Nguyễn Văn An" required>
+                            <input type="text" class="form-control" name="fullname" value="${user.getFullname()}" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email" value="nguyenvanan@email.com" required>
+                            <input type="email" class="form-control" name="email" value="${user.getEmail()}" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" name="phoneNumber" value="0987654321">
+                            <input type="text" class="form-control" name="phoneNumber" value="${user.getPhonenumber()}">
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -548,7 +548,7 @@
 
                         <div class="col-12 mb-3">
                             <label class="form-label">Mô tả</label>
-                            <textarea class="form-control" name="description">Người dùng đam mê mô hình xe hơi, đặc biệt là các dòng xe thể thao và siêu xe.</textarea>
+                            <textarea class="form-control" name="description">${user.getDescription()}</textarea>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -568,9 +568,25 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Address ID</label>
                             <select class="form-select" name="addressId">
-                                <option value="ADD001" selected>ADD001 - Địa chỉ chính</option>
-                                <option value="ADD002">ADD002 - Địa chỉ phụ</option>
-                                <option value="ADD003">ADD003 - Địa chỉ công ty</option>
+                                <c:choose>
+                                    <c:when test="${listAddress != null}">
+                                        <c:forEach var="a" items="${listProduct}" >
+                                            <c:choose>
+                                                <c:when test="${a.getType().equals('main')}">
+                                                    <option value="${a.getId()}" selected>${a.getId() +'-'+ a.getName()+'-'+'địa chỉ chính'}</option>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <option value="${a.getId()}">${a.getId() +'-'+ a.getName()+'-'+'địa chỉ phụ'}</option>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="0" selected>chưa có địa chỉ</option>
+                                    </c:otherwise>
+                                </c:choose>
+
+
                             </select>
                         </div>
                     </div>
@@ -644,7 +660,7 @@
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <a href="${pageContext.request.contextPath}/user/profile.jsp" class="btn-cancel">
+                    <a href="/profile" class="btn-cancel">
                         <i class="fas fa-times"></i> Hủy bỏ
                     </a>
                     <button type="submit" class="btn-save">
