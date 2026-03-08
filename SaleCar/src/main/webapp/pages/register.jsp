@@ -200,7 +200,7 @@
     </div>
 
     <div class="login-link">
-        Đã có tài khoản? <a href="login.jsp">ĐĂNG NHẬP</a>
+        Đã có tài khoản? <a href="/login">ĐĂNG NHẬP</a>
     </div>
 </div>
 

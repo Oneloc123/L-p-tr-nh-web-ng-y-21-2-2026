@@ -420,17 +420,17 @@
                 <span>Bảng điều khiển</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/profile.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
                 <i class="fas fa-user-circle"></i>
                 <span>Thông tin cá nhân</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/profile-edit.jsp" class="menu-item active">
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item active">
                 <i class="fas fa-user-edit"></i>
                 <span>Chỉnh sửa thông tin</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/change-password.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
                 <i class="fas fa-lock"></i>
                 <span>Đổi mật khẩu</span>
             </a>
@@ -477,9 +477,9 @@
             <h1>Chỉnh sửa thông tin</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home.jsp">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
                     <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/dashboard.jsp">Tài khoản</a></li>
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/profile.jsp">Thông tin cá nhân</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/profile">Thông tin cá nhân</a></li>
                     <li class="breadcrumb-item active">Chỉnh sửa</li>
                 </ol>
             </nav>

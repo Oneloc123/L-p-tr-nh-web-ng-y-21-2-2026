@@ -82,6 +82,7 @@ public class UserDao {
                 ", description = ?" +
                 ", UpdateAt = ?  " +
                 ", status =?" +
+                ", password = ?" +
                 " WHERE id = ?;";
 
         try (Connection con = DBConnection.getConnection();
@@ -92,7 +93,8 @@ public class UserDao {
             ps.setString(4, user.getDescription());
             ps.setDate(5,user.getUpdatedat());
             ps.setBoolean(6,user.getStatus());
-            ps.setInt(7,user.getId());
+            ps.setString(7, user.getPassword());
+            ps.setInt(8,user.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {

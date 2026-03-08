@@ -416,7 +416,7 @@
                 <span>Chỉnh sửa thông tin</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/change-password.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
                 <i class="fas fa-lock"></i>
                 <span>Đổi mật khẩu</span>
             </a>
@@ -463,8 +463,8 @@
             <h1>Thông tin cá nhân</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home.jsp">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/dashboard.jsp">Tài khoản</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/profile">Tài khoản</a></li>
                     <li class="breadcrumb-item active">Thông tin cá nhân</li>
                 </ol>
             </nav>
@@ -481,7 +481,7 @@
                         <div class="default-avatar">
                             <span>ND</span>
                         </div>
-                        <a href="${pageContext.request.contextPath}/user/avatar-edit.jsp" class="edit-avatar-btn">
+                        <a href="${pageContext.request.contextPath}/avatarEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
                     </div>
