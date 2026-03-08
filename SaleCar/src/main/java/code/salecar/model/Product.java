@@ -1,6 +1,7 @@
 package code.salecar.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Product {
     private int id;
@@ -18,11 +19,15 @@ public class Product {
     private Date updateat;
 
     private String brandName;
+    private String brandLink;
     private String categoryName;
     private double finalPrice;
     private Discount discount;
     private int ratePrice;
 
+    private List<Reviews> reviews;
+    private int totalReviews;
+    private double avgRating = 0;
 
     public Product(int id, String name, double price, int brandid, int categoryid, String description, String ratio, String size, String meterial, String orign, boolean status, Date createat, Date updateat) {
         this.id = id;
@@ -40,8 +45,50 @@ public class Product {
         this.updateat = updateat;
     }
 
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    //  Lấy  ra cho list, tối ưu query
+    public Product(int id, String name, double price, int brandid, int categoryid, String ratio) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.brandid = brandid;
+        this.categoryid = categoryid;
+        this.ratio = ratio;
+    }
+
+    public int getTotalReviews() {
+        return reviews.size();
+    }
+
+    public void setTotalReviews(int totalReviews) {
+        this.totalReviews = totalReviews;
+    }
+
     public int getRatePrice() {
         return ratePrice ;
+    }
+
+    public String getBrandLink() {
+        return brandLink;
+    }
+
+    public void setBrandLink(String brandLink) {
+        this.brandLink = brandLink;
+    }
+
+    public List<Reviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Reviews> reviews) {
+        this.reviews = reviews;
     }
 
     public void setRatePrice(int ratePrice) {

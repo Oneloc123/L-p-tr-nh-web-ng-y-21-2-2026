@@ -25,7 +25,7 @@ public class BrandDAO {
                         rs.getString("name"),
                         rs.getString("link_brand"),
                         rs.getString("description"),
-                        rs.getString("address"),
+                       // rs.getString("address"),
                         rs.getDate("created_at"),
                         rs.getDate("updated_at")
                 );
@@ -47,9 +47,9 @@ public class BrandDAO {
                 brand = new Brand(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("link_brand"),
                         rs.getString("description"),
-                        rs.getString("address"),
+                        rs.getString("link_brand"),
+                       // rs.getString("address"),
                         rs.getDate("created_at"),
                         rs.getDate("updated_at")
                 );

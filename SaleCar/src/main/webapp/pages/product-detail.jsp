@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/common/header.jsp" %>
 
@@ -112,19 +113,20 @@
 <body>
 
 <div class="container py-5">
-<%--        =============== Back ===============--%>
-        <div class="mb-4">
-            <c:choose>
-                    <a href="${returnUrl}" class="btn btn-outline-dark btn-sm">
-                        ← Quay lại
-                    </a>
-<%--                <c:otherwise>--%>
-<%--                    <a href="/home" class="btn btn-outline-dark btn-sm">--%>
-<%--                        ← Quay lại--%>
-<%--                    </a>--%>
-<%--                </c:otherwise>--%>
-            </c:choose>
-        </div>
+    <%--        =============== Back ===============--%>
+    <div class="mb-4">
+        <c:if test="${returnUrl ne null}">
+            <a href="${returnUrl}" class="btn btn-outline-dark btn-sm">
+                ← Quay lại
+            </a>
+        </c:if>
+
+        <c:if test="${returnUrl eq null}">
+            <a href="/home" class="btn btn-outline-dark btn-sm">
+                ← Quay lại
+            </a>
+        </c:if>
+    </div>
 
     <br>
 
@@ -164,14 +166,21 @@
 
             <h1>${product.name} Model ${product.ratio}</h1>
 
-            <div class="mb-3">
-                <span class="badge bg-danger">Giảm ${product.ratePrice}%</span>
-                <span class="badge badge-hot">HOT</span>
-            </div>
+
+            <c:if test="${product.ratePrice ne null && product.ratePrice gt 1}">
+                <div class="mb-3">
+                    <span class="badge bg-danger">Giảm ${product.ratePrice}%</span>
+
+                    <c:if test="${product.ratePrice ge 20}">
+                        <span class="badge badge-hot">HOT</span>
+                    </c:if>
+                </div>
+            </c:if>
+
 
             <!-- Rating -->
             <div class="mb-3">
-                ★★★★☆ (4.5 / 5 - 124 đánh giá)
+                ★★★★☆ (${product.avgRating} / 5 - ${product.totalReviews} đánh giá)
             </div>
 
             <p>
@@ -237,7 +246,7 @@
             </tr>
             <tr>
                 <th>Hãng</th>
-                <td>${product.brandName}</td>
+                <td><a href="${product.brandLink}" target="_blank">${product.brandName}</a></td>
             </tr>
             <tr>
                 <th>Xuất xứ</th>
@@ -250,22 +259,34 @@
     <!-- ================= ĐÁNH GIÁ ================= -->
     <div class="mt-5">
         <h2>Đánh Giá & Bình Luận</h2>
-
-        <div class="mb-4">
-            <strong>Nguyễn Văn A</strong>
-            <div>★★★★★</div>
-            <p>Chi tiết rất sắc nét, đóng gói cẩn thận.</p>
-        </div>
-
+        <c:if test="${product.totalReviews lt 1}">
+            <p>Chưa có đánh giá nào</p>
+        </c:if>
+        <c:forEach var="r" items="${product.reviews}">
+            <div class="mb-4">
+                <strong>${r.userName}</strong>
+                <p>${r.createAt}</p>
+                <div>★★★★★ ${r.rating}</div>
+                <p>${r.comment}</p>
+            </div>
+        </c:forEach>
         <hr>
 
         <!-- Form bình luận -->
-        <form>
+        <form action="/reviews" method="post">
+            <input type="hidden" name="productId" value="${product.id}">
+            <select name="rating">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
             <div class="mb-3">
                 <label class="form-label">Viết bình luận</label>
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" rows="3" name="comment"></textarea>
             </div>
-            <button class="btn btn-dark">Gửi đánh giá</button>
+            <button class="btn btn-dark" type="submit">Gửi đánh giá</button>
         </form>
     </div>
 

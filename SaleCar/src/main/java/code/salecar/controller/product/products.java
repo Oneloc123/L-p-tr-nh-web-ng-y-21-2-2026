@@ -33,7 +33,7 @@ public class products extends HttpServlet {
         String param = request.getParameter("page");
 
         if (param != null) {
-            page = Integer.parseInt(param);
+            page = Integer.parseInt(param.trim());
         }
 
 

@@ -103,4 +103,23 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
+
+    public String getUserNameById(int userId) {
+        String sql = "select fullname from users where id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setInt(1,userId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getString(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "";
+    }
 }
