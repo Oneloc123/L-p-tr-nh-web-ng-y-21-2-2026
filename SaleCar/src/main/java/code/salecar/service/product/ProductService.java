@@ -50,7 +50,8 @@ public class ProductService {
         if (reviews != null) {
             product.setReviews(reviews);
             product.setAvgRating(caculateRates(reviews));
-        }else {
+            addStar(reviews, product);
+        } else {
             product.setReviews(new ArrayList<>());
             product.setAvgRating(0);
         }
@@ -58,12 +59,39 @@ public class ProductService {
         return product;
     }
 
+    private void addStar(List<Reviews> reviews, Product product) {
+        for (Reviews review : reviews) {
+            switch (review.getRating()) {
+                case 1:
+                    product.setOneStar(product.getOneStar() + 1);
+                    break;
+                case 2:
+                    product.setTwoStar(product.getTwoStar() + 1);
+                    break;
+                case 3:
+                    product.setThreeStar(product.getThreeStar() + 1);
+                    break;
+                case 4:
+                    product.setFourStar(product.getFourStar() + 1);
+                    break;
+                case 5:
+                    product.setFiveStar(product.getFiveStar() + 1);
+                    break;
+
+            }
+        }
+    }
+
     private double caculateRates(List<Reviews> reviews) {
         int sum = 0;
         for (Reviews r : reviews) {
             sum += r.getRating();
         }
-        return (double) sum / (double) reviews.size();
+        double avg = 0;
+        if (sum > 0) {
+            avg = (double) sum / (double) reviews.size();
+        }
+        return avg;
     }
 
 
@@ -150,6 +178,16 @@ public class ProductService {
             return price - discount.getValue().doubleValue();
         }
         return price;
+    }
+
+    public List<Product> getRelatedProductMaterial(String byWith) {
+        List<Integer> list = productDAO.getRelatedProductMaterial( byWith);
+        List<Product> products = new ArrayList<>();
+        for ( Integer id : list ) {
+            Product product = getProductByID(id);
+            products.add(product);
+        }
+        return products;
     }
 
 

@@ -28,6 +28,12 @@ public class Product {
     private List<Reviews> reviews;
     private int totalReviews;
     private double avgRating = 0;
+    private int oneStar = 0;
+    private int twoStar = 0;
+    private int threeStar = 0;
+    private int fourStar = 0;
+    private int fiveStar = 0;
+
 
     public Product(int id, String name, double price, int brandid, int categoryid, String description, String ratio, String size, String meterial, String orign, boolean status, Date createat, Date updateat) {
         this.id = id;
@@ -43,6 +49,50 @@ public class Product {
         this.status = status;
         this.createat = createat;
         this.updateat = updateat;
+    }
+
+    public Product(int id) {
+        this.id = id;
+    }
+
+    public int getFiveStar() {
+        return fiveStar;
+    }
+
+    public void setFiveStar(int fiveStar) {
+        this.fiveStar = fiveStar;
+    }
+
+    public int getFourStar() {
+        return fourStar;
+    }
+
+    public void setFourStar(int fourStar) {
+        this.fourStar = fourStar;
+    }
+
+    public int getThreeStar() {
+        return threeStar;
+    }
+
+    public void setThreeStar(int threeStar) {
+        this.threeStar = threeStar;
+    }
+
+    public int getTwoStar() {
+        return twoStar;
+    }
+
+    public void setTwoStar(int twoStar) {
+        this.twoStar = twoStar;
+    }
+
+    public int getOneStar() {
+        return oneStar;
+    }
+
+    public void setOneStar(int oneStar) {
+        this.oneStar = oneStar;
     }
 
     public double getAvgRating() {

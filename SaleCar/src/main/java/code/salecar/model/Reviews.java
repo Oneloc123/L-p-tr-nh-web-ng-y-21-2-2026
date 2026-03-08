@@ -10,7 +10,10 @@ public class Reviews {
     private String comment;
     private Date CreateAt;
     private Date UpdateAt;
-    private  String userName;
+    private String userName;
+    private String avatar = null;
+
+
 
     public Reviews(int id, int userId, int productId, String comment, Date createAt, Date updateAt) {
         this.id = id;
@@ -29,6 +32,15 @@ public class Reviews {
         this.rating = rating;
         this.comment = comment;
         CreateAt = createAt;
+    }
+
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUserName() {
