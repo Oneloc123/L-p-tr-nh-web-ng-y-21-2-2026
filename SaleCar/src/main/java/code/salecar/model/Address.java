@@ -9,6 +9,15 @@ public class Address {
     private String type;
     private String name;
 
+    public Address( int userId, String street, String commune, String province, String type, String name) {
+        this.userId = userId;
+        this.street = street;
+        this.commune = commune;
+        this.province = province;
+        this.type = type;
+        this.name = name;
+    }
+
     public Address(int id, int userId, String street, String commune, String province, String type, String name) {
         this.id = id;
         this.userId = userId;

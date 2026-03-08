@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -469,11 +470,6 @@
             </nav>
         </div>
 
-        <!-- Sample Data Notice (for demo) -->
-        <div class="sample-data">
-            <i class="fas fa-info-circle"></i>
-            Đây là dữ liệu mẫu minh họa từ bảng USER và ADDRESS
-        </div>
 
         <!-- Profile Card -->
         <div class="profile-card">
@@ -591,24 +587,80 @@
                     Thông tin địa chỉ (ADDRESS)
                 </h3>
 
-                <div class="address-box">
-                    <div class="address-item">
-                        <i class="fas fa-hashtag"></i>
-                        <div><strong>ID:</strong> ADD001</div>
-                    </div>
-                    <div class="address-item">
-                        <i class="fas fa-road"></i>
-                        <div><strong>Đường:</strong> 123 Đường Lê Lợi</div>
-                    </div>
-                    <div class="address-item">
-                        <i class="fas fa-map-pin"></i>
-                        <div><strong>Xã/Phường:</strong> Phường Bến Nghé</div>
-                    </div>
-                    <div class="address-item">
-                        <i class="fas fa-city"></i>
-                        <div><strong>Tỉnh/Thành phố:</strong> Quận 1, TP. Hồ Chí Minh</div>
-                    </div>
-                </div>
+                <c:choose>
+                    <c:when test="${not empty listAddress}">
+                        <c:forEach var="a" items="${listAddress}">
+                            <c:choose>
+                                <c:when test="${a.type=='main'}">
+                                    <div class="address-box">
+                                        <div class="address-item">
+                                            <i class="fas fa-hashtag"></i>
+                                            <div><strong>địa chỉ chính</strong> </div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-hashtag"></i>
+                                            <div><strong>ID:</strong> ${a.id}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-road"></i>
+                                            <div><strong>tên địa chỉ:</strong> ${a.name}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-road"></i>
+                                            <div><strong>Đường:</strong> ${a.street}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-map-pin"></i>
+                                            <div><strong>Xã/Phường:</strong> ${a.commune}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-city"></i>
+                                            <div><strong>Tỉnh/Thành phố:</strong> ${a.province}</div>
+                                        </div>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="address-box">
+                                        <div class="address-item">
+                                            <i class="fas fa-hashtag"></i>
+                                            <div><strong>địa chỉ phụ</strong> </div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-hashtag"></i>
+                                            <div><strong>ID:</strong> ${a.id}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-road"></i>
+                                            <div><strong>tên địa chỉ:</strong> ${a.name}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-road"></i>
+                                            <div><strong>Đường:</strong> ${a.street}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-map-pin"></i>
+                                            <div><strong>Xã/Phường:</strong> ${a.commune}</div>
+                                        </div>
+                                        <div class="address-item">
+                                            <i class="fas fa-city"></i>
+                                            <div><strong>Tỉnh/Thành phố:</strong> ${a.province}</div>
+                                        </div>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="address-box">
+                            <div class="address-item">
+                                <i class="fas fa-hashtag"></i>
+                                <div><strong>Chưa có địa chỉ</strong> </div>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
+
 
                 <!-- Additional sample addresses -->
 <%--                <div style="margin-top: 20px;">--%>
