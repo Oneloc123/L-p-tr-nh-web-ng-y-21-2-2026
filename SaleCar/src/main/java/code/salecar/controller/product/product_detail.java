@@ -7,6 +7,8 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "product-detail", value = "/product-detail")
 public class product_detail extends HttpServlet {
@@ -30,6 +32,8 @@ public class product_detail extends HttpServlet {
             return;
         }
 
+        List<Product> list1 = ps.getRelatedProductMaterial(product.getMeterial());
+        request.setAttribute("related", list1);
 
 
 

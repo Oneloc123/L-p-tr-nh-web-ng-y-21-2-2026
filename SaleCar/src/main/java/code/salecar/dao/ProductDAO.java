@@ -108,7 +108,6 @@ public class ProductDAO {
     }
 
 
-
     public int getTotalProduct(ProductFilter filter) {
 
         List<Object> params = new ArrayList<>();
@@ -141,9 +140,6 @@ public class ProductDAO {
         }
 
 
-
-
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query.toString())) {
 
@@ -173,7 +169,7 @@ public class ProductDAO {
 //            ps.setInt(index, offset);
 
             for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i+1, params.get(i));
+                ps.setObject(i + 1, params.get(i));
             }
 
             ResultSet rs = ps.executeQuery();
@@ -220,8 +216,6 @@ public class ProductDAO {
         }
 
 
-
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query.toString())) {
 
@@ -251,7 +245,7 @@ public class ProductDAO {
 //            ps.setInt(index, offset);
 
             for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i+1, params.get(i));
+                ps.setObject(i + 1, params.get(i));
             }
 
             ResultSet rs = ps.executeQuery();
@@ -270,6 +264,25 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
 
+        return products;
+    }
+
+    public List<Integer> getRelatedProductMaterial(String byWith) {
+        List<Integer> products = new ArrayList<>();
+        String query = "select * from product where  status = 1 " +
+                " and  meterial = ? " +
+                " order by created_at desc limit 4";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, byWith);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int p = rs.getInt("id");
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return products;
     }
 }
