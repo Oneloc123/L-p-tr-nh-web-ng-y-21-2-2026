@@ -1,5 +1,6 @@
 package code.salecar.controller.profile;
 
+import code.salecar.model.Address;
 import code.salecar.model.User;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
@@ -9,6 +10,8 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "ProfileEdit", value = "/profileEdit")
 public class ProfileEdit extends HttpServlet {
@@ -20,6 +23,9 @@ public class ProfileEdit extends HttpServlet {
             response.sendRedirect("/login");
         }else{
             User user = (User)session.getAttribute("user");
+            AddressService as = new AddressService();
+            List<Address> listAddress = as.getListAddressById(user.getId());
+            request.setAttribute("listAddress",listAddress);
             request.setAttribute("user",user);
             request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
         }
@@ -53,6 +59,22 @@ public class ProfileEdit extends HttpServlet {
             AddressService as = new AddressService();
             as.setMainAddress(addressId,user.getId());
         }
+        AddressService as = new AddressService();
+        List<Address> listAddress = as.getListAddressById(user.getId());
+
+        if(!listAddress.isEmpty()){
+            for(Address a :listAddress){
+                String street = request.getParameter("street"+a.getId());
+                String commune = request.getParameter("commune"+a.getId());
+                String province = request.getParameter("province"+a.getId());
+                a.setStreet(street);
+                a.setCommune(commune);
+                a.setProvince(province);
+                as.updateAddress(a);
+            }
+        }
+        request.setAttribute("listAddress", listAddress);
+        request.setAttribute("user", user);
         request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
     }
 }

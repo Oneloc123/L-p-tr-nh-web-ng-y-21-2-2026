@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -569,14 +571,14 @@
                             <label class="form-label">Address ID</label>
                             <select class="form-select" name="addressId">
                                 <c:choose>
-                                    <c:when test="${listAddress != null}">
-                                        <c:forEach var="a" items="${listProduct}" >
+                                    <c:when test="${not empty listAddress}">
+                                        <c:forEach var="a" items="${listAddress}" >
                                             <c:choose>
-                                                <c:when test="${a.getType().equals('main')}">
-                                                    <option value="${a.getId()}" selected>${a.getId() +'-'+ a.getName()+'-'+'địa chỉ chính'}</option>
+                                                <c:when test="${a.type=='main'}">
+                                                    <option value="${a.id}" selected>${a.id}- ${a.name}-địa chỉ chính</option>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <option value="${a.getId()}">${a.getId() +'-'+ a.getName()+'-'+'địa chỉ phụ'}</option>
+                                                    <option value="${a.id}">${a.id}- ${a.name}-địa chỉ phụ</option>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:forEach>
@@ -598,64 +600,137 @@
                         <i class="fas fa-map-marker-alt"></i> Thông tin địa chỉ (ADDRESS)
                     </h3>
 
-                    <!-- Main Address -->
-                    <div class="address-box">
-                        <div class="address-box-header">
-                            <h4>Địa chỉ chính (ADD001)</h4>
-                            <button type="button" class="btn-remove-address" onclick="return confirm('Xóa địa chỉ này?')">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
+                    <c:choose>
+                        <c:when test="${not empty listAddress}">
+                            <c:forEach var="a" items="${listAddress}">
+                                <c:choose>
+                                    <c:when test="${a.type=='main'}">
+                                        <!-- Main Address -->
+                                        <div class="address-box">
+                                            <div class="address-box-header">
+                                                <h4>Địa chỉ chính: ${a.name} (id = ${a.id})</h4>
+                                                <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                                <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Số nhà, tên đường</label>
-                                <input type="text" class="form-control" name="street" value="123 Đường Lê Lợi">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Xác nhận xóa</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                Bạn có chắc muốn xóa địa chỉ này không?
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                                    Hủy
+                                                                </button>
+                                                                <input type="hidden" name="id" value="${a.id}">
+                                                                <a href="/removeAddress?id=${a.id}" type="submit" class="btn btn-danger">
+                                                                    Xóa
+                                                                </a>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Số nhà, tên đường</label>
+                                                    <input type="text" class="form-control" name="street${a.id}" value="${a.street}">
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Xã/Phường</label>
+                                                    <input type="text" class="form-control" name="commune${a.id}" value="${a.commune}">
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Tỉnh/Thành phố</label>
+                                                    <input type="text" class="form-control" name="province${a.id}" value="${a.province}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- Secondary Address -->
+                                        <div class="address-box">
+                                            <div class="address-box-header">
+                                                <h4>Địa chỉ phụ: ${a.name} (id = ${a.id})</h4>
+                                                <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                                <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Xác nhận xóa</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                Bạn có chắc muốn xóa địa chỉ này không?
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                                    Hủy
+                                                                </button>
+                                                                    <input type="hidden" name="id" value="${a.id}">
+                                                                    <a href="/removeAddress?id=${a.id}" type="submit" class="btn btn-danger">
+                                                                        Xóa
+                                                                    </a>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Số nhà, tên đường</label>
+                                                    <input type="text" class="form-control" name="street${a.id}" value="${a.street}">
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Xã/Phường</label>
+                                                    <input type="text" class="form-control" name="commune${a.id}" value="${a.commune}">
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Tỉnh/Thành phố</label>
+                                                    <input type="text" class="form-control" name="province${a.id}" value="${a.province}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Main Address -->
+                            <div class="address-box">
+                                <div class="address-box-header">
+                                    <h4>chưa có địa chỉ</h4>
+                                </div>
                             </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Xã/Phường</label>
-                                <input type="text" class="form-control" name="commune" value="Phường Bến Nghé">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Tỉnh/Thành phố</label>
-                                <input type="text" class="form-control" name="province" value="Quận 1, TP. Hồ Chí Minh">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Secondary Address -->
-                    <div class="address-box">
-                        <div class="address-box-header">
-                            <h4>Địa chỉ phụ (ADD002)</h4>
-                            <button type="button" class="btn-remove-address" onclick="return confirm('Xóa địa chỉ này?')">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Số nhà, tên đường</label>
-                                <input type="text" class="form-control" name="street2" value="456 Đường Nguyễn Huệ">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Xã/Phường</label>
-                                <input type="text" class="form-control" name="commune2" value="Phường Bến Thành">
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Tỉnh/Thành phố</label>
-                                <input type="text" class="form-control" name="province2" value="Quận 1, TP. Hồ Chí Minh">
-                            </div>
-                        </div>
-                    </div>
-
+                        </c:otherwise>
+                    </c:choose>
                     <!-- Add new address button -->
-                    <a href="#" class="btn-add-address">
-                        <i class="fas fa-plus-circle"></i> Thêm địa chỉ mới
-                    </a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus"></i> Thêm địa chỉ
+                    </button>
+
                 </div>
 
                 <!-- Form Actions -->
@@ -668,6 +743,53 @@
                     </button>
                 </div>
             </form>
+
+            <div class="modal fade" id="addAddressModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Thêm địa chỉ mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form action="${pageContext.request.contextPath}/addAddress" method="post">
+                            <div class="modal-body">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">tên địa chỉ <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" placeholder="ví dụ: địa chỉ nhà, công ty, vv" required>
+                                </div>
+                                <label class="form-label">Loại địa chỉ</label>
+                                <select class="form-select" name="type">
+                                    <option value="normal" selected>địa chỉ phụ</option>
+                                    <option value="main" >địa chỉ chính</option>
+                                </select>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Số nhà, tên đường</label>
+                                        <input type="text" class="form-control" name="street" >
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Xã/Phường</label>
+                                        <input type="text" class="form-control" name="commune" >
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Tỉnh/Thành phố</label>
+                                        <input type="text" class="form-control" name="province" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Hủy
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    Thêm địa chỉ
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
