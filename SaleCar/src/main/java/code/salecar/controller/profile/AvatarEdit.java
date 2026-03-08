@@ -1,32 +1,26 @@
-package code.salecar.controller.account;
+package code.salecar.controller.profile;
 
-import code.salecar.model.Address;
-import code.salecar.model.User;
-import code.salecar.service.address.AddressService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "ForgotPassword", value = "/forgotPassword")
-public class ForgotPassword extends HttpServlet {
+@WebServlet(name = "AvatarEdit", value = "/avatarEdit")
+public class AvatarEdit extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // kiểm tra session
         HttpSession session = request.getSession();
         if(session==null||session.getAttribute("user")==null){
-            response.sendRedirect("/pages/forgot-password.jsp");
+            response.sendRedirect("/login");
         }else{
-            response.sendRedirect("/home");
+            request.getRequestDispatcher("/pages/avatar-edit.jsp").forward(request,response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
 
     }
 }

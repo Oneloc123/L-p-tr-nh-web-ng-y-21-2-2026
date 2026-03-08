@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Đổi mật khẩu - LUXCAR</title>
+    <title>Xác nhận - LUXCAR</title>
     <%@ include file="/common/header-for-login-ex.jsp" %>
 
     <style>
@@ -13,10 +13,10 @@
             flex-direction: column;
         }
 
-        .change-password-container {
+        .verify-container {
             background-color: #ffffff;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             margin: 50px auto;
             padding: 40px 35px;
             border-radius: 8px;
@@ -27,7 +27,7 @@
             color: #000000;
             text-align: center;
             margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 600;
         }
 
@@ -49,42 +49,28 @@
             color: #000000;
             margin-bottom: 8px;
             font-weight: 500;
-            font-size: 15px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 14px;
         }
 
-        input[type="password"] {
+        input[type="text"] {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #000000;
             background-color: #ffffff;
             color: #000000;
-            font-size: 15px;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 5px;
             border-radius: 4px;
             outline: none;
         }
 
-        input[type="password"]:focus {
+        input[type="text"]:focus {
             background-color: #f5f5f5;
-            border-color: #333333;
         }
 
-        .password-requirements {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-left: 4px solid #000000;
-            font-size: 13px;
-            border-radius: 4px;
-        }
-
-        .password-requirements p {
-            margin: 5px 0;
-            color: #333333;
-        }
-
-        .btn-change {
+        .btn-verify {
             width: 100%;
             padding: 14px;
             background-color: #000000;
@@ -96,10 +82,9 @@
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
         }
 
-        .btn-change:hover {
+        .btn-verify:hover {
             background-color: #ffffff;
             color: #000000;
         }
@@ -127,12 +112,29 @@
             color: #ffffff;
         }
 
-        .user-info {
+        .info-box {
             background-color: #f5f5f5;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 25px;
             border: 2px solid #000000;
             text-align: center;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            color: #333333;
+        }
+
+        .code-display {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #000000;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 2px dashed #000000;
             border-radius: 4px;
         }
 
@@ -143,69 +145,56 @@
             color: #000000;
         }
 
-        .mode-indicator {
+        .timer {
             font-size: 12px;
             color: #666666;
             text-align: center;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
 
-        .message {
-            background-color: #f5f5f5;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-left: 5px solid #000000;
-            font-size: 14px;
-            color: #333333;
-            border-radius: 4px;
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666666;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back-link:hover {
+            color: #000000;
         }
     </style>
 </head>
 <body>
-<div class="change-password-container">
-    <div class="car-icon">🔑</div>
-    <h1>ĐỔI MẬT KHẨU</h1>
-    <div class="subtitle">THAY ĐỔI MẬT KHẨU ĐĂNG NHẬP</div>
+<div class="verify-container">
+    <div class="car-icon">✉️</div>
+    <h1>XÁC NHẬN</h1>
+    <div class="subtitle">NHẬP MÃ XÁC NHẬN</div>
 
-    <div class="mode-indicator">
-        Chế độ: <strong>Đã đăng nhập</strong>
+    <div class="info-box">
+        <p><strong>Tài khoản:</strong> luxcar_user</p>
+        <p><strong>Email:</strong> user@luxcar.com</p>
+        <div class="code-display">123456</div>
+        <p style="font-size: 12px;">(Mã xác nhận mẫu: 123456)</p>
     </div>
 
-    <div class="user-info">
-        <strong>Tài khoản:</strong> luxcar_user
-    </div>
-
-    <div class="message">
-        <strong>Lưu ý:</strong> Mật khẩu phải có ít nhất 6 ký tự
-    </div>
-
-    <form method="post" action="/changePassword">
+    <form method="post" action="#">
         <div class="form-group">
-            <label for="current_password">Mật khẩu hiện tại</label>
-            <input type="password" id="current_password" name="current_password"
-                   placeholder="Nhập mật khẩu hiện tại">
+            <label for="code">Mã xác nhận (6 số)</label>
+            <input type="text" id="code" name="code" maxlength="6"
+                   placeholder="------">
         </div>
 
-        <div class="form-group">
-            <label for="new_password">Mật khẩu mới</label>
-            <input type="password" id="new_password" name="new_password"
-                   placeholder="Nhập mật khẩu mới">
-            <div class="password-requirements">
-                <p>✓ Mật khẩu phải có ít nhất 6 ký tự</p>
-                <p>✓ Nên bao gồm chữ hoa, chữ thường và số</p>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="confirm_password">Xác nhận mật khẩu mới</label>
-            <input type="password" id="confirm_password" name="confirm_password"
-                   placeholder="Nhập lại mật khẩu mới">
-        </div>
-
-        <button type="submit" class="btn-change">CẬP NHẬT</button>
+        <button type="submit" class="btn-verify">XÁC NHẬN</button>
     </form>
 
-    <a href="/home" class="btn-secondary">QUAY LẠI TRANG CHỦ</a>
+    <div class="timer">
+        Mã có hiệu lực trong 5 phút
+    </div>
+
+    <a href="forgot-password.jsp" class="btn-secondary">GỬI LẠI MÃ</a>
+    <a href="login.jsp" class="back-link">Quay lại đăng nhập</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

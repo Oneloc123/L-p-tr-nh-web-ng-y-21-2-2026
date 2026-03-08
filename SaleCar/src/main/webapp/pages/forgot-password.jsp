@@ -150,7 +150,7 @@
         <strong>Hướng dẫn:</strong> Nhập email và tên đăng nhập để nhận mã xác nhận.
     </div>
 
-    <form method="post" action="#">
+    <form method="post" action="/forgotPassword">
         <div class="form-group">
             <label for="username">Tên đăng nhập</label>
             <input type="text" id="username" name="username"
@@ -166,7 +166,7 @@
         <button type="submit" class="btn-submit">GỬI YÊU CẦU</button>
     </form>
 
-    <a href="login.jsp" class="btn-secondary">QUAY LẠI ĐĂNG NHẬP</a>
+    <a href="/login" class="btn-secondary">QUAY LẠI ĐĂNG NHẬP</a>
 
     <div class="note">
         Mã xác nhận sẽ được gửi đến email của bạn

@@ -241,10 +241,10 @@
     <div class="breadcrumb-nav">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home.jsp">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/profile.jsp">Thông tin cá nhân</a></li>
-                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/profile-edit.jsp">Chỉnh sửa thông tin</a></li>
-                <li class="breadcrumb-item active">Chỉnh sửa ảnh</li>
+                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/profile">Thông tin cá nhân</a></li>
+                <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/profile-edit">Chỉnh sửa thông tin</a></li>
+                <li class="breadcrumb-item active"><a href="${pageContext.request.contextPath}/avatarEdit">Chỉnh sửa ảnh</a></li>
             </ol>
         </nav>
     </div>
@@ -262,7 +262,7 @@
             </div>
 
             <!-- Upload Area -->
-            <form action="#" method="post" enctype="multipart/form-data">
+            <form action="/avatarEdit" method="post" >
                 <label for="file-upload" class="upload-area">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h4>Chọn ảnh để tải lên</h4>
@@ -298,7 +298,7 @@
                 </div>
             </form>
 
-            <a href="${pageContext.request.contextPath}/user/profile-edit.jsp" class="back-link">
+            <a href="${pageContext.request.contextPath}/profile-edit" class="back-link">
                 <i class="fas fa-arrow-left"></i> Quay lại chỉnh sửa thông tin
             </a>
         </div>
