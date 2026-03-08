@@ -15,39 +15,6 @@ import java.util.logging.Filter;
 
 public class ProductDAO {
 
-
-    // Lấy danh sách sản phẩm. Chưa có kết nối ảnh
-    public List<Product> getproducts() {
-        List<Product> products = new ArrayList<>();
-        String query = "select * from product";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Product p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("meterial"),
-                        rs.getString("orign"),
-                        rs.getBoolean("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
-                products.add(p);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return products;
-    }
-
-
     public List<Product> getProductNew() {
         List<Product> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by created_at desc limit 4";
@@ -140,57 +107,7 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getProductsByPage(int page, int limit) {
-        List<Product> products = new ArrayList<>();
-        String query = "select * from product order by id desc limit ? offset ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
 
-            int offset = (page - 1) * limit;
-
-            ps.setInt(1, limit);
-            ps.setInt(2, offset);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Product p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("meterial"),
-                        rs.getString("orign"),
-                        rs.getBoolean("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
-                products.add(p);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return products;
-    }
-
-    public int getTotalProduct() {
-        String sql = "SELECT COUNT(*) FROM product";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
 
     public int getTotalProduct(ProductFilter filter) {
 
@@ -345,14 +262,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("meterial"),
-                        rs.getString("orign"),
-                        rs.getBoolean("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
+                        rs.getString("ratio")
                 );
                 products.add(p);
             }

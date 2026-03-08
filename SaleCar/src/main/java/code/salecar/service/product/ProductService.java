@@ -2,9 +2,11 @@ package code.salecar.service.product;
 
 import code.salecar.controller.product.ProductFilter;
 import code.salecar.dao.ProductDAO;
+import code.salecar.dao.ReviewsDAO;
 import code.salecar.model.Brand;
 import code.salecar.model.Discount;
 import code.salecar.model.Product;
+import code.salecar.model.Reviews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,16 @@ public class ProductService {
     ProductDAO productDAO = new ProductDAO();
     BrandService bs = new BrandService();
     DiscountService ds = new DiscountService();
+    ReviewsService rs = new ReviewsService();
 
 
     public Product getProductByID(int id) {
         Product product = productDAO.getProductByID(id);
         Brand brand = bs.getBrandByID(product.getBrandid());
         product.setBrandName(brand.getName());
+        product.setBrandLink(brand.getLinkband());
 
+        // Áp Giảm Giá Tổng (Không Phải Voucher)
         Discount discount = ds.getDiscount(product);
 
         if (discount != null) {
@@ -37,25 +42,28 @@ public class ProductService {
 
         } else {
             product.setFinalPrice(product.getPrice());
+            product.setRatePrice(0);
+        }
+
+        // Rating
+        List<Reviews> reviews = rs.getReviewsByID(product.getId());
+        if (reviews != null) {
+            product.setReviews(reviews);
+            product.setAvgRating(caculateRates(reviews));
+        }else {
+            product.setReviews(new ArrayList<>());
+            product.setAvgRating(0);
         }
 
         return product;
     }
 
-    public List<Product> getProductsByPage(int page, int limit) {
-        List<Product> products = productDAO.getProductsByPage(page, limit);
-
-        for (Product product : products) {
-            Discount discount = ds.getDiscount(product);
-            if (discount != null) {
-                product.setDiscount(discount);
-                double finalPrice = caculateDiscount(product.getPrice(), discount);
-                product.setFinalPrice(finalPrice);
-            } else {
-                product.setFinalPrice(product.getPrice());
-            }
+    private double caculateRates(List<Reviews> reviews) {
+        int sum = 0;
+        for (Reviews r : reviews) {
+            sum += r.getRating();
         }
-        return products;
+        return (double) sum / (double) reviews.size();
     }
 
 
@@ -66,7 +74,7 @@ public class ProductService {
     public List<Product> getProductFilter(ProductFilter filter, int page, int limit) {
         List<Product> products = productDAO.getProductFilter(filter);
         applyDiscount(products);
-        sortDiscount(filter,products);
+        sortDiscount(filter, products);
         int start = (page - 1) * limit;
         int end = Math.min(start + limit, products.size());
 
@@ -96,7 +104,7 @@ public class ProductService {
                         .compareTo(a.getDiscount().getStartAt());
             });
         } else if (filter.isSortByHighest()) {
-            products.sort((a, b) -> Double.compare( b.getRatePrice(),a.getRatePrice()));
+            products.sort((a, b) -> Double.compare(b.getRatePrice(), a.getRatePrice()));
         } else if (filter.isSortByNewest()) {
             products.sort((a, b) -> {
                 if (a.getDiscount() == null && b.getDiscount() == null) return 0;
@@ -127,6 +135,8 @@ public class ProductService {
 
             } else {
                 product.setFinalPrice(product.getPrice());
+                product.setRatePrice(0);
+
             }
         }
     }
@@ -141,4 +151,6 @@ public class ProductService {
         }
         return price;
     }
+
+
 }

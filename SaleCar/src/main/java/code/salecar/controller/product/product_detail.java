@@ -30,6 +30,9 @@ public class product_detail extends HttpServlet {
             return;
         }
 
+
+
+
         String returnUrl = request.getHeader("Referer");
         request.setAttribute("returnUrl", returnUrl);
 

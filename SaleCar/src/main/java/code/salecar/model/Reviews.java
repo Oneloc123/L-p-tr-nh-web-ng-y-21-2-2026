@@ -6,9 +6,11 @@ public class Reviews {
     private int id;
     private int userId;
     private int productId;
+    private int rating;
     private String comment;
     private Date CreateAt;
     private Date UpdateAt;
+    private  String userName;
 
     public Reviews(int id, int userId, int productId, String comment, Date createAt, Date updateAt) {
         this.id = id;
@@ -17,6 +19,32 @@ public class Reviews {
         this.comment = comment;
         CreateAt = createAt;
         UpdateAt = updateAt;
+    }
+
+    public Reviews() {
+    }
+
+    public Reviews(int userId, int rating, String comment, Date createAt) {
+        this.userId = userId;
+        this.rating = rating;
+        this.comment = comment;
+        CreateAt = createAt;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public int getId() {

@@ -17,4 +17,8 @@ public class UserService {
     public void UpdateProfile(User user) {
         ud.UpdateProfile(user);
     }
+
+    public String getUserNameById(int userId) {
+        return ud.getUserNameById( userId);
+    }
 }
