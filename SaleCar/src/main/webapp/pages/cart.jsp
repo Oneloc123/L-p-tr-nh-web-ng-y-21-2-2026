@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -105,10 +107,6 @@
         </div>
 
         <div class="profile-card">
-            <div class="cart-info-bar">
-                <span><strong>Mã Giỏ Hàng (Cart ID):</strong> CRT-001</span>
-                <span><strong>Cập nhật lần cuối:</strong> 24/02/2026 08:30</span>
-            </div>
 
             <div style="overflow-x: auto;">
                 <table class="lux-table">
@@ -121,44 +119,65 @@
                             <th>Xóa</th>
                         </tr>
                     </thead>
+
+                    <!-- hien thi san pham -->
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="product-col">
-                                    <div class="product-img"><i class="fas fa-car fa-2x"></i></div>
-                                    <div>
-                                        <div class="product-name">Lamborghini Aventador 1:18</div>
-                                        <div class="product-id">Product ID: PRD045</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="price-text">2,500,000 ₫</span></td>
-                            <td><input type="number" class="qty-box" value="1" min="1"></td>
-                            <td><span class="total-text">2,500,000 ₫</span></td>
-                            <td><a href="#" class="btn-remove"><i class="fas fa-trash-alt"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-col">
-                                    <div class="product-img"><i class="fas fa-car fa-2x"></i></div>
-                                    <div>
-                                        <div class="product-name">Porsche 911 GT3 RS 1:24</div>
-                                        <div class="product-id">Product ID: PRD088</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="price-text">1,200,000 ₫</span></td>
-                            <td><input type="number" class="qty-box" value="2" min="1"></td>
-                            <td><span class="total-text">2,400,000 ₫</span></td>
-                            <td><a href="#" class="btn-remove"><i class="fas fa-trash-alt"></i></a></td>
-                        </tr>
+
+                    <!-- san pham -->
+                    <c:forEach var="item" items="${sessionScope.cart.items}">
+
+                    <tr>
+                    <td>
+                        <div class="product-col">
+                            <div class="product-img">
+                                <i class="fas fa-car"></i>
+                            </div>
+
+                            <div>
+                                <div class="product-name">${item.product.name}</div>
+                                <div class="product-id">ID: ${item.productId}</div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="price-text">
+                        <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> ₫
+                    </td>
+
+                    <!-- cap nhat so luong -->
+                    <td>
+                        <form action="cart-update" method="post" class="d-flex align-items-center gap-2">
+
+                            <input type="hidden" name="id" values="${item.productId}">
+
+                            <input type="number" class="qty-box" value="${item.quantity}">
+
+                            <button type="submit" class"btn btn-sm btn-outline-dark" title="Cập nhật số lượng">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                    </td>
+
+                    <td class="total-text">
+                       <fmt:formatNumber value="${item.price * item.quantity}" type="number" groupingUsed="true"/> ₫
+                    </td>
+
+                    <!-- xoa san pham -->
+                    <td>
+                        <a href="cart-remove?id=${item.productId}" class="btn-remove">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                    </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
 
             <div class="cart-summary">
-                <div class="summary-row">Tổng số lượng: <strong>3 sản phẩm</strong></div>
-                <div class="summary-total">Tổng tiền: 4,900,000 ₫</div>
+                <div class="summary-row">
+                    Tổng số lượng: <strong>${sessionScope.cart.totalQuantity} sản phẩm</strong>
+                </div>
+                <div class="summary-total">Tổng tiền: <fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</div>
                 <a href="${pageContext.request.contextPath}/checkout" class="btn-checkout">Tiến hành thanh toán <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
             </div>
         </div>

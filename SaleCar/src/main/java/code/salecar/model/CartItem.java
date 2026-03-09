@@ -1,6 +1,8 @@
 package code.salecar.model;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
     private int id;
     private int cartId;
     private int productId;
@@ -8,6 +10,15 @@ public class CartItem {
     private double price;
 
     private Product product;
+
+
+    public CartItem( Product product,int quantity ,double price) {
+
+        this.product = product;
+        this.productId = product.getId();
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public int getId() {
         return id;
@@ -55,5 +66,13 @@ public class CartItem {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+
+    public void upQuantity( int quantity){
+            this.quantity += quantity;
+    }
+    public double getTotalPrice(){
+        return price * quantity;
     }
 }
