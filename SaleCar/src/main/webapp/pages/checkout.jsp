@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -116,14 +118,14 @@
             <h1>Thanh toán</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home.jsp">Trang chủ</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/cart.jsp">Giỏ hàng</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
                     <li class="breadcrumb-item active">Thanh toán</li>
                 </ol>
             </nav>
         </div>
 
-        <form action="process-checkout.jsp" method="POST">
+        <form action="process-checkout" method="POST">
             <div class="checkout-container">
 
                 <div class="checkout-form-section">
@@ -132,17 +134,17 @@
 
                         <div class="form-group">
                             <label for="fullName">Họ và tên người nhận</label>
-                            <input type="text" id="fullName" name="fullName" class="form-control" value="Nguyễn Văn An" placeholder="Nhập họ tên...">
+                            <input type="text" id="fullName" name="fullName" class="form-control" value="${sessionScope.user != null ? sessionScope.user.name : ''}" placeholder="Nhập họ tên..." required>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Số điện thoại (Phone)</label>
-                            <input type="text" id="phone" name="phone" class="form-control" value="0987654321" placeholder="Nhập số điện thoại...">
+                            <input type="text" id="phone" name="phone" class="form-control" value="" placeholder="Nhập số điện thoại..." required>
                         </div>
 
                         <div class="form-group">
                             <label for="shippingAddress">Địa chỉ nhận hàng (Shipping Address)</label>
-                            <textarea id="shippingAddress" name="shippingAddress" class="form-control" rows="3" placeholder="Nhập địa chỉ chi tiết (Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)...">123 Đường Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</textarea>
+                            <textarea id="shippingAddress" name="shippingAddress" class="form-control" rows="3" placeholder="Nhập địa chỉ chi tiết..." required></textarea>
                         </div>
                     </div>
 
@@ -166,15 +168,6 @@
                                 <p>Chuyển khoản trực tiếp qua số tài khoản ngân hàng của cửa hàng.</p>
                             </div>
                         </label>
-
-                        <label class="payment-method">
-                            <input type="radio" name="paymentMethod" value="MOMO">
-                            <div class="payment-icon"><i class="fas fa-qrcode"></i></div>
-                            <div class="payment-details">
-                                <h4>Thanh toán qua ví MoMo</h4>
-                                <p>Quét mã QR qua ứng dụng ví điện tử MoMo.</p>
-                            </div>
-                        </label>
                     </div>
                 </div>
 
@@ -183,33 +176,26 @@
                         <h3><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h3>
 
                         <div class="summary-items-list">
-                            <div class="summary-item">
-                                <div class="summary-item-info">
-                                    <div class="summary-img"><i class="fas fa-car"></i></div>
-                                    <div>
-                                        <div class="summary-name">Lamborghini Aventador 1:18</div>
-                                        <div class="summary-qty">Số lượng: 1</div>
+                            <c:forEach var="item" items="${sessionScope.cart.items}">
+                                <div class="summary-item">
+                                    <div class="summary-item-info">
+                                        <div class="summary-img"><i class="fas fa-car"></i></div>
+                                        <div>
+                                            <div class="summary-name">${item.product.name}</div>
+                                            <div class="summary-qty">Số lượng: ${item.quantity}</div>
+                                        </div>
+                                    </div>
+                                    <div class="summary-price">
+                                        <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/> ₫
                                     </div>
                                 </div>
-                                <div class="summary-price">2,500,000 ₫</div>
-                            </div>
-
-                            <div class="summary-item">
-                                <div class="summary-item-info">
-                                    <div class="summary-img"><i class="fas fa-car"></i></div>
-                                    <div>
-                                        <div class="summary-name">Porsche 911 GT3 RS 1:24</div>
-                                        <div class="summary-qty">Số lượng: 2</div>
-                                    </div>
-                                </div>
-                                <div class="summary-price">2,400,000 ₫</div>
-                            </div>
+                            </c:forEach>
                         </div>
 
                         <div class="summary-calc">
                             <div class="calc-row">
                                 <span>Tạm tính:</span>
-                                <span>4,900,000 ₫</span>
+                                <span><fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</span>
                             </div>
                             <div class="calc-row">
                                 <span>Phí vận chuyển:</span>
@@ -217,7 +203,7 @@
                             </div>
                             <div class="calc-row total">
                                 <span>Tổng cộng (Total Amount):</span>
-                                <span>4,900,000 ₫</span>
+                                <span><fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</span>
                             </div>
                         </div>
 
