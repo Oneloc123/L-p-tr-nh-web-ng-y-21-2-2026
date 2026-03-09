@@ -22,12 +22,18 @@ public class reviews extends HttpServlet {
         int rating = Integer.parseInt(request.getParameter("rating"));
         String comment = request.getParameter("comment");
 
+
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("/login");
+            return;
+        }
 
         Reviews reviews = new Reviews();
         reviews.setProductId(productId);
         reviews.setRating(rating);
         reviews.setComment(comment);
+
         reviews.setUserId(user.getId());
 
         ReviewsService reviewsService = new ReviewsService();

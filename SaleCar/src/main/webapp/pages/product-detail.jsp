@@ -760,7 +760,7 @@
                             </div>
 
                             <!-- BUTTON -->
-                            <a href="product?id=${rl.id}"
+                            <a href="/products?id=${rl.id}"
                                class="btn btn-sm btn-outline-dark mt-2">
                                 Xem chi tiết
                             </a>

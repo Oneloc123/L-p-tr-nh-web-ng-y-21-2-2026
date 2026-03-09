@@ -406,8 +406,11 @@
                                     <button class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
                                     <button class="btn star-btn btn-sm"><i class="bi bi-cart-plus"></i>
                                     </button>
-                                    <button class="btn star-btn btn-sm"><i class="bi bi-star"></i>
-                                    </button>
+                                    <form method="post" action="/favorites">
+                                        <button class="btn star-btn btn-sm" name="productid" value="${p.id}"><i
+                                                class="bi bi-star"></i>
+                                        </button>
+                                    </form>
                                 </div>
 
                             </div>

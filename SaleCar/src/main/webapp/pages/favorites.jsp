@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: PC
@@ -24,7 +27,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <!-- Font Luxury -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
 
     <style>
         body {
@@ -185,6 +189,9 @@
         <div class="col-lg-9 px-5">
 
             <h1 class="mb-4">Xe bạn đã yêu thích</h1>
+${favorites}
+
+
 
             <c:choose>
 
@@ -198,7 +205,7 @@
                                 <div class="card product-card">
 
                                     <div class="product-img">
-                                        <img src="${p.imageUrl}" alt="${p.name}">
+                                        <img src="" alt="${p.name}">
                                     </div>
 
                                     <div class="card-body">
@@ -208,43 +215,39 @@
 
                                             <div class="mb-2">
                                                 <span class="price-current">
-                                                    <fmt:formatNumber value="${p.price}" type="number"/> đ
+                                                    <fmt:formatNumber value="${p.finalPrice}" type="number"/> đ
                                                 </span>
 
-                                                <c:if test="${p.oldPrice > 0}">
+                                                <c:if test="${p.price gt 0}">
                                                     <span class="price-old ms-2">
-                                                        <fmt:formatNumber value="${p.oldPrice}" type="number"/> đ
+                                                        <fmt:formatNumber value="${p.price}" type="number"/> đ
                                                     </span>
                                                 </c:if>
                                             </div>
 
                                             <div class="rating mb-2">
                                                 <c:forEach begin="1" end="5" var="i">
-                                                    <c:choose>
-                                                        <c:when test="${i <= p.rating}">
+                                                        <c:if test="${i le p.avgRating}">
                                                             <i class="fa-solid fa-star"></i>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                        </c:if>
+
                                                 </c:forEach>
                                             </div>
 
                                             <div class="mb-2">
-                                                <c:choose>
-                                                    <c:when test="${p.stock > 0}">
-                                                        <span class="badge bg-success">Còn hàng</span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="badge bg-secondary">Hết hàng</span>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                    <%--                                                <c:choose>--%>
+                                                    <%--                                                    <c:when test="${p.stock > 0}">--%>
+                                                    <%--                                                        <span class="badge bg-success">Còn hàng</span>--%>
+                                                    <%--                                                    </c:when>--%>
+                                                    <%--                                                    <c:otherwise>--%>
+                                                    <%--                                                        <span class="badge bg-secondary">Hết hàng</span>--%>
+                                                    <%--                                                    </c:otherwise>--%>
+                                                    <%--                                                </c:choose>--%>
                                             </div>
 
-                                            <c:if test="${p.hot}">
-                                                <span class="badge bg-dark">HOT</span>
-                                            </c:if>
+                                                <%--                                            <c:if test="${p.hot}">--%>
+                                                <%--                                                <span class="badge bg-dark">HOT</span>--%>
+                                                <%--                                            </c:if>--%>
 
                                         </div>
 
@@ -253,7 +256,8 @@
                                                 Thêm vào giỏ
                                             </a>
 
-                                            <a href="favorites?action=remove&id=${p.id}" class="btn btn-outline-danger btn-sm">
+                                            <a href="favorites?action=remove&id=${p.id}"
+                                               class="btn btn-outline-danger btn-sm">
                                                 <i class="fa-solid fa-star"></i> Bỏ yêu thích
                                             </a>
                                         </div>
