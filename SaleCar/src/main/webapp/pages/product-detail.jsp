@@ -97,7 +97,7 @@
         /* Giá gốc */
         .price-old-bar {
             text-decoration: line-through;
-            font-size: 30px ;
+            font-size: 30px;
             color: #888;
         }
 
@@ -109,11 +109,23 @@
         /* Button đánh giá sao */
         .star-btn {
             border: 1px solid #000;
+            background: #fff;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+
+        .star-btn i {
+            color: #000000;
         }
 
         .star-btn:hover {
             background: #000;
             color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .star-btn:hover i {
+            color: #ffc107;
         }
 
         /* Button mua hàng */
@@ -399,7 +411,8 @@
             margin-left: 4px;
         }
 
-    </style></head>
+    </style>
+</head>
 
 <body>
 
@@ -553,7 +566,15 @@
                         </button>
                     </form>
 
-                    <button class="btn star-btn">★ Thêm vào yêu thích</button>
+                    <form method="post" action="/favorites" class="w-100">
+                        <button type="submit"
+                                class="btn star-btn w-100"
+                                name="productid"
+                                value="${product.id}">
+                            <i class="bi bi-star me-2"></i>
+                            Thêm vào yêu thích
+                        </button>
+                    </form>
                 </div>
 
             </div>

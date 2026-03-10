@@ -45,4 +45,22 @@ public class FavoriesDAO {
         }
         return favoritesList;
     }
+
+    public boolean removeFavoritesProduct(int prid) {
+        String sql = "delete from wishlist_item" +
+                " where  product_id = ? " ;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setInt(1, prid);
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

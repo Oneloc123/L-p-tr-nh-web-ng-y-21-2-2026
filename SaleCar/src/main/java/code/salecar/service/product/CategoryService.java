@@ -14,4 +14,7 @@ public class CategoryService {
     public List<String> getCategoryName() {
         return categoryDAO.getCategoryName();
     }
+    public String  getCategoryName(int id) {
+        return categoryDAO.getCategoryName(id);
+    }
 }

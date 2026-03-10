@@ -55,8 +55,6 @@ public class products extends HttpServlet {
         String[] brpr = request.getParameterValues("brand");
 
         ProductFilter filter = new ProductFilter();
-
-
         filter.setKeyword(request.getParameter("find"));
         filter.setCategories(ctpr == null ? new ArrayList<>() : Arrays.asList(ctpr));
         filter.setBrands(brpr == null ? new ArrayList<>() : Arrays.asList(brpr));
@@ -71,20 +69,8 @@ public class products extends HttpServlet {
         List<Product> list;
         int totalProduct = 0;
 
-//        if ((categories == null || categories.length == 0) &&
-//                (brands == null || brands.length == 0) &&
-//                (discounts == null || discounts.length == 0) &&
-//                (find == null || find.isEmpty()) &&
-//                (price == 0)) {
-//
-//            list = ps.getProductsByPage(page, limit);
-//            totalProduct = ps.getTotalProduct();
-//
-//        } else {
-
         list = ps.getProductFilter(filter, page, limit);
         totalProduct = ps.getTotalProduct(filter);
-//        }
 
         // Chia số trang để tính tổng
         int totalPage = (int) Math.ceil((double) totalProduct / limit);
