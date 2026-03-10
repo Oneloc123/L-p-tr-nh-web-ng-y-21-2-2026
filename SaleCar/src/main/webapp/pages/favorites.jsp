@@ -22,6 +22,7 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -129,40 +130,41 @@
                 <input type="text" name="keyword" class="form-control mb-3" placeholder="Tìm kiếm yêu thích...">
 
                 <div class="filter-title">Loại xe</div>
-                <select name="type" class="form-select mb-3">
-                    <option value="">Tất cả</option>
-                    <option value="sedan">Sedan</option>
-                    <option value="suv">SUV</option>
-                    <option value="sport">Sport</option>
+                <select name="category" class="form-select mb-3">
+                    <option value="all">Tất cả</option>
+                    <c:forEach var="c" items="${category}">
+                        <option value="${c}">${c}</option>
+                    </c:forEach>
                 </select>
 
                 <div class="filter-title">Hãng</div>
                 <select name="brand" class="form-select mb-3">
-                    <option value="">Tất cả</option>
-                    <option value="toyota">Toyota</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="bmw">BMW</option>
+                    <option value="all">Tất cả</option>
+                    <c:forEach var="b" items="${brand}">
+                        <option value="${b}">${b}</option>
+                    </c:forEach>
                 </select>
 
                 <div class="filter-title">Khoảng giá</div>
                 <select name="price" class="form-select mb-3">
-                    <option value="">Tất cả</option>
-                    <option value="low">Dưới 1 tỷ</option>
-                    <option value="mid">1 - 3 tỷ</option>
-                    <option value="high">Trên 3 tỷ</option>
+                    <option value="-1">Tất cả</option>
+                    <option value="10000000">Dưới 10.000.000</option>
+                    <option value="50000000">Dưới 50.000.000</option>
+                    <option value="100000000">Dưới 100.000.000</option>
+                    <option value="500000000">Dưới 500.000.000</option>
                 </select>
 
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="discount">
-                    <label class="form-check-label">Đang giảm giá</label>
+                    <label class="form-check-label">Đang giảm giá nhiều nhất</label>
                 </div>
 
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="hot">
-                    <label class="form-check-label">Hàng HOT</label>
+                    <input class="form-check-input" type="checkbox" name="newest">
+                    <label class="form-check-label">Giảm giá mới nhất</label>
                 </div>
 
-                <button class="btn btn-dark w-100">Lọc</button>
+                <button class="btn btn-dark w-100" type="submit">Lọc</button>
 
             </form>
 
@@ -189,8 +191,6 @@
         <div class="col-lg-9 px-5">
 
             <h1 class="mb-4">Xe bạn đã yêu thích</h1>
-${favorites}
-
 
 
             <c:choose>
@@ -217,20 +217,26 @@ ${favorites}
                                                 <span class="price-current">
                                                     <fmt:formatNumber value="${p.finalPrice}" type="number"/> đ
                                                 </span>
-
-                                                <c:if test="${p.price gt 0}">
+                                            </div>
+                                            <c:if test="${p.price gt 0}">
                                                     <span class="price-old ms-2">
                                                         <fmt:formatNumber value="${p.price}" type="number"/> đ
                                                     </span>
-                                                </c:if>
-                                            </div>
+                                            </c:if>
 
                                             <div class="rating mb-2">
+                                                <fmt:formatNumber
+                                                        value="${p.avgRating}"
+                                                        maxFractionDigits="1"/>
                                                 <c:forEach begin="1" end="5" var="i">
-                                                        <c:if test="${i le p.avgRating}">
-                                                            <i class="fa-solid fa-star"></i>
-                                                        </c:if>
-
+                                                    <c:choose>
+                                                        <c:when test="${i le p.avgRating}">
+                                                            <i class="bi bi-star-fill"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="bi bi-star"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:forEach>
                                             </div>
 
@@ -256,10 +262,14 @@ ${favorites}
                                                 Thêm vào giỏ
                                             </a>
 
-                                            <a href="favorites?action=remove&id=${p.id}"
-                                               class="btn btn-outline-danger btn-sm">
-                                                <i class="fa-solid fa-star"></i> Bỏ yêu thích
-                                            </a>
+                                            <form action="/favorites" method="post" class="w-100">
+                                                <button
+                                                        name="remove"
+                                                        value="${p.id}"
+                                                        class="btn btn-outline-danger btn-sm w-100">
+                                                    <i class="fa-solid fa-star"></i> Bỏ yêu thích
+                                                </button>
+                                            </form>
                                         </div>
 
                                     </div>

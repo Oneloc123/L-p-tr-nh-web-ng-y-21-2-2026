@@ -10,17 +10,21 @@ import code.salecar.model.Reviews;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProductService {
     ProductDAO productDAO = new ProductDAO();
     BrandService bs = new BrandService();
     DiscountService ds = new DiscountService();
     ReviewsService rs = new ReviewsService();
-
+    CategoryService cs = new CategoryService();
 
     public Product getProductByID(int id) {
         Product product = productDAO.getProductByID(id);
         Brand brand = bs.getBrandByID(product.getBrandid());
+        product.setCategoryName(cs.getCategoryName(product.getCategoryid()));
         product.setBrandName(brand.getName());
         product.setBrandLink(brand.getLinkband());
 
@@ -181,14 +185,55 @@ public class ProductService {
     }
 
     public List<Product> getRelatedProductMaterial(String byWith) {
-        List<Integer> list = productDAO.getRelatedProductMaterial( byWith);
+        List<Integer> list = productDAO.getRelatedProductMaterial(byWith);
         List<Product> products = new ArrayList<>();
-        for ( Integer id : list ) {
+        for (Integer id : list) {
             Product product = getProductByID(id);
             products.add(product);
         }
         return products;
     }
 
+    public List<Product> sortProducFilter(List<Product> favoritesProducts, ProductFilter filter) {
 
+        if (filter.getCategories().isEmpty() &&
+            filter.getBrands().isEmpty() && filter.getMaxPrice() == -1 &&
+            !filter.isSortByNewest() && !filter.isSortByHighest() ) {
+            return favoritesProducts;
+        }
+
+        Stream<Product> stream = favoritesProducts.stream();
+
+        // Keyword
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty() ) {
+            String keyword = filter.getKeyword().toLowerCase().trim();
+            stream = stream.filter(p -> p.getName().toLowerCase().trim().contains(keyword));
+        }
+
+        // category
+        if (!filter.getCategories().isEmpty() && !filter.getCategories().get(0).equals("all")) {
+            stream = stream.filter(p -> filter.getCategories().contains(p.getCategoryName()));
+        }
+
+        // brand
+        if (!filter.getBrands().isEmpty()  && !filter.getBrands().get(0).equals("all")) {
+            stream = stream.filter(p -> filter.getBrands().contains(p.getBrandName()));
+        }
+
+        //maxPrice
+        if (filter.getMaxPrice() != -1) {
+            stream = stream.filter(p -> p.getPrice() <= filter.getMaxPrice());
+        }
+
+
+        List<Product> result = stream.collect(Collectors.toList());
+
+        if (filter.isSortByNewest()) {
+            result.sort((a, b) -> b.getCreateat().compareTo(a.getCreateat()));
+        }
+        if (filter.isSortByHighest()) {
+            result.sort((a, b) -> Double.compare(b.getFinalPrice(), a.getFinalPrice()));
+        }
+        return result;
+    }
 }

@@ -42,4 +42,21 @@ public class CategoryDAO {
         }
         return list;
     }
+    public String getCategoryName(int id) {
+
+        String sql = "SELECT name from category where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+
+                return rs.getString("name");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
 }
