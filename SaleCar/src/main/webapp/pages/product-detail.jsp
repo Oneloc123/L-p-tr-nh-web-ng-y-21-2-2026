@@ -552,7 +552,20 @@
                 <!-- Nút hành động -->
                 <div class="d-grid gap-2">
                     <button class="btn btn-buy">Mua ngay</button>
-                    <button class="btn btn-outline-dark"><i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng</button>
+
+                    <!-- them sp vao cart(lan1) -->
+                    <form action= "cart-add" method="get">
+                        <input type= "hidden" name = "productId" value="${product.id}">
+
+                        <div class="mb-3">
+                            <label class="form-label"> Số lượng</label>
+                            <input type ="number" name="quantity" class="form-control" value="1" min="1">
+                        </div>
+
+                        <button class="btn btn-outline-dark">Thêm vào giỏ hàng
+                        </button>
+                    </form>
+
                     <form method="post" action="/favorites" class="w-100">
                         <button type="submit"
                                 class="btn star-btn w-100"
