@@ -20,7 +20,11 @@ public class addToCart extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int id = Integer.parseInt(request.getParameter("productId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        String quantitypr = request.getParameter("quantity");
+        int quantity = 1;
+        if(quantitypr!=null){
+             quantity = Integer.parseInt(quantitypr);
+        }
 
         ProductService ps = new ProductService();
         Product product = ps.getProductByID(id);

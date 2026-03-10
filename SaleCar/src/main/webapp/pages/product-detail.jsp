@@ -546,7 +546,7 @@
                 <!-- Số lượng -->
                 <div class="mb-3">
                     <label class="form-label">Số lượng</label>
-                    <input type="number" class="form-control" value="1" min="1">
+                    <input type="number" name="quantity" class="form-control" value="1" min="1" form="add-to-cart">
                 </div>
 
                 <!-- Nút hành động -->
@@ -554,15 +554,11 @@
                     <button class="btn btn-buy">Mua ngay</button>
 
                     <!-- them sp vao cart(lan1) -->
-                    <form action= "cart-add" method="get">
+                    <form id="add-to-cart" action= "cart-add" method="get" class="w-100">
                         <input type= "hidden" name = "productId" value="${product.id}">
 
-                        <div class="mb-3">
-                            <label class="form-label"> Số lượng</label>
-                            <input type ="number" name="quantity" class="form-control" value="1" min="1">
-                        </div>
 
-                        <button class="btn btn-outline-dark">Thêm vào giỏ hàng
+                        <button class="btn btn-outline-dark w-100">Thêm vào giỏ hàng
                         </button>
                     </form>
 
