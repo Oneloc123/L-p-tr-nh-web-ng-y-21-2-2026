@@ -21,4 +21,8 @@ public class UserService {
     public String getUserNameById(int userId) {
         return ud.getUserNameById( userId);
     }
+
+    public User getUserById(int id) {
+        return  ud.getUserById(id);
+    }
 }
