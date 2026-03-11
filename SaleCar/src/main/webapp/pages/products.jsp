@@ -403,11 +403,13 @@
                                 </div>
 
                                 <div class="d-flex justify-content-center gap-2 mt-3">
-                                    <button class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
+
                                     <form id="add-to-cart" action="cart-add" method="get" class="">
                                         <input type= "hidden" name = "productId" value="${p.id}">
                                         <input type="hidden" name="quantity" value="1" min="1" form="add-to-cart">
-                                        <button class="btn star-btn btn-sm "><i class="bi bi-cart-plus"></i></button>
+                                        <button type="submit" name="action" value"buyNow" class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
+                                        <button type="submit" name="action" value="addCart" class="btn star-btn btn-sm "><i class="bi bi-cart-plus"></i></button>
+
                                     </form>
                                     <form method="post" action="/favorites">
                                         <button class="btn star-btn btn-sm" name="productid" value="${p.id}"><i
