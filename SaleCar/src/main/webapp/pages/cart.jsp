@@ -144,18 +144,36 @@
                         <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> ₫
                     </td>
 
+
+
                     <!-- cap nhat so luong -->
                     <td>
-                        <form action="cart-update" method="post" class="d-flex align-items-center gap-2">
+                        <div class="d-flex align-items-center justify-content-center">
 
-                            <input type="hidden" name="id" values="${item.productId}">
 
-                            <input type="number" class="qty-box" value="${item.quantity}">
+                            <a href="/update-cart?value=-1&id=${item.productId}"
 
-                            <button type="submit" class"btn btn-sm btn-outline-dark" title="Cập nhật số lượng">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
+
+                               class="btn btn-sm btn-outline-dark"
+                               style="border-radius: 4px 0 0 4px; border-right: none;">
+                                <i class="fas fa-minus" style="font-size: 10px;"></i>
+                            </a>
+
+                            <input type="text" class="text-center" value="${item.quantity}" readonly
+                                   style="width: 45px; height: 31px; border: 1px solid #212529; outline: none; background: #fff;">
+
+
+                            <a href="/update-cart?value=1&id=${item.productId}"
+
+
+                               class="btn btn-sm btn-outline-dark"
+                               style="border-radius: 0 4px 4px 0; border-left: none;">
+                                <i class="fas fa-plus" style="font-size: 10px;"></i>
+                            </a>
+                        </div>
                     </td>
+
+
 
                     <td class="total-text">
                        <fmt:formatNumber value="${item.price * item.quantity}" type="number" groupingUsed="true"/> ₫
