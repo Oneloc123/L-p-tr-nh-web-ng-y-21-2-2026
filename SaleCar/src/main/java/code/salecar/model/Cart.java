@@ -7,15 +7,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Cart implements Serializable {
-        private int id;
-        private int userId;
-        private Date createdAt;
-        private Date updatedAt;
+    private int id;
+    private int userId;
+    private Date createdAt;
+    private Date updatedAt;
 
-        private Map<Integer,CartItem> items;
+    private Map<Integer, CartItem> items;
 
 
-    public Cart(){
+    public Cart() {
         items = new HashMap<Integer, CartItem>();
     }
 
@@ -52,57 +52,63 @@ public class Cart implements Serializable {
     }
 
 
-
     public void setItems(Map<Integer, CartItem> items) {
         this.items = items;
     }
 
     public void addProduct(Product product, int quantity) {
 
-        if(quantity <= 0){quantity = 1;}
+        if (quantity <= 0) {
+            quantity = 1;
+        }
 
-        if(!items.containsKey(product.getId())){
-           items.put(product.getId(), new CartItem(product,quantity, product.getPrice()));
-        }else {
+        if (!items.containsKey(product.getId())) {
+            items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
+        } else {
             items.get(product.getId()).upQuantity(quantity);
         }
     }
 
 
-    public void updateItem(Product product, int quantity){
+    public void updateItem(Product product, int quantity) {
         items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
 
 
     }
 
     //xoa item
-    public CartItem delItem(int id){
+    public CartItem delItem(int id) {
 
         return items.remove(id);
     }
 
     //xoa het
-    public List<CartItem> delAll(){
+    public List<CartItem> delAll() {
         List<CartItem> data = new ArrayList<>(items.values());
         items.clear();
         return data;
     }
 
-    public CartItem getItemById(int id){return items.get(id);}
-    public List<CartItem> getItems(){
+    public CartItem getItemById(int id) {
+        return items.get(id);
+    }
+    public int getSize(){
+        return items.size();
+    }
+    public List<CartItem> getItems() {
         return new ArrayList<>(items.values());
     }
 
-    public int getTotalQuantity(){
+    public int getTotalQuantity() {
         AtomicInteger total = new AtomicInteger();
         items.values().forEach(cartItem -> total.addAndGet(cartItem.getQuantity()));
         return total.get();
     }
 
-    public double getTotal(){
+    public double getTotal() {
         double total = 0;
 
-        for(CartItem item : items.values()){
+        for (CartItem item : items.values()) {
             total += item.getPrice() * item.getQuantity();
         }
         return total;

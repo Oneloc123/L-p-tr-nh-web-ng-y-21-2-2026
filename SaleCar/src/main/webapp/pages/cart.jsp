@@ -10,7 +10,7 @@
     <title>Giỏ hàng - LUXCAR</title>
 
     <%-- Include header --%>
-    <%@ include file="/common/header-for-login-ex.jsp" %>
+    <%@ include file="/common/header.jsp" %>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
