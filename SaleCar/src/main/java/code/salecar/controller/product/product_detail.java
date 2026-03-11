@@ -1,7 +1,9 @@
 package code.salecar.controller.product;
 
 import code.salecar.model.Product;
+import code.salecar.model.Voucher;
 import code.salecar.service.product.ProductService;
+import code.salecar.service.product.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -35,7 +37,10 @@ public class product_detail extends HttpServlet {
         List<Product> list1 = ps.getRelatedProductMaterial(product.getMeterial());
         request.setAttribute("related", list1);
 
-
+        // Voucher
+        VoucherService vs = new VoucherService();
+        List<Voucher> vouchers = vs.getVouchers();
+        request.setAttribute("vouchers", vouchers);
 
         String returnUrl = request.getHeader("Referer");
         request.setAttribute("returnUrl", returnUrl);

@@ -212,6 +212,13 @@
         .pagination .page-item.disabled .page-link {
             color: #aaa;
         }
+
+        .voucher-box {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #eee;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -357,6 +364,21 @@
                 </div>
 
             </form>
+
+            <div class="voucher-box">
+                <button class="btn btn-outline-dark w-100" data-bs-toggle="collapse" data-bs-target="#voucherArea">
+                    Xem Voucher của bạn
+                </button>
+
+                <div class="collapse mt-3" id="voucherArea">
+                    <c:forEach var="v" items="${vouchers}">
+                        <div class="border p-2 mb-2">
+                            <strong>${v.code}</strong><br>
+                            Giảm ${v.discount}
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
         </div>
 
 

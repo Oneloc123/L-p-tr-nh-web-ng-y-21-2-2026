@@ -110,7 +110,6 @@
         .star-btn {
             border: 1px solid #000;
             background: #fff;
-            font-weight: 500;
             transition: all 0.25s ease;
         }
 
@@ -411,6 +410,11 @@
             margin-left: 4px;
         }
 
+        form {
+            margin: 0;
+            padding: 0;
+        }
+
     </style>
 </head>
 
@@ -426,7 +430,7 @@
         </c:if>
 
         <c:if test="${returnUrl eq null}">
-            <a href="/home" class="btn btn-outline-dark btn-sm">
+            <a href="/products" class="btn btn-outline-dark btn-sm">
                 ← Quay lại
             </a>
         </c:if>
@@ -538,9 +542,12 @@
 
                 <!-- Voucher -->
                 <div class="mb-3">
-                    <button class="btn btn-outline-dark w-100">
-                        Chọn Voucher
-                    </button>
+                    <label class="form-label">Chọn Voucher</label>
+                    <select name="voucherId" class="form-select">
+                        <c:forEach items="${vouchers}" var="v">
+                            <option value="${v.id}"><strong>${v.code}</strong> - Giảm ${v.discount}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
                 <!-- Số lượng -->
@@ -554,10 +561,8 @@
                     <button class="btn btn-buy">Mua ngay</button>
 
                     <!-- them sp vao cart(lan1) -->
-                    <form id="add-to-cart" action= "cart-add" method="get" class="w-100">
-                        <input type= "hidden" name = "productId" value="${product.id}">
-
-
+                    <form id="add-to-cart" action="cart-add" method="get" class="w-100">
+                        <input type="hidden" name="productId" value="${product.id}">
                         <button class="btn btn-outline-dark w-100">Thêm vào giỏ hàng
                         </button>
                     </form>
