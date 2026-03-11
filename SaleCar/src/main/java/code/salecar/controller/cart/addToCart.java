@@ -21,6 +21,10 @@ public class addToCart extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("productId"));
         String quantitypr = request.getParameter("quantity");
+
+
+        String action = request.getParameter("action");
+
         int quantity = 1;
         if(quantitypr!=null){
              quantity = Integer.parseInt(quantitypr);
@@ -30,17 +34,27 @@ public class addToCart extends HttpServlet {
         Product product = ps.getProductByID(id);
         if(product == null){
             response.sendRedirect("list-product");
+            return;
         }
 
         HttpSession session = request.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
+
         if(cart == null){ cart = new Cart();}
 
-        cart.addProduct(product, quantity);
+            cart.addProduct(product, quantity);
+
+        if("addCart".equals(action)){
+            response.sendRedirect("cart");
+        } else {
+            response.sendRedirect("checkout");
+        }
 
         session.setAttribute("cart", cart);
 
-        response.sendRedirect("cart");
+
+
+
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

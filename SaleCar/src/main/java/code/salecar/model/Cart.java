@@ -72,6 +72,7 @@ public class Cart implements Serializable {
     public void updateItem(Product product, int quantity){
         items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
 
+
     }
 
     //xoa item
@@ -87,6 +88,7 @@ public class Cart implements Serializable {
         return data;
     }
 
+    public CartItem getItemById(int id){return items.get(id);}
     public List<CartItem> getItems(){
         return new ArrayList<>(items.values());
     }
