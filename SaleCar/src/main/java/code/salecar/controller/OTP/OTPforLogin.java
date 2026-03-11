@@ -21,6 +21,9 @@ public class OTPforLogin extends HttpServlet {
         int otp = ran.nextInt(900000)+100000;
         session.setAttribute("otp",otp);
         System.out.println(otp);
+        UserService us = new UserService();
+        User user = us.getUserById(Integer.parseInt(session.getAttribute("id").toString()));
+        request.setAttribute("user",user);
 //        new Thread(() -> {
 //            Random ran = new Random();
 //            int otp = ran.nextInt(9000)+1000;

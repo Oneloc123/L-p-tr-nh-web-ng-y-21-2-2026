@@ -3,6 +3,7 @@ package code.salecar.controller.account;
 import code.salecar.model.Address;
 import code.salecar.model.User;
 import code.salecar.service.address.AddressService;
+import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -27,6 +28,15 @@ public class ForgotPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-
+        UserService us = new UserService();
+        User user = us.getUserByUsername(username);
+        if(!email.equals(user.getEmail())){
+            response.sendRedirect("/pages/forgot-password.jsp");
+            return;
+        }
+        HttpSession session = request.getSession();
+        session.setAttribute("otpForgotPasswordState","true");
+        session.setAttribute("userTemp",user);
+        response.sendRedirect("/OTPforForgotPassword");
     }
 }

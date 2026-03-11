@@ -55,7 +55,5 @@ public class Register extends HttpServlet {
         session.setAttribute("otpRegisterState","true");
         session.setAttribute("userTemp",user);
         response.sendRedirect("/OTPforRegister");
-//        us.register(user);
-//        response.sendRedirect("/login");
     }
 }

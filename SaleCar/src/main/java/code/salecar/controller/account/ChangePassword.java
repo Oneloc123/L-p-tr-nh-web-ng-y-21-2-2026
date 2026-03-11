@@ -36,8 +36,11 @@ public class ChangePassword extends HttpServlet {
         UserService us =new UserService();
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
+        session.setAttribute("otpChangePasswordState","true");
         user.setPassword(confirmPass);
-        us.UpdateProfile(user);
-        response.sendRedirect("/loggout");
+        session.setAttribute("userTemp",user);
+        response.sendRedirect("/OTPforChangePassword");
+//        us.UpdateProfile(user);
+//        response.sendRedirect("/loggout");
     }
 }

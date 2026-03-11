@@ -21,6 +21,8 @@ public class OTPforRegister extends HttpServlet {
         int otp = ran.nextInt(900000)+100000;
         session.setAttribute("otp",otp);
         System.out.println(otp);
+        User user = (User) session.getAttribute("userTemp");
+        request.setAttribute("user",user);
 //        new Thread(() -> {
 //            Random ran = new Random();
 //            int otp = ran.nextInt(9000)+1000;
@@ -49,9 +51,10 @@ public class OTPforRegister extends HttpServlet {
             User user = (User)session.getAttribute("userTemp");
             UserService us = new UserService();
             us.register(user);
-            session.removeAttribute("otpLoginState");
+            session.removeAttribute("otpRegisterState");
             session.removeAttribute("otp");
             session.removeAttribute("id");
+            session.removeAttribute("userTemp");
             session.setAttribute("user",user);
             response.sendRedirect("/home");
             return;
