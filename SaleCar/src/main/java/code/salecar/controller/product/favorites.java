@@ -2,8 +2,10 @@ package code.salecar.controller.product;
 
 import code.salecar.model.Product;
 import code.salecar.model.User;
+import code.salecar.model.Voucher;
 import code.salecar.service.product.FavoritesService;
 import code.salecar.service.product.ProductService;
+import code.salecar.service.product.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -60,6 +62,10 @@ public class favorites extends HttpServlet {
         ProductService productService = new ProductService();
         List<Product> products = productService.sortProducFilter(favoritesProducts, filter);
 
+        // Voucher
+        VoucherService vs = new VoucherService();
+        List<Voucher> vouchers = vs.getVouchers();
+        request.setAttribute("vouchers", vouchers);
 
         request.setAttribute("favorites", products);
         request.setAttribute("brand",favoritesBrands);

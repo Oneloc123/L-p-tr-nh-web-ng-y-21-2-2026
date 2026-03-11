@@ -3,9 +3,11 @@ package code.salecar.controller.product;
 import code.salecar.model.Category;
 import code.salecar.model.Discount;
 import code.salecar.model.Product;
+import code.salecar.model.Voucher;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
+import code.salecar.service.product.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -86,6 +88,11 @@ public class products extends HttpServlet {
         int totalBrand = bs.getTotalBrand();
         // Lấy tên brand
         List<String> brandName = bs.getBrandName();
+
+        // Voucher
+        VoucherService vs = new VoucherService();
+        List<Voucher> vouchers = vs.getVouchers();
+        request.setAttribute("vouchers", vouchers);
 
 
         request.setAttribute("totalPage", totalPage);

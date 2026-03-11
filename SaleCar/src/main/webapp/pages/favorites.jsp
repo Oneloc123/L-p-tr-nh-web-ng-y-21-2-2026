@@ -178,8 +178,7 @@
                     <c:forEach var="v" items="${vouchers}">
                         <div class="border p-2 mb-2">
                             <strong>${v.code}</strong><br>
-                            Giảm
-                            <fmt:formatNumber value="${v.discount}" type="number"/> đ
+                            Giảm ${v.discount}
                         </div>
                     </c:forEach>
                 </div>
@@ -204,10 +203,11 @@
                             <div class="col-lg-3 col-md-6">
                                 <div class="card product-card">
 
-                                    <div class="product-img">
-                                        <img src="" alt="${p.name}">
-                                    </div>
-
+                                    <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
+                                        <div class="product-img">
+                                            <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg" alt="${p.name}">
+                                        </div>
+                                    </a>
                                     <div class="card-body">
 
                                         <div>
