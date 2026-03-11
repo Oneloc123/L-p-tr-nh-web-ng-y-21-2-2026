@@ -32,7 +32,6 @@ public class Register extends HttpServlet {
         String phonenumber = request.getParameter("phonenumber");
 
     //    System.out.println(fullname+" "+username+" "+email+" "+password+" "+confirmPassword+" "+phonenumber);
-
         if(!password.equals(confirmPassword)){
   //          request.setAttribute("response","mật khẩu không khớp");
             request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
@@ -52,7 +51,11 @@ public class Register extends HttpServlet {
         user.setStatus(true);
         user.setCreatedat(new Date(System.currentTimeMillis()));
         user.setUpdatedat(new Date(System.currentTimeMillis()));
-        us.register(user);
-        response.sendRedirect("/login");
+        HttpSession session = request.getSession();
+        session.setAttribute("otpRegisterState","true");
+        session.setAttribute("userTemp",user);
+        response.sendRedirect("/OTPforRegister");
+//        us.register(user);
+//        response.sendRedirect("/login");
     }
 }
