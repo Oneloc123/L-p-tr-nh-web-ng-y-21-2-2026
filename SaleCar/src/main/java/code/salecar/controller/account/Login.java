@@ -1,5 +1,6 @@
 package code.salecar.controller.account;
 
+import code.salecar.mail.Mail;
 import code.salecar.model.User;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.Random;
 
 @WebServlet(name = "Login", value = "/login")
 public class Login extends HttpServlet {
@@ -28,21 +30,17 @@ public class Login extends HttpServlet {
         System.out.println(username+" "+password);
         UserService us = new UserService();
         User user = us.getUserByUsername(username);
-        String responseForLogin = "";
         if(user == null){
- //           responseForLogin = "tên đăng nhập không tồn tại";
-//            request.setAttribute("response",responseForLogin);
             request.getRequestDispatcher("/pages/login.jsp").forward(request,response);
             return;
         }
         if(!user.getPassword().equals(password)){
-  //          responseForLogin = "sai mật khẩu hoặc tên đăng nhập";
- //           request.setAttribute("response",responseForLogin);
             request.getRequestDispatcher("/pages/login.jsp").forward(request,response);
             return;
         }
         HttpSession session = request.getSession();
-        session.setAttribute("user",user);
-        response.sendRedirect("/home");
+        session.setAttribute("otpLoginState","true");
+        session.setAttribute("id",user.getId());
+        response.sendRedirect("/OTPforLogin");
     }
 }

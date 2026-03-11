@@ -122,4 +122,38 @@ public class UserDao {
 
         return "";
     }
+
+    public User getUserById(int id) {
+        User user = new User();
+        String sql = "select * from users where id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                user.setId(rs.getInt(1)) ;
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setFullname(rs.getString(4));
+                user.setEmail(rs.getString(5));
+                user.setDescription(rs.getString(6));
+                user.setPhonenumber(rs.getString(7));
+                user.setRole(rs.getString(8));
+                user.setAddressid(rs.getString(9));
+                user.setStatus(rs.getBoolean(10));
+                user.setCreatedat(rs.getDate(11));
+                user.setUpdatedat(rs.getDate(12));
+                return user;
+            }else{
+                return null;
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
