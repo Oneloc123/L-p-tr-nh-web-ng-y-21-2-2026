@@ -93,6 +93,8 @@
             <h3>LUXCAR</h3>
             <p>Mô hình xe cao cấp</p>
         </div>
+
+        <!-- menu ben trai -->
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
@@ -113,6 +115,8 @@
         </div>
     </div>
 
+
+
     <div class="main-content">
         <div class="content-header">
             <h1>Thanh toán</h1>
@@ -125,7 +129,7 @@
             </nav>
         </div>
 
-        <form action="process-checkout" method="POST">
+        <form action="process-checkout"  method="POST">
             <div class="checkout-container">
 
                 <div class="checkout-form-section">
@@ -134,7 +138,7 @@
 
                         <div class="form-group">
                             <label for="fullName">Họ và tên người nhận</label>
-                            <input type="text" id="fullName" name="fullName" class="form-control" value="${sessionScope.user != null ? sessionScope.user.name : ''}" placeholder="Nhập họ tên..." required>
+                            <input type="text" id="fullName" name="fullName" class="form-control" value="${sessionScope.user != null ? sessionScope.user.username : ''}" placeholder="Nhập họ tên..." required>
                         </div>
 
                         <div class="form-group">

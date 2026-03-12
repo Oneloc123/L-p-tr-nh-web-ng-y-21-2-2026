@@ -558,12 +558,14 @@
 
                 <!-- Nút hành động -->
                 <div class="d-grid gap-2">
-                    <button class="btn btn-buy">Mua ngay</button>
 
-                    <!-- them sp vao cart(lan1) -->
+
+
+                    <!-- them sp vao cart -->
                     <form id="add-to-cart" action="cart-add" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.id}">
-                        <button class="btn btn-outline-dark w-100">Thêm vào giỏ hàng
+                        <button type="submit" name="action" value="buyNow" class="btn btn-buy w-100">Mua ngay</button>
+                        <button type="submit" name="action" value="addCart" class="btn btn-outline-dark w-100">Thêm vào giỏ hàng
                         </button>
                     </form>
 
