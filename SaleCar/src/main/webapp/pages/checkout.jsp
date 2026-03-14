@@ -179,6 +179,17 @@
                     <div class="checkout-card">
                         <h3><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h3>
 
+                        <!-- Voucher -->
+                        <div class="mb-3">
+                            <label class="form-label">Chọn Voucher</label>
+                            <select id="voucherSelect" name="voucherId" class="form-select">
+                                <c:forEach items="${vouchers}" var="v">
+                                    <option value="${v.id}"><strong>${v.code}</strong> - Giảm ${v.discount}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
+
                         <div class="summary-items-list">
                             <c:forEach var="item" items="${sessionScope.cart.items}">
                                 <div class="summary-item">
@@ -205,7 +216,7 @@
                                 <span>Phí vận chuyển:</span>
                                 <span>Miễn phí</span>
                             </div>
-                            <div class="calc-row total">
+                            <div  id="totalPrice" class="calc-row total">
                                 <span>Tổng cộng (Total Amount):</span>
                                 <span><fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</span>
                             </div>
@@ -222,4 +233,30 @@
     </div>
 </div>
 </body>
+<script>
+    document.getElementById("voucherSelect").addEventListener("change", function() {
+
+        let voucherId = this.value;
+
+        fetch("${pageContext.request.contextPath}/voucher", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "voucherId=" + voucherId
+        })
+            .then(response => response.text())
+            .then(data => {
+
+                console.log("Server response:", data);
+                let formatted = Number(data).toLocaleString('vi-VN');
+
+                // Ví dụ update lại giá tiền
+                document.getElementById("totalPrice").innerHTML = formatted + " ₫";
+
+            })
+            .catch(error => console.error("Error:", error));
+
+    });
+</script>
 </html>

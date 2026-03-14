@@ -13,10 +13,19 @@ public class Cart implements Serializable {
     private Date updatedAt;
 
     private Map<Integer, CartItem> items;
+    private double finalTotal;
 
 
     public Cart() {
         items = new HashMap<Integer, CartItem>();
+    }
+
+    public double getFinalTotal() {
+        return finalTotal;
+    }
+
+    public void setFinalTotal(double finalTotal) {
+        this.finalTotal = finalTotal;
     }
 
     public int getId() {
@@ -113,5 +122,6 @@ public class Cart implements Serializable {
         }
         return total;
     }
+
 
 }
