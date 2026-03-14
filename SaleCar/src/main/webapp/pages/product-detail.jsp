@@ -540,15 +540,6 @@
                     </span>
                 </div>
 
-                <!-- Voucher -->
-                <div class="mb-3">
-                    <label class="form-label">Chọn Voucher</label>
-                    <select name="voucherId" class="form-select">
-                        <c:forEach items="${vouchers}" var="v">
-                            <option value="${v.id}"><strong>${v.code}</strong> - Giảm ${v.discount}</option>
-                        </c:forEach>
-                    </select>
-                </div>
 
                 <!-- Số lượng -->
                 <div class="mb-3">
