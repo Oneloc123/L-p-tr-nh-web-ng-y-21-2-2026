@@ -44,4 +44,38 @@ public class VoucherDAO {
         }
         return vouchers;
     }
+
+    public Voucher getVoucherId(int voucherId) {
+
+        String sql = "select * from voucher  where id = ? and status = 1";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, voucherId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Voucher voucher = new Voucher(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("value_type"),
+                        rs.getBigDecimal("value"),
+                        rs.getBigDecimal("max_discount"),
+                        rs.getBigDecimal("min_order_value"),
+                        rs.getInt("usage_limit"),
+                        rs.getInt("used_count"),
+                        rs.getDate("start_at"),
+                        rs.getDate("end_at"),
+                        rs.getInt("status"),
+                        rs.getDate("created_at")
+                );
+                return voucher;
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
