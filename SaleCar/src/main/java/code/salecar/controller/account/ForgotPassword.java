@@ -35,8 +35,8 @@ public class ForgotPassword extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
-        session.setAttribute("otpForgotPasswordState","true");
+        session.setAttribute("resetPasswordState","true");
         session.setAttribute("userTemp",user);
-        response.sendRedirect("/OTPforForgotPassword");
+        response.sendRedirect("/resetPassword");
     }
 }
