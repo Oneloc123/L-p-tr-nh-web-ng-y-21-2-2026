@@ -27,7 +27,6 @@ public class addToCart extends HttpServlet {
         String action = request.getParameter("action");
 
 
-
         int quantity = 1;
         if (quantitypr != null) {
             quantity = Integer.parseInt(quantitypr);
@@ -45,12 +44,12 @@ public class addToCart extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         //guest thi khong mua hang duoc
-        if(user == null){
+        if (user == null) {
             response.sendRedirect("login");
             return;
 
-        //mua ngay va them vao gio hang
-        }else{
+            //mua ngay va them vao gio hang
+        } else {
             if (cart == null) {
                 cart = new Cart();
             }
@@ -58,13 +57,19 @@ public class addToCart extends HttpServlet {
             cart.addProduct(product, quantity);
             session.setAttribute("cart", cart);
 
+
+
+            // Lấy link trước đó
+            String previousUrl = request.getHeader("referer");
+
             if ("buyNow".equals(action)) {
                 response.sendRedirect("checkout");
             } else {
-                response.sendRedirect("cart");
+                //trả về link trước đó
+                response.sendRedirect(previousUrl);
+//                response.sendRedirect("cart");
             }
         }
-
 
 
     }

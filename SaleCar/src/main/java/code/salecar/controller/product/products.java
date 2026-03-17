@@ -57,7 +57,7 @@ public class products extends HttpServlet {
         String[] brpr = request.getParameterValues("brand");
 
         ProductFilter filter = new ProductFilter();
-        filter.setKeyword(request.getParameter("find"));
+        filter.setKeyword(request.getParameter("keyword"));
         filter.setCategories(ctpr == null ? new ArrayList<>() : Arrays.asList(ctpr));
         filter.setBrands(brpr == null ? new ArrayList<>() : Arrays.asList(brpr));
         String priceparam = request.getParameter("price");
