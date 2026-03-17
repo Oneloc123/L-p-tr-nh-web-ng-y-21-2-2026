@@ -1,4 +1,4 @@
-package code.salecar.controller.cart;
+package code.salecar.controller.checkout;
 
 import code.salecar.model.Voucher;
 import code.salecar.service.product.VoucherService;

@@ -421,9 +421,13 @@
                 <span>Đổi mật khẩu</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/orders.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
                 <i class="fas fa-shopping-bag"></i>
                 <span>Đơn hàng của tôi</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
+                <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
 
             <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">

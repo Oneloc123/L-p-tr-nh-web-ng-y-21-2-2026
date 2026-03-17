@@ -1,6 +1,8 @@
 package code.salecar.controller.cart;
 
+import code.salecar.dao.AddressDao;
 import code.salecar.dao.ProductDAO;
+import code.salecar.model.Address;
 import code.salecar.model.Cart;
 import code.salecar.model.Product;
 import code.salecar.model.User;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/cart-add")
 public class addToCart extends HttpServlet {
@@ -25,7 +28,7 @@ public class addToCart extends HttpServlet {
 
 
         String action = request.getParameter("action");
-
+        AddressDao AddrDAO = new AddressDao();
 
 
         int quantity = 1;
@@ -44,6 +47,8 @@ public class addToCart extends HttpServlet {
         Cart cart = (Cart) session.getAttribute("cart");
         User user = (User) session.getAttribute("user");
 
+        int userId = user.getId();
+
         //guest thi khong mua hang duoc
         if(user == null){
             response.sendRedirect("login");
@@ -58,10 +63,18 @@ public class addToCart extends HttpServlet {
             cart.addProduct(product, quantity);
             session.setAttribute("cart", cart);
 
+            List<Address> lstAddress = AddrDAO.getListAddressById(userId);
+            session.setAttribute("listAddress", lstAddress);
+
             if ("buyNow".equals(action)) {
                 response.sendRedirect("checkout");
             } else {
-                response.sendRedirect("cart");
+                String referer = request.getHeader("referer");
+                if(referer != null){
+                    response.sendRedirect(referer);
+                } else
+                response.sendRedirect("home");
+
             }
         }
 
