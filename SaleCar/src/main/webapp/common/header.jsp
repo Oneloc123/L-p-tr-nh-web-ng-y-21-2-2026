@@ -158,7 +158,7 @@
 
                         <c:when test="${sessionScope.user != null}">
                             <a href="${pageContext.request.contextPath}/profile">Tài khoản</a>
-                            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                            <a href="${pageContext.request.contextPath}/loggout">Logout</a>
                         </c:when>
 
                         <c:otherwise>

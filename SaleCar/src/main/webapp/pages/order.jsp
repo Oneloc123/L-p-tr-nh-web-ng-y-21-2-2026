@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -78,24 +80,67 @@
     <div class="sidebar-menu">
 
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
+            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Bảng điều khiển</span>
             </a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                <i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span>
+
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
+                <i class="fas fa-user-circle"></i>
+                <span>Thông tin cá nhân</span>
             </a>
+
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Chỉnh sửa thông tin</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
+                <i class="fas fa-lock"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Đơn hàng của tôi</span>
+            </a>
+
             <a href="${pageContext.request.contextPath}/cart" class="menu-item">
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item active">
-                <i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span>
+
+            <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">
+                <i class="fas fa-heart"></i>
+                <span>Sản phẩm yêu thích</span>
             </a>
+
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span>
+
+            <a href="${pageContext.request.contextPath}/user/address-list.jsp" class="menu-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Sổ địa chỉ</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/settings.jsp" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
             </a>
         </div>
     </div>
+
+
 
     <div class="main-content">
         <div class="content-header">
@@ -109,114 +154,74 @@
             </nav>
         </div>
 
-        <div class="order-card">
-            <div class="order-header">
-                <div class="order-id-date">
-                    <span class="id">Đơn hàng #ORD-10045</span>
-                    <span class="date"><i class="far fa-clock"></i> 23/02/2026 14:30</span> </div>
-                <div class="order-status status-processing">
-                    <i class="fas fa-spinner fa-spin"></i> Đang xử lý </div>
+<c:forEach var="order" items="${orders}">
+    <div class="order-card">
+        <div class="order-header">
+            <div class="order-id-date">
+                <span class="id">Đơn hàng #${order.id}</span>
+                <span class="date"><i class="far fa-clock"></i>
+                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
+                </span>
             </div>
 
-            <div class="order-info-grid">
-                <div class="info-block">
-                    <h4>Địa chỉ giao hàng (Shipping Address)</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Đường Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM</p>
-                </div>
-                <div class="info-block">
-                    <h4>Số điện thoại (Phone)</h4>
-                    <p><i class="fas fa-phone-alt"></i> 0987.654.321</p>
-                </div>
-                <div class="info-block">
-                    <h4>Phương thức thanh toán (Payment Method)</h4>
-                    <p><i class="fas fa-credit-card"></i> Chuyển khoản ngân hàng</p>
-                </div>
+            <div class="order-status status-processing">
+                <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
             </div>
-
-            <div class="order-items-wrapper">
-                <table class="order-table">
-                    <thead>
-                        <tr>
-                            <th>Sản phẩm (Product)</th>
-                            <th style="text-align: center;">Số lượng (Qty)</th>
-                            <th style="text-align: center;">Đơn giá (Price)</th>
-                            <th class="col-right">Thành tiền (Total Price)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="item-name">Ferrari SF90 Stradale 1:18</td>
-                            <td style="text-align: center;">1</td>
-                            <td style="text-align: center;" class="item-price">3,200,000 ₫</td>
-                            <td class="item-total">3,200,000 ₫</td>
-                        </tr>
-                    </tbody>
-                </table>
+        </div> <div class="order-info-grid">
+            <div class="info-block">
+                <h4>Thông tin giao hàng (Shipping Info)</h4>
+                <p><i class="fas fa-map-marker-alt"></i> ${order.shippingAddress}</p>
             </div>
-
-            <div class="order-footer">
-                <span class="total-amount-label">Tổng cộng (Total Amount):</span>
-                <span class="total-amount-value">3,200,000 ₫</span>
+            <div class="info-block">
+                <h4>Phương thức thanh toán (Payment Method)</h4>
+                <p><i class="fas fa-credit-card"></i> ${order.paymentMethod}</p>
             </div>
         </div>
 
-        <div class="order-card">
-            <div class="order-header">
-                <div class="order-id-date">
-                    <span class="id">Đơn hàng #ORD-09822</span>
-                    <span class="date"><i class="far fa-clock"></i> 10/01/2026 09:15</span>
-                </div>
-                <div class="order-status status-completed">
-                    <i class="fas fa-check-circle"></i> Đã giao hàng
-                </div>
-            </div>
-
-            <div class="order-info-grid">
-                <div class="info-block">
-                    <h4>Địa chỉ giao hàng (Shipping Address)</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> 456 Nguyễn Huệ, Quận 1, TP.HCM</p>
-                </div>
-                <div class="info-block">
-                    <h4>Số điện thoại (Phone)</h4>
-                    <p><i class="fas fa-phone-alt"></i> 0987.654.321</p>
-                </div>
-                <div class="info-block">
-                    <h4>Phương thức thanh toán (Payment Method)</h4>
-                    <p><i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng (COD)</p>
-                </div>
-            </div>
-
-            <div class="order-items-wrapper">
-                <table class="order-table">
-                    <thead>
+        <div class="order-items-wrapper">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm (Product)</th>
+                        <th style="text-align: center;">Số lượng (Qty)</th>
+                        <th style="text-align: center;">Đơn giá (Price)</th>
+                        <th class="col-right">Thành tiền (Total Price)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="item" items="${order.items}">
                         <tr>
-                            <th>Sản phẩm (Product)</th>
-                            <th style="text-align: center;">Số lượng (Qty)</th>
-                            <th style="text-align: center;">Đơn giá (Price)</th>
-                            <th class="col-right">Thành tiền (Total Price)</th>
+                            <td class="item-name">${item.product.name}</td>
+                            <td style="text-align: center;">${item.quantity}</td>
+                            <td style="text-align: center;" class="item-price">
+                                <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> ₫
+                            </td>
+                            <td class="item-total">
+                                <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/> ₫
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="item-name">McLaren 720S 1:24</td>
-                            <td style="text-align: center;">2</td>
-                            <td style="text-align: center;" class="item-price">1,500,000 ₫</td>
-                            <td class="item-total">3,000,000 ₫</td>
-                        </tr>
-                        <tr>
-                            <td class="item-name">Kệ trưng bày xe 3 tầng</td>
-                            <td style="text-align: center;">1</td>
-                            <td style="text-align: center;" class="item-price">500,000 ₫</td>
-                            <td class="item-total">500,000 ₫</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
 
-            <div class="order-footer">
-                <span class="total-amount-label">Tổng cộng (Total Amount):</span>
-                <span class="total-amount-value">3,500,000 ₫</span>
-            </div>
+        <div class="order-footer">
+            <span class="total-amount-label">Tổng cộng (Total Amount):</span>
+            <span class="total-amount-value">
+                <fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/> ₫
+            </span>
+        </div>
+    </div>
+</c:forEach>
+
+<c:if test="${empty orders}">
+    <div class="text-center py-5">
+        <i class="fas fa-box-open" style="font-size: 60px; color: #ddd; margin-bottom: 20px;"></i>
+        <h4 style="color: #666;">Bạn chưa có đơn hàng nào</h4>
+        <a href="${pageContext.request.contextPath}/home" class="btn btn-dark mt-3">Tiếp tục mua sắm</a>
+    </div>
+</c:if>
+
         </div>
 
     </div>
