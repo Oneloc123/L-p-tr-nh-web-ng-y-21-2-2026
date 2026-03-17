@@ -233,7 +233,7 @@
 
                 <!-- Tìm kiếm -->
                 <div>
-                    <input name="find" value="${find}" type="text" class="form-control"
+                    <input name="keyword" value="${find}" type="text" class="form-control"
                            placeholder="Tìm kiếm sản phẩm...">
                 </div>
 
@@ -428,10 +428,12 @@
                                 <div class="d-flex justify-content-center gap-2 mt-3">
 
                                     <form id="add-to-cart" action="cart-add" method="get" class="">
-                                        <input type= "hidden" name = "productId" value="${p.id}">
+                                        <input type="hidden" name="productId" value="${p.id}">
                                         <input type="hidden" name="quantity" value="1" min="1" form="add-to-cart">
-                                        <button type="submit" name="action" value="buyNow" class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
-                                        <button type="submit" name="action" value="addCart" class="btn star-btn btn-sm "><i class="bi bi-cart-plus"></i></button>
+                                        <button type="submit" name="action" value="buyNow"
+                                                class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
+                                        <button type="submit" name="action" value="addCart"
+                                                class="btn star-btn btn-sm "><i class="bi bi-cart-plus"></i></button>
 
                                     </form>
                                     <form method="post" action="/favorites">
@@ -446,6 +448,8 @@
                     </div>
                 </c:forEach>
 
+
+<%--                // Ngắt Trang--%>
                 <c:if test="${totalPage > 1}">
                     <div class="d-flex justify-content-center mt-5">
                         <nav>

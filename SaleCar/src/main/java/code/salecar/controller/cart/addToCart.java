@@ -30,7 +30,6 @@ public class addToCart extends HttpServlet {
         String action = request.getParameter("action");
         AddressDao AddrDAO = new AddressDao();
 
-
         int quantity = 1;
         if (quantitypr != null) {
             quantity = Integer.parseInt(quantitypr);
@@ -50,12 +49,12 @@ public class addToCart extends HttpServlet {
         int userId = user.getId();
 
         //guest thi khong mua hang duoc
-        if(user == null){
+        if (user == null) {
             response.sendRedirect("login");
             return;
 
-        //mua ngay va them vao gio hang
-        }else{
+            //mua ngay va them vao gio hang
+        } else {
             if (cart == null) {
                 cart = new Cart();
             }
@@ -77,7 +76,6 @@ public class addToCart extends HttpServlet {
 
             }
         }
-
 
 
     }
