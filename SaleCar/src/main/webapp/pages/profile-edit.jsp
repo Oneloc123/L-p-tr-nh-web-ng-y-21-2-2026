@@ -9,139 +9,37 @@
     <title>Chỉnh sửa thông tin - LUXCAR</title>
 
     <%-- Include header --%>
-    <%@ include file="/common/header-for-login-ex.jsp" %>
+    <%@ include file="/common/header.jsp" %>
 
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        /* Main layout */
-        .profile-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Menu */
-        .sidebar-menu {
-            width: 280px;
-            background-color: #000000;
-            color: #ffffff;
-            padding: 30px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid #333333;
-            text-align: center;
-        }
-
-        .sidebar-header h3 {
-            color: #ffffff;
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .sidebar-header p {
-            color: #999999;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .menu-items {
-            padding: 20px 0;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 25px;
-            color: #ffffff;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin: 5px 10px;
-            border-radius: 8px;
-        }
-
-        .menu-item i {
-            width: 25px;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .menu-item span {
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        .menu-item:hover {
-            background-color: #333333;
-            color: #ffffff;
-        }
-
-        .menu-item.active {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .menu-item.active i {
-            color: #000000;
-        }
-
-        .menu-divider {
-            height: 1px;
-            background-color: #333333;
-            margin: 15px 20px;
-        }
-
+        /* Main layout & Sidebar (Dùng chung từ profile.jsp) */
+        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
+        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333333; text-align: center; }
+        .sidebar-header h3 { color: #ffffff; font-size: 24px; font-weight: 600; margin: 0; }
+        .sidebar-header p { color: #999999; font-size: 14px; margin-top: 5px; }
+        .menu-items { padding: 20px 0; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
+        .menu-item span { font-size: 15px; font-weight: 500; }
+        .menu-item:hover { background-color: #333333; color: #ffffff; }
+        .menu-item.active { background-color: #ffffff; color: #000000; }
+        .menu-item.active i { color: #000000; }
+        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
         /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 30px;
-        }
-
-        .content-header {
-            margin-bottom: 30px;
-        }
-
-        .content-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            color: #000000;
-            margin-bottom: 10px;
-        }
-
-        .content-header .breadcrumb {
-            background: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .breadcrumb-item a {
-            color: #666666;
-            text-decoration: none;
-        }
-
-        .breadcrumb-item.active {
-            color: #000000;
-            font-weight: 500;
-        }
+        .main-content { flex: 1; padding: 30px; }
+        .content-header { margin-bottom: 30px; }
+        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
+        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; }
+        .breadcrumb-item { margin-right: 10px; }
+        .breadcrumb-item a { color: #666666; text-decoration: none; }
+        .breadcrumb-item.active { color: #000000; font-weight: 500; }
 
         /* Form Card */
         .form-card {
@@ -409,13 +307,10 @@
 <div class="profile-wrapper">
     <!-- Sidebar Menu -->
     <div class="sidebar-menu">
-        <div class="sidebar-header">
-            <h3>LUXCAR</h3>
-            <p>Mô hình xe cao cấp</p>
-        </div>
+
 
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i>
                 <span>Bảng điều khiển</span>
             </a>
@@ -435,29 +330,31 @@
                 <span>Đổi mật khẩu</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/orders.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
                 <i class="fas fa-shopping-bag"></i>
                 <span>Đơn hàng của tôi</span>
             </a>
-
-            <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
+                <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
 
             <div class="menu-divider"></div>
 
-            <a href="${pageContext.request.contextPath}/user/address-list.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Sổ địa chỉ</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
                 <i class="fas fa-bell"></i>
                 <span>Thông báo</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/settings.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/settings" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span>Cài đặt</span>
             </a>
@@ -478,7 +375,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/user/dashboard.jsp">Tài khoản</a></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/dashboard">Tài khoản</a></li>
                     <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/profile">Thông tin cá nhân</a></li>
                     <li class="breadcrumb-item active">Chỉnh sửa</li>
                 </ol>
@@ -495,7 +392,7 @@
                     </div>
 
                     <div class="upload-btn-wrapper">
-                        <a href="${pageContext.request.contextPath}/user/avatar-edit.jsp" class="btn-upload">
+                        <a href="${pageContext.request.contextPath}/avatar-edit" class="btn-upload">
                             <i class="fas fa-camera"></i> Thay đổi ảnh đại diện
                         </a>
                     </div>

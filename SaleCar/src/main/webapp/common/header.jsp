@@ -472,7 +472,7 @@
                                         <i class="bi bi-person-circle"></i>
                                         <span>Tài khoản của tôi</span>
                                     </a>
-                                    <a href="${pageContext.request.contextPath}/orders" class="auth-dropdown-item">
+                                    <a href="${pageContext.request.contextPath}/order" class="auth-dropdown-item">
                                         <i class="bi bi-box"></i>
                                         <span>Đơn hàng</span>
                                     </a>
@@ -480,7 +480,7 @@
                                         <i class="bi bi-gear"></i>
                                         <span>Cài đặt</span>
                                     </a>
-                                    <a href="${pageContext.request.contextPath}/logout" class="auth-dropdown-item">
+                                    <a href="${pageContext.request.contextPath}/loggout" class="auth-dropdown-item">
                                         <i class="bi bi-box-arrow-right"></i>
                                         <span>Đăng xuất</span>
                                     </a>
