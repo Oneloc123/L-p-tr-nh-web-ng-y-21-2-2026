@@ -406,7 +406,7 @@
         .product-name {
             font-weight: 600;
             margin-bottom: 4px;
-            font-size: 15px;
+            font-size: 24px;
             color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
@@ -437,7 +437,7 @@
         }
 
         .product-price-current {
-            font-size: 20px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--black);
             font-family: 'Cormorant Garamond', serif;
@@ -617,25 +617,79 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--black);
-            color: #fff;
-            border: none;
+            background: linear-gradient(135deg, #fff 0%, #fcf9f0 100%);
+            color: var(--black);
+            border-left: 4px solid var(--gold);
             border-radius: 8px;
-            padding: 15px 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            padding: 16px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(197, 160, 40, 0.2);
             z-index: 9999;
-            animation: slideInRight 0.3s ease;
+            animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: 'Inter', sans-serif;
+            min-width: 320px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-custom i {
+            color: var(--gold);
+            font-size: 24px;
+        }
+
+        .alert-custom strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        .alert-custom span {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 400;
         }
 
         @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
+            0% {
+                transform: translateX(100%) scale(0.8);
                 opacity: 0;
             }
-            to {
-                transform: translateX(0);
+            100% {
+                transform: translateX(0) scale(1);
                 opacity: 1;
             }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(197, 160, 40, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(197, 160, 40, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 160, 40, 0);
+            }
+        }
+
+        .alert-custom.success {
+            background: linear-gradient(135deg, #fafafa 0%, #fcf9f0 100%);
+        }
+
+        .alert-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 8px;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--gold), var(--light-gold));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         /* ================= VOUCHER ================= */
@@ -910,7 +964,7 @@
                                                         <i class="bi bi-lightning-charge me-1"></i>Mua
                                                     </button>
                                                     <button type="submit" name="action" value="addCart"
-                                                            class="btn-action">
+                                                            class="btn-action" onclick="showAddToCartAlert(event, '${p.name}')">
                                                         <i class="bi bi-cart-plus"></i>
                                                     </button>
                                                 </form>
@@ -1060,18 +1114,64 @@
     function showAlert(message, type) {
         const alertDiv = document.createElement('div');
         alertDiv.className = 'alert-custom';
+        if (type === 'success') {
+            alertDiv.classList.add('success');
+        }
+
+        // Chọn icon phù hợp
+        let icon = 'bi-check-circle-fill';
+        if (type === 'warning') {
+            icon = 'bi-exclamation-triangle-fill';
+        } else if (type === 'success') {
+            icon = 'bi-check-circle-fill';
+        }
+
         alertDiv.innerHTML = `
             <div class="d-flex align-items-center">
-                <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 18px;"></i>
+                <i class="bi ` + icon + ` me-3" style="font-size: 24px;"></i>
                 <div>
-                    <strong>Thông báo</strong><br>
-                    <span style="font-size: 13px;">` + message + `</span>
+                    <strong>LUXCAR</strong><br>
+                    <span style="font-size: 14px;">` + message + `</span>
                 </div>
             </div>
+            <div style="position: absolute; bottom: 0; left: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--gold), var(--light-gold)); transform-origin: left; animation: progress 3s linear;"></div>
         `;
         document.getElementById('alertContainer').appendChild(alertDiv);
-        setTimeout(() => alertDiv.remove(), 3000);
+
+        // Thêm animation progress bar
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes progress {
+                0% { transform: scaleX(1); }
+                100% { transform: scaleX(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        setTimeout(() => {
+            alertDiv.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => alertDiv.remove(), 300);
+        }, 3000);
     }
+
+
+</script>
+<!-- Thêm phần này để kiểm tra URL parameter -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy parameters từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const cartSuccess = urlParams.get('cartSuccess');
+        const productName = urlParams.get('productName');
+
+        if (cartSuccess === 'true' && productName) {
+            showAlert('Đã thêm ' + decodeURIComponent(productName) + ' vào giỏ hàng thành công!', 'success');
+
+            // Xóa parameters khỏi URL (tùy chọn)
+            const newUrl = window.location.pathname + window.location.search.replace(/[?&]cartSuccess=true&productName=[^&]*/g, '');
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    });
 </script>
 </body>
 </html>

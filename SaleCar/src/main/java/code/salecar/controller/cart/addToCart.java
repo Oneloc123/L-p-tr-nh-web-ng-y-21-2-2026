@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @WebServlet("/cart-add")
@@ -65,7 +66,14 @@ public class addToCart extends HttpServlet {
             List<Address> lstAddress = AddrDAO.getListAddressById(userId);
             session.setAttribute("listAddress", lstAddress);
 
-            if ("buyNow".equals(action)) {
+            if ("addCart".equals(action)) {
+                // Lấy tên sản phẩm từ database
+                String productName = product.getName(); // Bạn cần implement hàm này
+
+                // Redirect với tham số thông báo
+                String encodedProductName = URLEncoder.encode(productName, "UTF-8");
+                response.sendRedirect("products?cartSuccess=true&productName=" + encodedProductName);
+            } else if ("buyNow".equals(action)) {
                 response.sendRedirect("checkout");
             } else {
                 String referer = request.getHeader("referer");

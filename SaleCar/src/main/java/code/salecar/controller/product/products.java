@@ -65,6 +65,8 @@ public class products extends HttpServlet {
         String[] brandParam = request.getParameterValues("brand");
         String[] modelParam = request.getParameterValues("model");
 
+
+
         ProductFilter filter = new ProductFilter();
 
         filter.setKeyword(request.getParameter("keyword"));
