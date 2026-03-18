@@ -7,6 +7,51 @@
 
     <!-- Style riêng cho trang đăng nhập -->
     <style>
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-social i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        /* Google */
+        .btn-google {
+            background-color: #db4437;
+            border-color: #db4437;
+        }
+
+        .btn-google:hover {
+            background-color: #ffffff;
+            color: #db4437;
+        }
+
+        /* Facebook */
+        .btn-facebook {
+            background-color: #1877f2;
+            border-color: #1877f2;
+        }
+
+        .btn-facebook:hover {
+            background-color: #ffffff;
+            color: #1877f2;
+        }
         body {
             background-color: #000000;
             min-height: 100vh;
@@ -176,6 +221,21 @@
         </div>
 
         <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
+        <!-- Divider -->
+        <div style="text-align:center; margin:20px 0; color:#666;">
+            -------- Hoặc đăng nhập với --------
+        </div>
+
+        <!-- Social Login -->
+        <div class="social-login">
+            <a href="/googleLogin" class="btn-social btn-google">
+                <i class="bi bi-google"></i> Đăng nhập với Google
+            </a>
+
+            <a href="/login-facebook" class="btn-social btn-facebook">
+                <i class="bi bi-facebook"></i> Đăng nhập với Facebook
+            </a>
+        </div>
     </form>
 
     <div class="register-link">
