@@ -1,7 +1,7 @@
 package code.salecar.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
 
 public class Discount {
     private int id;
@@ -39,6 +39,14 @@ public class Discount {
         CATEGORY,
         PRODUCT,
         BRAND
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
     }
 
     public int getId() {

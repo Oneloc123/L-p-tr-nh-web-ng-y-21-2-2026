@@ -12,7 +12,6 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -52,12 +51,12 @@ public class favorites extends HttpServlet {
         if (discountpr != null && !discountpr.isEmpty()) {
             highest = true;
         }
-        filter.setSortByHighest(highest);
+        filter.setSortByHighestDiscount(highest);
         boolean newest = false;
         if (newestpr != null && !newestpr.isEmpty()) {
             newest = true;
         }
-        filter.setSortByNewest(newest);
+        filter.setSortByNewestDiscount(newest);
 
         ProductService productService = new ProductService();
         List<Product> products = productService.sortProducFilter(favoritesProducts, filter);
