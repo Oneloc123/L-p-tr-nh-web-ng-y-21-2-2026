@@ -7,16 +7,16 @@ public class Product {
     private int id;
     private String name;
     private double price;
-    private int brandid;
-    private int categoryid;
+    private int brandId;
+    private int categoryId;
     private String description;
     private String ratio;
     private String size;
-    private String meterial;
-    private String orign;
+    private String material;
+    private String origin;
     private boolean status;
-    private Date createat;
-    private Date updateat;
+    private Date createdAt;
+    private Date updatedAt;
 
     private String brandName;
     private String brandLink;
@@ -35,20 +35,45 @@ public class Product {
     private int fiveStar = 0;
 
 
-    public Product(int id, String name, double price, int brandid, int categoryid, String description, String ratio, String size, String meterial, String orign, boolean status, Date createat, Date updateat) {
+    public Product(int id, String name, double price, double finalPrice, int brandId, int categoryId, String description, String ratio, String size, String material, String origin, boolean status, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.brandid = brandid;
-        this.categoryid = categoryid;
+        this.finalPrice = finalPrice;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
         this.description = description;
         this.ratio = ratio;
         this.size = size;
-        this.meterial = meterial;
-        this.orign = orign;
+        this.material = material;
+        this.origin = origin;
         this.status = status;
-        this.createat = createat;
-        this.updateat = updateat;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    //  Lấy  ra cho list, tối ưu query
+    public Product(int id, String name, double price, double finalPrice, int brandId, int categoryId, String ratio) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.finalPrice = finalPrice;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
+        this.ratio = ratio;
+    }
+
+    public Product(int id, String name, double price, double finalPrice, int brandId, int categoryId, boolean status, Date createdAt, Date updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.finalPrice = finalPrice;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.finalPrice = finalPrice;
     }
 
     public Product(int id) {
@@ -103,18 +128,9 @@ public class Product {
         this.avgRating = avgRating;
     }
 
-    //  Lấy  ra cho list, tối ưu query
-    public Product(int id, String name, double price, int brandid, int categoryid, String ratio) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.brandid = brandid;
-        this.categoryid = categoryid;
-        this.ratio = ratio;
-    }
 
     public int getTotalReviews() {
-        return reviews.size();
+        return reviews == null ? 0 : reviews.size();
     }
 
     public void setTotalReviews(int totalReviews) {
@@ -122,7 +138,7 @@ public class Product {
     }
 
     public int getRatePrice() {
-        return ratePrice ;
+        return ratePrice;
     }
 
     public String getBrandLink() {
@@ -193,20 +209,20 @@ public class Product {
         this.size = size;
     }
 
-    public String getMeterial() {
-        return meterial;
+    public String getMaterial() {
+        return material;
     }
 
-    public void setMeterial(String meterial) {
-        this.meterial = meterial;
+    public void setMaterial(String material) {
+        this.material = material;
     }
 
-    public String getOrign() {
-        return orign;
+    public String getOrigin() {
+        return origin;
     }
 
-    public void setOrign(String orign) {
-        this.orign = orign;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public int getId() {
@@ -233,20 +249,20 @@ public class Product {
         this.price = price;
     }
 
-    public int getBrandid() {
-        return brandid;
+    public int getBrandId() {
+        return brandId;
     }
 
-    public void setBrandid(int brandid) {
-        this.brandid = brandid;
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
     }
 
-    public int getCategoryid() {
-        return categoryid;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryid(int categoryid) {
-        this.categoryid = categoryid;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getDescription() {
@@ -265,19 +281,19 @@ public class Product {
         this.status = status;
     }
 
-    public Date getCreateat() {
-        return createat;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateat(Date createat) {
-        this.createat = createat;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getUpdateat() {
-        return updateat;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateat(Date updateat) {
-        this.updateat = updateat;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

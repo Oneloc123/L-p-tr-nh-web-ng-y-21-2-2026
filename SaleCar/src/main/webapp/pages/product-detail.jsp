@@ -445,23 +445,23 @@
         <div class="col-lg-6">
 
             <div class="main-image mb-3">
-                <img src="car-main.jpg" alt="">
+                <img src="" alt="">
             </div>
 
             <div class="row g-3">
                 <div class="col-4">
                     <div class="sub-image">
-                        <img src="car1.jpg" alt="">
+                        <img src="" alt="">
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="sub-image">
-                        <img src="car2.jpg" alt="">
+                        <img src="" alt="">
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="sub-image">
-                        <img src="car3.jpg" alt="">
+                        <img src="" alt="">
                     </div>
                 </div>
             </div>

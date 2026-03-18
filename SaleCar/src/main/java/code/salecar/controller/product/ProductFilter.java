@@ -7,20 +7,63 @@ public class ProductFilter {
     private String keyword;
     private List<String> categories;
     private List<String> brands;
+    private List<String> modelScale;
     private double maxPrice;
+    private double minPrice;
 
-    private boolean sortByHighest;
-    private boolean sortByNewest;
 
+    private boolean sortByPriceAsc;
+    private boolean sortByPriceDesc;
+
+    private boolean sortByHighestDiscount;
+    private boolean sortByNewestDiscount;
 
 
     public ProductFilter() {
         this.keyword = "";
         this.categories = new ArrayList<String>();
         this.brands = new ArrayList<String>();
-        this.maxPrice = -1;
-        this.sortByHighest = false;
-        this.sortByNewest = false;
+        this.modelScale = new ArrayList<String>();
+        this.maxPrice = 0;
+        this.minPrice = 0;
+        this.sortByPriceAsc = false;
+        this.sortByPriceDesc = false;
+        this.sortByHighestDiscount = false;
+        this.sortByNewestDiscount = false;
+    }
+
+
+
+    public List<String> getModelScale() {
+        return modelScale;
+    }
+
+    public void setModelScale(List<String> modelScale) {
+        this.modelScale = modelScale;
+    }
+
+    public double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(double minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public boolean isSortByPriceAsc() {
+        return sortByPriceAsc;
+    }
+
+    public void setSortByPriceAsc(boolean sortByPriceAsc) {
+        this.sortByPriceAsc = sortByPriceAsc;
+    }
+
+    public boolean isSortByPriceDesc() {
+        return sortByPriceDesc;
+    }
+
+    public void setSortByPriceDesc(boolean sortByPriceDesc) {
+        this.sortByPriceDesc = sortByPriceDesc;
     }
 
     public String getKeyword() {
@@ -47,20 +90,20 @@ public class ProductFilter {
         this.brands = brands;
     }
 
-    public boolean isSortByHighest() {
-        return sortByHighest;
+    public boolean isSortByHighestDiscount() {
+        return sortByHighestDiscount;
     }
 
-    public void setSortByHighest(boolean sortByHighest) {
-        this.sortByHighest = sortByHighest;
+    public void setSortByHighestDiscount(boolean sortByHighestDiscount) {
+        this.sortByHighestDiscount = sortByHighestDiscount;
     }
 
-    public boolean isSortByNewest() {
-        return sortByNewest;
+    public boolean isSortByNewestDiscount() {
+        return sortByNewestDiscount;
     }
 
-    public void setSortByNewest(boolean sortByNewest) {
-        this.sortByNewest = sortByNewest;
+    public void setSortByNewestDiscount(boolean sortByNewestDiscount) {
+        this.sortByNewestDiscount = sortByNewestDiscount;
     }
 
     public double getMaxPrice() {
