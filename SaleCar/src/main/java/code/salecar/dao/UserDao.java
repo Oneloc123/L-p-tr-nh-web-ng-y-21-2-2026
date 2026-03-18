@@ -16,10 +16,10 @@ public class UserDao {
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
-            ps.setString(1,username);
+            ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                user.setId(rs.getInt(1)) ;
+            if (rs.next()) {
+                user.setId(rs.getInt(1));
                 user.setUsername(rs.getString(2));
                 user.setPassword(rs.getString(3));
                 user.setFullname(rs.getString(4));
@@ -33,7 +33,7 @@ public class UserDao {
                 user.setUpdatedat(rs.getDate(12));
                 user.setImgURL(rs.getString(13));
                 return user;
-            }else{
+            } else {
                 return null;
             }
 
@@ -54,17 +54,17 @@ public class UserDao {
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
-             ps.setString(1,user.getUsername());
-             ps.setString(2,user.getPassword());
-             ps.setString(3, user.getFullname());
-             ps.setString(4,user.getEmail());
-             ps.setString(5, user.getDescription());
-             ps.setString(6, user.getPhonenumber());
-             ps.setString(7, user.getRole());
-             ps.setString(8, user.getAddressid());
-             ps.setBoolean(9,user.getStatus());
-             ps.setDate(10,user.getCreatedat());
-             ps.setDate(11,user.getUpdatedat());
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullname());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getDescription());
+            ps.setString(6, user.getPhonenumber());
+            ps.setString(7, user.getRole());
+            ps.setString(8, user.getAddressid());
+            ps.setBoolean(9, user.getStatus());
+            ps.setDate(10, user.getCreatedat());
+            ps.setDate(11, user.getUpdatedat());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -92,14 +92,14 @@ public class UserDao {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
             ps.setString(1, user.getFullname());
-            ps.setString(2,user.getEmail());
+            ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhonenumber());
             ps.setString(4, user.getDescription());
-            ps.setDate(5,user.getUpdatedat());
-            ps.setBoolean(6,user.getStatus());
+            ps.setDate(5, user.getUpdatedat());
+            ps.setBoolean(6, user.getStatus());
             ps.setString(7, user.getPassword());
-            ps.setString(8,user.getImgURL());
-            ps.setInt(9,user.getId());
+            ps.setString(8, user.getImgURL());
+            ps.setInt(9, user.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -113,9 +113,9 @@ public class UserDao {
         String sql = "select fullname from users where id = ?";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
-            ps.setInt(1,userId);
+            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getString(1);
             }
 
@@ -134,10 +134,10 @@ public class UserDao {
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                user.setId(rs.getInt(1)) ;
+            if (rs.next()) {
+                user.setId(rs.getInt(1));
                 user.setUsername(rs.getString(2));
                 user.setPassword(rs.getString(3));
                 user.setFullname(rs.getString(4));
@@ -151,11 +151,44 @@ public class UserDao {
                 user.setUpdatedat(rs.getDate(12));
                 user.setImgURL(rs.getString(13));
                 return user;
-            }else{
+            } else {
                 return null;
             }
 
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getUserByEmail(String email) {
+        User user = new User();
+        String sql = "select * from users where email = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                user.setId(rs.getInt(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setFullname(rs.getString(4));
+                user.setEmail(rs.getString(5));
+                user.setDescription(rs.getString(6));
+                user.setPhonenumber(rs.getString(7));
+                user.setRole(rs.getString(8));
+                user.setAddressid(rs.getString(9));
+                user.setStatus(rs.getBoolean(10));
+                user.setCreatedat(rs.getDate(11));
+                user.setUpdatedat(rs.getDate(12));
+                user.setImgURL(rs.getString(13));
+                return user;
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {

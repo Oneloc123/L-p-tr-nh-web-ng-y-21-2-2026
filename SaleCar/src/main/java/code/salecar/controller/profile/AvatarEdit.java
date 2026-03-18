@@ -13,7 +13,6 @@ import jakarta.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 
-import java.io.IOException;
 
 @WebServlet(name = "AvatarEdit", value = "/avatarEdit")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 2 * 1024 * 1024,

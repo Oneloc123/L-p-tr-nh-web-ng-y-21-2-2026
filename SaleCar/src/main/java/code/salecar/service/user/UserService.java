@@ -25,4 +25,8 @@ public class UserService {
     public User getUserById(int id) {
         return  ud.getUserById(id);
     }
+
+    public User getUserByEmail(String email) {
+        return ud.getUserByEmail(email);
+    }
 }
