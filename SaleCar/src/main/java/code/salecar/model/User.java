@@ -15,6 +15,7 @@ public class User {
     private boolean status;
     private Date createdat;
     private Date updatedat;
+    private String imgURL;
 
     public User(){
 
@@ -128,5 +129,17 @@ public class User {
 
     public void setUpdatedat(Date updatedat) {
         this.updatedat = updatedat;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 }

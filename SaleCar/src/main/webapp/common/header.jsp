@@ -298,13 +298,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--dark-gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--black);
-            font-weight: 700;
-            font-size: 18px;
+            overflow: hidden; /* cắt ảnh gọn trong khung */
             border: 2px solid var(--gold);
             cursor: pointer;
             transition: 0.3s;
@@ -313,6 +307,12 @@
         .user-avatar:hover {
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* không méo ảnh */
         }
 
         /* MOBILE RESPONSIVE */
@@ -466,6 +466,11 @@
                             <!-- Logged In User -->
                             <div class="auth-dropdown">
                                 <div class="user-avatar">
+                                    <img src="${empty user.imgURL
+                                        ? pageContext.request.contextPath.concat('/assets/img/default-avatar.png')
+                                        : pageContext.request.contextPath.concat('/').concat(user.imgURL)}"
+                                         class="profile-img"
+                                         alt="Avatar">
                                 </div>
                                 <div class="auth-dropdown-content">
                                     <a href="${pageContext.request.contextPath}/profile" class="auth-dropdown-item">
