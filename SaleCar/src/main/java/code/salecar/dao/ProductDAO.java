@@ -247,10 +247,12 @@ public class ProductDAO {
                         rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("ratio")
                 );
+
 
                 products.add(p);
             }
