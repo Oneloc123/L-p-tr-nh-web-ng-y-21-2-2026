@@ -9,7 +9,6 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "product-detail", value = "/product-detail")
@@ -17,14 +16,14 @@ public class product_detail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String idpr = request.getParameter("id");
+        String idParam = request.getParameter("id");
 
-        if(idpr==null){
-            response.sendRedirect("/home");
+        if(idParam==null){
+            response.sendRedirect("/products");
             return;
         }
 
-        int id = Integer.parseInt(idpr);
+        int id = Integer.parseInt(idParam);
 
         ProductService ps  = new ProductService();
         Product product = ps.getProductByID(id);
@@ -34,7 +33,7 @@ public class product_detail extends HttpServlet {
             return;
         }
 
-        List<Product> list1 = ps.getRelatedProductMaterial(product.getMeterial());
+        List<Product> list1 = ps.getRelatedProductMaterial(product.getMaterial());
         request.setAttribute("related", list1);
 
         // Voucher
