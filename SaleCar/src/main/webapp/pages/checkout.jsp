@@ -10,7 +10,7 @@
     <title>Thanh toán - LUXCAR</title>
 
     <%-- Include header --%>
-    <%@ include file="/common/header-for-login-ex.jsp" %>
+    <%@ include file="/common/header.jsp" %>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -89,19 +89,14 @@
 <body>
 <div class="profile-wrapper">
     <div class="sidebar-menu">
-        <div class="sidebar-header">
-            <h3>LUXCAR</h3>
-            <p>Mô hình xe cao cấp</p>
-        </div>
-
         <!-- menu ben trai -->
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i>
                 <span>Bảng điều khiển</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item ">
                 <i class="fas fa-user-circle"></i>
                 <span>Thông tin cá nhân</span>
             </a>
@@ -121,28 +116,28 @@
                 <span>Đơn hàng của tôi</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item active">
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
 
             <div class="menu-divider"></div>
 
-            <a href="${pageContext.request.contextPath}/user/address-list.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Sổ địa chỉ</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
                 <i class="fas fa-bell"></i>
                 <span>Thông báo</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/user/settings.jsp" class="menu-item">
+            <a href="${pageContext.request.contextPath}/settings" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span>Cài đặt</span>
             </a>
