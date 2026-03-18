@@ -96,21 +96,62 @@
 
         <!-- menu ben trai -->
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
+            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Bảng điều khiển</span>
             </a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                <i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span>
+
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
+                <i class="fas fa-user-circle"></i>
+                <span>Thông tin cá nhân</span>
             </a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item active">
+
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Chỉnh sửa thông tin</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
+                <i class="fas fa-lock"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Đơn hàng của tôi</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                <i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span>
+
+            <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">
+                <i class="fas fa-heart"></i>
+                <span>Sản phẩm yêu thích</span>
             </a>
+
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span>
+
+            <a href="${pageContext.request.contextPath}/user/address-list.jsp" class="menu-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Sổ địa chỉ</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/settings.jsp" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
             </a>
         </div>
     </div>
@@ -146,11 +187,44 @@
                             <input type="text" id="phone" name="phone" class="form-control" value="" placeholder="Nhập số điện thoại..." required>
                         </div>
 
+
+                        <!--Dia chi nhan hang -->
                         <div class="form-group">
-                            <label for="shippingAddress">Địa chỉ nhận hàng (Shipping Address)</label>
-                            <textarea id="shippingAddress" name="shippingAddress" class="form-control" rows="3" placeholder="Nhập địa chỉ chi tiết..." required></textarea>
+                            <label>Địa chỉ nhận hàng (Shipping Address) <span class="text-danger">*</span></label>
+
+                            <c:choose>
+                                <%-- TRƯỜNG HỢP 1: KHÁCH CHƯA CÓ ĐỊA CHỈ NÀO --%>
+                                <c:when test="${empty listAddress}">
+                                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; border: 1px solid #ffeeba; font-size: 14px; margin-bottom: 10px;">
+                                        <i class="fas fa-exclamation-triangle"></i> Bạn chưa thiết lập địa chỉ giao hàng.
+                                    </div>
+                                    <a href="${pageContext.request.contextPath}/profileEdit" class="btn btn-outline-danger w-100" style="padding: 10px;">
+                                        <i class="fas fa-plus"></i> Sang trang cá nhân Thêm địa chỉ ngay
+                                    </a>
+
+                                    <input type="hidden" name="shippingAddress" value="">
+                                </c:when>
+
+                                <%-- TRƯỜNG HỢP 2: KHÁCH ĐÃ CÓ ĐỊA CHỈ --%>
+                                <c:otherwise>
+                                    <select name="shippingAddress" class="form-control" required style="padding: 12px; cursor: pointer;">
+                                        <c:forEach var="addr" items="${listAddress}">
+                                            <option value="${addr.street}, ${addr.commune}, ${addr.province}">
+                                                ${addr.name}: ${addr.street}, ${addr.commune}, ${addr.province} ${addr.type == 'main' ? '(Mặc định)' : ''}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                    <div style="margin-top: 8px; font-size: 13px; text-align: right;">
+                                        <a href="${pageContext.request.contextPath}/profileEdit" style="color: #000; text-decoration: underline;">
+                                            <i class="fas fa-cog"></i> Quản lý địa chỉ
+                                        </a>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
+
+
 
                     <div class="checkout-card">
                         <h3><i class="fas fa-wallet"></i> Phương thức thanh toán (Payment Method)</h3>
@@ -222,9 +296,23 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-submit-order">
-                            <i class="fas fa-check-circle"></i> Đặt Hàng
-                        </button>
+
+                        <!-- Dat hang -->
+                        <c:choose>
+                            <%-- Nếu danh sách địa chỉ rỗng -> Hiển thị nút ảo bị mờ (Disabled) --%>
+                            <c:when test="${empty listAddress}">
+                                <button type="button" class="btn-submit-order" style="background-color: #6c757d; cursor: not-allowed;" disabled>
+                                    <i class="fas fa-lock"></i> Vui lòng thêm địa chỉ để Đặt hàng
+                                </button>
+                            </c:when>
+
+                            <%-- Nếu có địa chỉ -> Hiển thị nút Đặt hàng bình thường --%>
+                            <c:otherwise>
+                                <button type="submit" class="btn-submit-order">
+                                    <i class="fas fa-check-circle"></i> Đặt Hàng
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
 

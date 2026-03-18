@@ -76,21 +76,62 @@
             <p>Mô hình xe cao cấp</p>
         </div>
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
+            <a href="${pageContext.request.contextPath}/user/dashboard.jsp" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Bảng điều khiển</span>
             </a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                <i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span>
+
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
+                <i class="fas fa-user-circle"></i>
+                <span>Thông tin cá nhân</span>
             </a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item active">
+
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Chỉnh sửa thông tin</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
+                <i class="fas fa-lock"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/order" class="menu-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Đơn hàng của tôi</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                <i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span>
+
+            <a href="${pageContext.request.contextPath}/user/wishlist.jsp" class="menu-item">
+                <i class="fas fa-heart"></i>
+                <span>Sản phẩm yêu thích</span>
             </a>
+
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span>
+
+            <a href="${pageContext.request.contextPath}/user/address-list.jsp" class="menu-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Sổ địa chỉ</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/user/settings.jsp" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+
+            <div class="menu-divider"></div>
+
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
             </a>
         </div>
     </div>
@@ -202,4 +243,5 @@
     </div>
 </div>
 </body>
+
 </html>
