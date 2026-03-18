@@ -76,10 +76,7 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 4px solid #ffffff;
-            background-color: #f0f0f0;
             object-fit: cover;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .default-avatar {
@@ -377,12 +374,19 @@
             <div class="profile-header">
                 <div class="avatar-section">
                     <div class="avatar-wrapper">
-                        <div class="default-avatar">
-                            <span>ND</span>
-                        </div>
+
+                        <c:choose>
+                            <c:when test="${not empty user.imgURL}">
+                                <img src="${pageContext.request.contextPath}/${user.imgURL}" class="profile-avatar" alt="Avatar">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" class="profile-avatar" alt="Avatar">
+                            </c:otherwise>
+                        </c:choose>
                         <a href="${pageContext.request.contextPath}/avatarEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
+
                     </div>
 
                     <div class="profile-title">

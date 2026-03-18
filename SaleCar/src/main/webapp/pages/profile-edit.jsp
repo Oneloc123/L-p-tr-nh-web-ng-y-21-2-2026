@@ -388,11 +388,18 @@
                 <!-- Avatar Upload Section -->
                 <div class="avatar-upload-section">
                     <div class="current-avatar">
-                        <span>ND</span>
+                        <c:choose>
+                            <c:when test="${not empty user.imgURL}">
+                                <img src="${pageContext.request.contextPath}/${user.imgURL}" alt="Avatar">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
                     <div class="upload-btn-wrapper">
-                        <a href="${pageContext.request.contextPath}/avatar-edit" class="btn-upload">
+                        <a href="${pageContext.request.contextPath}/avatarEdit" class="btn-upload">
                             <i class="fas fa-camera"></i> Thay đổi ảnh đại diện
                         </a>
                     </div>

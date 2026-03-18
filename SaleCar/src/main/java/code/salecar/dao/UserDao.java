@@ -31,6 +31,7 @@ public class UserDao {
                 user.setStatus(rs.getBoolean(10));
                 user.setCreatedat(rs.getDate(11));
                 user.setUpdatedat(rs.getDate(12));
+                user.setImgURL(rs.getString(13));
                 return user;
             }else{
                 return null;
@@ -85,6 +86,7 @@ public class UserDao {
                 ", UpdateAt = ?  " +
                 ", status =?" +
                 ", password = ?" +
+                ", imgURL = ?" +
                 " WHERE id = ?;";
 
         try (Connection con = DBConnection.getConnection();
@@ -96,7 +98,8 @@ public class UserDao {
             ps.setDate(5,user.getUpdatedat());
             ps.setBoolean(6,user.getStatus());
             ps.setString(7, user.getPassword());
-            ps.setInt(8,user.getId());
+            ps.setString(8,user.getImgURL());
+            ps.setInt(9,user.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -146,6 +149,7 @@ public class UserDao {
                 user.setStatus(rs.getBoolean(10));
                 user.setCreatedat(rs.getDate(11));
                 user.setUpdatedat(rs.getDate(12));
+                user.setImgURL(rs.getString(13));
                 return user;
             }else{
                 return null;

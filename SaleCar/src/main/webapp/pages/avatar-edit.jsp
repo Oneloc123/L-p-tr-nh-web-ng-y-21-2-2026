@@ -83,6 +83,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 50%;
         }
 
         .upload-area {
@@ -258,18 +259,28 @@
         <div class="avatar-body">
             <!-- Current Avatar -->
             <div class="current-avatar-large">
-                <span>ND</span>
+                <img id="avatarPreview"
+                     src="${empty user.imgURL
+                        ? pageContext.request.contextPath.concat('/assets/img/default-avatar.png')
+                        : pageContext.request.contextPath.concat('/').concat(user.imgURL)}"
+                     alt="Avatar">
             </div>
 
             <!-- Upload Area -->
-            <form action="/avatarEdit" method="post" >
-                <label for="file-upload" class="upload-area">
+            <form action="${pageContext.request.contextPath}/avatarEdit"
+                  method="post"
+                  enctype="multipart/form-data">
+                <label for="imageUpload" class="upload-area">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <h4>Chọn ảnh để tải lên</h4>
                     <p>Kéo thả hoặc click để chọn ảnh</p>
                     <p style="font-size: 12px; margin-top: 10px;">Hỗ trợ: JPG, PNG, GIF (Tối đa 5MB)</p>
                 </label>
-                <input type="file" id="file-upload" name="avatar" accept="image/*" style="display: none;">
+                <input type="file"
+                       class="form-control"
+                       id="imageUpload"
+                       accept="image/*"
+                       name="avatar">
 
                 <!-- File Info (show when file selected) -->
                 <div class="file-info" id="fileInfo" style="display: none;">
@@ -289,12 +300,12 @@
 
                 <!-- Action Buttons -->
                 <div class="avatar-actions">
-                    <button type="submit" class="btn-save" id="saveBtn" disabled>
+                    <button type="submit" class="btn-save" id="saveBtn" >
                         <i class="fas fa-save"></i> Lưu ảnh
                     </button>
-                    <button type="button" class="btn-remove" onclick="removeAvatar()">
-                        <i class="fas fa-trash-alt"></i> Xóa ảnh
-                    </button>
+                    <a type="button" class="btn-remove" href="/profileEdit">
+                        <i class="fas fa-trash-alt"></i> huỷ
+                    </a>
                 </div>
             </form>
 
@@ -309,72 +320,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // Handle file selection
-    document.getElementById('file-upload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        const fileInfo = document.getElementById('fileInfo');
-        const saveBtn = document.getElementById('saveBtn');
 
-        if (file) {
-            // Check file size (5MB max)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('File quá lớn. Vui lòng chọn file dưới 5MB.');
-                this.value = '';
-                fileInfo.style.display = 'none';
-                saveBtn.disabled = true;
-                return;
-            }
-
-            // Check file type
-            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (!validTypes.includes(file.type)) {
-                alert('Loại file không hỗ trợ. Vui lòng chọn JPG, PNG hoặc GIF.');
-                this.value = '';
-                fileInfo.style.display = 'none';
-                saveBtn.disabled = true;
-                return;
-            }
-
-            // Display file info
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
-            document.getElementById('fileType').textContent = file.type;
-            fileInfo.style.display = 'block';
-            saveBtn.disabled = false;
-
-            // Preview image
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const avatarDiv = document.querySelector('.current-avatar-large');
-                avatarDiv.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-            }
-            reader.readAsDataURL(file);
-        } else {
-            fileInfo.style.display = 'none';
-            saveBtn.disabled = true;
-        }
-    });
-
-    // Remove avatar function
-    function removeAvatar() {
-        if (confirm('Bạn có chắc chắn muốn xóa ảnh đại diện?')) {
-            // Reset to default avatar
-            const avatarDiv = document.querySelector('.current-avatar-large');
-            avatarDiv.innerHTML = '<span>ND</span>';
-
-            // Clear file input
-            document.getElementById('file-upload').value = '';
-            document.getElementById('fileInfo').style.display = 'none';
-            document.getElementById('saveBtn').disabled = true;
-
-            alert('Đã xóa ảnh đại diện');
-        }
-    }
-
-    // Click on upload area to trigger file input
-    document.querySelector('.upload-area').addEventListener('click', function() {
-        document.getElementById('file-upload').click();
-    });
 </script>
 </body>
 </html>
