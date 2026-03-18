@@ -18,18 +18,25 @@ public class product_detail extends HttpServlet {
 
         String idParam = request.getParameter("id");
 
-        if(idParam==null){
-            response.sendRedirect("/products");
+        if (idParam == null) {
+            response.sendRedirect(request.getContextPath() + "/products");
             return;
         }
+        System.out.println("Product ID param: " + idParam);
 
-        int id = Integer.parseInt(idParam);
+        int id;
 
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/products");
+            return;
+        }
         ProductService ps  = new ProductService();
         Product product = ps.getProductByID(id);
-
+        System.out.println("Product: " + product);
         if(product==null){
-            response.sendRedirect("/home");
+            response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 

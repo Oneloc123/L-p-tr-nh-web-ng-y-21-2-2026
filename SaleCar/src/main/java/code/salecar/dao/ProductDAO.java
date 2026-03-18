@@ -325,7 +325,6 @@ public class ProductDAO {
             ps.setInt(5, id);
 
             ps.executeUpdate();
-            System.out.println(ps.executeUpdate());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
