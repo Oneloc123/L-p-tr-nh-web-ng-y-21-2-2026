@@ -22,6 +22,7 @@ public class Product {
     private String brandLink;
     private String categoryName;
     private double finalPrice;
+    private double discountPercent;
     private Discount discount;
     private int ratePrice;
 
@@ -53,11 +54,12 @@ public class Product {
     }
 
     //  Lấy  ra cho list, tối ưu query
-    public Product(int id, String name, double price, double finalPrice, int brandId, int categoryId, String ratio) {
+    public Product(int id, String name, double price, double finalPrice,double discountPercent , int brandId, int categoryId, String ratio) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.finalPrice = finalPrice;
+        this.discountPercent = discountPercent;
         this.brandId = brandId;
         this.categoryId = categoryId;
         this.ratio = ratio;
@@ -74,6 +76,14 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.finalPrice = finalPrice;
+    }
+
+    public double getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(double discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
     public Product(int id) {

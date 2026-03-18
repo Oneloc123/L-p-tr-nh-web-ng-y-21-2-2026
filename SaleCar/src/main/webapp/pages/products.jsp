@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -18,520 +19,1059 @@
 
     <title>Sản phẩm - LUXCAR</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Font luxury đề xuất -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap"
+    <%--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">--%>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Font luxury -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"
           rel="stylesheet">
+
+    <!-- noUiSlider for price range -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
 
     <style>
         /* ================= GLOBAL ================= */
+        :root {
+            --black: #1a1a1a;
+            --gold: #C5A028;
+            --white: #FFFFFF;
+            --light-gold: #e9d6b0;
+            --dark-gold: #9e7e2c;
+            --gray-light: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --text-primary: #2c2c2c;
+            --text-secondary: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         html, body {
             height: 100%;
-            /*overflow: hidden;!* khóa scroll toàn trang *!*/
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--gray-light);
+            color: var(--text-primary);
         }
 
-        h1, h2, h3, h4 {
+        h1, h2, h3, h4, h5 {
             font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        /* Full height layout */
         .container-fluid {
+            /*min-height: 100vh;*/
             height: 100vh;
+            overflow: hidden;
         }
 
         .row {
             height: 100%;
-            align-items: flex-start;
+            margin: 0;
         }
-
 
         /* ================= SIDEBAR ================= */
-
         .sidebar {
             background: #fff;
-            padding: 30px;
-            border-right: 1px solid #eee;
-
-            height: 100%; /* full column height */
-            overflow-y: auto; /* enable scroll */
+            padding: 30px 25px;
+            border-right: 1px solid var(--gray-border);
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.03);
         }
 
-        /* Scrollbar style */
-        .sidebar::-webkit-scrollbar,
-        .product-wrapper::-webkit-scrollbar {
-            width: 6px;
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb,
-        .product-wrapper::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
 
-        /* Sticky apply button inside sidebar */
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
+        }
+
         .sidebar-footer {
             position: sticky;
             bottom: 0;
             background: #fff;
-            padding-top: 15px;
+            padding: 20px 0 10px;
             margin-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--gray-border);
+            z-index: 10;
         }
 
+        /* ================= FILTER STYLE ================= */
+        .filter-section {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray-border);
+            padding-bottom: 15px;
+        }
 
-        /* ================= PRODUCT LIST ================= */
+        .filter-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-title:hover {
+            color: var(--gold);
+        }
+
+        .filter-title i {
+            transition: transform 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .filter-title[aria-expanded="true"] i {
+            transform: rotate(180deg);
+        }
+
+        .filter-scroll {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-top: 5px;
+        }
+
+        .filter-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .filter-scroll::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 3px;
+        }
+
+        /* Custom checkbox and radio */
+        .form-check {
+            margin-bottom: 8px;
+            padding-left: 24px;
+        }
+
+        .form-check-input {
+            width: 16px;
+            height: 16px;
+            margin-left: -24px;
+            border: 1.5px solid #d0d0d0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .form-check-input:focus {
+            box-shadow: none;
+            border-color: var(--gold);
+        }
+
+        .form-check-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .form-check-label:hover {
+            color: var(--gold);
+        }
+
+        /* Price Range Slider */
+        .price-range-container {
+            padding: 5px 5px 15px;
+        }
+
+        #price-range {
+            margin: 15px 0 20px;
+            height: 4px;
+        }
+
+        .noUi-connect {
+            background: var(--gold);
+        }
+
+        .noUi-handle {
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 18px !important;
+            height: 18px !important;
+            right: -9px !important;
+            top: -7px !important;
+        }
+
+        .noUi-handle:before,
+        .noUi-handle:after {
+            display: none;
+        }
+
+        .noUi-handle:hover {
+            transform: scale(1.1);
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid var(--gray-border);
+            border-radius: 4px;
+            font-size: 13px;
+            transition: 0.2s;
+            background: #fafafa;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .price-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* ================= SORT BAR ================= */
+        .sort-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sort-btn {
+            padding: 6px 16px;
+            border: 1px solid var(--gray-border);
+            background: #fff;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .sort-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .sort-btn.active {
+            background: var(--black);
+            border-color: var(--black);
+            color: #fff;
+        }
+
+        .result-count {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .result-count span {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* ================= PRODUCT WRAPPER ================= */
 
         .product-wrapper {
             height: 100%;
             overflow-y: auto;
-            padding: 3rem;
-        }
-
-
-        /* ================= FILTER STYLE ================= */
-
-        .filter-title {
-            font-weight: 600;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-            transition: 0.3s;
-        }
-
-        .filter-title:hover {
-            color: #000;
-        }
-
-        /* Collapse icon */
-        .toggle-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .filter-title[aria-expanded="true"] .toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        /* Limit filter height */
-        .filter-scroll {
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
-
-        /* ================= PRODUCT CARD ================= */
-
-        .product-card {
-            border: none;
-            transition: 0.3s;
-            height: 100%;
+            /*padding: 2rem 2rem 1rem;*/
+            padding: 2rem;
             display: flex;
             flex-direction: column;
         }
 
+        .product-wrapper > .row {
+            flex: 1 0 auto;
+        }
+
+        .product-wrapper > .pagination-container {
+            flex-shrink: 0;
+        }
+
+        .product-wrapper::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .product-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .product-wrapper::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
+        }
+
+        /* ================= PRODUCT CARD ================= */
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
         .product-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
         }
 
         .product-image-wrapper {
-            height: 250px;
+            height: 240px;
             overflow: hidden;
+            position: relative;
         }
 
         .product-image-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .product-card:hover .product-image-wrapper img {
+            transform: scale(1.03);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--gold);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 2;
+            letter-spacing: 0.3px;
+        }
+
+        .product-badge.discount {
+            background: #d32f2f;
         }
 
         .card-body {
+            padding: 16px 15px 15px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
-        .product-price {
-            font-weight: 500;
+        .product-category {
+            font-size: 11px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 15px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-model {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .product-model i {
+            color: var(--gold);
+            margin-right: 3px;
+            font-size: 11px;
+        }
+
+        .product-price-section {
+            margin: 8px 0;
         }
 
         .product-price-old {
+            font-size: 12px;
             text-decoration: line-through;
-            font-weight: 400;
-            color: #888;
-
+            color: #999;
+            display: block;
         }
 
+        .product-price-current {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--black);
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1.2;
+        }
 
-        /* ================= BUTTON STYLE ================= */
+        .product-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 12px;
+        }
 
         .btn-buy {
-            background: #000;
+            flex: 2;
+            background: var(--black);
             color: #fff;
+            border: none;
+            padding: 8px 0;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.2s;
         }
 
         .btn-buy:hover {
-            background: #333;
+            background: var(--gold);
+        }
+
+        .btn-action {
+            flex: 1;
+            background: #f8f8f8;
+            color: var(--text-secondary);
+            border: none;
+            padding: 8px 0;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--gold);
             color: #fff;
         }
 
-        .star-btn {
-            border: 1px solid #000;
+        /* ================= EMPTY STATE ================= */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #fff;
+            border-radius: 12px;
         }
 
-        .star-btn:hover {
-            background: #000;
+        .empty-state i {
+            font-size: 60px;
+            color: var(--gold);
+            opacity: 0.3;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h4 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .btn-reset {
+            background: var(--gold);
             color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: 0.2s;
         }
 
+        .btn-reset:hover {
+            background: var(--dark-gold);
+        }
+
+        /* ================= PRODUCT WRAPPER ================= */
+        .product-wrapper {
+            height: 100%;
+            overflow-y: auto;
+            padding: 2rem 2rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Phần content chính (sort bar + products) */
+        .product-content {
+            flex: 1 0 auto;
+        }
+
+        /* Product grid */
+        .product-grid {
+            margin-bottom: 30px;
+        }
 
         /* ================= PAGINATION ================= */
+        .pagination-container {
+            /*flex-shrink: 0;*/
+            /*margin-top: 20px;*/
+            margin-top: auto;
+            padding: 30px 0;
+            padding: 30px 0 40px;
+            width: 100%;
+            border-top: 2px solid var(--gray-border);
+            background: transparent;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .pagination .page-item {
+            margin: 0;
+        }
 
         .pagination .page-link {
-            color: #000;
-            border: 1px solid #ddd;
-            transition: 0.3s;
+            color: var(--text-secondary);
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            transition: all 0.25s ease;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 0;
+            text-decoration: none;
+            background: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
         }
 
         .pagination .page-link:hover {
-            background: #000;
+            background: var(--gold);
             color: #fff;
-            border-color: #000;
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(197, 160, 40, 0.2);
         }
 
         .pagination .page-item.active .page-link {
-            background: #000;
-            border-color: #000;
+            background: var(--gold);
+            border-color: var(--gold);
             color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(197, 160, 40, 0.25);
         }
 
         .pagination .page-item.disabled .page-link {
-            color: #aaa;
+            background: #f8f8f8;
+            color: #ccc;
+            border-color: #eee;
+            pointer-events: none;
+            box-shadow: none;
+            transform: none;
         }
 
+        /* ================= ALERT ================= */
+        .alert-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--black);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ================= VOUCHER ================= */
         .voucher-box {
-            background: #fff;
+            background: linear-gradient(135deg, #fff 0%, #fcf9f0 100%);
             padding: 20px;
-            border: 1px solid #eee;
+            border: 1px dashed var(--gold);
+            border-radius: 8px;
             margin-top: 20px;
+        }
+
+        .voucher-item {
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--gold);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        }
+
+        .voucher-code {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .voucher-discount {
+            color: var(--gold);
+            font-weight: 500;
+            font-size: 12px;
         }
     </style>
 </head>
 
 <body>
 
+<!-- Alert Container -->
+<div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
 <div class="container-fluid">
     <div class="row align-items-start">
 
         <!-- ================= SIDEBAR FILTER ================= -->
-        <div class="col-lg-3 col-md-4 sidebar">
-            <form action="products" method="get">
-
-                <!-- Tìm kiếm -->
-                <div>
-                    <input name="keyword" value="${find}" type="text" class="form-control"
-                           placeholder="Tìm kiếm sản phẩm...">
-                </div>
-
-                <%--            Giảm giá--%>
-                <div>
-                    <div class="filter-title">Giảm giá</div>
-                    <div class="form-check">
-                        <input name="discount" value="newest" class="form-check-input" type="checkbox">
-                        <label class="form-check-label">Giảm giá mới nhất <img
-                                src="https://nettruyen.work/assets/images/icon-hot.gif"> </label>
-                    </div>
-                    <div class="form-check">
-                        <input name="discount" value="highest" class="form-check-input" type="checkbox">
-                        <label class="form-check-label">Giảm giá nhiều nhất <img
-                                src="https://nettruyen.work/assets/images/icon-hot.gif"></label>
-                    </div>
-                </div>
-
-                <!-- Phân loại -->
-                <div>
-                    <div class="filter-title d-flex justify-content-between align-items-center"
-                         data-bs-toggle="collapse"
-                         data-bs-target="#categoryCollapse"
-                         style="cursor:pointer;">
-                        <span>Theo Loại (${totalCategory})</span>
-                        <i class="toggle-icon bi bi-chevron-down"></i>
+        <div class="col-lg-3 col-md-4 sidebar p-0">
+            <form id="filterForm" action="products" method="get"
+                  style="height: 100%; display: flex; flex-direction: column;">
+                <div style="flex: 1; overflow-y: auto; padding: 25px 20px 10px;">
+                    <!-- Tìm kiếm -->
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span><i class="bi bi-search me-2"></i>Tìm kiếm</span>
+                        </div>
+                        <input name="keyword" value="${find}" type="text" class="form-control form-control-sm"
+                               placeholder="Tìm kiếm sản phẩm..."
+                               style="border-radius: 30px; padding: 8px 15px; font-size: 13px;">
                     </div>
 
-                    <div class="collapse " id="categoryCollapse">
-                        <div class="filter-scroll">
+                    <!-- Sort (hidden inputs) -->
+                    <input type="hidden" name="sort" id="sortInput" value="${param.sort != null ? param.sort : ''}">
+                    <input type="hidden" name="minPrice" id="minPriceInput" value="${param.minPrice}">
+                    <input type="hidden" name="maxPrice" id="maxPriceInput" value="${param.maxPrice}">
 
-                            <c:forEach var="cn" items="${categoryName}">
-                                <div class="form-check">
-                                    <input name="category" value="${cn}" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">${cn}</label>
+                    <!-- Phân loại theo Model Scale -->
+                    <div class="filter-section">
+                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#scaleCollapse"
+                             aria-expanded="true">
+                            <span><i class="bi bi-grid-3x3-gap me-2"></i>Tỉ lệ mô hình</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse show" id="scaleCollapse">
+                            <div class="filter-scroll">
+                                <c:set var="scales" value="1:12,1:18,1:24,1:32,1:43,1:64"/>
+                                <c:forTokens items="${scales}" delims="," var="scale">
+                                    <div class="form-check">
+                                        <input name="scale" value="${scale}" class="form-check-input" type="checkbox"
+                                            ${fn:contains(paramValues.scale, scale) ? 'checked' : ''}>
+                                        <label class="form-check-label">Tỉ lệ ${scale}</label>
+                                    </div>
+                                </c:forTokens>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phân loại theo Hãng -->
+                    <div class="filter-section">
+                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#brandCollapse"
+                             aria-expanded="false">
+                            <span><i class="bi bi-tags me-2"></i>Thương hiệu (${totalBrand})</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse" id="brandCollapse">
+                            <div class="filter-scroll">
+                                <c:forEach var="bn" items="${brandName}">
+                                    <div class="form-check">
+                                        <input name="brand" value="${bn}" class="form-check-input" type="checkbox"
+                                            ${fn:contains(paramValues.brand, bn) ? 'checked' : ''}>
+                                        <label class="form-check-label">${bn}</label>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phân loại theo Loại -->
+                    <div class="filter-section">
+                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#categoryCollapse"
+                             aria-expanded="false">
+                            <span><i class="bi bi-collection me-2"></i>Danh mục (${totalCategory})</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse" id="categoryCollapse">
+                            <div class="filter-scroll">
+                                <c:forEach var="cn" items="${categoryName}">
+                                    <div class="form-check">
+                                        <input name="category" value="${cn}" class="form-check-input" type="checkbox"
+                                            ${fn:contains(paramValues.category, cn) ? 'checked' : ''}>
+                                        <label class="form-check-label">${cn}</label>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Slider -->
+                    <div class="filter-section">
+                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#priceCollapse"
+                             aria-expanded="true">
+                            <span><i class="bi bi-currency-dollar me-2"></i>Khoảng giá</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse show" id="priceCollapse">
+                            <div class="price-range-container">
+                                <div id="price-range"></div>
+                                <div class="price-inputs">
+                                    <input type="text" class="price-input" id="min-price"
+                                           value="${param.minPrice != null ? param.minPrice : 0}"
+                                           placeholder="Từ" readonly>
+                                    <input type="text" class="price-input" id="max-price"
+                                           value="${param.maxPrice != null ? param.maxPrice : 1000000000}"
+                                           placeholder="Đến" readonly>
                                 </div>
-                            </c:forEach>
-
+                            </div>
                         </div>
                     </div>
 
-                </div>
-
-
-                <!-- Theo hãng -->
-                <div>
-                    <div class="filter-title d-flex justify-content-between align-items-center"
-                         data-bs-toggle="collapse"
-                         data-bs-target="#brandCollapse"
-                         style="cursor:pointer;">
-                        <span>Theo Hãng (${totalBrand})</span>
-                        <i class="toggle-icon bi bi-chevron-down"></i>
-                    </div>
-
-                    <div class="collapse " id="brandCollapse">
-                        <div class="filter-scroll">
-
-                            <c:forEach var="bn" items="${brandName}">
-                                <div class="form-check">
-                                    <input name="brand" value="${bn}" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">${bn}</label>
-                                </div>
-                            </c:forEach>
-
+                    <!-- Discount Options -->
+                    <div class="filter-section">
+                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#discountCollapse"
+                             aria-expanded="false">
+                            <span><i class="bi bi-gift me-2"></i>Khuyến mãi</span>
+                            <i class="bi bi-chevron-down"></i>
                         </div>
-                    </div>
-
-                </div>
-
-                <!-- Giá -->
-                <div>
-                    <div class="filter-title d-flex justify-content-between align-items-center"
-                         data-bs-toggle="collapse"
-                         data-bs-target="#priceCollapse"
-                         style="cursor:pointer;">
-                        <span>Theo Giá </span>
-                        <i class="toggle-icon bi bi-chevron-down"></i>
-                    </div>
-
-                    <div class="collapse " id="priceCollapse">
-                        <div class="filter-scroll">
-
+                        <div class="collapse" id="discountCollapse">
                             <div class="form-check">
-                                <input name="price" value="10000000" class="form-check-input" type="radio">
-                                <label class="form-check-label"> < 10.000.000</label>
+                                <input name="discount" value="newest" class="form-check-input" type="checkbox"
+                                ${param.discount == 'newest' ? 'checked' : ''}>
+                                <label class="form-check-label">Giảm giá mới nhất <img
+                                        src="https://nettruyen.work/assets/images/icon-hot.gif"
+                                        style="height: 12px; margin-left: 3px;"></label>
                             </div>
-
                             <div class="form-check">
-                                <input name="price" value="50000000" class="form-check-input" type="radio">
-                                <label class="form-check-label"> < 50.000.000</label>
+                                <input name="discount" value="highest" class="form-check-input" type="checkbox"
+                                ${param.discount == 'highest' ? 'checked' : ''}>
+                                <label class="form-check-label">Giảm giá nhiều nhất <img
+                                        src="https://nettruyen.work/assets/images/icon-hot.gif"
+                                        style="height: 12px; margin-left: 3px;"></label>
                             </div>
-
-                            <div class="form-check">
-                                <input name="price" value="100000000" class="form-check-input" type="radio">
-                                <label class="form-check-label"> < 100.000.000</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input name="price" value="500000000" class="form-check-input" type="radio">
-                                <label class="form-check-label"> < 500.000.000</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input name="price" value="1000000000" class="form-check-input" type="radio">
-                                <label class="form-check-label"> < 1.000.000.000</label>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
 
-                <%--            <!-- Sản phẩm nổi bật -->--%>
-                <%--            <div>--%>
-                <%--                <div class="filter-title">Tùy chọn khác</div>--%>
-                <%--                <div class="form-check">--%>
-                <%--                    <input class="form-check-input" type="checkbox">--%>
-                <%--                    <label class="form-check-label">Sản phẩm nổi bật</label>--%>
-                <%--                </div>--%>
-                <%--                <div class="form-check">--%>
-                <%--                    <input class="form-check-input" type="checkbox">--%>
-                <%--                    <label class="form-check-label">Sản phẩm mới</label>--%>
-                <%--                </div>--%>
-                <%--            </div>--%>
-
-                <div class="sidebar-footer">
-                    <button type="submit" class="btn btn-dark w-100">Áp dụng bộ lọc</button>
+                <!-- Footer buttons - always at bottom -->
+                <div class="sidebar-footer px-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn w-75"
+                                style="background: var(--black); color: #fff; border-radius: 30px; padding: 10px; font-size: 14px;">
+                            <i class="bi bi-funnel me-2"></i>Áp dụng
+                        </button>
+                        <button type="button" class="btn w-25"
+                                style="border: 1px solid var(--black); border-radius: 30px; padding: 10px; background: #fff;"
+                                onclick="resetFilters()">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                    </div>
                 </div>
-
             </form>
 
-            <div class="voucher-box">
-                <button class="btn btn-outline-dark w-100" data-bs-toggle="collapse" data-bs-target="#voucherArea">
-                    Xem Voucher của bạn
+            <!-- Voucher Section -->
+            <div class="voucher-box mx-3 mb-3">
+                <button class="btn w-100"
+                        style="background: var(--gold); color: #fff; border-radius: 30px; padding: 10px; font-size: 13px; font-weight: 500;"
+                        data-bs-toggle="collapse" data-bs-target="#voucherArea">
+                    <i class="bi bi-ticket-perforated me-2"></i>Xem Voucher
                 </button>
-
-                <div class="collapse mt-3" id="voucherArea">
+                <div class="collapse mt-2" id="voucherArea">
                     <c:forEach var="v" items="${vouchers}">
-                        <div class="border p-2 mb-2">
-                            <strong>${v.code}</strong><br>
-                            Giảm ${v.discount}
+                        <div class="voucher-item">
+                            <div class="voucher-code">${v.code}</div>
+                            <div class="voucher-discount">Giảm ${v.discount}</div>
                         </div>
                     </c:forEach>
+                    <c:if test="${empty vouchers}">
+                        <p class="text-center text-muted small mt-2">Bạn chưa có voucher nào</p>
+                    </c:if>
                 </div>
             </div>
         </div>
 
-
         <!-- ================= PRODUCT LIST ================= -->
-        <div class="col-lg-9 col-md-8 p-5 product-wrapper">
-            <%--        Loại đang lọc--%>
-            <%--            <div class="mb-3">--%>
-            <%--                <span class="badge bg-dark">Ferrari ×</span>--%>
-            <%--                <span class="badge bg-dark">Xe Thể Thao ×</span>--%>
-            <%--            </div>--%>
-
-            <h2 class="mb-4">Tất Cả Sản Phẩm (${totalProduct})</h2>
-
-            <div class="row g-4">
-
-                <!-- CARD 1 -->
-                <c:forEach var="p" items="${products}">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card product-card">
-
-                            <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="product-link">
-                                <div class="product-image-wrapper">
-                                    <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
-                                         class="card-img-top" alt="">
-                                </div>
-                            </a>
-
-                            <div class="card-body text-center">
-
-                                <div>
-                                    <h6>${p.name} </h6>
-                                    <h6>Model ${p.ratio}</h6>
-                                    <p class="product-price-old mt-auto">
-                                        <fmt:formatNumber value="${p.price}"
-                                                          type="number"
-                                                          groupingUsed="true"/> ₫
-                                    </p>
-                                    <h6 class="product-price mt-auto">
-                                        <fmt:formatNumber value="${p.finalPrice}"
-                                                          type="number"
-                                                          groupingUsed="true"/> ₫
-                                    </h6>
-
-                                </div>
-
-                                <!-- Mua ngay va them vao gio hang -->
-                                <div class="d-flex justify-content-center gap-2 mt-3">
-
-                                    <form id="add-to-cart" action="cart-add" method="get" class="">
-                                        <input type="hidden" name="productId" value="${p.id}">
-                                        <input type="hidden" name="quantity" value="1" min="1" form="add-to-cart">
-                                        <button type="submit" name="action" value="buyNow"
-                                                class="bi btn btn-buy btn-sm"><i>Mua ngay</i></button>
-                                        <button type="submit" name="action" value="addCart"
-                                                class="btn star-btn btn-sm "><i class="bi bi-cart-plus"></i></button>
-
-                                    </form>
-                                    <form method="post" action="/favorites">
-                                        <button class="btn star-btn btn-sm" name="productid" value="${p.id}"><i
-                                                class="bi bi-star"></i>
-                                        </button>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-
-
-<%--                // Ngắt Trang--%>
-                <c:if test="${totalPage > 1}">
-                    <div class="d-flex justify-content-center mt-5">
-                        <nav>
-                            <ul class="pagination">
-
-                                <!-- Previous -->
-                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link"
-                                       href="products?page=${currentPage - 1}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
-                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
-                                        <<
-                                    </a>
-                                </li>
-
-                                <!-- Trang 1 -->
-                                <li class="page-item ${currentPage == 1 ? 'active' : ''}">
-                                    <a class="page-link"
-                                       href="products?page=1<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
-                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">1</a>
-                                </li>
-
-                                <!-- Dấu ... đầu -->
-                                <c:if test="${currentPage > 3}">
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                </c:if>
-
-                                <!-- Các trang giữa -->
-                                <c:forEach begin="${currentPage - 1}"
-                                           end="${currentPage + 1}"
-                                           var="i">
-                                    <c:if test="${i > 1 && i < totalPage}">
-                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                            <a class="page-link"
-                                               href="products?page=${i}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
-                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
-                                                    ${i}
-                                            </a>
-                                        </li>
-                                    </c:if>
-                                </c:forEach>
-
-                                <!-- Dấu ... cuối -->
-                                <c:if test="${currentPage < totalPage - 2}">
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                </c:if>
-
-                                <!-- Trang cuối -->
-                                <li class="page-item ${currentPage == totalPage ? 'active' : ''}">
-                                    <a class="page-link"
-                                       href="products?page=${totalPage}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
-                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
-                                            ${totalPage}
-                                    </a>
-                                </li>
-
-                                <!-- Next -->
-                                <li class="page-item ${currentPage == totalPage ? 'disabled' : ''}">
-                                    <a class="page-link"
-                                       href="products?page=${currentPage + 1}<c:forEach var="cn" items="${selectedCategories}">&category=${cn}</c:forEach>
-                                        <c:forEach var="bn" items="${selectedBrands}">&brand=${bn}</c:forEach>">
-                                        >>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </nav>
-                    </div>
-                </c:if>
-
-                <!-- Copy thêm sản phẩm -->
-
+        <div class="col-lg-9 col-md-8 product-wrapper">
+            <!-- Sort Bar -->
+            <div class="sort-bar">
+                <div class="sort-buttons">
+                    <button type="button" class="sort-btn ${param.sort == 'price_asc' ? 'active' : ''}"
+                            onclick="setSort('price_asc')">
+                        <i class="bi bi-arrow-up me-1"></i>Giá tăng dần
+                    </button>
+                    <button type="button" class="sort-btn ${param.sort == 'price_desc' ? 'active' : ''}"
+                            onclick="setSort('price_desc')">
+                        <i class="bi bi-arrow-down me-1"></i>Giá giảm dần
+                    </button>
+                    <button type="button" class="sort-btn ${param.sort == 'newest' ? 'active' : ''}"
+                            onclick="setSort('newest')">
+                        <i class="bi bi-clock me-1"></i>Mới nhất
+                    </button>
+                </div>
+                <div class="result-count">
+                    <span>${totalProduct}</span> sản phẩm
+                </div>
             </div>
 
+            <!-- Product Grid -->
+            <div class="product-content">
+                <div class="row g-3">
+                    <c:choose>
+                        <c:when test="${not empty products}">
+                            <c:forEach var="p" items="${products}">
+                                <div class="col-xl-4 col-lg-6 col-md-6">
+                                    <div class="card product-card">
+                                        <div class="product-image-wrapper">
+                                            <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
+                                                <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
+                                                     class="card-img-top" alt="${p.name}">
+                                            </a>
+                                            <c:if test="${p.discount > 0}">
+                                                <span class="product-badge discount">-${p.discount}%</span>
+                                            </c:if>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="product-category">${p.categoryName}</div>
+                                            <h6 class="product-name">${p.name}</h6>
+                                            <div class="product-model">
+                                                <i class="bi bi-cpu"></i> Tỉ lệ ${p.ratio}
+                                            </div>
+                                            <div class="product-price-section">
+                                                <c:if test="${p.discount > 0}">
+                                                <span class="product-price-old">
+                                                    <fmt:formatNumber value="${p.price}" type="number"
+                                                                      groupingUsed="true"/> ₫
+                                                </span>
+                                                </c:if>
+                                                <div class="product-price-current">
+                                                    <fmt:formatNumber value="${p.finalPrice}" type="number"
+                                                                      groupingUsed="true"/> ₫
+                                                </div>
+                                            </div>
+                                            <div class="product-actions">
+                                                <form action="cart-add" method="get" style="display: contents;">
+                                                    <input type="hidden" name="productId" value="${p.id}">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button type="submit" name="action" value="buyNow" class="btn-buy">
+                                                        <i class="bi bi-lightning-charge me-1"></i>Mua
+                                                    </button>
+                                                    <button type="submit" name="action" value="addCart"
+                                                            class="btn-action">
+                                                        <i class="bi bi-cart-plus"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="post" action="/favorites" style="display: contents;">
+                                                    <button class="btn-action" name="productid" value="${p.id}">
+                                                        <i class="bi bi-star"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="col-12">
+                                <div class="empty-state">
+                                    <i class="bi bi-search"></i>
+                                    <h4>Không tìm thấy sản phẩm</h4>
+                                    <p>Không có sản phẩm nào phù hợp với bộ lọc của bạn.</p>
+                                    <button class="btn-reset" onclick="resetFilters()">
+                                        <i class="bi bi-arrow-counterclockwise me-2"></i>Đặt lại bộ lọc
+                                    </button>
+                                </div>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <c:if test="${totalPage > 1}">
+                <div class="pagination-container">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})"
+                                   aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <c:forEach begin="1" end="${totalPage}" var="i">
+                                <c:if test="${i == 1 || i == totalPage || (i >= currentPage-2 && i <= currentPage+2)}">
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="javascript:void(0)"
+                                           onclick="changePage(${i})">${i}</a>
+                                    </li>
+                                </c:if>
+                                <c:if test="${i == currentPage-3 && i > 2}">
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                </c:if>
+                                <c:if test="${i == currentPage+3 && i < totalPage-1}">
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                </c:if>
+                            </c:forEach>
+
+                            <li class="page-item ${currentPage == totalPage ? 'disabled' : ''}">
+                                <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})"
+                                   aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </c:if>
         </div>
-
-
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<%--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>--%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+
+<script>
+    // Initialize Bootstrap collapse
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize all collapses
+        var collapseElements = document.querySelectorAll('.collapse');
+        collapseElements.forEach(function (collapseEl) {
+            new bootstrap.Collapse(collapseEl, {
+                toggle: false
+            });
+        });
+    });
+
+    // Initialize price range slider
+    const priceSlider = document.getElementById('price-range');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    const minPriceHidden = document.getElementById('minPriceInput');
+    const maxPriceHidden = document.getElementById('maxPriceInput');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const minPrice = urlParams.get('minPrice') ? parseInt(urlParams.get('minPrice')) : 0;
+    const maxPrice = urlParams.get('maxPrice') ? parseInt(urlParams.get('maxPrice')) : 1000000000;
+
+    noUiSlider.create(priceSlider, {
+        start: [minPrice, maxPrice],
+        connect: true,
+        step: 100000,
+        range: {
+            'min': 0,
+            'max': 1000000000
+        },
+        format: wNumb({
+            decimals: 0,
+            thousand: '.',
+            suffix: ' ₫'
+        })
+    });
+
+    priceSlider.noUiSlider.on('update', function (values, handle) {
+        const value = values[handle].replace(/[^0-9]/g, '');
+        if (handle) {
+            maxPriceInput.value = values[handle];
+            maxPriceHidden.value = value;
+        } else {
+            minPriceInput.value = values[handle];
+            minPriceHidden.value = value;
+        }
+    });
+
+    function setSort(sortValue) {
+        document.getElementById('sortInput').value = sortValue;
+        document.getElementById('filterForm').submit();
+    }
+
+    function resetFilters() {
+        window.location.href = 'products';
+    }
+
+    function changePage(page) {
+        const form = document.getElementById('filterForm');
+        const pageInput = document.createElement('input');
+        pageInput.type = 'hidden';
+        pageInput.name = 'page';
+        pageInput.value = page;
+        form.appendChild(pageInput);
+        form.submit();
+    }
+
+    <c:if test="${empty products}">
+    showAlert('Không có sản phẩm nào phù hợp với bộ lọc của bạn', 'warning');
+    </c:if>
+
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert-custom';
+        alertDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 18px;"></i>
+                <div>
+                    <strong>Thông báo</strong><br>
+                    <span style="font-size: 13px;">` + message + `</span>
+                </div>
+            </div>
+        `;
+        document.getElementById('alertContainer').appendChild(alertDiv);
+        setTimeout(() => alertDiv.remove(), 3000);
+    }
+</script>
 </body>
 </html>

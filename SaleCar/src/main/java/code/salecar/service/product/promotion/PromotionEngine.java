@@ -54,7 +54,6 @@ public class PromotionEngine {
                     discountUpdatedAt
 
             );
-            System.out.println(product.getId() + "............................");
         }
 
     }
