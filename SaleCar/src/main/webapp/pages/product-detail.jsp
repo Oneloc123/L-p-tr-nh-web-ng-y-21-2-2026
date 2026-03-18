@@ -5,6 +5,7 @@
   Time: 11:43 AM
   To change this template use File | Settings | File Templates.
 --%>
+<h1>TEST JSP WORKING</h1>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -591,7 +592,7 @@
             </tr>
             <tr>
                 <th>Chất liệu</th>
-                <td>${product.meterial}</td>
+                <td>${product.material}</td>
             </tr>
             <tr>
                 <th>Hãng</th>
@@ -599,7 +600,7 @@
             </tr>
             <tr>
                 <th>Xuất xứ</th>
-                <td>${product.orign}</td>
+                <td>${product.origin}</td>
             </tr>
         </table>
     </div>

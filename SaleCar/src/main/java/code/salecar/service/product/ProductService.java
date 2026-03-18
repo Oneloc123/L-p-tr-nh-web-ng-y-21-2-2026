@@ -33,8 +33,8 @@ public class ProductService {
 
         }
 
-        product.setCategoryName(cs.getCategoryName(product.getCategoryId()));
-
+        String categoryName = cs.getCategoryName(product.getCategoryId());
+        product.setCategoryName(categoryName != null ? categoryName : "");
 
         // Rating
         List<Reviews> reviews = rs.getReviewsByID(product.getId());
