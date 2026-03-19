@@ -1,7 +1,9 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.Product;
-import code.salecar.model.Voucher;
+import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.Voucher;
+import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
@@ -94,7 +96,7 @@ public class products extends HttpServlet {
         /* =========================
            GET PRODUCT DATA
         ========================= */
-        List<Product> list = ps.getProductFilter(filter, page, limit);
+        List<ProductItem> list = ps.getProductFilter(filter, page, limit);
         int totalProduct = ps.getTotalProduct(filter);
 
         int totalPage = (int) Math.ceil((double) totalProduct / limit);

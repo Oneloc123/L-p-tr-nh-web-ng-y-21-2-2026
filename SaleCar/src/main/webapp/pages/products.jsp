@@ -934,8 +934,8 @@
                                                 <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
                                                      class="card-img-top" alt="${p.name}">
                                             </a>
-                                            <c:if test="${p.discount > 0}">
-                                                <span class="product-badge discount">-${p.discount}%</span>
+                                            <c:if test="${p.discountPercent > 0}">
+                                                <span class="product-badge discount">-${p.discountPercent}%</span>
                                             </c:if>
                                         </div>
                                         <div class="card-body">
@@ -945,7 +945,7 @@
                                                 <i class="bi bi-cpu"></i> Tỉ lệ ${p.ratio}
                                             </div>
                                             <div class="product-price-section">
-                                                <c:if test="${p.discount > 0}">
+                                                <c:if test="${p.discountPercent > 0}">
                                                 <span class="product-price-old">
                                                     <fmt:formatNumber value="${p.price}" type="number"
                                                                       groupingUsed="true"/> ₫

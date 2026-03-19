@@ -1,11 +1,14 @@
 package code.salecar.service.product;
 
-import code.salecar.controller.product.ProductFilter;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.dto.ProductRating;
+import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
 import code.salecar.model.Brand;
-import code.salecar.model.Discount;
-import code.salecar.model.Product;
-import code.salecar.model.Reviews;
+import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.Reviews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,38 +22,41 @@ public class ProductService {
     ReviewsService rs = new ReviewsService();
     CategoryService cs = new CategoryService();
 
-    public Product getProductByID(int id) {
+    public ProductDetail getProductByID(int id) {
 
         Product product = productDAO.getProductByID(id);
-        if (product == null) {
+        ProductDetail detail = new ProductDetail(product);
+        if (detail == null) {
             return null;
         }
 
-        Brand brand = bs.getBrandByID(product.getBrandId());
+        Brand brand = bs.getBrandByID(detail.getProduct().getBrandId());
         if (brand != null) {
-            product.setBrandName(brand.getName());
-            product.setBrandLink(brand.getLinkband());
+            detail.setBrandName(brand.getName());
+            detail.setBrandLink(brand.getLinkband());
 
         }
 
-        String categoryName = cs.getCategoryName(product.getCategoryId());
-        product.setCategoryName(categoryName != null ? categoryName : "");
+        String categoryName = cs.getCategoryName(detail.getProduct().getCategoryId());
+        detail.setCategoryName(categoryName != null ? categoryName : "");
 
         // Rating
-        List<Reviews> reviews = rs.getReviewsByID(product.getId());
+        List<Reviews> reviews = rs.getReviewsByID(detail.getProduct().getId());
+        ProductRating rating = new ProductRating(product.getId());
         if (reviews != null && !reviews.isEmpty()) {
-            product.setReviews(reviews);
-            product.setAvgRating(caculateRates(reviews));
-            addStar(reviews, product);
+            detail.setReviews(reviews);
+            detail.setAvgRating(caculateRates(reviews));
+            addStar(reviews, rating);
         } else {
-            product.setReviews(new ArrayList<>());
-            product.setAvgRating(0);
+            detail.setReviews(new ArrayList<>());
+            detail.setAvgRating(0);
         }
+        detail.setRating(rating);
 
-        return product;
+        return detail;
     }
 
-    private void addStar(List<Reviews> reviews, Product product) {
+    private void addStar(List<Reviews> reviews, ProductRating product) {
         for (Reviews review : reviews) {
             switch (review.getRating()) {
                 case 1:
@@ -89,8 +95,17 @@ public class ProductService {
         return productDAO.getTotalProduct(filter);
     }
 
-    public List<Product> getProductFilter(ProductFilter filter, int page, int limit) {
-        return productDAO.getProductFilter(filter, page, limit);
+    public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
+        List<ProductItem> product = productDAO.getProductFilter(filter, page, limit);
+        for (ProductItem productItem : product) {
+            String brand = bs.getBrandName(productItem.getBrandId());
+            productItem.setBrandName(brand != null ? brand : "");
+
+            String categoryName = cs.getCategoryName(productItem.getCategoryId());
+            productItem.setCategoryName(categoryName != null ? categoryName : "");
+        }
+
+        return product;
     }
 
 //    private void sortDiscount(ProductFilter filter, List<Product> products) {
@@ -160,13 +175,13 @@ public class ProductService {
         return price;
     }
 
-    public List<Product> getRelatedProductMaterial(String byWith) {
+    public List<ProductDetail> getRelatedProductMaterial(String byWith) {
 
         List<Integer> ids = productDAO.getRelatedProductMaterial(byWith);
-        List<Product> products = new ArrayList<>();
+        List<ProductDetail> products = new ArrayList<>();
 
         for (Integer id : ids) {
-            Product p = getProductByID(id);
+            ProductDetail p = getProductByID(id);
 
             if (p != null) {
                 products.add(p);
@@ -176,7 +191,7 @@ public class ProductService {
         return products;
     }
 
-    public List<Product> sortProducFilter(List<Product> favoritesProducts, ProductFilter filter) {
+    public List<ProductDetail> sortProducFilter(List<ProductDetail> favoritesProducts, ProductFilter filter) {
 
         if (filter.getCategories().isEmpty() &&
                 filter.getBrands().isEmpty() && filter.getMaxPrice() == -1 &&
@@ -184,12 +199,12 @@ public class ProductService {
             return favoritesProducts;
         }
 
-        Stream<Product> stream = favoritesProducts.stream();
+        Stream<ProductDetail> stream = favoritesProducts.stream();
 
         // Keyword
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             String keyword = filter.getKeyword().toLowerCase().trim();
-            stream = stream.filter(p -> p.getName().toLowerCase().trim().contains(keyword));
+            stream = stream.filter(p -> p.getProduct().getName().toLowerCase().trim().contains(keyword));
         }
 
         // category
@@ -204,18 +219,18 @@ public class ProductService {
 
         //maxPrice
         if (filter.getMaxPrice() != -1) {
-            stream = stream.filter(p -> p.getPrice() <= filter.getMaxPrice());
+            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice());
         }
 
 
-        List<Product> result = stream.collect(Collectors.toList());
+        List<ProductDetail> result = stream.collect(Collectors.toList());
 
-        if (filter.isSortByNewestDiscount()) {
-            result.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
-        }
-        if (filter.isSortByHighestDiscount()) {
-            result.sort((a, b) -> Double.compare(b.getFinalPrice(), a.getFinalPrice()));
-        }
+//        if (filter.isSortByNewestDiscount()) {
+//            result.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+//        }
+//        if (filter.isSortByHighestDiscount()) {
+//            result.sort((a, b) -> Double.compare(b.getFinalPrice(), a.getFinalPrice()));
+//        }
         return result;
     }
 }

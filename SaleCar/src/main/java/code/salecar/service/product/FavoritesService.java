@@ -1,7 +1,8 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.FavoriesDAO;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Product;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,9 +24,9 @@ public class FavoritesService {
 
     }
 
-    public List<Product> getFavorites(int userId) {
+    public List<ProductDetail> getFavorites(int userId) {
         List<Integer> favoritesList = favoriesDAO.getFavorites(userId);
-        List<Product> products = new ArrayList<>();
+        List<ProductDetail> products = new ArrayList<>();
         for (Integer favoriteId : favoritesList) {
             products.add(productService.getProductByID(favoriteId));
         }
@@ -36,31 +37,20 @@ public class FavoritesService {
         return favoriesDAO.removeFavoritesProduct(prid);
     }
 
-    static void main() {
-        FavoriesDAO favoriesDAO = new FavoriesDAO();
-        ProductService productService = new ProductService();
-        List<Integer> favoritesList = favoriesDAO.getFavorites(1);
-        List<Product> products = new ArrayList<>();
-        for (Integer favoriteId : favoritesList) {
-            products.add(productService.getProductByID(favoriteId));
-        }
-        System.out.println(favoritesList);
-        System.out.println(products);
-
-    }
 
 
-    public Set<String> getFavoritesBrand(List<Product> favoritesProducts) {
+
+    public Set<String> getFavoritesBrand(List<ProductDetail> favoritesProducts) {
         Set<String> favoritesBrands = new HashSet<>();
-        for (Product product : favoritesProducts) {
+        for (ProductDetail product : favoritesProducts) {
             favoritesBrands.add(product.getBrandName());
         }
         return favoritesBrands;
     }
 
-    public Set<String> getFavoritesCategory(List<Product> favoritesProducts) {
+    public Set<String> getFavoritesCategory(List<ProductDetail> favoritesProducts) {
         Set<String> favoritesCategory = new HashSet<>();
-        for (Product product : favoritesProducts) {
+        for (ProductDetail product : favoritesProducts) {
             favoritesCategory.add(product.getCategoryName());
         }
         return favoritesCategory;

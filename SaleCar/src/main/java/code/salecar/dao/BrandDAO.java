@@ -93,4 +93,22 @@ public class BrandDAO {
         return list;
 
     }
+    public String getBrandName(int brandId) {
+        String name = "";
+        String sql = "SELECT name from brand where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, brandId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+
+                name= rs.getString("name");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return name;
+
+    }
 }

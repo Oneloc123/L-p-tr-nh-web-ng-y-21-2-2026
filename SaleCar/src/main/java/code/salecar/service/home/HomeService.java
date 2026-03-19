@@ -2,9 +2,9 @@ package code.salecar.service.home;
 
 import code.salecar.dao.CategoryDAO;
 import code.salecar.dao.ProductDAO;
-import code.salecar.model.Category;
-import code.salecar.model.Discount;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class HomeService {
     ProductDAO  productDAO = new ProductDAO();
     CategoryDAO categoryDAO = new CategoryDAO();
 
-    public List<Product> getProductNew(){
+    public List<ProductItem> getProductNew(){
         return productDAO.getProductNew();
     }
 
@@ -37,7 +37,7 @@ public class HomeService {
         return null;
     }
 
-    public List<Product> getProductHot() {
+    public List<ProductItem> getProductHot() {
         return productDAO.getProductHot();
     }
 }

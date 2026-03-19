@@ -1,8 +1,7 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.ReviewsDAO;
-import code.salecar.model.Reviews;
-import code.salecar.model.User;
+import code.salecar.model.product.entity.Reviews;
 import code.salecar.service.user.UserService;
 
 import java.util.List;

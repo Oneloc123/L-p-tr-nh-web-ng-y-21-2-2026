@@ -1,10 +1,11 @@
 package code.salecar.model;
 
 
+import code.salecar.model.product.entity.Product;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Cart implements Serializable {
     private int id;

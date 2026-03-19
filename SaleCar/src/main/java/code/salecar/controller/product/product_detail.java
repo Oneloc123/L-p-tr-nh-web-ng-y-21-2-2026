@@ -1,7 +1,8 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.Product;
-import code.salecar.model.Voucher;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.Voucher;
 import code.salecar.service.product.ProductService;
 import code.salecar.service.product.VoucherService;
 import jakarta.servlet.*;
@@ -32,26 +33,31 @@ public class product_detail extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/products");
             return;
         }
+
         ProductService ps  = new ProductService();
-        Product product = ps.getProductByID(id);
+        ProductDetail product = ps.getProductByID(id);
         System.out.println("Product: " + product);
         if(product==null){
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        List<Product> list1 = ps.getRelatedProductMaterial(product.getMaterial());
-        request.setAttribute("related", list1);
+//        List<ProductDetail> list1 = ps.getRelatedProductMaterial(product.getProduct().getMaterial());
+//        request.setAttribute("related", list1);
 
         // Voucher
         VoucherService vs = new VoucherService();
         List<Voucher> vouchers = vs.getVouchers();
+
         request.setAttribute("vouchers", vouchers);
 
         String returnUrl = request.getHeader("Referer");
         request.setAttribute("returnUrl", returnUrl);
 
-        request.setAttribute("product", product);
+        request.setAttribute("product", product.getProduct());
+        request.setAttribute("productDetail", product);
+        request.setAttribute("rating", product.getRating());
+
         request.getRequestDispatcher("/pages/product-detail.jsp").forward(request, response);
     }
 
