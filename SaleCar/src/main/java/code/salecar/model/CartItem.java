@@ -1,5 +1,7 @@
 package code.salecar.model;
 
+import code.salecar.model.product.entity.Product;
+
 import java.io.Serializable;
 
 public class CartItem implements Serializable {

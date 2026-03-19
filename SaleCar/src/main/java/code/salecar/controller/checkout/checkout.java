@@ -1,6 +1,6 @@
 package code.salecar.controller.checkout;
 
-import code.salecar.model.Voucher;
+import code.salecar.model.product.entity.Voucher;
 import code.salecar.service.product.VoucherService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.List;
 

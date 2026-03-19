@@ -1,4 +1,4 @@
-package code.salecar.controller.product;
+package code.salecar.model.product.filter;
 
 import java.util.ArrayList;
 import java.util.List;

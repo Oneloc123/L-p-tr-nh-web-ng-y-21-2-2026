@@ -2,15 +2,13 @@ package code.salecar.service.product.promotion;
 
 import code.salecar.dao.DiscountDAO;
 import code.salecar.dao.ProductDAO;
-import code.salecar.model.Discount;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PromotionEngine {
 
@@ -26,12 +24,12 @@ public class PromotionEngine {
 
     public void run() {
         System.out.println("PromotionEngine.run() called");
-        List<Product> products = productDAO.getAllProducts();
+        List<ProductItem> products = productDAO.getAllProducts();
         System.out.println("Product " + products.size());
         List<Discount> discounts = discountDAO.selectAll();
         System.out.println("DC " + products.size());
 
-        for (Product product : products) {
+        for (ProductItem product : products) {
 
             Discount bestDiscount = findBestDiscount(product, discounts);
 
@@ -58,7 +56,7 @@ public class PromotionEngine {
 
     }
 
-    private Discount findBestDiscount(Product product,
+    private Discount findBestDiscount(ProductItem product,
                                       List<Discount> discounts) {
 
         Discount best = null;

@@ -20,4 +20,7 @@ public class BrandService {
     public List<String> getBrandName() {
         return brandDAO.getBrandName();
     }
+    public String getBrandName(int productId) {
+        return brandDAO.getBrandName(productId);
+    }
 }

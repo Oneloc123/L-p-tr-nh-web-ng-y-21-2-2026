@@ -2,6 +2,7 @@ package code.salecar.dao;
 
 import code.salecar.model.*;
 
+import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Connection;

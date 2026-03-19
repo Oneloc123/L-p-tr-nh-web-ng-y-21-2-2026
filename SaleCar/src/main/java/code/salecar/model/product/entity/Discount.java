@@ -1,4 +1,4 @@
-package code.salecar.model;
+package code.salecar.model.product.entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
