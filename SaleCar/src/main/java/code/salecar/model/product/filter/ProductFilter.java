@@ -1,5 +1,6 @@
 package code.salecar.model.product.filter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +8,12 @@ public class ProductFilter {
     private String keyword;
     private List<String> categories;
     private List<String> brands;
-    private List<String> modelScale;
-    private double maxPrice;
-    private double minPrice;
+    private List<String> scale;
+    private BigDecimal maxPrice;
+    private BigDecimal minPrice;
 
 
-    private boolean sortByPriceAsc;
-    private boolean sortByPriceDesc;
+    private sortBy sortBy;
 
     private boolean sortByHighestDiscount;
     private boolean sortByNewestDiscount;
@@ -23,48 +23,41 @@ public class ProductFilter {
         this.keyword = "";
         this.categories = new ArrayList<String>();
         this.brands = new ArrayList<String>();
-        this.modelScale = new ArrayList<String>();
-        this.maxPrice = 0;
-        this.minPrice = 0;
-        this.sortByPriceAsc = false;
-        this.sortByPriceDesc = false;
+        this.scale = new ArrayList<String>();
         this.sortByHighestDiscount = false;
         this.sortByNewestDiscount = false;
     }
 
-
-
-    public List<String> getModelScale() {
-        return modelScale;
+    public enum sortBy {
+        PRICE_ASC,
+        PRICE_DESC,
+        NEWEST
     }
 
-    public void setModelScale(List<String> modelScale) {
-        this.modelScale = modelScale;
+    public sortBy getSortBy() {
+        return sortBy;
     }
 
-    public double getMinPrice() {
+    public void setSortBy(sortBy sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public List<String> getScale() {
+        return scale;
+    }
+
+    public void setScale(List<String> scale) {
+        this.scale = scale;
+    }
+
+    public BigDecimal getMinPrice() {
         return minPrice;
     }
 
-    public void setMinPrice(double minPrice) {
+    public void setMinPrice(BigDecimal minPrice) {
         this.minPrice = minPrice;
     }
 
-    public boolean isSortByPriceAsc() {
-        return sortByPriceAsc;
-    }
-
-    public void setSortByPriceAsc(boolean sortByPriceAsc) {
-        this.sortByPriceAsc = sortByPriceAsc;
-    }
-
-    public boolean isSortByPriceDesc() {
-        return sortByPriceDesc;
-    }
-
-    public void setSortByPriceDesc(boolean sortByPriceDesc) {
-        this.sortByPriceDesc = sortByPriceDesc;
-    }
 
     public String getKeyword() {
         return keyword;
@@ -106,11 +99,11 @@ public class ProductFilter {
         this.sortByNewestDiscount = sortByNewestDiscount;
     }
 
-    public double getMaxPrice() {
+    public BigDecimal getMaxPrice() {
         return maxPrice;
     }
 
-    public void setMaxPrice(double maxPrice) {
+    public void setMaxPrice(BigDecimal maxPrice) {
         this.maxPrice = maxPrice;
     }
 }

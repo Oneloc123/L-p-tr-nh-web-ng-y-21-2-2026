@@ -756,19 +756,19 @@
                     <div class="filter-section">
                         <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#scaleCollapse"
                              aria-expanded="true">
-                            <span><i class="bi bi-grid-3x3-gap me-2"></i>Tỉ lệ mô hình</span>
+                            <span><i class="bi bi-grid-3x3-gap me-2"></i>Tỉ lệ mô hình (${totalScale})</span>
                             <i class="bi bi-chevron-down"></i>
                         </div>
                         <div class="collapse show" id="scaleCollapse">
                             <div class="filter-scroll">
-                                <c:set var="scales" value="1:12,1:18,1:24,1:32,1:43,1:64"/>
-                                <c:forTokens items="${scales}" delims="," var="scale">
+<%--                                <c:set var="scales" value="1:12,1:18,1:24,1:32,1:43,1:64"/>--%>
+                                <c:forEach items="${scaleName}" var="scale">
                                     <div class="form-check">
                                         <input name="scale" value="${scale}" class="form-check-input" type="checkbox"
                                             ${fn:contains(paramValues.scale, scale) ? 'checked' : ''}>
                                         <label class="form-check-label">Tỉ lệ ${scale}</label>
                                     </div>
-                                </c:forTokens>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
@@ -828,7 +828,7 @@
                                            value="${param.minPrice != null ? param.minPrice : 0}"
                                            placeholder="Từ" readonly>
                                     <input type="text" class="price-input" id="max-price"
-                                           value="${param.maxPrice != null ? param.maxPrice : 1000000000}"
+                                           value="${param.maxPrice != null ? param.maxPrice : requestScope.maxPrice}"
                                            placeholder="Đến" readonly>
                                 </div>
                             </div>
@@ -836,29 +836,29 @@
                     </div>
 
                     <!-- Discount Options -->
-                    <div class="filter-section">
-                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#discountCollapse"
-                             aria-expanded="false">
-                            <span><i class="bi bi-gift me-2"></i>Khuyến mãi</span>
-                            <i class="bi bi-chevron-down"></i>
-                        </div>
-                        <div class="collapse" id="discountCollapse">
-                            <div class="form-check">
-                                <input name="discount" value="newest" class="form-check-input" type="checkbox"
-                                ${param.discount == 'newest' ? 'checked' : ''}>
-                                <label class="form-check-label">Giảm giá mới nhất <img
-                                        src="https://nettruyen.work/assets/images/icon-hot.gif"
-                                        style="height: 12px; margin-left: 3px;"></label>
-                            </div>
-                            <div class="form-check">
-                                <input name="discount" value="highest" class="form-check-input" type="checkbox"
-                                ${param.discount == 'highest' ? 'checked' : ''}>
-                                <label class="form-check-label">Giảm giá nhiều nhất <img
-                                        src="https://nettruyen.work/assets/images/icon-hot.gif"
-                                        style="height: 12px; margin-left: 3px;"></label>
-                            </div>
-                        </div>
-                    </div>
+<%--                    <div class="filter-section">--%>
+<%--                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#discountCollapse"--%>
+<%--                             aria-expanded="false">--%>
+<%--                            <span><i class="bi bi-gift me-2"></i>Khuyến mãi</span>--%>
+<%--                            <i class="bi bi-chevron-down"></i>--%>
+<%--                        </div>--%>
+<%--                        <div class="collapse" id="discountCollapse">--%>
+<%--                            <div class="form-check">--%>
+<%--                                <input name="discount" value="newest" class="form-check-input" type="checkbox"--%>
+<%--                                ${param.discount == 'newest' ? 'checked' : ''}>--%>
+<%--                                <label class="form-check-label">Giảm giá mới nhất <img--%>
+<%--                                        src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
+<%--                                        style="height: 12px; margin-left: 3px;"></label>--%>
+<%--                            </div>--%>
+<%--                            <div class="form-check">--%>
+<%--                                <input name="discount" value="highest" class="form-check-input" type="checkbox"--%>
+<%--                                ${param.discount == 'highest' ? 'checked' : ''}>--%>
+<%--                                <label class="form-check-label">Giảm giá nhiều nhất <img--%>
+<%--                                        src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
+<%--                                        style="height: 12px; margin-left: 3px;"></label>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
                 </div>
 
                 <!-- Footer buttons - always at bottom -->
@@ -1060,7 +1060,7 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const minPrice = urlParams.get('minPrice') ? parseInt(urlParams.get('minPrice')) : 0;
-    const maxPrice = urlParams.get('maxPrice') ? parseInt(urlParams.get('maxPrice')) : 1000000000;
+    const maxPrice = urlParams.get('maxPrice') ? parseInt(urlParams.get('maxPrice')) : ${maxPrice};
 
     noUiSlider.create(priceSlider, {
         start: [minPrice, maxPrice],
@@ -1068,7 +1068,7 @@
         step: 100000,
         range: {
             'min': 0,
-            'max': 1000000000
+            'max': ${maxPrice}
         },
         format: wNumb({
             decimals: 0,

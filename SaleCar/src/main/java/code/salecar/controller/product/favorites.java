@@ -13,6 +13,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class favorites extends HttpServlet {
         filter.setBrands(brand == null ? new ArrayList<>() : List.of(brand));
         if (priceParam != null && !priceParam.isEmpty()) {
             int price = Integer.parseInt(priceParam);
-            filter.setMaxPrice(price);
+            filter.setMaxPrice(new BigDecimal(price));
         }
         boolean highest = false;
         if (discountpr != null && !discountpr.isEmpty()) {
@@ -69,8 +70,8 @@ public class favorites extends HttpServlet {
         request.setAttribute("vouchers", vouchers);
 
         request.setAttribute("favorites", products);
-        request.setAttribute("brand",favoritesBrands);
-        request.setAttribute("category",favoritesCategory);
+        request.setAttribute("brand", favoritesBrands);
+        request.setAttribute("category", favoritesCategory);
         request.getRequestDispatcher("/pages/favorites.jsp").forward(request, response);
 
     }
