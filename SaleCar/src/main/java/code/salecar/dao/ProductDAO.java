@@ -69,13 +69,12 @@ public class ProductDAO {
     }
 
 
-
     //Products
     public int getTotalProduct(ProductFilter filter) {
 
         List<Object> params = new ArrayList<>();
 
-        String sql = "select  count(*) from product pr  " +
+        String sql = "select   count(*) from product pr  " +
                 " join brand br on pr.brand_id = br.id  " +
                 " join category ct on pr.category_id = ct.id " +
                 " where 1=1 ";
@@ -101,21 +100,38 @@ public class ProductDAO {
             params.addAll(filter.getBrands());
         }
 
-        if (filter.getModelScale() != null && !filter.getModelScale().isEmpty()) {
+        if (filter.getScale() != null && !filter.getScale().isEmpty()) {
             query.append(" and pr.ratio in (")
-                    .append(String.join(",", Collections.nCopies(filter.getModelScale().size(), "?")))
+                    .append(String.join(",", Collections.nCopies(filter.getScale().size(), "?")))
                     .append(") ");
-            params.addAll(filter.getModelScale());
+            params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() > 0) {
+        if (filter.getMaxPrice() !=  null) {
             query.append(" and pr.final_price <= ? ");
-            params.add(filter.getMaxPrice());
+            params.add(filter.getMaxPrice().doubleValue());
         }
-        if (filter.getMinPrice() > 0) {
+        if (filter.getMinPrice() != null) {
             query.append(" and pr.final_price >= ? ");
-            params.add(filter.getMinPrice());
+            params.add(filter.getMinPrice().doubleValue());
         }
+
+
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NEWEST:
+                    query.append(" order by pr.created_at desc");
+                    break;
+            }
+        }
+
+
 
 
         try (Connection conn = DBConnection.getConnection();
@@ -168,24 +184,36 @@ public class ProductDAO {
             params.addAll(filter.getBrands());
         }
 
-        if (filter.getModelScale() != null && !filter.getModelScale().isEmpty()) {
+        if (filter.getScale() != null && !filter.getScale().isEmpty()) {
             query.append(" and pr.ratio in (")
-                    .append(String.join(",", Collections.nCopies(filter.getModelScale().size(), "?")))
+                    .append(String.join(",", Collections.nCopies(filter.getScale().size(), "?")))
                     .append(") ");
-            params.addAll(filter.getModelScale());
+            params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() > 0) {
+        if (filter.getMaxPrice() !=  null) {
             query.append(" and pr.final_price <= ? ");
-            params.add(filter.getMaxPrice());
+            params.add(filter.getMaxPrice().doubleValue());
         }
-        if (filter.getMinPrice() > 0) {
+        if (filter.getMinPrice() != null) {
             query.append(" and pr.final_price >= ? ");
-            params.add(filter.getMinPrice());
+            params.add(filter.getMinPrice().doubleValue());
         }
 
 
-        query.append(" order by pr.id desc");
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NEWEST:
+                    query.append(" order by pr.created_at desc");
+                    break;
+            }
+        }
 
 
         int offset = (page - 1) * limit;
@@ -224,7 +252,6 @@ public class ProductDAO {
         System.out.println("Products found: " + products.size());
         return products;
     }
-
 
 
     //Detail
@@ -283,7 +310,6 @@ public class ProductDAO {
     }
 
 
-
     //Discount
     public List<ProductItem> getAllProducts() {
         List<ProductItem> products = new ArrayList<>();
@@ -336,4 +362,63 @@ public class ProductDAO {
         }
     }
 
+
+    //Scale
+    public int getTotalScale() {
+        String query = "SELECT COUNT(DISTINCT ratio) AS total_ratio FROM product;";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total_ratio");
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return 0;
+    }
+
+    public List<String> getScaleName() {
+        List<String> scaleName = new ArrayList<>();
+        String query = "SELECT DISTINCT ratio FROM product;";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                scaleName.add(rs.getString(1));
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return scaleName;
+    }
+
+    public BigDecimal getMaxPrice() {
+        String query = "SELECT MAX(final_price) AS max_final_price FROM product;";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal(1);
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return BigDecimal.ZERO;
+    }
 }

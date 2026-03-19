@@ -10,6 +10,7 @@ import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.model.product.entity.Reviews;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -194,7 +195,7 @@ public class ProductService {
     public List<ProductDetail> sortProducFilter(List<ProductDetail> favoritesProducts, ProductFilter filter) {
 
         if (filter.getCategories().isEmpty() &&
-                filter.getBrands().isEmpty() && filter.getMaxPrice() == -1 &&
+                filter.getBrands().isEmpty() && filter.getMaxPrice() != null &&
                 !filter.isSortByNewestDiscount() && !filter.isSortByHighestDiscount()) {
             return favoritesProducts;
         }
@@ -218,8 +219,8 @@ public class ProductService {
         }
 
         //maxPrice
-        if (filter.getMaxPrice() != -1) {
-            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice());
+        if (filter.getMaxPrice() != null) {
+            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice().doubleValue());
         }
 
 
@@ -232,5 +233,17 @@ public class ProductService {
 //            result.sort((a, b) -> Double.compare(b.getFinalPrice(), a.getFinalPrice()));
 //        }
         return result;
+    }
+
+    public int getTotalScale() {
+        return productDAO.getTotalScale();
+    }
+
+    public List<String> getScaleName() {
+        return productDAO.getScaleName();
+    }
+
+    public BigDecimal getMaxPrice() {
+        return productDAO.getMaxPrice();
     }
 }
