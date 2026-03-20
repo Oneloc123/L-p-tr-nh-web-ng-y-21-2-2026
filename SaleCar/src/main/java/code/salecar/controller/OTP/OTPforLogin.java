@@ -56,6 +56,11 @@ public class OTPforLogin extends HttpServlet {
             session.removeAttribute("otp");
             session.removeAttribute("id");
             session.setAttribute("user",user);
+
+            //alert
+            request.getSession().setAttribute("toastMessage", "Đăng nhập thành công");
+            request.getSession().setAttribute("toastType", "success");
+
             response.sendRedirect("/home");
             return;
         }

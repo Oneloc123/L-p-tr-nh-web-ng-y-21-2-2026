@@ -186,6 +186,7 @@ public class products extends HttpServlet {
         request.setAttribute("selectedCategories", filter.getCategories());
         request.setAttribute("selectedBrands", filter.getBrands());
 
+
         /* =========================
            FORWARD VIEW
         ========================= */
