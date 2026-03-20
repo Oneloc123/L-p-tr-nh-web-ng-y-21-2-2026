@@ -72,6 +72,7 @@ public class addToCart extends HttpServlet {
 
                 // Redirect với tham số thông báo
                 String encodedProductName = URLEncoder.encode(productName, "UTF-8");
+                //alert
                 response.sendRedirect("products?cartSuccess=true&productName=" + encodedProductName);
             } else if ("buyNow".equals(action)) {
                 response.sendRedirect("checkout");
