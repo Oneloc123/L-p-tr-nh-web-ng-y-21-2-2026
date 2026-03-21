@@ -39,6 +39,11 @@ public class Login extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
+        if(user.getRole().equals("admin")){
+            session.setAttribute("user",user);
+            response.sendRedirect("/userAdmin");
+            return;
+        }
         session.setAttribute("otpLoginState","true");
         session.setAttribute("id",user.getId());
         response.sendRedirect("/OTPforLogin");
