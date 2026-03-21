@@ -10,4 +10,8 @@ public class Image {
     private String entityid;
     private boolean main;
     private Date createat;
+
+    public enum entityType {
+        product, brand, category, user, banner
+    }
 }

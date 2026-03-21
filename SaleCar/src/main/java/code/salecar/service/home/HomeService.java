@@ -1,21 +1,21 @@
 package code.salecar.service.home;
 
-import code.salecar.dao.CategoryDAO;
-import code.salecar.dao.ProductDAO;
+import code.salecar.model.Brand;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
+import code.salecar.service.product.BrandService;
+import code.salecar.service.product.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeService {
 
-    ProductDAO  productDAO = new ProductDAO();
-    CategoryDAO categoryDAO = new CategoryDAO();
+    ProductService productService = new ProductService();
+    BrandService brandService = new BrandService();
 
-    public List<ProductItem> getProductNew(){
-        return productDAO.getProductNew();
-    }
+
 
     public List<Product> getProductByCategory(int category_id){
         return null;
@@ -26,7 +26,7 @@ public class HomeService {
     }
 
     public List<Product> getProductSale(){
-        return null;
+        return new ArrayList<Product>();
     }
 
     public List<Product> getProductSaleByCategory(int category_id){
@@ -37,7 +37,14 @@ public class HomeService {
         return null;
     }
 
+    public List<ProductItem> getProductNew(){
+        return productService.getProductNew();
+    }
+
     public List<ProductItem> getProductHot() {
-        return productDAO.getProductHot();
+        return productService.getProductHot();
+    }
+
+    public List<Brand> getAllBrands() { return brandService.getBrands();
     }
 }

@@ -6,12 +6,13 @@ import code.salecar.utils.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrandDAO {
 
-    public List<Brand> getBrands() throws Exception {
+    public List<Brand> getBrands()  {
         List<Brand> brands = new ArrayList<>();
         String sql = "select * from brand";
 
@@ -29,7 +30,12 @@ public class BrandDAO {
                         rs.getDate("created_at"),
                         rs.getDate("updated_at")
                 );
+                brands.add(brand);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return brands;
@@ -111,4 +117,6 @@ public class BrandDAO {
         return name;
 
     }
+
+
 }
