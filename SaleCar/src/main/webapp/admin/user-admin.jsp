@@ -461,7 +461,7 @@
                                         <button class="action-btn action-edit" data-bs-toggle="modal"
                                                 data-bs-target="#editUserModal${u.id}"><i
                                                 class="bi bi-pencil-square"></i></button>
-                                        <a href=""
+                                        <a href="/deleteUser?id=${u.id}"
                                            onclick="return confirm('Xóa người dùng này?')"
                                            class="action-btn action-delete"><i class="bi bi-trash"></i></a>
                                     </td>
@@ -543,7 +543,7 @@
                     <div class="modal-header"><h5 class="modal-title">✏️ Cập nhật người dùng</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <form action="users?action=edit" method="post">
+                    <form action="/updateUser?id=${u.id}" method="post">
                         <div class="modal-body"><input type="hidden" name="id" value="1">
                             <div class="row g-3">
                                 <div class="col-md-6"><label>Tên đăng nhập</label><input class="form-control" name="username"
@@ -591,7 +591,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="users?action=add" method="post">
+                <form action="/addUser" method="post">
                     <div class="row g-3">
                         <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text"
                                                                                                       class="form-control"
@@ -613,8 +613,8 @@
                         </div>
                         <div class="col-md-6"><label class="form-label">Vai trò</label><select class="form-select"
                                                                                                name="role">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
+                            <option value="user">user</option>
+                            <option value="admin">admin</option>
                         </select></div>
                         <div class="col-md-6"><label class="form-label">Trạng thái</label><select class="form-select"
                                                                                                   name="status">

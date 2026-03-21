@@ -1,8 +1,6 @@
-package code.salecar.controller.admin;
+package code.salecar.controller.admin.user;
 
-import code.salecar.model.Address;
 import code.salecar.model.User;
-import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -11,8 +9,8 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "UserAdmin", value = "/userAdmin")
-public class UserAdmin extends HttpServlet {
+@WebServlet(name = "DeleteUser", value = "/deleteUser")
+public class DeleteUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -24,10 +22,10 @@ public class UserAdmin extends HttpServlet {
                 response.sendRedirect("/login");
                 return;
             }
+            int id = Integer.parseInt(request.getParameter("id"));
             UserService us = new UserService();
-            List<User> listUser = us.getList();
-            request.setAttribute("listUser",listUser);
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            us.deleteUserById(id);
+            response.sendRedirect("/userAdmin");
         }
     }
 

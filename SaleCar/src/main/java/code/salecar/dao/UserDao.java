@@ -228,4 +228,15 @@ public class UserDao {
         }
         return list;
     }
+
+    public void deleteUserById(int id) {
+        String query = "delete from users where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1,id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

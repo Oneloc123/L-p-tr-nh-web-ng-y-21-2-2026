@@ -35,4 +35,8 @@ public class UserService {
     public List<User> getList() {
         return ud.getList();
     }
+
+    public void deleteUserById(int id) {
+        ud.deleteUserById(id);
+    }
 }
