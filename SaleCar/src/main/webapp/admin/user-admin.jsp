@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -15,7 +16,24 @@
             padding: 0;
             box-sizing: border-box;
         }
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid #00ffcc;
+            box-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
+        }
 
+        /* Avatar trong modal (to hơn) */
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
         body {
             background-color: #000000;
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -83,7 +101,7 @@
         .sidebar nav ul li a.active {
             background-color: #00ffcc10;
             color: #00ffcc;
-            box-shadow: 0 2px 6px rgba(0,255,204,0.05);
+            box-shadow: 0 2px 6px rgba(0, 255, 204, 0.05);
             border-left: 2px solid #00ffcc;
         }
 
@@ -102,7 +120,7 @@
             border-radius: 28px;
             margin-bottom: 2rem;
             border: 1px solid #1e2a2a;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
         }
 
         .header h3 {
@@ -126,7 +144,7 @@
         .btn-primary:hover {
             background-color: #00ffcc;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,255,204,0.3);
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
             color: #000;
         }
 
@@ -147,7 +165,7 @@
             border: 1px solid #1e2a2a;
             border-radius: 24px;
             backdrop-filter: blur(2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
 
         .card-body {
@@ -165,7 +183,7 @@
         .form-control:focus, .form-select:focus {
             background-color: #1a1a1a;
             border-color: #00ffcc;
-            box-shadow: 0 0 0 3px rgba(0,255,204,0.2);
+            box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
             color: white;
         }
 
@@ -274,7 +292,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 18px;
-            box-shadow: 0 0 6px rgba(0,255,204,0.4);
+            box-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
         }
 
         /* Modal Dark */
@@ -307,12 +325,15 @@
                 width: 80px;
                 padding: 1rem 0.5rem;
             }
+
             .sidebar .logo span {
                 display: none;
             }
+
             .sidebar nav ul li a span {
                 display: none;
             }
+
             .sidebar nav ul li a i {
                 font-size: 1.5rem;
             }
@@ -344,7 +365,8 @@
     <!-- Main -->
     <main class="main-content">
         <header class="header d-flex justify-content-between align-items-center">
-            <h3 class="fw-bold m-0"><i class="bi bi-people-fill me-2" style="color:#00ffcc;"></i> Quản lý người dùng</h3>
+            <h3 class="fw-bold m-0"><i class="bi bi-people-fill me-2" style="color:#00ffcc;"></i> Quản lý người dùng
+            </h3>
             <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                     <i class="bi bi-plus-lg"></i> Thêm người dùng
@@ -354,7 +376,8 @@
 
         <!-- SEARCH + FILTERS -->
         <form class="input-group mb-4" action="users" method="get">
-            <input type="text" class="form-control" name="keyword" placeholder="🔍 Tìm kiếm theo tên, email, số điện thoại..." value="">
+            <input type="text" class="form-control" name="keyword"
+                   placeholder="🔍 Tìm kiếm theo tên, email, số điện thoại..." value="">
             <button class="btn btn-outline-secondary"><i class="bi bi-search"></i> Tìm</button>
         </form>
 
@@ -389,45 +412,61 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                             <tr class="text-uppercase small">
-                                <th>#</th><th>Avatar</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Email</th>
-                                <th>Số điện thoại</th><th>Vai trò</th><th>Trạng thái</th><th>Ngày tạo</th><th>Hành động</th>
+                                <th>#</th>
+                                <th>Avatar</th>
+                                <th>Tên đăng nhập</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Hành động</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- Admin user -->
-                            <tr>
-                                <td>1</td>
-                                <td class="avatar-cell"><div class="default-avatar">A</div></td>
-                                <td class="fw-semibold">admin</td>
-                                <td>Nguyễn Văn Admin</td>
-                                <td>admin@luxcar.com</td>
-                                <td>0901234567</td>
-                                <td><span class="role-badge role-admin">Admin</span></td>
-                                <td><span class="status-badge status-active">Hoạt động</span></td>
-                                <td>2024-01-01</td>
-                                <td>
-                                    <button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewUserModal1"><i class="bi bi-eye"></i></button>
-                                    <button class="action-btn action-edit" data-bs-toggle="modal" data-bs-target="#editUserModal1"><i class="bi bi-pencil-square"></i></button>
-                                    <a href="users?action=delete&id=1" onclick="return confirm('Xóa người dùng này?')" class="action-btn action-delete"><i class="bi bi-trash"></i></a>
-                                </td>
-                            </tr>
-                            <!-- User khóa -->
-                            <tr>
-                                <td>4</td>
-                                <td><div class="default-avatar">L</div></td>
-                                <td>lethib</td>
-                                <td>Lê Thị B</td>
-                                <td>lethib@luxcar.com</td>
-                                <td>0934567890</td>
-                                <td><span class="role-badge role-user">User</span></td>
-                                <td><span class="status-badge status-inactive">Đã khóa</span></td>
-                                <td>2024-01-20</td>
-                                <td>
-                                    <button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewUserModal4"><i class="bi bi-eye"></i></button>
-                                    <button class="action-btn action-edit" data-bs-toggle="modal" data-bs-target="#editUserModal4"><i class="bi bi-pencil-square"></i></button>
-                                    <a href="users?action=delete&id=4" onclick="return confirm('Xóa người dùng này?')" class="action-btn action-delete"><i class="bi bi-trash"></i></a>
-                                </td>
-                            </tr>
+                            <c:forEach items="${listUser}" var="u">
+                                <tr>
+                                    <td>${u.id}</td>
+                                    <td class="avatar-cell">
+                                        <c:choose>
+                                            <c:when test="${not empty u.imgURL}">
+                                                <img src="${pageContext.request.contextPath}/${u.imgURL}"
+                                                     class="profile-avatar" alt="Avatar">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png"
+                                                     class="profile-avatar" alt="Avatar">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="fw-semibold">${u.username}</td>
+                                    <td>${u.fullname}</td>
+                                    <td>${u.email}</td>
+                                    <td>${u.phonenumber}</td>
+                                    <td><span class="role-badge role-admin">${u.role}</span></td>
+                                    <c:choose>
+                                        <c:when test="${u.status}">
+                                            <td><span class="status-badge status-active">Hoạt động</span></td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td><span class="status-badge status-inactive">Đã khóa</span></td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <td>${u.createdat}</td>
+                                    <td>
+                                        <button class="action-btn action-view" data-bs-toggle="modal"
+                                                data-bs-target="#viewUserModal${u.id}"><i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="action-btn action-edit" data-bs-toggle="modal"
+                                                data-bs-target="#editUserModal${u.id}"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <a href=""
+                                           onclick="return confirm('Xóa người dùng này?')"
+                                           class="action-btn action-delete"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
                             </tbody>
                         </table>
                     </div>
@@ -435,6 +474,109 @@
             </div>
         </section>
     </main>
+    <c:forEach items="${listUser}" var="u">
+        <!-- MODAL VIEW USER 1 -->
+        <div class="modal fade" id="viewUserModal${u.id}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title">👤 Chi tiết người dùng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex gap-4 flex-wrap">
+                            <div>
+                                <img src="${pageContext.request.contextPath}/${empty u.imgURL ? 'assets/img/default-avatar.png' : u.imgURL}"
+                                     class="profile-avatar-lg" alt="Avatar">
+                            </div>
+                            <div>
+                                <table class="table table-borderless text-white">
+                                    <tr>
+                                        <th>ID:</th>
+                                        <td>${u.id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tên đăng nhập:</th>
+                                        <td>${u.username}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Họ tên:</th>
+                                        <td>${u.fullname}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email:</th>
+                                        <td>${u.email}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>SĐT:</th>
+                                        <td>${u.phonenumber}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Vai trò:</th>
+                                        <td><span class="role-badge role-admin">${u.role}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Trạng thái:</th>
+                                        <c:choose>
+                                            <c:when test="${u.status}">
+                                                <td><span class="status-badge status-active">Hoạt động</span></td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td><span class="status-badge status-inactive">Đã khóa</span></td>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL EDIT USER 1 -->
+        <div class="modal fade" id="editUserModal${u.id}" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title">✏️ Cập nhật người dùng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form action="users?action=edit" method="post">
+                        <div class="modal-body"><input type="hidden" name="id" value="1">
+                            <div class="row g-3">
+                                <div class="col-md-6"><label>Tên đăng nhập</label><input class="form-control" name="username"
+                                                                                         placeholder="${u.username}"  ></div>
+                                <div class="col-md-6"><label>Mật khẩu mới</label><input type="password" class="form-control"
+                                                                                        name="password"
+                                                                                        placeholder="Để trống nếu không đổi">
+                                </div>
+                                <div class="col-md-6"><label>Họ tên</label><input class="form-control" name="fullname"
+                                                                                  placeholder="${u.fullname}"  ></div>
+                                <div class="col-md-6"><label>Email</label><input class="form-control" name="email"
+                                                                                 placeholder="${u.email}"  ></div>
+                                <div class="col-md-6"><label>Số điện thoại</label><input class="form-control" name="phonenumber"
+                                                                                         placeholder="${u.phonenumber}"     ></div>
+                                <div class="col-md-6"><label>Vai trò</label><select class="form-select" name="role">
+                                    <option value="user">User</option>
+                                    <option value="admin" selected>Admin</option>
+                                </select></div>
+                                <div class="col-md-6"><label>Trạng thái</label><select class="form-select" name="status">
+                                    <option value="true" selected>Hoạt động</option>
+                                    <option value="false">Đã khóa</option>
+                                </select></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </c:forEach>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -444,20 +586,46 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill text-primary me-2"></i> Thêm người dùng</h5>
+                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill text-primary me-2"></i> Thêm người dùng
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form action="users?action=add" method="post">
                     <div class="row g-3">
-                        <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text" class="form-control" name="username" required></div>
-                        <div class="col-md-6"><label class="form-label">Mật khẩu *</label><input type="password" class="form-control" name="password" required></div>
-                        <div class="col-md-6"><label class="form-label">Họ tên</label><input type="text" class="form-control" name="fullname"></div>
-                        <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" name="email"></div>
-                        <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text" class="form-control" name="phonenumber"></div>
-                        <div class="col-md-6"><label class="form-label">Vai trò</label><select class="form-select" name="role"><option value="user">User</option><option value="admin">Admin</option></select></div>
-                        <div class="col-md-6"><label class="form-label">Trạng thái</label><select class="form-select" name="status"><option value="true">Hoạt động</option><option value="false">Đã khóa</option></select></div>
-                        <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label><input type="text" class="form-control" name="imgURL" placeholder="/assets/img/avatar.png"></div>
+                        <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text"
+                                                                                                      class="form-control"
+                                                                                                      name="username"
+                                                                                                      required></div>
+                        <div class="col-md-6"><label class="form-label">Mật khẩu *</label><input type="password"
+                                                                                                 class="form-control"
+                                                                                                 name="password"
+                                                                                                 required></div>
+                        <div class="col-md-6"><label class="form-label">Họ tên</label><input type="text"
+                                                                                             class="form-control"
+                                                                                             name="fullname"></div>
+                        <div class="col-md-6"><label class="form-label">Email</label><input type="email"
+                                                                                            class="form-control"
+                                                                                            name="email"></div>
+                        <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text"
+                                                                                                    class="form-control"
+                                                                                                    name="phonenumber">
+                        </div>
+                        <div class="col-md-6"><label class="form-label">Vai trò</label><select class="form-select"
+                                                                                               name="role">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select></div>
+                        <div class="col-md-6"><label class="form-label">Trạng thái</label><select class="form-select"
+                                                                                                  name="status">
+                            <option value="true">Hoạt động</option>
+                            <option value="false">Đã khóa</option>
+                        </select></div>
+                        <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label><input type="text"
+                                                                                                        class="form-control"
+                                                                                                        name="imgURL"
+                                                                                                        placeholder="/assets/img/avatar.png">
+                        </div>
                     </div>
                     <div class="modal-footer mt-4 px-0 pb-0 border-0">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -469,17 +637,6 @@
     </div>
 </div>
 
-<!-- MODAL VIEW USER 1 -->
-<div class="modal fade" id="viewUserModal1" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">👤 Chi tiết người dùng</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="d-flex gap-4 flex-wrap"><div class="default-avatar" style="width:100px;height:100px;font-size:40px;">A</div><div><table class="table table-borderless text-white"><tr><th>ID:</th><td>1</td></tr><tr><th>Tên đăng nhập:</th><td>admin</td></tr><tr><th>Họ tên:</th><td>Nguyễn Văn Admin</td></tr><tr><th>Email:</th><td>admin@luxcar.com</td></tr><tr><th>SĐT:</th><td>0901234567</td></tr><tr><th>Vai trò:</th><td><span class="role-badge role-admin">Admin</span></td></tr><tr><th>Trạng thái:</th><td><span class="status-badge status-active">Hoạt động</span></td></tr></table></div></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button></div></div></div></div>
-
-<!-- MODAL VIEW USER 4 -->
-<div class="modal fade" id="viewUserModal4" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">👤 Chi tiết người dùng</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="d-flex gap-4"><div class="default-avatar" style="width:100px;height:100px;font-size:40px;">L</div><div><table class="table table-borderless text-white"><tr><th>ID:</th><td>4</td></tr><tr><th>Tên đăng nhập:</th><td>lethib</td></tr><tr><th>Họ tên:</th><td>Lê Thị B</td></tr><tr><th>Email:</th><td>lethib@luxcar.com</td></tr><tr><th>Vai trò:</th><td><span class="role-badge role-user">User</span></td></tr><tr><th>Trạng thái:</th><td><span class="status-badge status-inactive">Đã khóa</span></td></tr></table></div></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button></div></div></div></div>
-
-<!-- MODAL EDIT USER 1 -->
-<div class="modal fade" id="editUserModal1" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">✏️ Cập nhật người dùng</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form action="users?action=edit" method="post"><div class="modal-body"><input type="hidden" name="id" value="1"><div class="row g-3"><div class="col-md-6"><label>Tên đăng nhập</label><input class="form-control" name="username" value="admin"></div><div class="col-md-6"><label>Mật khẩu mới</label><input type="password" class="form-control" name="password" placeholder="Để trống nếu không đổi"></div><div class="col-md-6"><label>Họ tên</label><input class="form-control" name="fullname" value="Nguyễn Văn Admin"></div><div class="col-md-6"><label>Email</label><input class="form-control" name="email" value="admin@luxcar.com"></div><div class="col-md-6"><label>Số điện thoại</label><input class="form-control" name="phonenumber" value="0901234567"></div><div class="col-md-6"><label>Vai trò</label><select class="form-select" name="role"><option value="user">User</option><option value="admin" selected>Admin</option></select></div><div class="col-md-6"><label>Trạng thái</label><select class="form-select" name="status"><option value="true" selected>Hoạt động</option><option value="false">Đã khóa</option></select></div></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary" type="submit">Lưu thay đổi</button></div></form></div></div></div>
-
-<!-- MODAL EDIT USER 4 -->
-<div class="modal fade" id="editUserModal4" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">✏️ Cập nhật người dùng</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form action="users?action=edit" method="post"><div class="modal-body"><input type="hidden" name="id" value="4"><div class="row g-3"><div class="col-md-6"><label>Tên đăng nhập</label><input class="form-control" name="username" value="lethib"></div><div class="col-md-6"><label>Mật khẩu mới</label><input type="password" class="form-control" name="password" placeholder="Để trống"></div><div class="col-md-6"><label>Họ tên</label><input class="form-control" name="fullname" value="Lê Thị B"></div><div class="col-md-6"><label>Email</label><input class="form-control" name="email" value="lethib@luxcar.com"></div><div class="col-md-6"><label>Số điện thoại</label><input class="form-control" name="phonenumber" value="0934567890"></div><div class="col-md-6"><label>Vai trò</label><select class="form-select" name="role"><option value="user" selected>User</option><option value="admin">Admin</option></select></div><div class="col-md-6"><label>Trạng thái</label><select class="form-select" name="status"><option value="true">Hoạt động</option><option value="false" selected>Đã khóa</option></select></div></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary" type="submit">Lưu thay đổi</button></div></form></div></div></div>
 
 </body>
 </html>

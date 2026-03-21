@@ -3,6 +3,8 @@ package code.salecar.service.user;
 import code.salecar.dao.UserDao;
 import code.salecar.model.User;
 
+import java.util.List;
+
 public class UserService {
 
     private UserDao ud = new UserDao();
@@ -28,5 +30,9 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return ud.getUserByEmail(email);
+    }
+
+    public List<User> getList() {
+        return ud.getList();
     }
 }
