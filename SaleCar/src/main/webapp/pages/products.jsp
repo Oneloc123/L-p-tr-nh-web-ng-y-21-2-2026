@@ -482,6 +482,26 @@
         color: #fff;
     }
 
+    /* ================= RATING STYLE ================= */
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: var(--gold);
+        margin: 8px 0;
+    }
+
+    .rating i {
+        font-size: 12px;
+    }
+
+    .rating span {
+        color: var(--text-secondary);
+        margin-right: 5px;
+        font-weight: 500;
+    }
+
     /* ================= EMPTY STATE ================= */
     .empty-state {
         text-align: center;
@@ -900,6 +920,21 @@
                                             <div class="product-model">
                                                 <i class="bi bi-cpu"></i> Tỉ lệ ${p.ratio}
                                             </div>
+                                            <div class="rating mb-2">
+                                                <fmt:formatNumber
+                                                        value="${p.avgRating}"
+                                                        maxFractionDigits="1"/>
+                                                <c:forEach begin="1" end="5" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${i le p.avgRating}">
+                                                            <i class="bi bi-star-fill"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="bi bi-star"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
                                             <div class="product-price-section">
                                                 <c:if test="${p.discountPercent > 0}">
                                                 <span class="product-price-old">
@@ -1065,9 +1100,6 @@
         form.submit();
     }
 
-    <c:if test="${empty products}">
-    showAlert('Không có sản phẩm nào phù hợp với bộ lọc của bạn', 'warning');
-    </c:if>
 
     // function showAlert(message, type) {
     //     const alertDiv = document.createElement('div');
@@ -1113,9 +1145,12 @@
     // }
 
 
-</script>
-<!-- Thêm phần này để kiểm tra URL parameter -->
-<script>
+    <!-- Thêm phần này để kiểm tra URL parameter -->
+    document.addEventListener('DOMContentLoaded', function () {
+        <c:if test="${empty products}">
+        showAlert('Không có sản phẩm nào phù hợp với bộ lọc của bạn', 'warning');
+        </c:if>
+    });
     document.addEventListener('DOMContentLoaded', function () {
         // Lấy parameters từ URL
         const urlParams = new URLSearchParams(window.location.search);

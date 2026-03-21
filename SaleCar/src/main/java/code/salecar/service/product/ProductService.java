@@ -34,7 +34,7 @@ public class ProductService {
         Brand brand = bs.getBrandByID(detail.getProduct().getBrandId());
         if (brand != null) {
             detail.setBrandName(brand.getName());
-            detail.setBrandLink(brand.getLinkband());
+            detail.setBrandLink(brand.getLinkBrand());
 
         }
 
@@ -43,7 +43,7 @@ public class ProductService {
 
         // Rating
         List<Reviews> reviews = rs.getReviewsByID(detail.getProduct().getId());
-        ProductRating rating = new ProductRating(product.getId());
+        ProductRating rating = new ProductRating(detail.getProduct().getId());
         if (reviews != null && !reviews.isEmpty()) {
             detail.setReviews(reviews);
             detail.setAvgRating(caculateRates(reviews));
@@ -104,7 +104,15 @@ public class ProductService {
 
             String categoryName = cs.getCategoryName(productItem.getCategoryId());
             productItem.setCategoryName(categoryName != null ? categoryName : "");
+
+            List<Reviews> reviews = rs.getReviewsByID(productItem.getId());
+            if (reviews != null && !reviews.isEmpty()) {
+                productItem.setAvgRating(caculateRates(reviews));
+            } else {
+                productItem.setAvgRating(0);
+            }
         }
+
 
         return product;
     }
@@ -245,5 +253,13 @@ public class ProductService {
 
     public BigDecimal getMaxPrice() {
         return productDAO.getMaxPrice();
+    }
+
+    public List<ProductItem> getProductNew() {
+       return productDAO.getProductNew();
+    }
+
+    public List<ProductItem> getProductHot() {
+        return productDAO.getProductHot();
     }
 }
