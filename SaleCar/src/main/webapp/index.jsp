@@ -604,38 +604,16 @@
     <div class="container">
         <h2 class="section-title">Danh Mục Mô Hình Xe</h2>
         <div class="category-grid">
-            <a href="/products?category=sport" class="category-card">
-                <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
-                     alt="Xe Thể Thao" class="category-img">
-                <div class="category-info">
-                    <i class="bi bi-speedometer2 category-icon"></i>
-                    <h3 class="category-name">Xe Thể Thao</h3>
-                </div>
-            </a>
-            <a href="/products?category=supercar" class="category-card">
-                <img src="https://product.hstatic.net/1000328919/product/lamborghini-aventador-svj-1-18-maisto_1eef51a198a043e2a8330ab4b4ed3003_grande.jpg"
-                     alt="Siêu Xe" class="category-img">
-                <div class="category-info">
-                    <i class="bi bi-stars category-icon"></i>
-                    <h3 class="category-name">Siêu Xe</h3>
-                </div>
-            </a>
-            <a href="/products?category=classic" class="category-card">
-                <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-250-gto-1-18-cmc_9e3a3b5d5c6d4c5f8b3e6f2a1c8e9d4f_grande.jpg"
-                     alt="Xe Cổ Điển" class="category-img">
-                <div class="category-info">
-                    <i class="bi bi-clock-history category-icon"></i>
-                    <h3 class="category-name">Xe Cổ Điển</h3>
-                </div>
-            </a>
-            <a href="/products?category=limited" class="category-card">
-                <img src="https://product.hstatic.net/1000328919/product/bugatti-chiron-1-18-autoart_f8d3a2c5b6e7f8d9c0a1b2c3d4e5f6g7_grande.jpg"
-                     alt="Phiên Bản Giới Hạn" class="category-img">
-                <div class="category-info">
-                    <i class="bi bi-gem category-icon"></i>
-                    <h3 class="category-name">Phiên Bản Giới Hạn</h3>
-                </div>
-            </a>
+            <c:forEach var="ca" items="${categories}">
+                <a href="/products?category=${ca.name}" class="category-card">
+                    <img src="${ca.image}"
+                         alt="${ca.name}" class="category-img">
+                    <div class="category-info">
+                        <i class="bi ${ca.icon} category-icon"></i>
+                        <h3 class="category-name">${ca.name}</h3>
+                    </div>
+                </a>
+            </c:forEach>
         </div>
     </div>
 </section>
