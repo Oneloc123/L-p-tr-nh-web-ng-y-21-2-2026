@@ -103,8 +103,12 @@
 
 .alert-custom.success {
     background: linear-gradient(135deg, #fafafa 0%, #fcf9f0 100%);
+    border-left-color: #40ff00;
 }
-
+.alert-custom.success i,
+.alert-custom.success strong {
+    color: #40ff00;
+}
 .alert-custom.warning {
     background: linear-gradient(135deg, #fff9e6 0%, #fff3d6 100%);
     border-left-color: #ff9800;
