@@ -5,7 +5,7 @@ import code.salecar.model.Image;
 
 public class ImageService {
     ImageDAO imageDAO = new ImageDAO();
-    public String getImage(int brandId) {
-        return  imageDAO.getImage(Image.entityType.brand,brandId);
+    public String getImage(Image.entityType type ,int id) {
+        return  imageDAO.getImage(type,id);
     }
 }

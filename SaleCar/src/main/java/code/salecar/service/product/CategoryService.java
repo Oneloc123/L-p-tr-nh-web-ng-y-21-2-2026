@@ -1,11 +1,22 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.CategoryDAO;
+import code.salecar.model.Category;
+import code.salecar.model.Image;
+import code.salecar.service.Image.ImageService;
 
 import java.util.List;
 
 public class CategoryService {
     CategoryDAO categoryDAO = new CategoryDAO();
+    ImageService imageService = new ImageService();
+    public  List<Category> getCategory() {
+        List<Category> categories = categoryDAO.getCategory();
+        for(Category category:categories){
+            category.setImage(imageService.getImage(Image.entityType.category,category.getId()));
+        }
+        return categories;
+    }
 
     public int getTotalCategory() {
         return categoryDAO.getTotalCategory();

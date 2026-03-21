@@ -30,9 +30,8 @@ public class BrandService {
     public List<Brand> getBrands() {
         List<Brand> brands =  brandDAO.getBrands();
         for (Brand brand : brands) {
-            String image = imageService.getImage(brand.getId());
+            String image = imageService.getImage(Image.entityType.brand,brand.getId());
             brand.setImage(image);
-            System.out.println(image+"//////////////////////////");
         }
         return brands;
     }

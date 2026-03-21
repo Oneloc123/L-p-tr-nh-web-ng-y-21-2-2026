@@ -1,6 +1,7 @@
 package code.salecar.controller.home;
 
 import code.salecar.model.Brand;
+import code.salecar.model.Category;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
@@ -40,6 +41,10 @@ public class home extends HttpServlet {
 
         List<Brand> brands = hs.getAllBrands();
         request.setAttribute("brands", brands);
+
+        List<Category> categories = hs.getCategory();
+        request.setAttribute("categories",categories);
+
 
 
 
