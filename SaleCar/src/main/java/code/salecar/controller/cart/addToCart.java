@@ -47,28 +47,44 @@ public class addToCart extends HttpServlet {
         Cart cart = (Cart) session.getAttribute("cart");
         User user = (User) session.getAttribute("user");
 
-        int userId = user.getId();
+
+
+        String ajax = request.getParameter("ajax");
 
         //guest thi khong mua hang duoc
         if (user == null) {
+            // ajax cho login
+            if("true".equals(ajax)){
+                response.getWriter().print("need_login");
+                return;
+            }
+
             response.sendRedirect("login");
             return;
 
             //mua ngay va them vao gio hang
         } else {
+
             if (cart == null) {
                 cart = new Cart();
             }
 
+            int userId = user.getId();
             cart.addProduct(product.getProduct(), quantity);
             session.setAttribute("cart", cart);
 
             List<Address> lstAddress = AddrDAO.getListAddressById(userId);
             session.setAttribute("listAddress", lstAddress);
 
+            // ajax(huy)
+            if("true".equals(ajax)){
+                response.getWriter().print("success");
+                return;
+            }
+
             if ("addCart".equals(action)) {
                 // Lấy tên sản phẩm từ database
-                String productName = product.getProduct().getName(); // Bạn cần implement hàm này
+                String productName = product.getProduct().getName();
 
                 // Redirect với tham số thông báo
                 String encodedProductName = URLEncoder.encode(productName, "UTF-8");
@@ -81,7 +97,7 @@ public class addToCart extends HttpServlet {
                 if(referer != null){
                     response.sendRedirect(referer);
                 } else
-                response.sendRedirect("home");
+                    response.sendRedirect("home");
 
             }
         }
