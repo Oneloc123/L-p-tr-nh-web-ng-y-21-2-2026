@@ -1,7 +1,7 @@
 package code.salecar.dao;
 
-import code.salecar.model.Discount;
-import code.salecar.model.Product;
+import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Connection;

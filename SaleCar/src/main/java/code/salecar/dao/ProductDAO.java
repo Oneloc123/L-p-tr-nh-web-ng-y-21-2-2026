@@ -1,7 +1,8 @@
 package code.salecar.dao;
 
-import code.salecar.controller.product.ProductFilter;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.filter.ProductFilter;
+import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
 
 import java.math.BigDecimal;
@@ -10,32 +11,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.sql.Date;
 import java.util.List;
-import java.util.logging.Filter;
 
 public class ProductDAO {
 
-    public List<Product> getProductNew() {
-        List<Product> products = new ArrayList<>();
+
+    //Home
+    public List<ProductItem> getProductNew() {
+        List<ProductItem> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by created_at desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Product p = new Product(
+                ProductItem p = new ProductItem(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
+                        rs.getString("ratio")
                 );
                 products.add(p);
             }
@@ -46,60 +42,23 @@ public class ProductDAO {
 
     }
 
-    public Product getProductByID(int id) {
-        Product p = null;
-        String query = "select * from product where id = ? ";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
-
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return p;
-    }
-
-    public List<Product> getProductHot() {
-        List<Product> products = new ArrayList<>();
+    //Home
+    public List<ProductItem> getProductHot() {
+        List<ProductItem> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by price desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Product p = new Product(
+                ProductItem p = new ProductItem(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
+                        rs.getString("ratio")
                 );
                 products.add(p);
             }
@@ -109,11 +68,13 @@ public class ProductDAO {
         return products;
     }
 
+
+    //Products
     public int getTotalProduct(ProductFilter filter) {
 
         List<Object> params = new ArrayList<>();
 
-        String sql = "select  count(*) from product pr  " +
+        String sql = "select   count(*) from product pr  " +
                 " join brand br on pr.brand_id = br.id  " +
                 " join category ct on pr.category_id = ct.id " +
                 " where 1=1 ";
@@ -139,21 +100,37 @@ public class ProductDAO {
             params.addAll(filter.getBrands());
         }
 
-        if (filter.getModelScale() != null && !filter.getModelScale().isEmpty()) {
+        if (filter.getScale() != null && !filter.getScale().isEmpty()) {
             query.append(" and pr.ratio in (")
-                    .append(String.join(",", Collections.nCopies(filter.getModelScale().size(), "?")))
+                    .append(String.join(",", Collections.nCopies(filter.getScale().size(), "?")))
                     .append(") ");
-            params.addAll(filter.getModelScale());
+            params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() > 0) {
+        if (filter.getMaxPrice() !=  null) {
             query.append(" and pr.final_price <= ? ");
-            params.add(filter.getMaxPrice());
+            params.add(filter.getMaxPrice().doubleValue());
         }
-        if (filter.getMinPrice() > 0) {
+        if (filter.getMinPrice() != null) {
             query.append(" and pr.final_price >= ? ");
-            params.add(filter.getMinPrice());
+            params.add(filter.getMinPrice().doubleValue());
         }
+
+
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NEWEST:
+                    query.append(" order by pr.created_at desc");
+                    break;
+            }
+        }
+
 
 
 
@@ -175,9 +152,10 @@ public class ProductDAO {
         return 0;
     }
 
-    public List<Product> getProductFilter(ProductFilter filter, int page, int limit) {
+    //Produtcs
+    public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
 
-        List<Product> products = new ArrayList<>();
+        List<ProductItem> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
         String sql = "select   pr.* from product pr  " +
@@ -206,24 +184,36 @@ public class ProductDAO {
             params.addAll(filter.getBrands());
         }
 
-        if (filter.getModelScale() != null && !filter.getModelScale().isEmpty()) {
+        if (filter.getScale() != null && !filter.getScale().isEmpty()) {
             query.append(" and pr.ratio in (")
-                    .append(String.join(",", Collections.nCopies(filter.getModelScale().size(), "?")))
+                    .append(String.join(",", Collections.nCopies(filter.getScale().size(), "?")))
                     .append(") ");
-            params.addAll(filter.getModelScale());
+            params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() > 0) {
+        if (filter.getMaxPrice() !=  null) {
             query.append(" and pr.final_price <= ? ");
-            params.add(filter.getMaxPrice());
+            params.add(filter.getMaxPrice().doubleValue());
         }
-        if (filter.getMinPrice() > 0) {
+        if (filter.getMinPrice() != null) {
             query.append(" and pr.final_price >= ? ");
-            params.add(filter.getMinPrice());
+            params.add(filter.getMinPrice().doubleValue());
         }
 
 
-        query.append(" order by pr.id desc");
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NEWEST:
+                    query.append(" order by pr.created_at desc");
+                    break;
+            }
+        }
 
 
         int offset = (page - 1) * limit;
@@ -242,7 +232,7 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Product p = new Product(
+                ProductItem p = new ProductItem(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getDouble("price"),
@@ -263,6 +253,43 @@ public class ProductDAO {
         return products;
     }
 
+
+    //Detail
+    public Product getProductByID(int id) {
+        Product p = null;
+        String query = "select * from product where id = ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                p = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
+                        rs.getDate("discount_updated_at"),
+                        rs.getInt("brand_id"),
+                        rs.getInt("category_id"),
+                        rs.getString("description"),
+                        rs.getString("ratio"),
+                        rs.getString("size"),
+                        rs.getString("material"),
+                        rs.getString("origin"),
+                        rs.getBoolean("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at")
+                );
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return p;
+    }
+
+    //Detail
     public List<Integer> getRelatedProductMaterial(String byWith) {
         List<Integer> products = new ArrayList<>();
         String query = "select * from product where  status = 1 " +
@@ -282,8 +309,10 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
+
+    //Discount
+    public List<ProductItem> getAllProducts() {
+        List<ProductItem> products = new ArrayList<>();
         String query = "select * from product ";
 
         try (Connection conn = DBConnection.getConnection();
@@ -291,16 +320,14 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Product product = new Product(
+                ProductItem product = new ProductItem(
                         rs.getInt("id"),
-                        rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
-                        rs.getBoolean("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
+                        rs.getDate("created_at")
                 );
 
                 products.add(product);
@@ -314,6 +341,7 @@ public class ProductDAO {
         return products;
     }
 
+    //Discount
     public void updateFinalPrice(int id, double finalPrice, BigDecimal value, Date updatedAt) {
         String query = "update product  " +
                 " set final_price = ?, discount_percent = ?, updated_at = ?,discount_updated_at = ?  " +
@@ -334,69 +362,63 @@ public class ProductDAO {
         }
     }
 
-    public Product getProductByBrand(int entityId) {
-        Product p = null;
-        String query = "select * from product pr join brand br on pr.brand_id = br.id where br.id = ? ";
+
+    //Scale
+    public int getTotalScale() {
+        String query = "SELECT COUNT(DISTINCT ratio) AS total_ratio FROM product;";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, entityId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
-
-
+                return rs.getInt("total_ratio");
             }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return p;
 
+        return 0;
     }
 
-    public Product getProductByCategory(int entityId) {
-        Product p = null;
-        String query = "select * from product pr join category ct on pr.category_id = ct.id where ct.id = ? ";
+    public List<String> getScaleName() {
+        List<String> scaleName = new ArrayList<>();
+        String query = "SELECT DISTINCT ratio FROM product;";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, entityId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
-
+            while (rs.next()) {
+                scaleName.add(rs.getString(1));
             }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return p;
+
+        return scaleName;
+    }
+
+    public BigDecimal getMaxPrice() {
+        String query = "SELECT MAX(final_price) AS max_final_price FROM product;";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal(1);
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return BigDecimal.ZERO;
     }
 }

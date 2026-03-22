@@ -35,6 +35,22 @@ public class User {
         this.updatedat = updatedat;
     }
 
+    public User(int id, String username, String password, String fullname, String email, String description, String phonenumber, String addressid, String role, boolean status, Date createdat, Date updatedat, String imgURL) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.email = email;
+        this.description = description;
+        this.phonenumber = phonenumber;
+        this.addressid = addressid;
+        this.role = role;
+        this.status = status;
+        this.createdat = createdat;
+        this.updatedat = updatedat;
+        this.imgURL = imgURL;
+    }
+
     public int getId() {
         return id;
     }

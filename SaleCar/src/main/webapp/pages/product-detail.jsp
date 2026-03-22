@@ -476,11 +476,11 @@
             <h1>${product.name} Model ${product.ratio}</h1>
 
 
-            <c:if test="${product.ratePrice ne null && product.ratePrice gt 1}">
+            <c:if test="${productDetail.ratePrice ne null && productDetail.ratePrice gt 1}">
                 <div class="mb-3">
-                    <span class="badge bg-danger">Giảm ${product.ratePrice}%</span>
+                    <span class="badge bg-danger">Giảm ${productDetail.ratePrice}%</span>
 
-                    <c:if test="${product.ratePrice ge 20}">
+                    <c:if test="${productDetail.ratePrice ge 20}">
                         <span class="badge badge-hot">HOT</span>
                     </c:if>
                 </div>
@@ -493,7 +493,7 @@
                 <div class="stars">
                     <c:forEach begin="1" end="5" var="i">
                         <c:choose>
-                            <c:when test="${i le product.avgRating}">
+                            <c:when test="${i le productDetail.avgRating}">
                                 <i class="bi bi-star-fill"></i>
                             </c:when>
                             <c:otherwise>
@@ -505,7 +505,7 @@
 
                 <span class="rating-score">
                    <fmt:formatNumber
-                           value="${product.avgRating}"
+                           value="${productDetail.avgRating}"
                            maxFractionDigits="1"/>
                 </span>
 
@@ -514,7 +514,7 @@
                 <span class="rating-max">5</span>
 
                 <span class="rating-reviews">
-        (${product.totalReviews} đánh giá)
+        (${productDetail.totalReviews} đánh giá)
     </span>
 
             </div>
@@ -596,7 +596,7 @@
             </tr>
             <tr>
                 <th>Hãng</th>
-                <td><a href="${product.brandLink}" target="_blank">${product.brandName}</a></td>
+                <td><a href="${productDetail.brandLink}" target="_blank">${productDetail.brandName}</a></td>
             </tr>
             <tr>
                 <th>Xuất xứ</th>
@@ -611,7 +611,7 @@
 
         <h2 class="review-title">Đánh Giá & Bình Luận</h2>
 
-        <c:if test="${product.totalReviews lt 1}">
+        <c:if test="${productDetail.totalReviews lt 1}">
             <p class="no-review">Chưa có đánh giá nào</p>
         </c:if>
 
@@ -623,11 +623,11 @@
                 <i class="bi bi-star-fill"></i>
 
                 <div class="rating-big-number">
-                    <fmt:formatNumber value="${product.avgRating}" maxFractionDigits="1"/>
+                    <fmt:formatNumber value="${productDetail.avgRating}" maxFractionDigits="1"/>
                 </div>
 
                 <div class="rating-total">
-                    (${product.totalReviews} đánh giá)
+                    (${productDetail.totalReviews} đánh giá)
                 </div>
 
             </div>
@@ -635,17 +635,17 @@
             <!-- RATING LEVELS -->
             <div class="rating-levels">
 
-                <div class="rating-level">5 <i class="bi bi-star-fill"></i> (${product.fiveStar})</div>
-                <div class="rating-level">4 <i class="bi bi-star-fill"></i> (${product.fourStar})</div>
-                <div class="rating-level">3 <i class="bi bi-star-fill"></i> (${product.threeStar})</div>
-                <div class="rating-level">2 <i class="bi bi-star-fill"></i> (${product.twoStar})</div>
-                <div class="rating-level">1 <i class="bi bi-star-fill"></i> (${product.oneStar})</div>
+                <div class="rating-level">5 <i class="bi bi-star-fill"></i> (${rating.fiveStar})</div>
+                <div class="rating-level">4 <i class="bi bi-star-fill"></i> (${rating.fourStar})</div>
+                <div class="rating-level">3 <i class="bi bi-star-fill"></i> (${rating.threeStar})</div>
+                <div class="rating-level">2 <i class="bi bi-star-fill"></i> (${rating.twoStar})</div>
+                <div class="rating-level">1 <i class="bi bi-star-fill"></i> (${rating.oneStar})</div>
 
             </div>
 
         </div>
 
-        <c:forEach var="r" items="${product.reviews}">
+        <c:forEach var="r" items="${productDetail.reviews}">
 
             <div class="review-card">
 

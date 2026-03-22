@@ -2,7 +2,8 @@ package code.salecar.controller.cart;
 
 import code.salecar.model.Cart;
 import code.salecar.model.CartItem;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Product;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -19,7 +20,7 @@ public class updateCart extends HttpServlet {
         int value = Integer.parseInt(request.getParameter("value"));
 
         ProductService ps = new ProductService();
-        Product product = ps.getProductByID(id);
+        ProductDetail product = ps.getProductByID(id);
         if(product == null){
             response.sendRedirect("list-product");
             return;
@@ -37,7 +38,7 @@ public class updateCart extends HttpServlet {
             response.sendRedirect("cart");
             return;
         }
-        cart.updateItem(product,value + item.getQuantity());
+        cart.updateItem(product.getProduct(),value + item.getQuantity());
 
 
         session.setAttribute("cart", cart);

@@ -1,5 +1,7 @@
 package code.salecar.model;
 
+import code.salecar.model.product.entity.Product;
+
 public class OrderItem {
     private int id;
     private int orderId;

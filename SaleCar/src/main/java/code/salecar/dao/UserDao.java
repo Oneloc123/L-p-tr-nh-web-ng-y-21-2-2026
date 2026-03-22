@@ -1,12 +1,15 @@
 package code.salecar.dao;
 
 import code.salecar.model.User;
+import code.salecar.model.product.dto.ProductItem;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserDao {
@@ -191,6 +194,47 @@ public class UserDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> getList() {
+        List<User> list = new ArrayList<>();
+        String query = "select * from users";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getBoolean(10),
+                        rs.getDate(11),
+                        rs.getDate(12),
+                        rs.getString(13)
+                );
+                list.add(u);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    public void deleteUserById(int id) {
+        String query = "delete from users where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1,id);
+            ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

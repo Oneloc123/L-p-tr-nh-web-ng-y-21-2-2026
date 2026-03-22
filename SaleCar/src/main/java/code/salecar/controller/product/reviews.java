@@ -1,6 +1,6 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.Reviews;
+import code.salecar.model.product.entity.Reviews;
 import code.salecar.model.User;
 import code.salecar.service.product.ReviewsService;
 import jakarta.servlet.*;

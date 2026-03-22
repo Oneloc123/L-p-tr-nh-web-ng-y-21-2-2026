@@ -1,6 +1,6 @@
 package code.salecar.dao;
 
-import code.salecar.model.Voucher;
+import code.salecar.model.product.entity.Voucher;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Connection;

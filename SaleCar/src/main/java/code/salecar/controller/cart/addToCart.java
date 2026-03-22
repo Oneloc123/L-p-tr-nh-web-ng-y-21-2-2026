@@ -1,10 +1,10 @@
 package code.salecar.controller.cart;
 
 import code.salecar.dao.AddressDao;
-import code.salecar.dao.ProductDAO;
 import code.salecar.model.Address;
 import code.salecar.model.Cart;
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Product;
 import code.salecar.model.User;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.ServletException;
@@ -37,7 +37,7 @@ public class addToCart extends HttpServlet {
         }
 
         ProductService ps = new ProductService();
-        Product product = ps.getProductByID(id);
+        ProductDetail product = ps.getProductByID(id);
         if (product == null) {
             response.sendRedirect("list-product");
             return;
@@ -60,7 +60,7 @@ public class addToCart extends HttpServlet {
                 cart = new Cart();
             }
 
-            cart.addProduct(product, quantity);
+            cart.addProduct(product.getProduct(), quantity);
             session.setAttribute("cart", cart);
 
             List<Address> lstAddress = AddrDAO.getListAddressById(userId);
@@ -68,10 +68,11 @@ public class addToCart extends HttpServlet {
 
             if ("addCart".equals(action)) {
                 // Lấy tên sản phẩm từ database
-                String productName = product.getName(); // Bạn cần implement hàm này
+                String productName = product.getProduct().getName(); // Bạn cần implement hàm này
 
                 // Redirect với tham số thông báo
                 String encodedProductName = URLEncoder.encode(productName, "UTF-8");
+                //alert
                 response.sendRedirect("products?cartSuccess=true&productName=" + encodedProductName);
             } else if ("buyNow".equals(action)) {
                 response.sendRedirect("checkout");

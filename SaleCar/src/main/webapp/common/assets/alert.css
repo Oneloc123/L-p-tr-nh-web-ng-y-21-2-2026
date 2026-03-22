@@ -1,0 +1,162 @@
+/* ================= ALERT ================= */
+.alert-custom {
+    position: relative;
+    /*top: 20px;*/
+    /*right: 20px;*/
+    background: linear-gradient(135deg, #fff 0%, #fcf9f0 100%);
+    color: var(--black);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(197, 160, 40, 0.2);
+    z-index: 9999;
+    animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-family: 'Inter', sans-serif;
+    min-width: 320px;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.alert-custom:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.alert-custom i {
+    color: var(--gold);
+    font-size: 24px;
+}
+
+.alert-custom strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+}
+
+.alert-custom span {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 400;
+}
+
+/* Animation hiệu ứng xuất hiện */
+@keyframes slideInRight {
+    0% {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Animation hiệu ứng biến mất - GIẢM DẦN */
+@keyframes slideOutRight {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+        display: none;
+    }
+}
+
+/* Animation fade out đơn giản */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+        visibility: hidden;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(197, 160, 40, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(197, 160, 40, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(197, 160, 40, 0);
+    }
+}
+
+@keyframes progress {
+    0% {
+        transform: scaleX(1);
+    }
+    100% {
+        transform: scaleX(0);
+    }
+}
+
+.alert-custom.success {
+    background: linear-gradient(135deg, #f7f7f5 0%, #f0f2ef 100%);
+    border-left-color: #1f7a63;
+}
+
+.alert-custom.success i,
+.alert-custom.success strong {
+    color: #1f7a63;
+}
+
+/* WARNING – vàng amber sang trọng */
+
+.alert-custom.warning {
+    background: linear-gradient(135deg, #fffaf0 0%, #fdf3d7 100%);
+    border-left-color: #c9a227;
+}
+
+.alert-custom.warning i,
+.alert-custom.warning strong {
+    color: #c9a227;
+}
+
+/* ERROR – đỏ burgundy (đỡ chói hơn đỏ tươi) */
+
+.alert-custom.error {
+    background: linear-gradient(135deg, #faf5f5 0%, #f4e8e8 100%);
+    border-left-color: #8b2f2f;
+}
+
+.alert-custom.error i,
+.alert-custom.error strong {
+    color: #8b2f2f;
+}
+
+.alert-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--gold), var(--light-gold));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+#alertContainer{
+    position: fixed;
+    top: 90px;   /* chỉnh ở đây */
+    right: 20px;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

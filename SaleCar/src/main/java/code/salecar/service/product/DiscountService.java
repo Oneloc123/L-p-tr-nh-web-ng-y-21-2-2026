@@ -1,8 +1,6 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.DiscountDAO;
-import code.salecar.model.Discount;
-import code.salecar.model.Product;
 
 public class DiscountService {
     DiscountDAO discountDAO = new DiscountDAO();

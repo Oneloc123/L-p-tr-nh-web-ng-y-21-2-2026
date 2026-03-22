@@ -1,5 +1,6 @@
 package code.salecar.dao;
 
+import code.salecar.model.Category;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Connection;
@@ -58,5 +59,21 @@ public class CategoryDAO {
             throw new RuntimeException(e);
         }
         return "";
+    }
+
+    public List<Category> getCategory() {
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT * from category ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                categories.add(new Category(rs.getInt("id"), rs.getString("name"), rs.getString("icon")));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return categories;
     }
 }

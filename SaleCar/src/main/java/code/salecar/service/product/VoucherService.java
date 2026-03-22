@@ -2,7 +2,7 @@ package code.salecar.service.product;
 
 import code.salecar.dao.VoucherDAO;
 import code.salecar.model.Cart;
-import code.salecar.model.Voucher;
+import code.salecar.model.product.entity.Voucher;
 
 import java.util.List;
 

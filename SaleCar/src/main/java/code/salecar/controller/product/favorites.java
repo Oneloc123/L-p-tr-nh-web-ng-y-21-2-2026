@@ -1,8 +1,10 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.Product;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Product;
 import code.salecar.model.User;
-import code.salecar.model.Voucher;
+import code.salecar.model.product.entity.Voucher;
+import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.FavoritesService;
 import code.salecar.service.product.ProductService;
 import code.salecar.service.product.VoucherService;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +30,7 @@ public class favorites extends HttpServlet {
             response.sendRedirect("/login");
             return;
         }
-        List<Product> favoritesProducts = favoritesService.getFavorites(user.getId());
+        List<ProductDetail> favoritesProducts = favoritesService.getFavorites(user.getId());
         Set<String> favoritesBrands = favoritesService.getFavoritesBrand(favoritesProducts);
         Set<String> favoritesCategory = favoritesService.getFavoritesCategory(favoritesProducts);
 
@@ -45,7 +48,7 @@ public class favorites extends HttpServlet {
         filter.setBrands(brand == null ? new ArrayList<>() : List.of(brand));
         if (priceParam != null && !priceParam.isEmpty()) {
             int price = Integer.parseInt(priceParam);
-            filter.setMaxPrice(price);
+            filter.setMaxPrice(new BigDecimal(price));
         }
         boolean highest = false;
         if (discountpr != null && !discountpr.isEmpty()) {
@@ -59,7 +62,7 @@ public class favorites extends HttpServlet {
         filter.setSortByNewestDiscount(newest);
 
         ProductService productService = new ProductService();
-        List<Product> products = productService.sortProducFilter(favoritesProducts, filter);
+        List<ProductDetail> products = productService.sortProducFilter(favoritesProducts, filter);
 
         // Voucher
         VoucherService vs = new VoucherService();
@@ -67,8 +70,8 @@ public class favorites extends HttpServlet {
         request.setAttribute("vouchers", vouchers);
 
         request.setAttribute("favorites", products);
-        request.setAttribute("brand",favoritesBrands);
-        request.setAttribute("category",favoritesCategory);
+        request.setAttribute("brand", favoritesBrands);
+        request.setAttribute("category", favoritesCategory);
         request.getRequestDispatcher("/pages/favorites.jsp").forward(request, response);
 
     }
