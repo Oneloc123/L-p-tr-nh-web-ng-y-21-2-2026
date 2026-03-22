@@ -15,8 +15,13 @@ public class ProductItem {
     private int categoryId;
     private String ratio;
 
+    private String image;
+
     private String categoryName;
     private String brandName;
+
+    private double avgRating;
+    private  int reviewCount;
 
     private Date createdAt;
 
@@ -33,6 +38,7 @@ public class ProductItem {
         this.ratio = ratio;
     }
 
+    // Lấy cho discount update
     public ProductItem(int id, double price, double finalPrice, double discountPercent, int brandId, int categoryId, Date createdAt) {
         this.id = id;
         this.price = price;
@@ -41,6 +47,30 @@ public class ProductItem {
         this.brandId = brandId;
         this.categoryId = categoryId;
         this.createdAt = createdAt;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
     }
 
     public Date getCreatedAt() {

@@ -7,17 +7,23 @@ public class Brand {
     private String name;
     private String description;
     private String image;
-    private String linkband;
-    private Date createat;
-    private Date updateat;
+    private String linkBrand;
+    private Date createdAt;
+    private Date updatedAt;
 
-    public Brand(int id, String name, String description, String linkband, Date createat, Date updateat) {
+    public Brand(int id, String name, String description, String linkBrand, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.linkband = linkband;
-        this.createat = createat;
-        this.updateat = updateat;
+        this.linkBrand = linkBrand;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Lấy cho home
+    public Brand(String name, String image) {
+        this.name = name;
+        this.image = image;
     }
 
     public int getId() {
@@ -52,27 +58,27 @@ public class Brand {
         this.image = image;
     }
 
-    public String getLinkband() {
-        return linkband;
+    public String getLinkBrand() {
+        return linkBrand;
     }
 
-    public void setLinkband(String linkband) {
-        this.linkband = linkband;
+    public void setLinkBrand(String linkBrand) {
+        this.linkBrand = linkBrand;
     }
 
-    public Date getCreateat() {
-        return createat;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateat(Date createat) {
-        this.createat = createat;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getUpdateat() {
-        return updateat;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateat(Date updateat) {
-        this.updateat = updateat;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
