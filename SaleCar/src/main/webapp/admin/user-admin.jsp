@@ -375,14 +375,14 @@
         </header>
 
         <!-- SEARCH + FILTERS -->
-        <form class="input-group mb-4" action="users" method="get">
+        <form class="input-group mb-4" action="/filterUser" method="get">
             <input type="text" class="form-control" name="keyword"
                    placeholder="🔍 Tìm kiếm theo tên, email, số điện thoại..." value="">
             <button class="btn btn-outline-secondary"><i class="bi bi-search"></i> Tìm</button>
         </form>
 
         <section class="filters mt-2 mb-4">
-            <form action="users" method="get" class="row g-3 align-items-end">
+            <form action="/filterUser" method="post" class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <select class="form-select" name="role">
                         <option value="">📌 Tất cả vai trò</option>

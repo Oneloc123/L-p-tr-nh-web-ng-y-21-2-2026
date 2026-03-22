@@ -39,4 +39,19 @@ public class UserService {
     public void deleteUserById(int id) {
         ud.deleteUserById(id);
     }
+
+    public List<User> getUserBykeyWord(String keyword) {
+        return ud.getUserByKeyWord(keyword);
+    }
+
+    public List<User> filterUser(String role, String status) {
+        boolean stat = true;
+        if(status.equals("")){
+            return ud.filterByRole(role);
+        }
+        if(status.equals("false")){
+            stat = false;
+        }
+        return ud.fileUser(role,stat);
+    }
 }
