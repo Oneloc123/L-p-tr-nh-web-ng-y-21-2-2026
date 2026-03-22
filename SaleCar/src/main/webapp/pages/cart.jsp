@@ -132,6 +132,7 @@
         </div>
     </div>
 
+    <!-- gio hang -->
     <div class="main-content">
         <div class="content-header">
             <h1>Giỏ hàng của bạn</h1>
@@ -173,6 +174,7 @@
                             <div>
                                 <div class="product-name">${item.product.name}</div>
                                 <div class="product-id">ID: ${item.productId}</div>
+
                             </div>
                         </div>
                     </td>

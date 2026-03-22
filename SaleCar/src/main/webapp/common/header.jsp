@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -95,7 +96,7 @@
                 <a href="${pageContext.request.contextPath}/cart" class="cart-btn">
                     <i class="bi bi-cart3"></i>
                     <span id="cart-count" class="cart-count">
-                                                <c:out value="${sessionScope.cart != null ? sessionScope.cart.size : 0}"/>
+                        <c:out value="${sessionScope.cart != null ? fn:length(sessionScope.cart.items) : 0}"/>
                     </span>
                 </a>
 

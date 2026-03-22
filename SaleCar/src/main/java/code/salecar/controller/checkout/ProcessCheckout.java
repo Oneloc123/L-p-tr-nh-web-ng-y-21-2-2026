@@ -52,7 +52,7 @@
 
 
                         session.removeAttribute("cart");
-                        response.sendRedirect("order");
+                        response.sendRedirect("/pages/thankyou.jsp");
 
                     } catch (Exception e) {
                         e.printStackTrace();
