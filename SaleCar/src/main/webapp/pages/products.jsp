@@ -948,18 +948,24 @@
                                                                       groupingUsed="true"/> ₫
                                                 </div>
                                             </div>
+
+
                                             <div class="product-actions">
                                                 <form action="cart-add" method="get" style="display: contents;">
                                                     <input type="hidden" name="productId" value="${p.id}">
                                                     <input type="hidden" name="quantity" value="1">
-                                                    <button type="submit" name="action" value="buyNow" class="btn-buy">
+
+                                                    <button type="button" class="btn-buy"
+                                                    onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
                                                         <i class="bi bi-lightning-charge me-1"></i>Mua
                                                     </button>
-                                                    <button type="submit" name="action" value="addCart"
-                                                            class="btn-action"
-                                                            onclick="showAddToCartAlert(event, '${p.name}')">
+
+                                                    <!--sua type act thanh btt -->
+                                                    <button type="button" class="btn-action"
+                                                            onclick="addToCartAjax(event,'${p.id}', '${p.name}', false)">
                                                         <i class="bi bi-cart-plus"></i>
                                                     </button>
+
                                                 </form>
                                                 <form method="post" action="/favorites" style="display: contents;">
                                                     <button class="btn-action" name="productid" value="${p.id}">
@@ -1027,6 +1033,39 @@
         </div>
     </div>
 </div>
+<div id="customToast" style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
+</div>
+
+<!-- thong bao dang nhap -->
+<div class="modal fade" id="requireLoginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                <h5 class="modal-title" style="color: var(--gold); font-weight: 600;">
+                    <i class="bi bi-shield-lock me-2"></i>Yêu cầu đăng nhập
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-center" style="padding: 30px 20px;">
+                <i class="bi bi-person-circle" style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
+                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào giỏ nhé!</h6>
+            </div>
+
+            <div class="modal-footer justify-content-center" style="border-top: none; padding-bottom: 25px;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
+                    Tiếp tục lướt
+                </button>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark" style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
+                    Đi đến đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
 
 
 <%--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>--%>
@@ -1034,6 +1073,57 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 
 <script>
+    function addToCartAjax(event, productId, productName, isBuyNow){
+        event.preventDefault();
+
+        let quantityInput = document.querySelector('input[name="quantity"]');
+        let quantity = quantityInput ? quantityInput.value : 1;
+
+        fetch('cart-add?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+            .then(response => response.text())
+            .then(data => {
+            if (data.trim() === 'success'){
+
+            if(isBuyNow === true){
+                window.location.href = "checkout";
+            } else {
+            // hien thi thong bao(TOAST)
+            let toast = document.getElementById("customToast");
+            document.getElementById("customToast").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+
+            toast.style.visibility = "visible";
+            toast.style.opacity = "1";
+
+            setTimeout( function(){
+                toast.style.opacity = "0";
+
+                setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+            }, 3000);
+
+            // ---- CỘNG SỐ GIỎ HÀNG ----
+            let count = document.getElementById("cart-count");
+
+            if (count != null){
+                let crrNumber = parseInt(count.innerText);
+
+                if (isNaN(crrNumber)){
+                    crrNumber = 0; }
+                count.innerText = crrNumber + parseInt(quantity);
+            }
+            }
+
+
+            } else if (data.trim() === 'need_login'){
+                let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
+                loginModal.show();
+            }
+    })
+    .catch(error => {
+        console.error("Lỗi khi thêm giỏ hàng:", error);
+        alert("có lỗi xãy ra, vui lòng thử lại!");
+    });
+    }
+
     // Initialize Bootstrap collapse
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize all collapses

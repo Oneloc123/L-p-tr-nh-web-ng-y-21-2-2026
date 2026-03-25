@@ -1,4 +1,4 @@
-package code.salecar.controller.checkout;
+package code.salecar.controller.order;
 
 import code.salecar.dao.OrderDAO;
 import code.salecar.model.Order;

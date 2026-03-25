@@ -130,4 +130,20 @@ public class OrderDAO {
         }
         return listItems;
     }
+
+    public void updateOrderStatusAndReason(int orderId, int userId, String newStatus) {
+        String query = "UPDATE `order` SET order_status = ? WHERE id = ? AND user_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, orderId);
+            ps.setInt(3, userId);
+
+            ps.executeUpdate();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
