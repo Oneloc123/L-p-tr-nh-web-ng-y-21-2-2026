@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -15,6 +16,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
+
+        /* ================= ORDER TABS ================= */
+        .order-tabs {
+            display: flex;
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .order-tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .order-tab:hover {
+            background: #fafafa;
+            color: #000;
+        }
+        .order-tab.active {
+            color: var(--gold, #C5A028); /* Hoặc dùng màu đen #000 tùy style của bạn */
+            border-bottom-color: var(--gold, #C5A028);
+            background: #fffcf5;
+            font-weight: 600;
+        }
+
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
@@ -154,8 +189,31 @@
             </nav>
         </div>
 
+    <!-- trang thais don hang -->
+    <div class="order-tabs">
+        <div class="order-tab active" onclick="filterOrders('all', this)">Tât cả</div>
+        <div class="order-tab" onclick="filterOrders('pending',this)">Đang xử lý</div>
+        <div class="order-tab" onclick="filterOrders('completed', this)">Đã Giao</div>
+        <div class="order-tab" onclick="filterOrders('cancelled',this)">Đã huỷ</div>
+    </div>
+
+
+
 <c:forEach var="order" items="${orders}">
-    <div class="order-card">
+
+    <c:set var="statusCategory" value="pending" />
+
+    <!-- check gtri val PENDING -->
+    <c:if test="${fn:contains(order.orderStatus, 'Đã huỷ') || fn:contains(order.orderStatus, 'Đã hủy')}">
+        <c:set var="statusCategory" value="cancelled" />
+    </c:if>
+
+    <c:if test="${fn:contains(order.orderStatus, 'Đã giao') || fn:contains(order.orderStatus, 'Thành công')}">
+        <c:set var="statusCategory" value="completed" />
+    </c:if>
+
+    <div class="order-card order-item-card" data-status="${statusCategory}">
+
         <div class="order-header">
             <div class="order-id-date">
                 <span class="id">Đơn hàng #${order.id}</span>
@@ -164,10 +222,36 @@
                 </span>
             </div>
 
-            <div class="order-status status-processing">
-                <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
-            </div>
-        </div> <div class="order-info-grid">
+            <c:choose>
+                <%-- NẾU LÀ ĐƠN ĐÃ HỦY --%>
+                <c:when test="${statusCategory == 'cancelled'}">
+                    <div class="order-status" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+                        <i class="bi bi-x-circle-fill"></i> ${order.orderStatus}
+                    </div>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="reOrder('${order.id}')">
+                            <i class="bi bi-arrow-repeat"></i> Mua lại đơn này
+                        </button>
+                    </div>
+                </c:when>
+
+                <%-- NẾU LÀ ĐƠN BÌNH THƯỜNG --%>
+                <c:otherwise>
+                    <div class="order-status status-processing">
+                        <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
+                    </div>
+                    <c:if test="${order.orderStatus == 'Đang xử lý' || order.orderStatus == 'Pending'}">
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="openCancelModal('${order.id}')">
+                                <i class="bi bi-x-circle"></i> Huỷ đơn hàng
+                            </button>
+                        </div>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
+        <div class="order-info-grid">
             <div class="info-block">
                 <h4>Thông tin giao hàng (Shipping Info)</h4>
                 <p><i class="fas fa-map-marker-alt"></i> ${order.shippingAddress}</p>
@@ -226,5 +310,78 @@
 
     </div>
 </div>
+
+<!-- xac nhan huy hang, ly do huy hang -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; border: none;">
+            <form action="cancel-order" method="POST">
+                <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                    <h5 class="modal-title text-danger" style="font-weight: 600;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Xác nhận hủy đơn
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" style="padding: 25px;">
+                    <p style="font-size: 16px; color: #333;">Bạn có chắc chắn muốn hủy đơn hàng <strong>#<span id="displayOrderId"></span></strong> không?</p>
+
+                    <input type="hidden" name="orderId" id="cancelOrderId" value="">
+
+                    <div class="form-group mt-3">
+                        <label class="fw-bold mb-2" style="font-size: 14px;">Vui lòng chọn lý do hủy:</label>
+                        <select name="cancelReason" class="form-select" required>
+                            <option value="">-- Chọn lý do --</option>
+                            <option value="Tôi muốn thay đổi địa chỉ nhận hàng">Tôi muốn thay đổi địa chỉ nhận hàng</option>
+                            <option value="Tôi muốn thay đổi sản phẩm/số lượng">Tôi muốn thay đổi sản phẩm/số lượng</option>
+                            <option value="Tôi tìm thấy chỗ khác giá rẻ hơn">Tôi tìm thấy chỗ khác giá rẻ hơn</option>
+                            <option value="Tôi đổi ý, không muốn mua nữa">Tôi đổi ý, không muốn mua nữa</option>
+                            <option value="Lý do khác">Lý do khác</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="border-top: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Không hủy nữa</button>
+                    <button type="submit" class="btn btn-danger" style="border-radius: 8px;">Đồng ý hủy đơn</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function openCancelModal(orderId){
+
+        document.getElementById('displayOrderId').innerText = orderId;
+
+        document.getElementById('cancelOrderId').value = orderId;
+
+        let cancelModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
+        cancelModal.show();
+    }
+
+    function filterOrders(statusTarget, clickedTab) {
+
+        let tabs = document.querySelectorAll('.order-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        clickedTab.classList.add('active');
+
+        let allOrders = document.querySelectorAll('.order-item-card');
+        allOrders.forEach(order => {
+            let orderStatus = order.getAttribute('data-status');
+
+            if (statusTarget === 'all' || orderStatus === statusTarget){
+                order.style.display = 'block';
+            } else {
+
+                order.style.display = 'none';
+            }
+        });
+    }
+
+</script>
+
 </body>
 </html>
