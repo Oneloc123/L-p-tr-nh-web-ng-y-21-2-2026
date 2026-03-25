@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddressDao {
     public void setMainAddress(int addressId, int userId) {
@@ -118,5 +119,25 @@ public class AddressDao {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Address> getListAddress() {
+        ArrayList<Address> list = new ArrayList<>();
+        String sql = "select * from address ";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                list.add(new Address(rs.getInt(1),rs.getInt(2),rs.getString(3)
+                        ,rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
     }
 }

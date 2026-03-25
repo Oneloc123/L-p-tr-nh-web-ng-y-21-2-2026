@@ -4,6 +4,7 @@ import code.salecar.dao.AddressDao;
 import code.salecar.model.Address;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddressService {
     AddressDao ad = new AddressDao();
@@ -26,5 +27,9 @@ public class AddressService {
 
     public void updateAddress(Address a) {
         ad.updateAddress(a);
+    }
+
+    public List<Address> getListAddress() {
+        return ad.getListAddress();
     }
 }
