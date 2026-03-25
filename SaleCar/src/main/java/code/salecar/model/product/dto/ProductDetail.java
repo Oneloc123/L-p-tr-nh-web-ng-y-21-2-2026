@@ -48,6 +48,7 @@ public class ProductDetail implements Serializable {
 
     public ProductDetail() {
     }
+
     public ProductDetail(Product product) {
         this.id = product.getId();
         this.name = product.getName();
@@ -66,6 +67,19 @@ public class ProductDetail implements Serializable {
         this.createdAt = product.getCreatedAt();
         this.updatedAt = product.getUpdatedAt();
     }
+
+    //getRelatedProductBrand
+
+
+    public ProductDetail(int id, String name, double price, double finalPrice, double discountPercent, int brandId) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.finalPrice = finalPrice;
+        this.discountPercent = discountPercent;
+        this.brandId = brandId;
+    }
+
     public Product getProduct(){
         Product product = new Product(id,name,price,finalPrice,discountPercent,discountUpdatedAt,brandId,categoryId,description,ratio,size,material,origin,status,createdAt,updatedAt);
         return product;
