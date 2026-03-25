@@ -51,9 +51,9 @@ public class UserDao {
 
     public void register(User user) {
         String sql = "insert into users" +
-                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt) " +
+                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt,imgURL) " +
                 "values " +
-                "(?,?,?,?,?,?,?,?,?,?,?)";
+                "(?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
@@ -68,6 +68,7 @@ public class UserDao {
             ps.setBoolean(9, user.getStatus());
             ps.setDate(10, user.getCreatedat());
             ps.setDate(11, user.getUpdatedat());
+            ps.setString(12,user.getImgURL());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -306,10 +307,10 @@ public class UserDao {
 
     public List<User> filterByRole(String role) {
         List<User> list = new ArrayList<>();
-        String query = "select * from users where role = ?";
+        String query = "select * from users where role like ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1,role);
+            ps.setString(1,"%"+role+"%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User u = new User(

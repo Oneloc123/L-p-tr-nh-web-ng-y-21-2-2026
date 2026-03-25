@@ -11,6 +11,150 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        /* FORM CARD */
+        .form-card {
+            padding: 25px;
+        }
+
+        /* SECTION */
+        .form-section {
+            background: #0c0c0c;
+            border: 1px solid #1e2a2a;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+        }
+
+        /* TITLE */
+        .form-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00ffcc;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ADDRESS BOX */
+        .address-box {
+            border: 1px solid #2a3a3a;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 10px;
+            background: #0a0a0a;
+            transition: 0.2s;
+        }
+
+        .address-box:hover {
+            border-color: #00ffcc;
+            box-shadow: 0 0 10px rgba(0,255,204,0.2);
+        }
+
+        /* HEADER ADDRESS */
+        .address-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .address-box-header h4 {
+            font-size: 14px;
+            color: #aafff0;
+        }
+
+        /* BUTTON DELETE */
+        .btn-remove-address {
+            background: transparent;
+            border: none;
+            color: #ff6b6b;
+            font-size: 16px;
+        }
+
+        .btn-remove-address:hover {
+            color: #ff3b3b;
+        }
+
+        /* STATUS RADIO */
+        .status-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* AVATAR SECTION */
+        .avatar-upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .current-avatar img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 2px solid #00ffcc;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0,255,204,0.4);
+        }
+
+        /* BUTTON UPLOAD */
+        .btn-upload {
+            display: inline-block;
+            margin-top: 10px;
+            background: #00ccaa;
+            color: black;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .btn-upload:hover {
+            background: #00ffcc;
+        }
+
+        /* ACTION BUTTONS */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            background: #00ccaa;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            color: black;
+            font-weight: 600;
+        }
+
+        .btn-save:hover {
+            background: #00ffcc;
+        }
+
+        .btn-cancel {
+            border: 1px solid #2a3a3a;
+            padding: 8px 18px;
+            border-radius: 30px;
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .btn-cancel:hover {
+            border-color: #00ffcc;
+            color: #00ffcc;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -458,9 +602,8 @@
                                         <button class="action-btn action-view" data-bs-toggle="modal"
                                                 data-bs-target="#viewUserModal${u.id}"><i class="bi bi-eye"></i>
                                         </button>
-                                        <button class="action-btn action-edit" data-bs-toggle="modal"
-                                                data-bs-target="#editUserModal${u.id}"><i
-                                                class="bi bi-pencil-square"></i></button>
+                                        <a href="/updateUser?id=${u.id}" class="action-btn action-edit"><i
+                                                class="bi bi-pencil-square"></i></a>
                                         <a href="/deleteUser?id=${u.id}"
                                            onclick="return confirm('Xóa người dùng này?')"
                                            class="action-btn action-delete"><i class="bi bi-trash"></i></a>
@@ -475,107 +618,177 @@
         </section>
     </main>
     <c:forEach items="${listUser}" var="u">
-        <!-- MODAL VIEW USER 1 -->
-        <div class="modal fade" id="viewUserModal${u.id}" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header"><h5 class="modal-title">👤 Chi tiết người dùng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="d-flex gap-4 flex-wrap">
-                            <div>
-                                <img src="${pageContext.request.contextPath}/${empty u.imgURL ? 'assets/img/default-avatar.png' : u.imgURL}"
-                                     class="profile-avatar-lg" alt="Avatar">
-                            </div>
-                            <div>
-                                <table class="table table-borderless text-white">
-                                    <tr>
-                                        <th>ID:</th>
-                                        <td>${u.id}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Tên đăng nhập:</th>
-                                        <td>${u.username}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Họ tên:</th>
-                                        <td>${u.fullname}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Email:</th>
-                                        <td>${u.email}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>SĐT:</th>
-                                        <td>${u.phonenumber}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Vai trò:</th>
-                                        <td><span class="role-badge role-admin">${u.role}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Trạng thái:</th>
-                                        <c:choose>
-                                            <c:when test="${u.status}">
-                                                <td><span class="status-badge status-active">Hoạt động</span></td>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <td><span class="status-badge status-inactive">Đã khóa</span></td>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- MODAL EDIT USER 1 -->
-        <div class="modal fade" id="editUserModal${u.id}" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header"><h5 class="modal-title">✏️ Cập nhật người dùng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <form action="/updateUser?id=${u.id}" method="post">
-                        <div class="modal-body"><input type="hidden" name="id" value="1">
-                            <div class="row g-3">
-                                <div class="col-md-6"><label>Tên đăng nhập</label><input class="form-control" name="username"
-                                                                                         placeholder="${u.username}"  ></div>
-                                <div class="col-md-6"><label>Mật khẩu mới</label><input type="password" class="form-control"
-                                                                                        name="password"
-                                                                                        placeholder="Để trống nếu không đổi">
+        <!-- MODAL VIEW USER  -->
+        <c:forEach items="${listUser}" var="u">
+            <div class="modal fade" id="viewUserModal${u.id}" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="form-card">
+                            <!-- Avatar Upload Section (View only) -->
+                            <div class="avatar-upload-section">
+                                <div class="current-avatar">
+                                    <c:choose>
+                                        <c:when test="${not empty u.imgURL}">
+                                            <img src="${pageContext.request.contextPath}/${u.imgURL}" alt="Avatar">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
-                                <div class="col-md-6"><label>Họ tên</label><input class="form-control" name="fullname"
-                                                                                  placeholder="${u.fullname}"  ></div>
-                                <div class="col-md-6"><label>Email</label><input class="form-control" name="email"
-                                                                                 placeholder="${u.email}"  ></div>
-                                <div class="col-md-6"><label>Số điện thoại</label><input class="form-control" name="phonenumber"
-                                                                                         placeholder="${u.phonenumber}"     ></div>
-                                <div class="col-md-6"><label>Vai trò</label><select class="form-select" name="role">
-                                    <option value="user">User</option>
-                                    <option value="admin" selected>Admin</option>
-                                </select></div>
-                                <div class="col-md-6"><label>Trạng thái</label><select class="form-select" name="status">
-                                    <option value="true" selected>Hoạt động</option>
-                                    <option value="false">Đã khóa</option>
-                                </select></div>
+                                <div class="upload-hint">
+                                    Ảnh đại diện người dùng
+                                </div>
+                            </div>
+
+                            <!-- User Information Section (USER table) -->
+                            <div class="form-section address-box">
+                                <h3 class="form-section-title">
+                                    <i class="fas fa-user"></i> Thông tin tài khoản (USER)
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">ID người dùng</label>
+                                        <input type="text" class="form-control" value="${u.getId()}" readonly >
+                                        <small class="text-muted">ID không thể thay đổi</small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Tên đăng nhập</label>
+                                        <input type="text" class="form-control" value="${u.getUsername()}" readonly >
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Họ và tên</label>
+                                        <input type="text" class="form-control" value="${u.getFullname()}" readonly >
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" value="${u.getEmail()}" readonly >
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Số điện thoại</label>
+                                        <input type="text" class="form-control" value="${u.getPhonenumber()}" readonly >
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Vai trò</label>
+                                        <input type="text" class="form-control" value="${u.role}" readonly >
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">Mô tả</label>
+                                        <textarea class="form-control" readonly >${u.getDescription()}</textarea>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Trạng thái</label>
+                                        <div class="status-options">
+                                            <c:choose>
+                                                <c:when test="${u.status}">
+                                                    <span class="status-badge status-active">Hoạt động</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="status-badge status-inactive">Đã khóa</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Address ID</label>
+                                        <select class="form-select" >
+                                            <c:choose>
+                                                <c:when test="${not empty listAddress}">
+                                                    <c:forEach var="a" items="${listAddress}" >
+                                                        <c:choose>
+                                                            <c:when test="${a.type=='main' && a.userId==u.id}">
+                                                                <option selected>${a.id}- ${a.name}-địa chỉ chính</option>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <option>${a.id}- ${a.name}-địa chỉ phụ</option>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <option selected>chưa có địa chỉ</option>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address Information Section (ADDRESS table) - VIEW ONLY -->
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="fas fa-map-marker-alt"></i> Thông tin địa chỉ
+                                </h3>
+
+                                <c:set var="hasAddress" value="false"/>
+
+                                <c:forEach var="a" items="${listAddress}">
+                                    <c:if test="${a.userId == u.id}">
+                                        <c:set var="hasAddress" value="true"/>
+
+                                        <div class="address-box">
+                                            <div class="address-box-header">
+                                                <h4>
+                                                    <c:choose>
+                                                        <c:when test="${a.type == 'main'}">
+                                                            🏠 Địa chỉ chính:
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            📍 Địa chỉ phụ:
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                        ${a.name} (ID: ${a.id})
+                                                </h4>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Số nhà, đường</label>
+                                                    <input type="text" class="form-control" value="${a.street}" readonly >
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Phường/Xã</label>
+                                                    <input type="text" class="form-control" value="${a.commune}" readonly >
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Tỉnh/TP</label>
+                                                    <input type="text" class="form-control" value="${a.province}" readonly >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+
+                                <!-- Nếu không có địa chỉ -->
+                                <c:if test="${!hasAddress}">
+                                    <div class="address-box">
+                                        <h4>⚠️ Người dùng chưa có địa chỉ</h4>
+                                    </div>
+                                </c:if>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i> Đóng
+                                </button>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </c:forEach>
     </c:forEach>
 </div>
 
@@ -591,7 +804,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="/addUser" method="post">
+                <form action="/addUser" method="post" enctype="multipart/form-data">
                     <div class="row g-3">
                         <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text"
                                                                                                       class="form-control"
@@ -607,6 +820,9 @@
                         <div class="col-md-6"><label class="form-label">Email</label><input type="email"
                                                                                             class="form-control"
                                                                                             name="email"></div>
+                        <div class="col-md-6"><label class="form-label">Description</label><input type="text"
+                                                                                            class="form-control"
+                                                                                            name="description"></div>
                         <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text"
                                                                                                     class="form-control"
                                                                                                     name="phonenumber">
@@ -621,14 +837,41 @@
                             <option value="true">Hoạt động</option>
                             <option value="false">Đã khóa</option>
                         </select></div>
-                        <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label><input type="text"
-                                                                                                        class="form-control"
-                                                                                                        name="imgURL"
-                                                                                                        placeholder="/assets/img/avatar.png">
+                        <div class="col-12">
+                            <div class="border rounded p-3 mt-3">
+                                <h6 class="mb-3">Thông tin địa chỉ tam thời</h6>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="name"
+                                               placeholder="ví dụ: địa chỉ nhà, công ty..." required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Số nhà, tên đường</label>
+                                        <input type="text" class="form-control" name="street">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Xã/Phường</label>
+                                        <input type="text" class="form-control" name="commune">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Tỉnh/Thành phố</label>
+                                        <input type="text" class="form-control" name="province">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label> <input type="file"
+                                                                                                         class="form-control" id="imageUpload" accept="image/*" name="avatar">
                         </div>
                     </div>
                     <div class="modal-footer mt-4 px-0 pb-0 border-0">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         <button class="btn btn-primary" type="submit">Thêm mới</button>
                     </div>
                 </form>

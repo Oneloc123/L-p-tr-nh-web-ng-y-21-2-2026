@@ -309,7 +309,7 @@
                 </div>
             </form>
 
-            <a href="${pageContext.request.contextPath}/profile-edit" class="back-link">
+            <a href="${pageContext.request.contextPath}/profileEdit" class="back-link">
                 <i class="fas fa-arrow-left"></i> Quay lại chỉnh sửa thông tin
             </a>
         </div>

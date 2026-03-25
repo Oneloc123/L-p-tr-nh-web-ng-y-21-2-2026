@@ -1,6 +1,8 @@
 package code.salecar.controller.admin.user;
 
+import code.salecar.model.Address;
 import code.salecar.model.User;
+import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -24,6 +26,12 @@ public class UserAdmin extends HttpServlet {
             }
             UserService us = new UserService();
             List<User> listUser = us.getList();
+            AddressService as = new AddressService();
+            List<Address> listAddress = as.getListAddress();
+            for(Address a : listAddress){
+                System.out.println(a.getId());
+            }
+            request.setAttribute("listAddress",listAddress);
             request.setAttribute("listUser",listUser);
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
         }
