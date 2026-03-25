@@ -8,16 +8,15 @@
   Time: 1:27 PM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ include file="/common/header.jsp" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%--<%@ taglib prefix="c" uri="jakarta.tags.core" %>--%>
 <%--<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>--%>
 
-<!DOCTYPE html>
-<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <%@ include file="/common/header.jsp" %>
     <title>Sản phẩm yêu thích - SaleCar</title>
 
     <!-- Bootstrap 5 -->
@@ -303,5 +302,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-</body>
-</html>
+<%@ include file="/common/footer.jsp" %>

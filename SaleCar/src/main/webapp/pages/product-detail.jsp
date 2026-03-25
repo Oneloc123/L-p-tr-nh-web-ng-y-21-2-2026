@@ -1237,7 +1237,6 @@
                                         </c:choose>
                                     </c:forEach>
                                 </div>
-                                <span>(${rl.totalReviews})</span>
                             </div>
                         </div>
                     </a>

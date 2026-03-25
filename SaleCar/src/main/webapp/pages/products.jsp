@@ -908,7 +908,7 @@
                                     <div class="card product-card">
                                         <div class="product-image-wrapper">
                                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                                <img src="https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg"
+                                                <img src="${p.image}"
                                                      class="card-img-top" alt="${p.name}">
                                             </a>
                                             <c:if test="${p.discountPercent > 0}">

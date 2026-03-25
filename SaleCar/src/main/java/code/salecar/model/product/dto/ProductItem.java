@@ -1,8 +1,9 @@
 package code.salecar.model.product.dto;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class ProductItem {
+public class ProductItem implements Serializable {
 
 
     private int id;
@@ -25,9 +26,11 @@ public class ProductItem {
 
     private Date createdAt;
 
+    public ProductItem(int id) {
+        this.id = id;
+    }
 
-
-    public ProductItem(int id, String name, double price, double finalPrice, double discountPercent,int brandId,int categoryId, String ratio) {
+    public ProductItem(int id, String name, double price, double finalPrice, double discountPercent, int brandId, int categoryId, String ratio) {
         this.id = id;
         this.name = name;
         this.price = price;
