@@ -54,8 +54,7 @@ public class product_detail extends HttpServlet {
         String returnUrl = request.getHeader("Referer");
         request.setAttribute("returnUrl", returnUrl);
 
-        request.setAttribute("product", product.getProduct());
-        request.setAttribute("productDetail", product);
+        request.setAttribute("product", product);
         request.setAttribute("rating", product.getRating());
 
         request.getRequestDispatcher("/pages/product-detail.jsp").forward(request, response);

@@ -405,11 +405,12 @@
     .product-name {
         font-weight: 600;
         margin-bottom: 4px;
-        font-size: 24px;
+        font-size: 28px;
         color: var(--text-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-family: 'Cormorant Garamond', serif;
     }
 
     .product-model {
