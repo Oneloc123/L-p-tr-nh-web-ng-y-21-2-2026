@@ -31,19 +31,19 @@ public class ProductService {
             return null;
         }
 
-        Brand brand = bs.getBrandByID(detail.getProduct().getBrandId());
+        Brand brand = bs.getBrandByID(detail.getBrandId());
         if (brand != null) {
             detail.setBrandName(brand.getName());
             detail.setBrandLink(brand.getLinkBrand());
 
         }
 
-        String categoryName = cs.getCategoryName(detail.getProduct().getCategoryId());
+        String categoryName = cs.getCategoryName(detail.getCategoryId());
         detail.setCategoryName(categoryName != null ? categoryName : "");
 
         // Rating
-        List<Reviews> reviews = rs.getReviewsByID(detail.getProduct().getId());
-        ProductRating rating = new ProductRating(detail.getProduct().getId());
+        List<Reviews> reviews = rs.getReviewsByID(detail.getId());
+        ProductRating rating = new ProductRating(detail.getId());
         if (reviews != null && !reviews.isEmpty()) {
             detail.setReviews(reviews);
             detail.setAvgRating(caculateRates(reviews));
@@ -213,7 +213,7 @@ public class ProductService {
         // Keyword
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             String keyword = filter.getKeyword().toLowerCase().trim();
-            stream = stream.filter(p -> p.getProduct().getName().toLowerCase().trim().contains(keyword));
+            stream = stream.filter(p -> p.getName().toLowerCase().trim().contains(keyword));
         }
 
         // category
@@ -228,7 +228,7 @@ public class ProductService {
 
         //maxPrice
         if (filter.getMaxPrice() != null) {
-            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice().doubleValue());
+            stream = stream.filter(p -> p.getPrice() <= filter.getMaxPrice().doubleValue());
         }
 
 

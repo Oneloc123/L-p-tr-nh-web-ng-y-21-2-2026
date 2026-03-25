@@ -5,806 +5,1400 @@
   Time: 11:43 AM
   To change this template use File | Settings | File Templates.
 --%>
-<h1>TEST JSP WORKING</h1>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ include file="/common/header.jsp" %>
-
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Chi tiết sản phẩm - LUXCAR</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Font luxury -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap"
-          rel="stylesheet">
+    <title>${product.name} - LUXCAR</title>
 
     <style>
+        /* ============================================
+           VARIABLES & RESET
+        ============================================ */
+        :root {
+            --black: #000000;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --dark-gold: #b8960f;
+            --gray-dark: #2c2c2c;
+            --gray-medium: #666666;
+            --gray-light: #f5f5f5;
+            --border-light: #e5e5e5;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
 
-        /* =================================================
-           1. CÀI ĐẶT CHUNG CHO TRANG
-           ================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f8f9fa;
+            background: var(--gray-light);
+            color: var(--black);
         }
 
-        /* Font tiêu đề */
-        h1, h2, h3 {
-            font-family: 'Cormorant Garamond', serif;
-        }
-
-
-        /* =================================================
-           2. HÌNH ẢNH SẢN PHẨM (TRANG CHI TIẾT)
-           ================================================= */
-
-        /* Ảnh chính */
-        .main-image {
-            height: 450px;
-            overflow: hidden;
-        }
-
-        .main-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Ảnh phụ */
-        .sub-image {
-            height: 120px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .sub-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-
-        /* =================================================
-           3. GIÁ SẢN PHẨM
-           ================================================= */
-
-        .badge-hot {
-            background: #000;
-        }
-
-        /* Box hiển thị giá */
-        .price-box {
-            background: #fff;
-            padding: 30px;
-            border: 1px solid #eee;
-        }
-
-        /* Giá sau giảm */
-        .price-total {
-            font-size: 50px;
-            font-weight: 600;
-        }
-
-        /* Giá gốc */
-        .price-old-bar {
-            text-decoration: line-through;
-            font-size: 30px;
-            color: #888;
-        }
-
-
-        /* =================================================
-           4. BUTTON
-           ================================================= */
-
-        /* Button đánh giá sao */
-        .star-btn {
-            border: 1px solid #000;
-            background: #fff;
-            transition: all 0.25s ease;
-        }
-
-        .star-btn i {
-            color: #000000;
-        }
-
-        .star-btn:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .star-btn:hover i {
-            color: #ffc107;
-        }
-
-        /* Button mua hàng */
-        .btn-buy {
-            background: #000;
-            color: #fff;
-        }
-
-        .btn-buy:hover {
-            background: #333;
-            color: #fff;
-        }
-
-
-        /* =================================================
-           5. RATING (HIỂN THỊ SAO)
-           ================================================= */
-
-        /* Container rating */
-        .rating-box {
-            display: flex;
+        /* ============================================
+           BACK BUTTON - FIXED: quay lại link trước đó
+        ============================================ */
+        .back-link {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 18px;
-        }
-
-        /* Các icon sao */
-        .stars {
-            display: flex;
-            gap: 3px;
-            color: #ffc107;
-            font-size: 20px;
-        }
-
-        /* Hiệu ứng hover sao */
-        .stars i {
-            transition: transform 0.2s ease;
-        }
-
-        .stars i:hover {
-            transform: scale(1.2);
-        }
-
-        /* Điểm rating */
-        .rating-score {
-            font-weight: 600;
-            color: #000;
-        }
-
-        /* dấu "/" giữa điểm và max */
-        .rating-divider {
-            color: #888;
-        }
-
-        /* max rating */
-        .rating-max {
-            color: #888;
-        }
-
-        /* số lượng review */
-        .rating-reviews {
-            margin-left: 6px;
-            color: #777;
-            font-size: 15px;
-        }
-
-
-        /* =================================================
-           6. REVIEW SECTION
-           ================================================= */
-
-        /* Tiêu đề review */
-        .review-title {
-            margin-bottom: 30px;
-        }
-
-        /* Khi chưa có review */
-        .no-review {
-            color: #777;
-        }
-
-        /* Card hiển thị review */
-        .review-card {
-            display: flex;
-            gap: 15px;
-            padding: 20px;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
+            color: var(--gray-medium);
+            text-decoration: none;
+            font-size: 14px;
             margin-bottom: 20px;
+            transition: color 0.2s;
         }
 
-        /* Avatar người review */
-        .review-avatar img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
+        .back-link:hover {
+            color: var(--gold);
         }
 
-        /* Nội dung review */
-        .review-content {
-            flex: 1;
+        /* ============================================
+           PRODUCT GALLERY
+        ============================================ */
+        .product-gallery {
+            position: sticky;
+            top: 100px;
         }
 
-        /* Header review */
-        .review-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Tên người review */
-        .review-name {
-            font-size: 16px;
-        }
-
-        /* Ngày review */
-        .review-date {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-
-        /* Nội dung bình luận */
-        .review-comment {
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        /* Form viết review */
-        .review-form {
-            margin-top: 30px;
-        }
-
-
-        /* =================================================
-           7. RATING SUMMARY (TỔNG QUAN ĐÁNH GIÁ)
-           ================================================= */
-
-        .rating-summary {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-        }
-
-        /* Điểm rating lớn */
-        .rating-big {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .rating-big i {
-            font-size: 36px;
-            color: #ffc107;
-        }
-
-        .rating-big-number {
-            font-size: 28px;
-            font-weight: 600;
-        }
-
-        /* Tổng số review */
-        .rating-total {
-            color: #777;
-            font-size: 14px;
-        }
-
-        /* Các mức rating */
-        .rating-levels {
-            display: flex;
-            gap: 15px;
-        }
-
-        .rating-level {
-            font-size: 14px;
-            color: #ffc107;
-            padding: 6px 10px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            background: #eeeeee;
-        }
-
-
-        /* =================================================
-           8. RELATED PRODUCT (SẢN PHẨM LIÊN QUAN)
-           ================================================= */
-
-        /* Card sản phẩm */
-        .product-card {
-            border: none;
-            height: 100%;
-            background: #fff;
-            transition: all 0.25s ease;
-        }
-
-        /* Hover card */
-        .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Container ảnh */
-        .product-image {
-            position: relative;
+        .main-image-wrapper {
+            background: var(--white);
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            position: relative;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Ảnh sản phẩm */
-        .product-image img {
-            height: 220px;
+        .main-image {
             width: 100%;
-            object-fit: cover;
+            height: 480px;
+            object-fit: contain;
+            background: var(--white);
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
         }
 
-        /* Badge giảm giá */
-        .badge-discount {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #000;
-            color: #fff;
-            font-size: 13px;
-            padding: 4px 8px;
+        .main-image.zoomed {
+            transform: scale(1.5);
+            cursor: zoom-out;
+        }
+
+        /* Thumbnail List - chỉ hiển thị 4 ảnh */
+        .thumbnail-list {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .thumbnail-list::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .thumbnail-list::-webkit-scrollbar-track {
+            background: var(--border-light);
             border-radius: 4px;
         }
 
-        /* Brand sản phẩm */
-        .product-brand {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 4px;
+        .thumbnail-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
         }
 
-        /* Tên sản phẩm */
-        .product-name {
-            font-size: 15px;
-            font-weight: 500;
-            min-height: 40px;
+        .thumbnail-item {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* Box giá */
-        .product-price {
-            margin-top: 6px;
+        .thumbnail-item.active {
+            border-color: var(--gold);
+            transform: scale(1.02);
         }
 
-        /* Giá hiện tại */
-        .price-current {
-            font-weight: 600;
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ============================================
+           PRODUCT INFO
+        ============================================ */
+        .product-info {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 12px;
+            color: var(--black);
+            line-height: 1.3;
+        }
+
+        .product-sku {
+            font-size: 13px;
+            color: var(--gray-medium);
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Rating */
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            color: var(--warning);
             font-size: 16px;
         }
 
-        /* Giá cũ */
-        .price-old {
-            text-decoration: line-through;
-            color: #888;
-            font-size: 13px;
-            margin-left: 6px;
+        .rating-value {
+            font-weight: 600;
+            color: var(--black);
         }
 
-        /* Rating sản phẩm */
-        .product-rating {
-            margin-top: 6px;
-            font-size: 14px;
-            color: #ffc107;
-        }
-
-        /* Text trong rating */
-        .product-rating span {
-            color: #000;
-            margin-left: 4px;
-        }
-
-        /* Số lượng review */
         .review-count {
-            color: #777;
-            margin-left: 4px;
+            color: var(--gray-medium);
+            font-size: 14px;
         }
 
-        form {
+        /* Price */
+        .price-container {
+            background: var(--gray-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .current-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .old-price {
+            font-size: 18px;
+            color: var(--gray-medium);
+            text-decoration: line-through;
+            margin-left: 12px;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 12px;
+        }
+
+        .savings {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--success);
+        }
+
+        /* Badges */
+        .info-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--gray-light);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .info-badge i {
+            color: var(--gold);
+        }
+
+        /* Delivery Info */
+        .delivery-info {
+            background: var(--gray-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .delivery-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .delivery-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .delivery-item i {
+            color: var(--gold);
+            font-size: 16px;
+            width: 24px;
+        }
+
+        /* Quantity Selector */
+        .quantity-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: none;
+            border-left: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+            font-weight: 600;
+        }
+
+        .stock-status {
+            font-size: 13px;
+            color: var(--success);
+        }
+
+
+        /* ============================================
+    ACTION BUTTONS -
+ ============================================ */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            width: 100%;
+        }
+
+        .action-buttons form {
+            flex: 1; /* MỖI FORM CHIẾM 1 PHẦN BẰNG NHAU */
             margin: 0;
-            padding: 0;
         }
 
+        .btn-action {
+            width: 100%; /* CHIẾM HẾT FORM */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 0; /* GIẢM PADDING NGANG, TĂNG DỌC */
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            border: 2px solid;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-add-cart {
+            background: transparent;
+            border-color: var(--black);
+            color: var(--black);
+        }
+
+        .btn-add-cart:hover {
+            background: var(--black);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-buy-now {
+            background: var(--gold);
+            border-color: var(--black);
+            color: var(--black);
+        }
+
+        .btn-buy-now:hover {
+            background: var(--black);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-wishlist {
+            background: transparent;
+            border-color: var(--black);
+            color: var(--black);
+        }
+
+
+        .btn-wishlist:hover {
+            background: var(--black);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-wishlist:hover i {
+            color: var(--gold);
+        }
+
+        /* ============================================
+           RESPONSIVE - GIỮ 3 NÚT CÙNG HÀNG
+        ============================================ */
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .action-buttons form {
+                flex: 1;
+                min-width: calc(33.333% - 7px);
+            }
+
+            .btn-action, .btn-wishlist {
+                padding: 12px 0;
+                font-size: 13px;
+            }
+        }
+
+        /* ============================================
+           PRODUCT DETAILS TABS
+        ============================================ */
+        .details-tabs {
+            background: var(--white);
+            border-radius: 16px;
+            margin-top: 40px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--white);
+        }
+
+        .tab-btn {
+            padding: 16px 28px;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray-medium);
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .tab-content {
+            padding: 32px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Specifications Table */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table tr {
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .specs-table th {
+            width: 180px;
+            padding: 14px 0;
+            text-align: left;
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .specs-table td {
+            padding: 14px 0;
+            color: var(--gray-medium);
+        }
+
+        .description-content {
+            line-height: 1.7;
+            color: var(--gray-medium);
+        }
+
+        /* Reviews Section */
+        .review-summary {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .avg-rating {
+            text-align: center;
+        }
+
+        .avg-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .rating-bars {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .rating-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .rating-bar-label {
+            width: 45px;
+            font-size: 13px;
+        }
+
+        .rating-bar-track {
+            flex: 1;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .rating-bar-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 3px;
+        }
+
+        .rating-bar-percent {
+            width: 45px;
+            font-size: 12px;
+            color: var(--gray-medium);
+        }
+
+        .review-card {
+            display: flex;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--gray-light);
+            flex-shrink: 0;
+        }
+
+        .review-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .review-name {
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: var(--gray-medium);
+        }
+
+        .review-comment {
+            color: var(--gray-medium);
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .review-form {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* ============================================
+           RELATED PRODUCTS
+        ============================================ */
+        .related-section {
+            margin-top: 60px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .related-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .related-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .related-image {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+            background: var(--gray-light);
+        }
+
+        .related-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .related-card:hover .related-image img {
+            transform: scale(1.05);
+        }
+
+        .related-discount {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--danger);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .related-info {
+            padding: 16px;
+        }
+
+        .related-brand {
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .related-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--black);
+            margin: 8px 0;
+            line-height: 1.4;
+            min-height: 42px;
+        }
+
+        .related-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .related-current-price {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .related-old-price {
+            font-size: 12px;
+            color: var(--gray-medium);
+            text-decoration: line-through;
+        }
+
+        .related-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .related-rating .stars {
+            font-size: 11px;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 992px) {
+            .product-gallery {
+                position: static;
+                margin-bottom: 32px;
+            }
+
+            .main-image-wrapper {
+                min-height: 400px;
+            }
+
+            .main-image {
+                height: 400px;
+            }
+
+            .thumbnail-item {
+                width: 70px;
+                height: 70px;
+            }
+
+            .product-info {
+                padding: 20px;
+            }
+
+            .product-title {
+                font-size: 24px;
+            }
+
+            .current-price {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-image-wrapper {
+                min-height: 320px;
+            }
+
+            .main-image {
+                height: 320px;
+            }
+
+            .tab-btn {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .review-summary {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+
+        }
     </style>
 </head>
 
 <body>
 
-<div class="container py-5">
-    <%--        =============== Back ===============--%>
-    <div class="mb-4">
-        <c:if test="${returnUrl ne null}">
-            <a href="${returnUrl}" class="btn btn-outline-dark btn-sm">
-                ← Quay lại
-            </a>
-        </c:if>
+<div class="container py-4">
+    <!-- Back Link - FIXED: quay lại link trước đó -->
+    <a href="javascript:history.back()" class="back-link">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
 
-        <c:if test="${returnUrl eq null}">
-            <a href="/products" class="btn btn-outline-dark btn-sm">
-                ← Quay lại
-            </a>
-        </c:if>
-    </div>
-
-    <br>
-
-    <!-- ================= TOP SECTION ================= -->
-    <div class="row g-5">
-
-        <!-- HÌNH ẢNH -->
+    <!-- Product Overview Row -->
+    <div class="row g-4">
+        <!-- Left: Gallery -->
         <div class="col-lg-6">
-
-            <div class="main-image mb-3">
-                <img src="" alt="">
-            </div>
-
-            <div class="row g-3">
-                <div class="col-4">
-                    <div class="sub-image">
-                        <img src="" alt="">
-                    </div>
+            <div class="product-gallery">
+                <div class="main-image-wrapper">
+                    <c:choose>
+                        <c:when test="${not empty product.image and fn:length(product.image) > 0}">
+                            <img src="${product.image[0]}" alt="${product.name}" class="main-image" id="mainImage">
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Fixed: set size trước cho ảnh mặc định -->
+                            <img src="https://via.placeholder.com/600x480?text=LUXCAR" alt="${product.name}"
+                                 class="main-image" style="width: 100%; height: 100%; object-fit: contain;">
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-                <div class="col-4">
-                    <div class="sub-image">
-                        <img src="" alt="">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="sub-image">
-                        <img src="" alt="">
-                    </div>
-                </div>
-            </div>
 
-        </div>
-
-
-        <!-- THÔNG TIN + KHU MUA -->
-        <div class="col-lg-6">
-
-            <h1>${product.name} Model ${product.ratio}</h1>
-
-
-            <c:if test="${productDetail.ratePrice ne null && productDetail.ratePrice gt 1}">
-                <div class="mb-3">
-                    <span class="badge bg-danger">Giảm ${productDetail.ratePrice}%</span>
-
-                    <c:if test="${productDetail.ratePrice ge 20}">
-                        <span class="badge badge-hot">HOT</span>
+                <!-- Thumbnails - Fixed: chỉ hiển thị tối đa 4 ảnh con -->
+                <div class="thumbnail-list">
+                    <c:forEach items="${product.image}" var="img" varStatus="status" end="3">
+                        <div class="thumbnail-item ${status.first ? 'active' : ''}" data-image="${img}">
+                            <img src="${img}" alt="Thumbnail ${status.index + 1}">
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty product.image or fn:length(product.image) == 0}">
+                        <div class="thumbnail-item active">
+                            <img src="https://via.placeholder.com/90x90?text=LUXCAR" alt="No Image">
+                        </div>
                     </c:if>
                 </div>
-            </c:if>
+            </div>
+        </div>
 
-
-            <!-- Rating -->
-            <div class="rating-box mb-3">
-
-                <div class="stars">
-                    <c:forEach begin="1" end="5" var="i">
-                        <c:choose>
-                            <c:when test="${i le productDetail.avgRating}">
-                                <i class="bi bi-star-fill"></i>
-                            </c:when>
-                            <c:otherwise>
-                                <i class="bi bi-star"></i>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
+        <!-- Right: Product Info -->
+        <div class="col-lg-6">
+            <div class="product-info">
+                <h1 class="product-title">${product.name}</h1>
+                <div class="product-sku">
+                    Mã sản phẩm: LUX-${product.id}
                 </div>
 
-                <span class="rating-score">
-                   <fmt:formatNumber
-                           value="${productDetail.avgRating}"
-                           maxFractionDigits="1"/>
-                </span>
-
-                <span class="rating-divider">/</span>
-
-                <span class="rating-max">5</span>
-
-                <span class="rating-reviews">
-        (${productDetail.totalReviews} đánh giá)
-    </span>
-
-            </div>
-            <p>
-                ${product.description}
-            </p>
-
-            <hr>
-
-            <div class="price-box">
-
-                <div class="mb-2">
-                    <span class="price-total">
-                     <p><fmt:formatNumber value="${product.finalPrice}"
-                                          type="number"
-                                          groupingUsed="true"/> ₫
-                    </p>
+                <!-- Rating -->
+                <div class="rating-container">
+                    <div class="stars">
+                        <c:forEach begin="1" end="5" var="i">
+                            <c:choose>
+                                <c:when test="${i <= product.avgRating}">
+                                    <i class="bi bi-star-fill"></i>
+                                </c:when>
+                                <c:when test="${i - 0.5 <= product.avgRating}">
+                                    <i class="bi bi-star-half"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="bi bi-star"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </div>
+                    <span class="rating-value">
+                        <fmt:formatNumber value="${product.avgRating}" maxFractionDigits="1"/>
                     </span>
-                    <span class="price-old-bar ms-2">
-                    <p><fmt:formatNumber value="${product.price}"
-                                         type="number"
-                                         groupingUsed="true"/> ₫
-                    </p>
+                    <span class="review-count">(${product.totalReviews} đánh giá)</span>
+                </div>
+
+                <!-- Info Badges -->
+                <div class="info-badges">
+                    <span class="info-badge">
+                        <i class="bi bi-building"></i> ${product.brandName}
+                    </span>
+                    <span class="info-badge">
+                        <i class="bi bi-grid"></i> ${product.categoryName}
+                    </span>
+                    <span class="info-badge">
+                        <i class="bi bi-rulers"></i> Tỉ lệ ${product.ratio}
                     </span>
                 </div>
 
-
-                <!-- Số lượng -->
-                <div class="mb-3">
-                    <label class="form-label">Số lượng</label>
-                    <input type="number" name="quantity" class="form-control" value="1" min="1" form="add-to-cart">
+                <!-- Price -->
+                <div class="price-container">
+                    <div>
+                        <span class="current-price">
+                            <fmt:formatNumber value="${product.finalPrice}" type="number" groupingUsed="true"/> ₫
+                        </span>
+                        <c:if test="${product.discountPercent > 0}">
+                            <span class="old-price">
+                                <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/> ₫
+                            </span>
+                            <span class="discount-badge">-${product.discountPercent}%</span>
+                        </c:if>
+                    </div>
+                    <c:if test="${product.discountPercent > 0}">
+                        <div class="savings">
+                            <i class="bi bi-piggy-bank"></i> Tiết kiệm:
+                            <fmt:formatNumber value="${product.price - product.finalPrice}" type="number"
+                                              groupingUsed="true"/> ₫
+                        </div>
+                    </c:if>
                 </div>
 
-                <!-- Nút hành động -->
-                <div class="d-grid gap-2">
-
-
-
-                    <!-- them sp vao cart -->
-                    <form id="add-to-cart" action="cart-add" method="get" class="w-100">
-                        <input type="hidden" name="productId" value="${product.id}">
-                        <button type="submit" name="action" value="buyNow" class="btn btn-buy w-100">Mua ngay</button>
-                        <button type="submit" name="action" value="addCart" class="btn btn-outline-dark w-100">Thêm vào giỏ hàng
-                        </button>
-                    </form>
-
-                    <form method="post" action="/favorites" class="w-100">
-                        <button type="submit"
-                                class="btn star-btn w-100"
-                                name="productid"
-                                value="${product.id}">
-                            <i class="bi bi-star me-2"></i>
-                            Thêm vào yêu thích
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-
-    <!-- ================= THÔNG SỐ ================= -->
-    <div class="mt-5">
-        <h2>Thông Số Kỹ Thuật</h2>
-        <table class="table mt-3">
-            <tr>
-                <th>Tỉ lệ</th>
-                <td>${product.ratio}</td>
-            </tr>
-            <tr>
-                <th>Kích thước</th>
-                <td>${product.size}</td>
-            </tr>
-            <tr>
-                <th>Chất liệu</th>
-                <td>${product.material}</td>
-            </tr>
-            <tr>
-                <th>Hãng</th>
-                <td><a href="${productDetail.brandLink}" target="_blank">${productDetail.brandName}</a></td>
-            </tr>
-            <tr>
-                <th>Xuất xứ</th>
-                <td>${product.origin}</td>
-            </tr>
-        </table>
-    </div>
-
-
-    <!-- ================= ĐÁNH GIÁ ================= -->
-    <div class="mt-5 review-section">
-
-        <h2 class="review-title">Đánh Giá & Bình Luận</h2>
-
-        <c:if test="${productDetail.totalReviews lt 1}">
-            <p class="no-review">Chưa có đánh giá nào</p>
-        </c:if>
-
-        <div class="rating-summary">
-
-            <!-- AVG RATING -->
-            <div class="rating-big">
-
-                <i class="bi bi-star-fill"></i>
-
-                <div class="rating-big-number">
-                    <fmt:formatNumber value="${productDetail.avgRating}" maxFractionDigits="1"/>
-                </div>
-
-                <div class="rating-total">
-                    (${productDetail.totalReviews} đánh giá)
-                </div>
-
-            </div>
-
-            <!-- RATING LEVELS -->
-            <div class="rating-levels">
-
-                <div class="rating-level">5 <i class="bi bi-star-fill"></i> (${rating.fiveStar})</div>
-                <div class="rating-level">4 <i class="bi bi-star-fill"></i> (${rating.fourStar})</div>
-                <div class="rating-level">3 <i class="bi bi-star-fill"></i> (${rating.threeStar})</div>
-                <div class="rating-level">2 <i class="bi bi-star-fill"></i> (${rating.twoStar})</div>
-                <div class="rating-level">1 <i class="bi bi-star-fill"></i> (${rating.oneStar})</div>
-
-            </div>
-
-        </div>
-
-        <c:forEach var="r" items="${productDetail.reviews}">
-
-            <div class="review-card">
-
-                <!-- Avatar -->
-                <div class="review-avatar">
-                    <div class="review-avatar">
-
-                        <c:choose>
-                            <c:when test="${r.avatar ne null}">
-                                <img src="${r.avatar}" alt="avatar">
-                            </c:when>
-
-                            <c:otherwise>
-                                <img src="https://avatarfiles.alphacoders.com/369/thumb-1920-369714.jpeg" alt="avatar">
-                            </c:otherwise>
-                        </c:choose>
-
+                <!-- Delivery Info -->
+                <div class="delivery-info">
+                    <div class="delivery-item">
+                        <i class="bi bi-truck"></i>
+                        <span>Giao hàng dự kiến: 2-4 ngày làm việc</span>
+                    </div>
+                    <div class="delivery-item">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <span>Đổi trả miễn phí trong 7 ngày</span>
+                    </div>
+                    <div class="delivery-item">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Bảo hành chính hãng 12 tháng</span>
                     </div>
                 </div>
 
-                <div class="review-content">
+                <!-- Quantity -->
+                <div class="quantity-section">
+                    <span class="quantity-label">Số lượng:</span>
+                    <div class="quantity-control">
+                        <button type="button" class="qty-btn" id="qtyMinus">−</button>
+                        <input type="number" name="quantity" id= "quantity" class="quantity-input" value="1" min="1" max="99"
+                               form="add-to-cart">
+                        <button type="button" class="qty-btn" id="qtyPlus">+</button>
+                    </div>
+                    <span class="stock-status">
+                        <i class="bi bi-check-circle-fill"></i> Còn hàng
+                    </span>
+                </div>
 
-                    <div class="review-header">
-                        <strong class="review-name">${r.userName}</strong>
+                <!-- Action Buttons - FIXED: cùng hàng, size bằng nhau -->
+                <div class="action-buttons">
 
-                        <div class="stars">
-                            <c:forEach begin="1" end="5" var="i">
+                    <form action="${pageContext.request.contextPath}/cart-add" method="get" class="flex-grow-1">
+                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="quantity" id="buyQuantity" value="1">
+                        <input type="hidden" name="action" value="buyNow">
+                        <button type="submit" class="btn-action btn-buy-now">
+                            <i class="bi bi-lightning-charge"></i> Mua ngay
+                        </button>
+                    </form>
+
+                    <form id="add-to-cart" action="${pageContext.request.contextPath}/cart-add" method="get"
+                          class="flex-grow-1">
+
+                        <input type="hidden" name="productId" value="${product.id}">
+<%--                        <input type="hidden" name="quantity" id="cartQuantity" value="1">--%>
+<%--                        <input type="hidden" name="action" value="addCart">--%>
+                        <button type="submit" class="btn-action btn-add-cart" onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">
+                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                        </button>
+                    </form>
+                    <form action="${pageContext.request.contextPath}/favorites" method="post">
+                        <button type="submit" name="productid" value="${product.id}" class="btn-action btn-wishlist">
+                            <i class="bi bi-star">Yêu thích</i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="details-tabs">
+        <div class="tabs-header">
+            <button class="tab-btn active" data-tab="description">Mô tả sản phẩm</button>
+            <button class="tab-btn" data-tab="specifications">Thông số kỹ thuật</button>
+            <button class="tab-btn" data-tab="reviews">Đánh giá (${product.totalReviews})</button>
+        </div>
+
+        <!-- Tab 1: Description -->
+        <div class="tab-content active" id="description">
+            <div class="description-content">
+                ${product.description}
+            </div>
+        </div>
+
+        <!-- Tab 2: Specifications -->
+        <div class="tab-content" id="specifications">
+            <table class="specs-table">
+                <tr>
+                    <th>Tỉ lệ mô hình</th>
+                    <td>${product.ratio}</td>
+                </tr>
+                <tr>
+                    <th>Kích thước</th>
+                    <td>${product.size}</td>
+                </tr>
+                <tr>
+                    <th>Chất liệu</th>
+                    <td>${product.material}</td>
+                </tr>
+                <tr>
+                    <th>Thương hiệu</th>
+                    <td>${product.brandName}</td>
+                </tr>
+                <tr>
+                    <th>Hãng xe</th>
+                    <td>${product.brandName}</td>
+                </tr>
+                <tr>
+                    <th>Xuất xứ</th>
+                    <td>${product.origin}</td>
+                </tr>
+                <tr>
+                    <th>Danh mục</th>
+                    <td>${product.categoryName}</td>
+                </tr>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <td>LUX-${product.id}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tab 3: Reviews -->
+        <div class="tab-content" id="reviews">
+            <!-- Rating Summary -->
+            <div class="review-summary">
+                <div class="avg-rating">
+                    <div class="avg-number">
+                        <fmt:formatNumber value="${product.avgRating}" maxFractionDigits="1"/>
+                    </div>
+                    <div class="stars mt-2">
+                        <c:forEach begin="1" end="5" var="i">
+                            <c:choose>
+                                <c:when test="${i <= product.avgRating}">
+                                    <i class="bi bi-star-fill"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="bi bi-star"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </div>
+                    <div class="review-count mt-1">${product.totalReviews} đánh giá</div>
+                </div>
+
+                <div class="rating-bars">
+                    <c:if test="${not empty product.rating}">
+                        <div class="rating-bar-item">
+                            <span class="rating-bar-label">5 <i class="bi bi-star-fill"></i></span>
+                            <div class="rating-bar-track">
+                                <div class="rating-bar-fill"
+                                     style="width: ${product.rating.fiveStar / product.totalReviews * 100}%"></div>
+                            </div>
+                            <span class="rating-bar-percent">${product.rating.fiveStar}</span>
+                        </div>
+                        <div class="rating-bar-item">
+                            <span class="rating-bar-label">4 <i class="bi bi-star-fill"></i></span>
+                            <div class="rating-bar-track">
+                                <div class="rating-bar-fill"
+                                     style="width: ${product.rating.fourStar / product.totalReviews * 100}%"></div>
+                            </div>
+                            <span class="rating-bar-percent">${product.rating.fourStar}</span>
+                        </div>
+                        <div class="rating-bar-item">
+                            <span class="rating-bar-label">3 <i class="bi bi-star-fill"></i></span>
+                            <div class="rating-bar-track">
+                                <div class="rating-bar-fill"
+                                     style="width: ${product.rating.threeStar / product.totalReviews * 100}%"></div>
+                            </div>
+                            <span class="rating-bar-percent">${product.rating.threeStar}</span>
+                        </div>
+                        <div class="rating-bar-item">
+                            <span class="rating-bar-label">2 <i class="bi bi-star-fill"></i></span>
+                            <div class="rating-bar-track">
+                                <div class="rating-bar-fill"
+                                     style="width: ${product.rating.twoStar / product.totalReviews * 100}%"></div>
+                            </div>
+                            <span class="rating-bar-percent">${product.rating.twoStar}</span>
+                        </div>
+                        <div class="rating-bar-item">
+                            <span class="rating-bar-label">1 <i class="bi bi-star-fill"></i></span>
+                            <div class="rating-bar-track">
+                                <div class="rating-bar-fill"
+                                     style="width: ${product.rating.oneStar / product.totalReviews * 100}%"></div>
+                            </div>
+                            <span class="rating-bar-percent">${product.rating.oneStar}</span>
+                        </div>
+                    </c:if>
+                </div>
+            </div>
+
+            <!-- Review List -->
+            <c:choose>
+                <c:when test="${not empty product.reviews and fn:length(product.reviews) > 0}">
+                    <c:forEach var="review" items="${product.reviews}">
+                        <div class="review-card">
+                            <div class="review-avatar">
                                 <c:choose>
-                                    <c:when test="${i le r.rating}">
-                                        <i class="bi bi-star-fill"></i>
+                                    <c:when test="${not empty review.avatar}">
+                                        <img src="${review.avatar}" alt="${review.userName}">
                                     </c:when>
                                     <c:otherwise>
-                                        <i class="bi bi-star"></i>
+                                        <img src="https://ui-avatars.com/api/?name=${fn:substring(review.userName, 0, 1)}&background=D4AF37&color=000"
+                                             alt="Avatar">
                                     </c:otherwise>
                                 </c:choose>
-                            </c:forEach>
+                            </div>
+                            <div class="review-content">
+                                <div class="review-header">
+                                    <span class="review-name">${review.userName}</span>
+                                    <div class="stars">
+                                        <c:forEach begin="1" end="5" var="i">
+                                            <c:choose>
+                                                <c:when test="${i <= review.rating}">
+                                                    <i class="bi bi-star-fill" style="font-size: 12px;"></i>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <i class="bi bi-star" style="font-size: 12px;"></i>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                    </div>
+                                    <span class="review-date">${review.createAt}</span>
+                                </div>
+                                <p class="review-comment">${review.comment}</p>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-dots" style="font-size: 48px; color: #ddd;"></i>
+                        <p class="mt-3 text-muted">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm
+                            này!</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- Review Form -->
+            <div class="review-form">
+                <h4 style="margin-bottom: 20px;">Viết đánh giá của bạn</h4>
+                <form action="${pageContext.request.contextPath}/reviews" method="post">
+                    <input type="hidden" name="productId" value="${product.id}">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Đánh giá</label>
+                            <select name="rating" class="form-select" style="border-radius: 8px;">
+                                <option value="5">5 ⭐ - Tuyệt vời</option>
+                                <option value="4">4 ⭐ - Tốt</option>
+                                <option value="3">3 ⭐ - Trung bình</option>
+                                <option value="2">2 ⭐ - Tạm được</option>
+                                <option value="1">1 ⭐ - Không hài lòng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <label class="form-label">Nội dung</label>
+                            <textarea name="comment" class="form-control" rows="3"
+                                      placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."
+                                      style="border-radius: 8px;"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn-action btn-buy-now"
+                                    style="width: auto; padding: 10px 28px;">
+                                <i class="bi bi-send"></i> Gửi đánh giá
+                            </button>
                         </div>
                     </div>
-
-                    <p class="review-date">${r.createAt}</p>
-
-                    <p class="review-comment">${r.comment}</p>
-
-                </div>
-
+                </form>
             </div>
-
-        </c:forEach>
-
-        <hr>
-
-        <!-- Form bình luận -->
-        <form action="/reviews" method="post" class="review-form">
-
-            <input type="hidden" name="productId" value="${product.id}">
-
-            <select name="rating" class="form-select w-25">
-                <option value="5">5 ⭐</option>
-                <option value="4">4 ⭐</option>
-                <option value="3">3 ⭐</option>
-                <option value="2">2 ⭐</option>
-                <option value="1">1 ⭐</option>
-            </select>
-
-            <div class="mb-3 mt-3">
-                <label class="form-label">Viết bình luận</label>
-                <textarea class="form-control" rows="3" name="comment"></textarea>
-            </div>
-
-            <button class="btn btn-dark" type="submit">Gửi đánh giá</button>
-
-        </form>
-
-    </div>
-
-    <!-- ================= SẢN PHẨM LIÊN QUAN ================= -->
-    <div class="mt-5">
-        <h2 class="mb-4">Sản Phẩm Liên Quan</h2>
-
-
-        <div class="row g-4 mt-2">
-
-            <c:forEach items="${related}" var="rl">
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="card product-card shadow-sm">
-
-                        <!-- IMAGE -->
-                        <div class="product-image">
-                            <img src="" class="card-img-top" alt="${rl.name}">
-
-                            <!-- DISCOUNT BADGE -->
-                            <c:if test="${rl.ratePrice gt 0}">
-                        <span class="badge-discount">
-                            -${rl.ratePrice}%
-                        </span>
-                            </c:if>
-                        </div>
-
-                        <div class="card-body text-center">
-
-                            <!-- BRAND -->
-                            <div class="product-brand">
-                                    ${rl.brandName}
-                            </div>
-
-                            <!-- NAME -->
-                            <h6 class="product-name">
-                                    ${rl.name}
-                            </h6>
-
-                            <!-- PRICE -->
-                            <div class="product-price">
-
-                        <span class="price-current">
-                            <fmt:formatNumber value="${rl.finalPrice}"
-                                              type="number"
-                                              groupingUsed="true"/> ₫
-                        </span>
-
-                                <c:if test="${rl.ratePrice gt 0}">
-                            <span class="price-old">
-                                <fmt:formatNumber value="${rl.price}"
-                                                  type="number"
-                                                  groupingUsed="true"/> ₫
-                            </span>
-                                </c:if>
-
-                            </div>
-
-                            <!-- RATING -->
-                            <div class="product-rating">
-
-                                <i class="bi bi-star-fill"></i>
-                                <span>${rl.avgRating}</span>
-
-                                <span class="review-count">
-                            (${rl.reviews.size()})
-                        </span>
-
-                            </div>
-
-                            <!-- BUTTON -->
-                            <a href="/products?id=${rl.id}"
-                               class="btn btn-sm btn-outline-dark mt-2">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </c:forEach>
-
         </div>
     </div>
 
+    <!-- Related Products -->
+    <c:if test="${not empty related}">
+        <div class="related-section">
+            <h2 class="section-title">Sản phẩm liên quan</h2>
+            <div class="related-grid">
+                <c:forEach items="${related}" var="rl">
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${rl.id}" class="related-card">
+                        <div class="related-image">
+                            <c:choose>
+                                <c:when test="${not empty rl.image and fn:length(rl.image) > 0}">
+                                    <img src="${rl.image[0]}" alt="${rl.name}">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="https://via.placeholder.com/300x220?text=LUXCAR" alt="${rl.name}">
+                                </c:otherwise>
+                            </c:choose>
+                            <c:if test="${rl.discountPercent > 0}">
+                                <span class="related-discount">-${rl.discountPercent}%</span>
+                            </c:if>
+                        </div>
+                        <div class="related-info">
+                            <div class="related-brand">${rl.brandName}</div>
+                            <div class="related-name">${rl.name}</div>
+                            <div class="related-price">
+                                <span class="related-current-price">
+                                    <fmt:formatNumber value="${rl.finalPrice}" type="number" groupingUsed="true"/> ₫
+                                </span>
+                                <c:if test="${rl.discountPercent > 0}">
+                                    <span class="related-old-price">
+                                        <fmt:formatNumber value="${rl.price}" type="number" groupingUsed="true"/> ₫
+                                    </span>
+                                </c:if>
+                            </div>
+                            <div class="related-rating">
+                                <div class="stars">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <c:choose>
+                                            <c:when test="${i <= rl.avgRating}">
+                                                <i class="bi bi-star-fill"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="bi bi-star"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </div>
+                                <span>(${rl.totalReviews})</span>
+                            </div>
+                        </div>
+                    </a>
+                </c:forEach>
+            </div>
+        </div>
+    </c:if>
+</div>
+<!-- khai bao TOAST -->
+<div id="customToast" style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
+</div>
+<!-- thong bao dang nhap -->
+<div class="modal fade" id="requireLoginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                <h5 class="modal-title" style="color: var(--gold); font-weight: 600;">
+                    <i class="bi bi-shield-lock me-2"></i>Yêu cầu đăng nhập
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-center" style="padding: 30px 20px;">
+                <i class="bi bi-person-circle" style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
+                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào giỏ nhé!</h6>
+            </div>
+
+            <div class="modal-footer justify-content-center" style="border-top: none; padding-bottom: 25px;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
+                    Tiếp tục lướt
+                </button>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark" style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
+                    Đi đến đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-</body>
-</html>
+<script>
+    function addToCartAjax(event, productId, productName, isBuyNow){
+        event.preventDefault();
+
+        let quantityInput = document.querySelector('input[name="quantity"]');
+        let quantity = quantityInput ? quantityInput.value : 1;
+
+        fetch('cart-add?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === 'success'){
+
+                    if(isBuyNow === true){
+                        window.location.href = "checkout";
+                    } else {
+                        // hien thi thong bao(TOAST)
+                        let toast = document.getElementById("customToast");
+                        document.getElementById("customToast").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+
+                        toast.style.visibility = "visible";
+                        toast.style.opacity = "1";
+
+                        setTimeout( function(){
+                            toast.style.opacity = "0";
+
+                            setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+                        }, 3000);
+
+                        // ---- CỘNG SỐ GIỎ HÀNG ----
+                        let count = document.getElementById("cart-count");
+
+                        if (count != null){
+                            let crrNumber = parseInt(count.innerText);
+
+                            if (isNaN(crrNumber)){
+                                crrNumber = 0; }
+                            count.innerText = crrNumber + parseInt(quantity);
+                        }
+                    }
+
+
+                } else if (data.trim() === 'need_login'){
+                    let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
+                    loginModal.show();
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi khi thêm giỏ hàng:", error);
+                alert("có lỗi xãy ra, vui lòng thử lại!");
+            });
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ========== IMAGE GALLERY ==========
+        const mainImage = document.getElementById('mainImage');
+        const thumbnails = document.querySelectorAll('.thumbnail-item');
+
+        if (thumbnails.length > 0 && mainImage) {
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function () {
+                    const imgSrc = this.getAttribute('data-image');
+                    if (imgSrc) {
+                        mainImage.src = imgSrc;
+                        thumbnails.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // ========== ZOOM FUNCTION ==========
+        if (mainImage) {
+            mainImage.addEventListener('click', function () {
+                this.classList.toggle('zoomed');
+            });
+        }
+
+        // ========== tity SELECTOR ==========
+        const quantityInput = document.getElementById('quantity');
+        const cartQuantity = document.getElementById('cartQuantity');
+        const buyQuantity = document.getElementById('buyQuantity');
+        const qtyMinus = document.getElementById('qtyMinus');
+        const qtyPlus = document.getElementById('qtyPlus');
+
+        function updateQuantity(value) {
+            let newValue = parseInt(value);
+            if (isNaN(newValue)) newValue = 1;
+            newValue = Math.max(1, Math.min(99, newValue));
+            if (quantityInput) quantityInput.value = newValue;
+            if (cartQuantity) cartQuantity.value = newValue;
+            if (buyQuantity) buyQuantity.value = newValue;
+        }
+
+        if (qtyMinus) {
+            qtyMinus.addEventListener('click', () => updateQuantity(parseInt(quantityInput.value) - 1));
+        }
+        if (qtyPlus) {
+            qtyPlus.addEventListener('click', () => updateQuantity(parseInt(quantityInput.value) + 1));
+        }
+        if (quantityInput) {
+            quantityInput.addEventListener('change', () => updateQuantity(quantityInput.value));
+        }
+
+        // ========== TAB SWITCHING ==========
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                tabContents.forEach(content => content.classList.remove('active'));
+                const activeContent = document.getElementById(tabId);
+                if (activeContent) activeContent.classList.add('active');
+            });
+        });
+    });
+</script>
+
+<%@ include file="/common/footer.jsp" %>

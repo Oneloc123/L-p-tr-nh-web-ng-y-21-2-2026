@@ -68,7 +68,7 @@ public class addToCart extends HttpServlet {
 
             if ("addCart".equals(action)) {
                 // Lấy tên sản phẩm từ database
-                String productName = product.getProduct().getName(); // Bạn cần implement hàm này
+                String productName = product.getProduct().getName();
 
                 // Redirect với tham số thông báo
                 String encodedProductName = URLEncoder.encode(productName, "UTF-8");

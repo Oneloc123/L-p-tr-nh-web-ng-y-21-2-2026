@@ -1,9 +1,10 @@
 package code.salecar.model.product.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-public class Discount {
+public class Discount implements Serializable {
     private int id;
     private String name;
     private DiscountValueType valueType;
@@ -15,7 +16,8 @@ public class Discount {
     private Date createAt;
     private Date updateAt;
 
-
+    public Discount() {
+    }
 
     public Discount(int id, String name, DiscountValueType valueType, BigDecimal value, DiscountEntityType entityType, int entityId, Date startAt, Date endAt, Date createAt, Date updateAt) {
         this.id = id;
