@@ -629,7 +629,7 @@
                         <img src="https://nettruyen.work/assets/images/icon-hot.gif" class="badge-gif" alt="Hot">
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://via.placeholder.com/400x300?text=No+Image'}"
+                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">
@@ -686,7 +686,7 @@
                              class="badge-gif" alt="New">
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://via.placeholder.com/400x300?text=No+Image'}"
+                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">
@@ -743,7 +743,7 @@
                              class="badge-gif" alt="Sale">
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://via.placeholder.com/400x300?text=No+Image'}"
+                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">
