@@ -18,20 +18,20 @@
 
         /* SECTION */
         .form-section {
-            background: #0c0c0c;
-            border: 1px solid #1e2a2a;
+            background: #fefefe;
+            border: 1px solid #eef2f6;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         /* TITLE */
         .form-section-title {
             font-size: 14px;
             font-weight: 600;
-            color: #00ffcc;
+            color: #2c7da0;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -40,17 +40,17 @@
 
         /* ADDRESS BOX */
         .address-box {
-            border: 1px solid #2a3a3a;
+            border: 1px solid #eef2f6;
             border-radius: 16px;
             padding: 15px;
             margin-top: 10px;
-            background: #0a0a0a;
+            background: #fafcfd;
             transition: 0.2s;
         }
 
         .address-box:hover {
-            border-color: #00ffcc;
-            box-shadow: 0 0 10px rgba(0,255,204,0.2);
+            border-color: #2c7da0;
+            box-shadow: 0 0 10px rgba(44,125,160,0.08);
         }
 
         /* HEADER ADDRESS */
@@ -63,19 +63,19 @@
 
         .address-box-header h4 {
             font-size: 14px;
-            color: #aafff0;
+            color: #2c7da0;
         }
 
         /* BUTTON DELETE */
         .btn-remove-address {
             background: transparent;
             border: none;
-            color: #ff6b6b;
+            color: #dc3545;
             font-size: 16px;
         }
 
         .btn-remove-address:hover {
-            color: #ff3b3b;
+            color: #c82333;
         }
 
         /* STATUS RADIO */
@@ -100,17 +100,17 @@
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            border: 2px solid #00ffcc;
+            border: 2px solid #2c7da0;
             object-fit: cover;
-            box-shadow: 0 0 10px rgba(0,255,204,0.4);
+            box-shadow: 0 0 8px rgba(44,125,160,0.15);
         }
 
         /* BUTTON UPLOAD */
         .btn-upload {
             display: inline-block;
             margin-top: 10px;
-            background: #00ccaa;
-            color: black;
+            background: #2c7da0;
+            color: white;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
@@ -118,7 +118,7 @@
         }
 
         .btn-upload:hover {
-            background: #00ffcc;
+            background: #1f5e7a;
         }
 
         /* ACTION BUTTONS */
@@ -130,29 +130,29 @@
         }
 
         .btn-save {
-            background: #00ccaa;
+            background: #2c7da0;
             border: none;
             padding: 8px 18px;
             border-radius: 30px;
-            color: black;
+            color: white;
             font-weight: 600;
         }
 
         .btn-save:hover {
-            background: #00ffcc;
+            background: #1f5e7a;
         }
 
         .btn-cancel {
-            border: 1px solid #2a3a3a;
+            border: 1px solid #e2e8f0;
             padding: 8px 18px;
             border-radius: 30px;
-            color: #ccc;
+            color: #64748b;
             text-decoration: none;
         }
 
         .btn-cancel:hover {
-            border-color: #00ffcc;
-            color: #00ffcc;
+            border-color: #2c7da0;
+            color: #2c7da0;
         }
 
         * {
@@ -165,8 +165,8 @@
             height: 42px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1.5px solid #00ffcc;
-            box-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
+            border: 1.5px solid #2c7da0;
+            box-shadow: 0 0 4px rgba(44,125,160,0.2);
         }
 
         /* Avatar trong modal (to hơn) */
@@ -175,20 +175,20 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #00ffcc;
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            border: 2px solid #2c7da0;
+            box-shadow: 0 0 10px rgba(44,125,160,0.2);
         }
         body {
-            background-color: #000000;
+            background-color: #f1f5f9;
             font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #e5e9f0;
+            color: #1e293b;
         }
 
-        /* SIDEBAR STYLE - Dark Glass */
+        /* SIDEBAR STYLE - Soft Gray */
         .sidebar {
             width: 280px;
-            background-color: #0a0a0a;
-            border-right: 1px solid #1f2a2e;
+            background-color: #ffffff;
+            border-right: 1px solid #e9edf2;
             height: 100vh;
             position: sticky;
             top: 0;
@@ -199,7 +199,7 @@
         .logo {
             font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #00ffcc);
+            background: linear-gradient(135deg, #1e2a3a, #2c7da0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -209,7 +209,7 @@
 
         .logo i {
             background: none;
-            color: #00ffcc;
+            color: #2c7da0;
             -webkit-background-clip: unset;
             background-clip: unset;
         }
@@ -229,7 +229,7 @@
             gap: 14px;
             padding: 12px 18px;
             border-radius: 14px;
-            color: #b0bec5;
+            color: #5a6e7c;
             font-weight: 500;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -243,73 +243,72 @@
 
         .sidebar nav ul li a:hover,
         .sidebar nav ul li a.active {
-            background-color: #00ffcc10;
-            color: #00ffcc;
-            box-shadow: 0 2px 6px rgba(0, 255, 204, 0.05);
-            border-left: 2px solid #00ffcc;
+            background-color: #f0f9ff;
+            color: #2c7da0;
+            box-shadow: 0 2px 4px rgba(44,125,160,0.08);
+            border-left: 2px solid #2c7da0;
         }
 
         /* MAIN CONTENT */
         .main-content {
             flex: 1;
             padding: 2rem 2rem 3rem 2rem;
-            background-color: #000000;
+            background-color: #f1f5f9;
             overflow-y: auto;
         }
 
         /* HEADER */
         .header {
-            background: #0a0a0a;
+            background: #ffffff;
             padding: 1rem 1.8rem;
-            border-radius: 28px;
+            border-radius: 24px;
             margin-bottom: 2rem;
-            border: 1px solid #1e2a2a;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+            border: 1px solid #e9edf2;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
 
         .header h3 {
             font-weight: 700;
-            background: linear-gradient(135deg, #f0f0f0, #aafff0);
+            background: linear-gradient(135deg, #1e293b, #2c7da0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
         .btn-primary {
-            background-color: #00ccaa;
+            background-color: #2c7da0;
             border: none;
             padding: 8px 20px;
             font-weight: 600;
             border-radius: 40px;
-            color: #000000;
+            color: #ffffff;
             transition: 0.2s;
         }
 
         .btn-primary:hover {
-            background-color: #00ffcc;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
-            color: #000;
+            background-color: #1f5e7a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(44,125,160,0.2);
+            color: #fff;
         }
 
         .btn-outline-secondary {
-            border-color: #2c3a3a;
-            color: #ccddee;
+            border-color: #e2e8f0;
+            color: #5a6e7c;
         }
 
         .btn-outline-secondary:hover {
-            background-color: #00ffcc20;
-            border-color: #00ffcc;
-            color: #00ffcc;
+            background-color: #f8fafc;
+            border-color: #2c7da0;
+            color: #2c7da0;
         }
 
         /* Filter & Card */
         .card {
-            background: #0c0c0c;
-            border: 1px solid #1e2a2a;
+            background: #ffffff;
+            border: 1px solid #e9edf2;
             border-radius: 24px;
-            backdrop-filter: blur(2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
 
         .card-body {
@@ -317,32 +316,32 @@
         }
 
         .form-control, .form-select {
-            background-color: #111111;
-            border: 1px solid #2a3a3a;
-            color: #f0f0f0;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
             border-radius: 14px;
             padding: 10px 16px;
         }
 
         .form-control:focus, .form-select:focus {
-            background-color: #1a1a1a;
-            border-color: #00ffcc;
-            box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
-            color: white;
+            background-color: #ffffff;
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+            color: #1e293b;
         }
 
         .table {
-            color: #e2e8f0;
-            border-color: #1f2a2e;
+            color: #1e293b;
+            border-color: #e9edf2;
         }
 
         .table-light {
-            background-color: #0f1215;
-            color: #b3f0e0;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
 
         .table-hover > tbody > tr:hover {
-            background-color: #00ffcc0c;
+            background-color: #f8fafc;
         }
 
         /* Badges */
@@ -356,26 +355,27 @@
         }
 
         .status-active {
-            background-color: #0f2e1f;
-            color: #00ffaa;
-            border: 0.5px solid #00ffaa50;
+            background-color: #e6f7ec;
+            color: #2e7d5e;
+            border: 0.5px solid #b8e0c2;
         }
 
         .status-inactive {
-            background-color: #3a1e22;
-            color: #ff8a7a;
-            border: 0.5px solid #ff6b5b50;
+            background-color: #fff0f0;
+            color: #c75c5c;
+            border: 0.5px solid #f0c0c0;
         }
 
         .role-admin {
-            background-color: #001f3f;
-            color: #5bc0ff;
-            border: 0.5px solid #2f7fff;
+            background-color: #eef2ff;
+            color: #2c5f8a;
+            border: 0.5px solid #cbdff2;
         }
 
         .role-user {
-            background-color: #1e2a2e;
-            color: #b0d4ff;
+            background-color: #f5f0ff;
+            color: #7a5c9e;
+            border: 0.5px solid #ddd0f0;
         }
 
         /* Action Buttons */
@@ -394,33 +394,33 @@
         }
 
         .action-view {
-            background-color: #1f3a44;
-            color: #8dd0ff;
+            background-color: #eef2ff;
+            color: #2c7da0;
         }
 
         .action-view:hover {
-            background-color: #2f5f77;
-            color: white;
+            background-color: #e0e8f5;
+            color: #1f5e7a;
         }
 
         .action-edit {
-            background-color: #3a3f1f;
-            color: #ffea80;
+            background-color: #fff8e8;
+            color: #c9772e;
         }
 
         .action-edit:hover {
-            background-color: #b8860b;
-            color: black;
+            background-color: #fff0dd;
+            color: #b85f1a;
         }
 
         .action-delete {
-            background-color: #4a1f2c;
-            color: #ffa098;
+            background-color: #fff0f0;
+            color: #c75c5c;
         }
 
         .action-delete:hover {
-            background-color: #c82333;
-            color: white;
+            background-color: #ffe0e0;
+            color: #b84c4c;
         }
 
         /* Avatar mặc định */
@@ -428,39 +428,39 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: linear-gradient(145deg, #1f3a3a, #000000);
-            border: 1.5px solid #00ffcc;
-            color: #00ffcc;
+            background: linear-gradient(145deg, #eef2ff, #e2e8f0);
+            border: 1.5px solid #2c7da0;
+            color: #2c7da0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 18px;
-            box-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
+            box-shadow: 0 0 4px rgba(44,125,160,0.15);
         }
 
-        /* Modal Dark */
+        /* Modal Light */
         .modal-content {
-            background-color: #0e1217;
-            border: 1px solid #2a4242;
+            background-color: #ffffff;
+            border: 1px solid #e9edf2;
             border-radius: 28px;
-            color: #eef5ff;
+            color: #1e293b;
         }
 
         .modal-header {
-            border-bottom-color: #2a3a3a;
+            border-bottom-color: #eef2f6;
         }
 
         .modal-footer {
-            border-top-color: #2a3a3a;
+            border-top-color: #eef2f6;
         }
 
         .btn-close {
-            filter: invert(1);
+            filter: none;
         }
 
         .text-muted {
-            color: #8c9aa8 !important;
+            color: #7c8b9c !important;
         }
 
         /* responsive */
@@ -488,7 +488,7 @@
 <body>
 <div class="d-flex">
 
-    <!-- SIDEBAR DARK PREMIUM -->
+    <!-- SIDEBAR MODERN -->
     <aside class="sidebar">
         <h2 class="logo"><i class="bi bi-car-front-fill me-2"></i><span>LUXCAR Admin</span></h2>
         <nav>
@@ -509,7 +509,7 @@
     <!-- Main -->
     <main class="main-content">
         <header class="header d-flex justify-content-between align-items-center">
-            <h3 class="fw-bold m-0"><i class="bi bi-people-fill me-2" style="color:#00ffcc;"></i> Quản lý người dùng
+            <h3 class="fw-bold m-0"><i class="bi bi-people-fill me-2" style="color:#2c7da0;"></i> Quản lý người dùng
             </h3>
             <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
@@ -548,9 +548,9 @@
             </form>
         </section>
 
-        <!-- Bảng người dùng Dark Style -->
+        <!-- Bảng người dùng -->
         <section class="blog-table mt-4">
-            <div class="card shadow-lg">
+            <div class="card shadow-sm">
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -821,8 +821,8 @@
                                                                                             class="form-control"
                                                                                             name="email"></div>
                         <div class="col-md-6"><label class="form-label">Description</label><input type="text"
-                                                                                            class="form-control"
-                                                                                            name="description"></div>
+                                                                                                  class="form-control"
+                                                                                                  name="description"></div>
                         <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text"
                                                                                                     class="form-control"
                                                                                                     name="phonenumber">
