@@ -1,5 +1,6 @@
 package code.salecar.dao;
 
+import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.model.product.entity.Product;
@@ -420,5 +421,29 @@ public class ProductDAO {
         }
 
         return BigDecimal.ZERO;
+    }
+
+    public List<ProductItem> getRelatedProductBrand(int brandId) {
+        List<ProductItem> products = new ArrayList<>();
+        String query = "select * from product where brand_id = ? ";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, brandId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductItem product = new ProductItem(
+                        rs.getInt("id")
+                );
+
+                products.add(product);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return products;
     }
 }

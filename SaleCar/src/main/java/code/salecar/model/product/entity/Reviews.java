@@ -1,8 +1,9 @@
 package code.salecar.model.product.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Reviews {
+public class Reviews implements Serializable {
     private int id;
     private int userId;
     private int productId;
