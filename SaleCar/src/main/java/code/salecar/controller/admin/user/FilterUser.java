@@ -1,8 +1,6 @@
 package code.salecar.controller.admin.user;
 
-import code.salecar.model.Address;
 import code.salecar.model.User;
-import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -11,8 +9,8 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "UserAdmin", value = "/userAdmin")
-public class UserAdmin extends HttpServlet {
+@WebServlet(name = "FilterUser", value = "/filterUser")
+public class FilterUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -24,14 +22,9 @@ public class UserAdmin extends HttpServlet {
                 response.sendRedirect("/login");
                 return;
             }
+            String keyword = request.getParameter("keyword");
             UserService us = new UserService();
-            List<User> listUser = us.getList();
-            AddressService as = new AddressService();
-            List<Address> listAddress = as.getListAddress();
-            for(Address a : listAddress){
-                System.out.println(a.getId());
-            }
-            request.setAttribute("listAddress",listAddress);
+            List<User> listUser =  us.getUserBykeyWord(keyword);
             request.setAttribute("listUser",listUser);
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
         }
@@ -39,6 +32,11 @@ public class UserAdmin extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+            String role = request.getParameter("role");
+            String status = request.getParameter("status");
+            UserService us = new UserService();
+            List<User> listUser = us.filterUser(role,status);
+            request.setAttribute("listUser",listUser);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
     }
 }

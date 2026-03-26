@@ -51,9 +51,9 @@ public class UserDao {
 
     public void register(User user) {
         String sql = "insert into users" +
-                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt) " +
+                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt,imgURL) " +
                 "values " +
-                "(?,?,?,?,?,?,?,?,?,?,?)";
+                "(?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
@@ -68,6 +68,7 @@ public class UserDao {
             ps.setBoolean(9, user.getStatus());
             ps.setDate(10, user.getCreatedat());
             ps.setDate(11, user.getUpdatedat());
+            ps.setString(12,user.getImgURL());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -238,5 +239,100 @@ public class UserDao {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<User> getUserByKeyWord(String keyword) {
+        List<User> list = new ArrayList<>();
+        String query = "select * from users where username like ? or fullname like ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getBoolean(10),
+                        rs.getDate(11),
+                        rs.getDate(12),
+                        rs.getString(13)
+                );
+                list.add(u);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
+    }
+
+    public List<User> fileUser(String role, boolean stat) {
+        List<User> list = new ArrayList<>();
+        String query = "select * from users where role like ? and status = ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, "%"+role+"%");
+            ps.setBoolean(2,stat);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getBoolean(10),
+                        rs.getDate(11),
+                        rs.getDate(12),
+                        rs.getString(13)
+                );
+                list.add(u);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
+    }
+
+    public List<User> filterByRole(String role) {
+        List<User> list = new ArrayList<>();
+        String query = "select * from users where role like ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1,"%"+role+"%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getBoolean(10),
+                        rs.getDate(11),
+                        rs.getDate(12),
+                        rs.getString(13)
+                );
+                list.add(u);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
     }
 }

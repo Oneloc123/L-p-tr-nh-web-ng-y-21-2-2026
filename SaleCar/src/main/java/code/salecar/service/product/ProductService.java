@@ -1,5 +1,6 @@
 package code.salecar.service.product;
 
+import code.salecar.model.Image;
 import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.dto.ProductRating;
@@ -9,6 +10,7 @@ import code.salecar.model.Brand;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.model.product.entity.Reviews;
+import code.salecar.service.Image.ImageService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class ProductService {
     DiscountService ds = new DiscountService();
     ReviewsService rs = new ReviewsService();
     CategoryService cs = new CategoryService();
-
+    ImageService is = new ImageService();
     public ProductDetail getProductByID(int id) {
 
         Product product = productDAO.getProductByID(id);
@@ -31,19 +33,23 @@ public class ProductService {
             return null;
         }
 
-        Brand brand = bs.getBrandByID(detail.getProduct().getBrandId());
+        //get img
+        List<String> image = is.getImageProduct(detail.getId());
+        image.add(is.getImage(Image.entityType.brand,detail.getBrandId()));
+        detail.setImage(image);
+
+        Brand brand = bs.getBrandByID(detail.getBrandId());
         if (brand != null) {
             detail.setBrandName(brand.getName());
             detail.setBrandLink(brand.getLinkBrand());
-
         }
 
-        String categoryName = cs.getCategoryName(detail.getProduct().getCategoryId());
+        String categoryName = cs.getCategoryName(detail.getCategoryId());
         detail.setCategoryName(categoryName != null ? categoryName : "");
 
         // Rating
-        List<Reviews> reviews = rs.getReviewsByID(detail.getProduct().getId());
-        ProductRating rating = new ProductRating(detail.getProduct().getId());
+        List<Reviews> reviews = rs.getReviewsByID(detail.getId());
+        ProductRating rating = new ProductRating(detail.getId());
         if (reviews != null && !reviews.isEmpty()) {
             detail.setReviews(reviews);
             detail.setAvgRating(caculateRates(reviews));
@@ -53,6 +59,8 @@ public class ProductService {
             detail.setAvgRating(0);
         }
         detail.setRating(rating);
+
+
 
         return detail;
     }
@@ -111,6 +119,10 @@ public class ProductService {
             } else {
                 productItem.setAvgRating(0);
             }
+            List<String> image = is.getImageProduct(productItem.getId());
+            image.add(is.getImage(Image.entityType.brand,productItem.getBrandId()));
+            productItem.setImage(image.get(0));
+
         }
 
 
@@ -213,7 +225,7 @@ public class ProductService {
         // Keyword
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             String keyword = filter.getKeyword().toLowerCase().trim();
-            stream = stream.filter(p -> p.getProduct().getName().toLowerCase().trim().contains(keyword));
+            stream = stream.filter(p -> p.getName().toLowerCase().trim().contains(keyword));
         }
 
         // category
@@ -228,7 +240,7 @@ public class ProductService {
 
         //maxPrice
         if (filter.getMaxPrice() != null) {
-            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice().doubleValue());
+            stream = stream.filter(p -> p.getPrice() <= filter.getMaxPrice().doubleValue());
         }
 
 
@@ -261,5 +273,15 @@ public class ProductService {
 
     public List<ProductItem> getProductHot() {
         return productDAO.getProductHot();
+    }
+
+    public List<ProductDetail> getRelatedProductBrand(int brandId) {
+        List<ProductItem> items = productDAO.getRelatedProductBrand( brandId);
+        List<ProductDetail> details = new ArrayList<>();
+        for (ProductItem item : items.subList(0, items.size() > 8 ? 8 : items.size() )) {
+            details.add(getProductByID(item.getId()));
+        }
+
+        return details;
     }
 }

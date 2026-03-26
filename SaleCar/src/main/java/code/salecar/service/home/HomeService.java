@@ -48,7 +48,7 @@ public class HomeService {
         return productService.getProductHot();
     }
 
-    public List<Brand> getAllBrands() { return brandService.getBrands();
+    public List<Brand> getAllBrands() { return brandService.getBrands().subList(0,9);
     }
 
     public List<Category> getCategory() {

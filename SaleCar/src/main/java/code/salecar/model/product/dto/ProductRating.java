@@ -1,6 +1,8 @@
 package code.salecar.model.product.dto;
 
-public class ProductRating {
+import java.io.Serializable;
+
+public class ProductRating implements Serializable {
 
     private int productId;
 
@@ -11,6 +13,7 @@ public class ProductRating {
     private int fourStar = 0;
     private int fiveStar = 0;
 
+    public ProductRating() {}
 
     public ProductRating(int productId) {
         this.productId = productId;
