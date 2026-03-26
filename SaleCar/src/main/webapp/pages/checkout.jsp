@@ -166,6 +166,8 @@
         </div>
 
         <form action="process-checkout"  method="POST">
+
+            <input type="hidden" name="type" value="${param.type}">
             <div class="checkout-container">
 
                 <div class="checkout-form-section">
@@ -260,7 +262,7 @@
 
 
                         <div class="summary-items-list">
-                            <c:forEach var="item" items="${sessionScope.cart.items}">
+                            <c:forEach var="item" items="${checkoutCart.items}">
                                 <div class="summary-item">
                                     <div class="summary-item-info">
                                         <div class="summary-img"><i class="fas fa-car"></i></div>
@@ -279,15 +281,15 @@
                         <div class="summary-calc">
                             <div class="calc-row">
                                 <span>Tạm tính:</span>
-                                <span><fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</span>
+                                <span><fmt:formatNumber value="${checkoutCart.total}" type="number" groupingUsed="true"/> ₫</span>
                             </div>
                             <div class="calc-row">
                                 <span>Phí vận chuyển:</span>
                                 <span>Miễn phí</span>
                             </div>
-                            <div  id="totalPrice" class="calc-row total">
+                            <div class="calc-row total">
                                 <span>Tổng cộng (Total Amount):</span>
-                                <span><fmt:formatNumber value="${sessionScope.cart.total}" type="number" groupingUsed="true"/> ₫</span>
+                                <span id="totalPrice"><fmt:formatNumber value="${checkoutCart.total}" type="number" groupingUsed="true"/> ₫</span>
                             </div>
                         </div>
 
@@ -321,12 +323,16 @@
 
         let voucherId = this.value;
 
+        // update truong hop tinh voucher
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || '';
+
         fetch("${pageContext.request.contextPath}/voucher", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: "voucherId=" + voucherId
+            body: "voucherId=" + voucherId + "&type=" +type
         })
             .then(response => response.text())
             .then(data => {

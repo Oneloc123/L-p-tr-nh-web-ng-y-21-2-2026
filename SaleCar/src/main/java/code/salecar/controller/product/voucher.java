@@ -20,17 +20,26 @@ public class voucher extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+        String type = request.getParameter("type");
 
-        String voucherId = request.getParameter("voucherId");
-        VoucherService voucherService = new VoucherService();
-        voucherService.getFinalPrice(Integer.parseInt(voucherId),cart);
+        Cart cart = null;
+        if("buynow".equals(type)){
+            cart = (Cart) session.getAttribute("buyNowCart");
+        } else {
+            cart = (Cart) session.getAttribute("cart");
+        }
+        if(cart != null){
+            String voucherId = request.getParameter("voucherId");
+            VoucherService voucherService = new VoucherService();
+            voucherService.getFinalPrice(Integer.parseInt(voucherId),cart);
 
 
+            response.setContentType("text/plain");
+            response.getWriter().write(String.valueOf(cart.getFinalTotal()));
 
-
-        response.setContentType("text/plain");
-        response.getWriter().write(String.valueOf(cart.getFinalTotal()));
+        }   else {
+                response.getWriter().print("0");
+        }
 
     }
 }

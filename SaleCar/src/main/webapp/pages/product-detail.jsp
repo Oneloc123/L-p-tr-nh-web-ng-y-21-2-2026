@@ -557,12 +557,18 @@
                     <form id="add-to-cart" action="cart-add" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.id}">
 
-                        <button type="button" class="btn btn-buy w-100"
-                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)" >Mua ngay</button>
+
 
                         <button type="button" class="btn btn-outline-dark w-100"
                         onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">Thêm vào giỏ hàng
                         </button>
+                    </form>
+
+                    <form id="buy-now" action="buy-now" method="get" class="w-100">
+                        <input type="hidden" name="productId" value="${product.id}">
+
+                        <button type="button" class="btn btn-buy w-100"
+                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)" >Mua ngay</button>
                     </form>
 
                     <form method="post" action="/favorites" class="w-100">
@@ -843,24 +849,42 @@
     </div>
 </div>
 
+
+
 <script>
     function addToCartAjax(event, productId, productName, isBuyNow){
         event.preventDefault();
 
         let quantityInput = document.querySelector('input[name="quantity"]');
-        let quantity = quantityInput ? quantityInput.value : 1;
+        let quantity;
 
-        fetch('cart-add?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
-            .then(response => response.text())
-            .then(data => {
-            if (data.trim() === 'success'){
+        if (quantityInput != null){
+            quantity = quantityInput.value
+        } else{
+            quantity = 1;
+        }
 
-            if(isBuyNow === true){
-                window.location.href = "checkout";
+        let apiUrl;
+        if (isBuyNow == true){
+            apiUrl = 'buy-now';
+        } else{
+            apiUrl = 'cart-add';
+        }
+
+        fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(data) {
+                if (data.trim() === 'success'){
+
+                    if(isBuyNow === true){
+                        window.location.href = "checkout?type=buynow";
             } else {
+
             // hien thi thong bao(TOAST)
-            let toast = document.getElementById("customToast");
-            document.getElementById("customToast").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+            let toast = document.getElementById("toastMessage");
+            document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
 
             toast.style.visibility = "visible";
             toast.style.opacity = "1";
@@ -871,7 +895,7 @@
                 setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
             }, 3000);
 
-            // ---- CỘNG SỐ GIỎ HÀNG ----
+            // CỘNG SỐ GIỎ HÀNG
             let count = document.getElementById("cart-count");
 
             if (count != null){
@@ -889,11 +913,11 @@
                 loginModal.show();
             }
     })
-    .catch(error => {
+    .catch(function(error) {
         console.error("Lỗi khi thêm giỏ hàng:", error);
         alert("có lỗi xãy ra, vui lòng thử lại!");
     });
-    }
+}
 </script>
 
 </body>
