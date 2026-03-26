@@ -968,8 +968,7 @@
                         </button>
                     </form>
 
-                    <form id="add-to-cart" action="${pageContext.request.contextPath}/cart-add" method="get"
-                          class="flex-grow-1">
+
 
                         <input type="hidden" name="productId" value="${product.id}">
 <%--                        <input type="hidden" name="quantity" id="cartQuantity" value="1">--%>
@@ -978,9 +977,21 @@
                             <i class="bi bi-cart-plus"></i> Thêm vào giỏ
                         </button>
                     </form>
-                    <form action="${pageContext.request.contextPath}/favorites" method="post">
-                        <button type="submit" name="productid" value="${product.id}" class="btn-action btn-wishlist">
-                            <i class="bi bi-star">Yêu thích</i>
+
+                    <form id="buy-now" action="buy-now" method="get" class="w-100">
+                        <input type="hidden" name="productId" value="${product.id}">
+
+                        <button type="button" class="btn btn-buy w-100"
+                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)" >Mua ngay</button>
+                    </form>
+
+                    <form method="post" action="/favorites" class="w-100">
+                        <button type="submit"
+                                class="btn star-btn w-100"
+                                name="productid"
+                                value="${product.id}">
+                            <i class="bi bi-star me-2"></i>
+                            Thêm vào yêu thích
                         </button>
                     </form>
                 </div>
@@ -1277,76 +1288,45 @@
     </div>
 </div>
 
+
+
 <script>
     function addToCartAjax(event, productId, productName, isBuyNow){
         event.preventDefault();
 
         let quantityInput = document.querySelector('input[name="quantity"]');
-        let quantity = quantityInput ? quantityInput.value : 1;
+        let quantity;
 
-        fetch('cart-add?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
-            .then(response => response.text())
-            .then(data => {
+        if (quantityInput != null){
+            quantity = quantityInput.value
+        } else{
+            quantity = 1;
+        }
+
+        let apiUrl;
+        if (isBuyNow == true){
+            apiUrl = 'buy-now';
+        } else{
+            apiUrl = 'cart-add';
+        }
+
+        fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(data) {
                 if (data.trim() === 'success'){
 
                     if(isBuyNow === true){
-                        window.location.href = "checkout";
-                    } else {
-                        // hien thi thong bao(TOAST)
-                        let toast = document.getElementById("customToast");
-                        document.getElementById("customToast").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+                        window.location.href = "checkout?type=buynow";
+            } else {
 
-                        toast.style.visibility = "visible";
-                        toast.style.opacity = "1";
+            // hien thi thong bao(TOAST)
+            let toast = document.getElementById("toastMessage");
+            document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
 
-                        setTimeout( function(){
-                            toast.style.opacity = "0";
-
-                            setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
-                        }, 3000);
-
-                        // ---- CỘNG SỐ GIỎ HÀNG ----
-                        let count = document.getElementById("cart-count");
-
-                        if (count != null){
-                            let crrNumber = parseInt(count.innerText);
-
-                            if (isNaN(crrNumber)){
-                                crrNumber = 0; }
-                            count.innerText = crrNumber + parseInt(quantity);
-                        }
-                    }
-
-
-                } else if (data.trim() === 'need_login'){
-                    let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
-                    loginModal.show();
-                }
-            })
-            .catch(error => {
-                console.error("Lỗi khi thêm giỏ hàng:", error);
-                alert("có lỗi xãy ra, vui lòng thử lại!");
-            });
-    }
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // ========== IMAGE GALLERY ==========
-        const mainImage = document.getElementById('mainImage');
-        const thumbnails = document.querySelectorAll('.thumbnail-item');
-
-        if (thumbnails.length > 0 && mainImage) {
-            thumbnails.forEach(thumb => {
-                thumb.addEventListener('click', function () {
-                    const imgSrc = this.getAttribute('data-image');
-                    if (imgSrc) {
-                        mainImage.src = imgSrc;
-                        thumbnails.forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                    }
-                });
-            });
-        }
+            toast.style.visibility = "visible";
+            toast.style.opacity = "1";
 
         // ========== ZOOM FUNCTION ==========
         if (mainImage) {
@@ -1371,15 +1351,8 @@
             if (buyQuantity) buyQuantity.value = newValue;
         }
 
-        if (qtyMinus) {
-            qtyMinus.addEventListener('click', () => updateQuantity(parseInt(quantityInput.value) - 1));
-        }
-        if (qtyPlus) {
-            qtyPlus.addEventListener('click', () => updateQuantity(parseInt(quantityInput.value) + 1));
-        }
-        if (quantityInput) {
-            quantityInput.addEventListener('change', () => updateQuantity(quantityInput.value));
-        }
+            // CỘNG SỐ GIỎ HÀNG
+            let count = document.getElementById("cart-count");
 
         // ========== TAB SWITCHING ==========
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -1392,12 +1365,16 @@
                 tabBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
-                tabContents.forEach(content => content.classList.remove('active'));
-                const activeContent = document.getElementById(tabId);
-                if (activeContent) activeContent.classList.add('active');
-            });
-        });
+            } else if (data.trim() === 'need_login'){
+                let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
+                loginModal.show();
+            }
+    })
+    .catch(function(error) {
+        console.error("Lỗi khi thêm giỏ hàng:", error);
+        alert("có lỗi xãy ra, vui lòng thử lại!");
     });
+}
 </script>
 
 <%@ include file="/common/footer.jsp" %>

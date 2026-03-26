@@ -1,66 +1,64 @@
-    package code.salecar.controller.checkout;
+package code.salecar.controller.checkout;
 
-    import code.salecar.dao.OrderDAO;
-    import code.salecar.model.Cart;
-    import code.salecar.model.Order;
-    import code.salecar.model.User;
-    import jakarta.servlet.*;
-    import jakarta.servlet.http.*;
-    import jakarta.servlet.annotation.*;
+import code.salecar.model.Cart;
+import code.salecar.model.User;
 
-    import java.io.IOException;
+import code.salecar.service.order.OrderService;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 
-    @WebServlet(name = "ProcessCheckout", value = "/process-checkout")
-    public class ProcessCheckout extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+import java.io.IOException;
+
+@WebServlet(name = "ProcessCheckout", value = "/process-checkout")
+public class ProcessCheckout extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
 
-
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
         }
 
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String type = request.getParameter("type");
+        Cart targetCart = null;
 
-            HttpSession session = request.getSession();
-            Cart cart = (Cart) session.getAttribute("cart");
-            User user = (User) session.getAttribute("user");
-
-            if (user == null){
-                response.sendRedirect("login");
-                return;
-            }else {
-                if (cart == null){
-                    cart = new Cart();
-                }else {
-                    String name = request.getParameter("fullName");
-                    String phone = request.getParameter("phone");
-                    String shippingAddress = request.getParameter("shippingAddress");
-
-                    // set dữ liệu cho order
-                    String fullInfor = name + "- SĐT: " + phone + " - Địa chỉ: " + shippingAddress;
-                    Order order = new Order();
-                    order.setUserId(user.getId());
-                    order.setTotalAmount(cart.getTotal());
-                    order.setShippingAddress(fullInfor);
-                    order.setPaymentMethod(request.getParameter("paymentMethod"));
-                    order.setOrderStatus("Đang xử lý");
-
-                    try {
-                        OrderDAO orderDAO = new OrderDAO();
-                        orderDAO.insertOrder(order, cart);
-
-
-                        session.removeAttribute("cart");
-                        response.sendRedirect("/pages/thankyou.jsp");
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-                        response.getWriter().println("Lỗi lưu đơn hàng: " + e.getMessage());
-                    }
-
-                }
+        // check type
+        if("buynow".equals(type)){
+            targetCart = (Cart) session.getAttribute("buyNowCart");
+        } else {
+            targetCart = (Cart) session.getAttribute("cart");
         }
+
+        if (targetCart == null || targetCart.getItems().isEmpty()) {
+            response.sendRedirect("home");
+            return;
+        }
+
+        String name = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String shippingAddress = request.getParameter("shippingAddress");
+        String paymentMethod = request.getParameter("paymentMethod");
+
+
+        OrderService orderService = new OrderService();
+        boolean isSuccess = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod);
+
+        if (isSuccess) {
+
+            if ("buynow".equals(type)) {
+                session.removeAttribute("buyNowCart");
+            } else {
+                session.removeAttribute("cart");
+            }
+            response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
+        } else {
+            response.getWriter().println("Hệ thống quá tải hoặc có lỗi xảy ra. Vui lòng thử lại!");
         }
     }
+}

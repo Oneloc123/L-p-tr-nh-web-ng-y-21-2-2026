@@ -955,10 +955,7 @@
                                                     <input type="hidden" name="productId" value="${p.id}">
                                                     <input type="hidden" name="quantity" value="1">
 
-                                                    <button type="button" class="btn-buy"
-                                                    onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
-                                                        <i class="bi bi-lightning-charge me-1"></i>Mua
-                                                    </button>
+
 
                                                     <!--sua type act thanh btt -->
                                                     <button type="button" class="btn-action"
@@ -967,6 +964,17 @@
                                                     </button>
 
                                                 </form>
+
+
+                                                <form action="buy-now" method="get" style="display: contents;">
+                                                <input type="hidden" name="productId" value="${p.id}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="button" class="btn-buy"
+                                                    onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
+                                                    <i class="bi bi-lightning-charge me-1"></i>Mua
+                                                </button>
+                                                </form>
+
                                                 <form method="post" action="/favorites" style="display: contents;">
                                                     <button class="btn-action" name="productid" value="${p.id}">
                                                         <i class="bi bi-star"></i>
@@ -1068,61 +1076,77 @@
 
 
 
-<%--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>--%>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 
 <script>
     function addToCartAjax(event, productId, productName, isBuyNow){
-        event.preventDefault();
+            event.preventDefault();
 
-        let quantityInput = document.querySelector('input[name="quantity"]');
-        let quantity = quantityInput ? quantityInput.value : 1;
+            let quantityInput = document.querySelector('input[name="quantity"]');
+            let quantity;
 
-        fetch('cart-add?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
-            .then(response => response.text())
-            .then(data => {
-            if (data.trim() === 'success'){
-
-            if(isBuyNow === true){
-                window.location.href = "checkout";
-            } else {
-            // hien thi thong bao(TOAST)
-            let toast = document.getElementById("customToast");
-            document.getElementById("customToast").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
-
-            toast.style.visibility = "visible";
-            toast.style.opacity = "1";
-
-            setTimeout( function(){
-                toast.style.opacity = "0";
-
-                setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
-            }, 3000);
-
-            // ---- CỘNG SỐ GIỎ HÀNG ----
-            let count = document.getElementById("cart-count");
-
-            if (count != null){
-                let crrNumber = parseInt(count.innerText);
-
-                if (isNaN(crrNumber)){
-                    crrNumber = 0; }
-                count.innerText = crrNumber + parseInt(quantity);
-            }
+            if (quantityInput != null){
+                quantity = quantityInput.value
+            } else{
+                quantity = 1;
             }
 
-
-            } else if (data.trim() === 'need_login'){
-                let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
-                loginModal.show();
+            let apiUrl;
+            if (isBuyNow == true){
+                apiUrl = 'buy-now';
+            } else{
+                apiUrl = 'cart-add';
             }
-    })
-    .catch(error => {
-        console.error("Lỗi khi thêm giỏ hàng:", error);
-        alert("có lỗi xãy ra, vui lòng thử lại!");
-    });
-    }
+
+            fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+                .then(function(response) {
+                    return response.text();
+                })
+                .then(function(data) {
+                    if (data.trim() === 'success'){
+
+                        if(isBuyNow === true){
+                            window.location.href = "checkout?type=buynow";
+                } else {
+
+                // hien thi thong bao(TOAST)
+                let toast = document.getElementById("customToast");
+                document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+
+                toast.style.visibility = "visible";
+                toast.style.opacity = "1";
+
+                setTimeout( function(){
+                    toast.style.opacity = "0";
+
+                    setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+                }, 3000);
+
+                // CỘNG SỐ GIỎ HÀNG
+                let count = document.getElementById("cart-count");
+
+                if (count != null){
+                    let crrNumber = parseInt(count.innerText);
+
+                    if (isNaN(crrNumber)){
+                        crrNumber = 0; }
+                    count.innerText = crrNumber + parseInt(quantity);
+                }
+                }
+
+
+                } else if (data.trim() === 'need_login'){
+                    let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
+                    loginModal.show();
+                }
+        })
+        .catch(function(error) {
+            console.error("Lỗi khi thêm giỏ hàng:", error);
+            alert("có lỗi xãy ra, vui lòng thử lại!");
+        });
+}
 
     // Initialize Bootstrap collapse
     document.addEventListener('DOMContentLoaded', function () {

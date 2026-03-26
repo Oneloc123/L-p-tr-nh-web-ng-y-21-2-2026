@@ -23,7 +23,7 @@ public class CancelOrderServlet extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String cancelReason = request.getParameter("cancelReason");
 
-        System.out.println("hah");
+
         User user = (User) request.getSession().getAttribute("user");
         if(user != null){
 
