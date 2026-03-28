@@ -108,7 +108,7 @@ public class ProductDAO {
             params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() !=  null) {
+        if (filter.getMaxPrice() != null) {
             query.append(" and pr.final_price <= ? ");
             params.add(filter.getMaxPrice().doubleValue());
         }
@@ -131,8 +131,6 @@ public class ProductDAO {
                     break;
             }
         }
-
-
 
 
         try (Connection conn = DBConnection.getConnection();
@@ -192,7 +190,7 @@ public class ProductDAO {
             params.addAll(filter.getScale());
         }
 
-        if (filter.getMaxPrice() !=  null) {
+        if (filter.getMaxPrice() != null) {
             query.append(" and pr.final_price <= ? ");
             params.add(filter.getMaxPrice().doubleValue());
         }
@@ -356,6 +354,7 @@ public class ProductDAO {
             ps.setInt(5, id);
 
             ps.executeUpdate();
+            System.out.println("Product updated");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
@@ -445,5 +444,225 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
         return products;
+    }
+
+    public List<ProductItem> getProductForAdmin(ProductFilter filter, int page, int limit) {
+        List<ProductItem> products = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        String sql = "select   pr.* from product pr  " +
+                " join brand br on pr.brand_id = br.id  " +
+                " join category ct on pr.category_id = ct.id " +
+                " where 1=1 ";
+
+        StringBuilder query = new StringBuilder(sql);
+
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            query.append(" and pr.name like ? ");
+            params.add("%" + filter.getKeyword() + "%");
+        }
+
+        if (filter.getCategory() != null && !filter.getCategory().isEmpty()) {
+            query.append(" and ct.id in (")
+                    .append(String.join(",", Collections.nCopies(filter.getCategory().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getCategory());
+        }
+
+        if (filter.getBrand() != null && !filter.getBrand().isEmpty()) {
+            query.append(" and br.id in (")
+                    .append(String.join(",", Collections.nCopies(filter.getBrand().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getBrand());
+        }
+
+        if (filter.getStatus() != -1) {
+            query.append(" and pr.status like ? ");
+            params.add("%" + filter.getStatus() + "%");
+        }
+
+        if (filter.getStock() != null && !filter.getStock().isEmpty()) {
+            query.append(" and pr.stock like ? ");
+            params.add("%" + filter.getStock() + "%");
+        }
+
+
+        if (filter.getMaxPrice() != null) {
+            query.append(" and pr.final_price <= ? ");
+            params.add(filter.getMaxPrice().doubleValue());
+        }
+        if (filter.getMinPrice() != null) {
+            query.append(" and pr.final_price >= ? ");
+            params.add(filter.getMinPrice().doubleValue());
+        }
+        if (filter.getFromDate() != null) {
+            query.append(" and pr.updated_at >= ? ");
+            params.add(filter.getFromDate());
+        }
+        if (filter.getToDate() != null) {
+            query.append(" and pr.updated_at <= ? ");
+            params.add(filter.getToDate());
+        }
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NAME_ASC:
+                    query.append(" order by pr.name asc");
+                    break;
+                case NAME_DESC:
+                    query.append(" order by pr.name desc");
+                    break;
+                case CREATED_ASC:
+                    query.append(" order by created_at asc");
+                    break;
+                case CREATED_DESC:
+                    query.append(" order by created_at desc");
+                    break;
+            }
+        }else {
+            query.append(" order by pr.id asc");
+        }
+
+
+        int offset = (page - 1) * limit;
+
+        query.append("  limit  ? offset  ? ");
+        params.add(limit);
+        params.add(offset);
+        System.out.println("SQL: " + query);
+        System.out.println("Params: " + params);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductItem p = new ProductItem(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getDouble("final_price"),
+                        rs.getDouble("discount_percent"),
+                        rs.getInt("brand_id"),
+                        rs.getInt("category_id"),
+                        rs.getInt("status"),
+                        rs.getDate("created_at"),
+                        rs.getDate("updated_at")
+                );
+
+
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Products found: " + products.size());
+        return products;
+    }
+
+    public int getTotalProductForAdmin(ProductFilter filter) {
+        List<Object> params = new ArrayList<>();
+
+        String sql = "select   count(*) from product pr  " +
+                " join brand br on pr.brand_id = br.id  " +
+                " join category ct on pr.category_id = ct.id " +
+                " where 1=1 ";
+
+        StringBuilder query = new StringBuilder(sql);
+
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            query.append(" and pr.name like ? ");
+            params.add("%" + filter.getKeyword() + "%");
+        }
+
+        if (filter.getCategory() != null && !filter.getCategory().isEmpty()) {
+            query.append(" and ct.id in (")
+                    .append(String.join(",", Collections.nCopies(filter.getCategory().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getCategory());
+        }
+
+        if (filter.getBrand() != null && !filter.getBrand().isEmpty()) {
+            query.append(" and br.id in (")
+                    .append(String.join(",", Collections.nCopies(filter.getBrand().size(), "?")))
+                    .append(") ");
+            params.addAll(filter.getBrand());
+        }
+
+        if (filter.getStatus() != -1) {
+            query.append(" and pr.status like ? ");
+            params.add("%" + filter.getStatus() + "%");
+        }
+
+        if (filter.getStock() != null && !filter.getStock().isEmpty()) {
+            query.append(" and pr.stock like ? ");
+            params.add("%" + filter.getStock() + "%");
+        }
+
+
+        if (filter.getMaxPrice() != null) {
+            query.append(" and pr.final_price <= ? ");
+            params.add(filter.getMaxPrice().doubleValue());
+        }
+        if (filter.getMinPrice() != null) {
+            query.append(" and pr.final_price >= ? ");
+            params.add(filter.getMinPrice().doubleValue());
+        }
+        if (filter.getFromDate() != null) {
+            query.append(" and pr.updated_at >= ? ");
+            params.add(filter.getFromDate());
+        }
+        if (filter.getToDate() != null) {
+            query.append(" and pr.updated_at <= ? ");
+            params.add(filter.getToDate());
+        }
+        if (filter.getSortBy() != null) {
+            switch (filter.getSortBy()) {
+                case PRICE_DESC:
+                    query.append(" order by pr.price desc");
+                    break;
+                case PRICE_ASC:
+                    query.append(" order by pr.price asc");
+                    break;
+                case NAME_ASC:
+                    query.append(" order by pr.name asc");
+                    break;
+                case NAME_DESC:
+                    query.append(" order by pr.name desc");
+                    break;
+                case CREATED_ASC:
+                    query.append(" order by created_at asc");
+                    break;
+                case CREATED_DESC:
+                    query.append(" order by created_at desc");
+                    break;
+            }
+        }else {
+            query.append(" order by pr.id asc");
+        }
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+               return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
     }
 }

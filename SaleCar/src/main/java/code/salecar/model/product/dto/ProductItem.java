@@ -15,6 +15,10 @@ public class ProductItem implements Serializable {
     private int brandId;
     private int categoryId;
     private String ratio;
+    private int status;
+    private Date createdAt;
+    private Date updatedAt;
+
 
     private String image;
 
@@ -22,14 +26,32 @@ public class ProductItem implements Serializable {
     private String brandName;
 
     private double avgRating;
-    private  int reviewCount;
+    private int reviewCount;
 
-    private Date createdAt;
 
+
+    // Lọc bên product admin
+
+
+    public ProductItem(int id, String name, double price, double finalPrice, double discountPercent, int brandId, int categoryId, int status, Date createdAt, Date updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.finalPrice = finalPrice;
+        this.discountPercent = discountPercent;
+        this.brandId = brandId;
+        this.categoryId = categoryId;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Sản phẩm liên quan
     public ProductItem(int id) {
         this.id = id;
     }
 
+    // Filter bên cưar hàng, product new, product hot
     public ProductItem(int id, String name, double price, double finalPrice, double discountPercent, int brandId, int categoryId, String ratio) {
         this.id = id;
         this.name = name;
@@ -50,6 +72,22 @@ public class ProductItem implements Serializable {
         this.brandId = brandId;
         this.categoryId = categoryId;
         this.createdAt = createdAt;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getImage() {

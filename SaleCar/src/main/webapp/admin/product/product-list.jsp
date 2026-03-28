@@ -121,6 +121,7 @@
             border-radius: 40px;
             color: #ffffff;
             transition: 0.2s;
+            cursor: pointer;
         }
 
         .admin-btn-primary:hover {
@@ -137,6 +138,7 @@
             border-radius: 30px;
             color: #64748b;
             transition: 0.2s;
+            cursor: pointer;
         }
 
         .admin-btn-outline:hover {
@@ -275,6 +277,7 @@
             align-items: center;
             gap: 6px;
             margin: 0 3px;
+            cursor: pointer;
         }
 
         .admin-action-view {
@@ -316,51 +319,6 @@
             border: 1px solid #e9edf2;
         }
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            border: 1px solid #e9edf2;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .product-card-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .product-card-body {
-            padding: 15px;
-        }
-
-        /* ========== BULK ACTIONS ========== */
-        .admin-bulk-bar {
-            background: white;
-            border-radius: 16px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            display: none;
-            border: 1px solid #e9edf2;
-        }
-
-        .admin-bulk-bar.show {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
         /* ========== PAGINATION ========== */
         .admin-pagination {
             margin-top: 20px;
@@ -374,6 +332,7 @@
             text-decoration: none;
             border: 1px solid #e2e8f0;
             background: white;
+            cursor: pointer;
         }
 
         .admin-page-item.active .admin-page-link {
@@ -385,28 +344,7 @@
         .admin-page-item.disabled .admin-page-link {
             color: #cbd5e1;
             pointer-events: none;
-        }
-
-        /* ========== VIEW TOGGLE ========== */
-        .admin-view-toggle {
-            display: flex;
-            gap: 10px;
-        }
-
-        .admin-view-toggle .admin-btn-outline.active {
-            background-color: #2c7da0;
-            color: white;
-            border-color: #2c7da0;
-        }
-
-        /* ========== LOADING ========== */
-        .admin-loading {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
+            cursor: not-allowed;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -432,128 +370,119 @@
 </head>
 <body>
 <div class="d-flex">
-    <%@ include file="/admin/sidebar/sidebar.jsp"%>
+    <!-- Include sidebar (optional) -->
+     <%@ include file="/admin/sidebar/sidebar.jsp"%>
 
     <main class="main-content">
         <header class="admin-header d-flex justify-content-between align-items-center">
             <h3 class="fw-bold m-0"><i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i> Quản lý sản phẩm</h3>
             <div>
-                <button class="admin-btn-primary me-2" onclick="exportProducts()">
-                    <i class="bi bi-download"></i> Export
-                </button>
-                <button class="admin-btn-primary" onclick="location.href='/createProduct'">
+                <form action="/admin/products/export" method="get" style="display: inline-block;">
+                    <input type="hidden" name="keyword" value="${param.keyword}">
+                    <input type="hidden" name="categoryId" value="${param.categoryId}">
+                    <input type="hidden" name="status" value="${param.status}">
+                    <input type="hidden" name="stockStatus" value="${param.stockStatus}">
+                    <input type="hidden" name="minPrice" value="${param.minPrice}">
+                    <input type="hidden" name="maxPrice" value="${param.maxPrice}">
+                    <input type="hidden" name="fromDate" value="${param.fromDate}">
+                    <input type="hidden" name="toDate" value="${param.toDate}">
+                    <button type="submit" class="admin-btn-primary me-2">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                </form>
+                <a href="/admin/products/create" class="admin-btn-primary text-decoration-none">
                     <i class="bi bi-plus-lg"></i> Thêm sản phẩm
-                </button>
+                </a>
             </div>
         </header>
 
-        <!-- Search Bar -->
-        <div class="mb-4">
-            <div class="input-group">
-                <input type="text" class="admin-input" id="searchKeyword" name="keyword" datatype="String"
-                       placeholder="🔍 Tìm kiếm theo tên sản phẩm, SKU, danh mục..." onkeyup="searchProducts()">
-                <button class="admin-btn-outline" onclick="searchProducts()">
-                    <i class="bi bi-search"></i> Tìm
-                </button>
+        <!-- Search & Filter Form -->
+        <form action="/admin/products" method="get" id="filterForm">
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="admin-input" id="searchKeyword" name="keyword"
+                           placeholder="🔍 Tìm kiếm theo tên sản phẩm, SKU, danh mục..."
+                           value="${param.keyword}">
+                    <button type="submit" class="admin-btn-outline">
+                        <i class="bi bi-search"></i> Tìm
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- Filter Sidebar -->
-        <div class="admin-filter-sidebar">
-            <h6 class="mb-3"><i class="bi bi-funnel"></i> Bộ lọc nâng cao</h6>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Danh mục</label>
-                    <select class="admin-select" id="filterCategory" name="categoryId" datatype="Long" onchange="filterProducts()">
-                        <option value="">Tất cả danh mục</option>
-                        <c:forEach items="${categories}" var="cat">
-                            <option value="${cat.id}">${cat.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Trạng thái</label>
-                    <select class="admin-select" id="filterStatus" name="status" datatype="String" onchange="filterProducts()">
-                        <option value="">Tất cả</option>
-                        <option value="active">Hoạt động</option>
-                        <option value="inactive">Không hoạt động</option>
-                        <option value="draft">Nháp</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Tồn kho</label>
-                    <select class="admin-select" id="filterStock" name="stockStatus" datatype="String" onchange="filterProducts()">
-                        <option value="">Tất cả</option>
-                        <option value="high">Còn nhiều (>50)</option>
-                        <option value="medium">Trung bình (10-50)</option>
-                        <option value="low">Sắp hết (<10)</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Khoảng giá</label>
-                    <div class="d-flex gap-2">
-                        <input type="number" class="admin-input price-range-input" id="minPrice" name="minPrice"
-                               datatype="double" placeholder="Từ" onchange="filterProducts()">
-                        <input type="number" class="admin-input price-range-input" id="maxPrice" name="maxPrice"
-                               datatype="double" placeholder="Đến" onchange="filterProducts()">
+            <!-- Filter Sidebar -->
+            <div class="admin-filter-sidebar">
+                <h6 class="mb-3"><i class="bi bi-funnel"></i> Bộ lọc nâng cao</h6>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Danh mục</label>
+                        <select class="admin-select" id="filterCategory" name="categoryId" onchange="this.form.submit()">
+                            <option value="">Tất cả danh mục</option>
+                            <c:forEach items="${categories}" var="cat">
+                                <option value="${cat.id}" ${param.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="admin-select" id="filterStatus" name="status" onchange="this.form.submit()">
+                            <option value="">Tất cả</option>
+                            <option value="active" ${param.status == 'active' ? 'selected' : ''}>Hoạt động</option>
+                            <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
+                            <option value="draft" ${param.status == 'draft' ? 'selected' : ''}>Nháp</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tồn kho</label>
+                        <select class="admin-select" id="filterStock" name="stockStatus" onchange="this.form.submit()">
+                            <option value="">Tất cả</option>
+                            <option value="high" ${param.stockStatus == 'high' ? 'selected' : ''}>Còn nhiều (>50)</option>
+                            <option value="medium" ${param.stockStatus == 'medium' ? 'selected' : ''}>Trung bình (10-50)</option>
+                            <option value="low" ${param.stockStatus == 'low' ? 'selected' : ''}>Sắp hết (<10)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Khoảng giá</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" class="admin-input price-range-input" id="minPrice" name="minPrice"
+                                   placeholder="Từ" value="${param.minPrice}">
+                            <input type="number" class="admin-input price-range-input" id="maxPrice" name="maxPrice"
+                                   placeholder="Đến" value="${param.maxPrice}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ngày tạo từ</label>
+                        <input type="date" class="admin-input" id="fromDate" name="fromDate" value="${param.fromDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" class="admin-input" id="toDate" name="toDate" value="${param.toDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Sắp xếp theo</label>
+                        <select class="admin-select" id="sortBy" name="sortBy" onchange="this.form.submit()">
+                            <option value="name_asc" ${param.sortBy == 'name_asc' ? 'selected' : ''}>Tên A-Z</option>
+                            <option value="name_desc" ${param.sortBy == 'name_desc' ? 'selected' : ''}>Tên Z-A</option>
+                            <option value="price_asc" ${param.sortBy == 'price_asc' ? 'selected' : ''}>Giá tăng dần</option>
+                            <option value="price_desc" ${param.sortBy == 'price_desc' ? 'selected' : ''}>Giá giảm dần</option>
+                            <option value="createdAt_desc" ${param.sortBy == 'createdAt_desc' ? 'selected' : ''}>Mới nhất</option>
+                            <option value="createdAt_asc" ${param.sortBy == 'createdAt_asc' ? 'selected' : ''}>Cũ nhất</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div>
+                            <button type="submit" class="admin-btn-primary w-100">
+                                <i class="bi bi-funnel"></i> Áp dụng bộ lọc
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Ngày tạo từ</label>
-                    <input type="date" class="admin-input" id="fromDate" name="fromDate" datatype="LocalDate" onchange="filterProducts()">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Đến ngày</label>
-                    <input type="date" class="admin-input" id="toDate" name="toDate" datatype="LocalDate" onchange="filterProducts()">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Sắp xếp theo</label>
-                    <select class="admin-select" id="sortBy" name="sortBy" datatype="String" onchange="filterProducts()">
-                        <option value="name_asc">Tên A-Z</option>
-                        <option value="name_desc">Tên Z-A</option>
-                        <option value="price_asc">Giá tăng dần</option>
-                        <option value="price_desc">Giá giảm dần</option>
-                        <option value="createdAt_desc">Mới nhất</option>
-                        <option value="createdAt_asc">Cũ nhất</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Hiển thị</label>
-                    <div class="admin-view-toggle">
-                        <button class="admin-btn-outline active" onclick="setView('table')">
-                            <i class="bi bi-table"></i>
-                        </button>
-                        <button class="admin-btn-outline" onclick="setView('grid')">
-                            <i class="bi bi-grid-3x3-gap-fill"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
-        </div>
 
-        <!-- Bulk Actions Bar -->
-        <div id="bulkActionsBar" class="admin-bulk-bar">
-            <span id="selectedCount">0</span> sản phẩm được chọn
-            <button class="admin-action-delete" onclick="bulkDelete()">
-                <i class="bi bi-trash"></i> Xóa
-            </button>
-            <button class="admin-action-edit" onclick="bulkChangeStatus()">
-                <i class="bi bi-arrow-repeat"></i> Đổi trạng thái
-            </button>
-            <button class="admin-action-view" onclick="bulkAssignCategory()">
-                <i class="bi bi-tags"></i> Gán danh mục
-            </button>
-            <button class="admin-btn-outline" onclick="clearSelection()">
-                <i class="bi bi-x-lg"></i> Bỏ chọn
-            </button>
-        </div>
-
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="admin-loading">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
+            <!-- Hidden fields for pagination -->
+            <input type="hidden" name="page" id="page" value="${currentPage}">
+        </form>
 
         <!-- Product Table View -->
         <div id="tableView" class="product-table-view">
@@ -564,12 +493,12 @@
                             <thead class="table-light">
                             <tr>
                                 <th width="40">
-                                    <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                                    <input type="checkbox" id="selectAll">
                                 </th>
                                 <th>ID</th>
                                 <th>Hình ảnh</th>
                                 <th>Tên sản phẩm</th>
-                                <th>SKU</th>
+                                <th>id</th>
                                 <th>Giá gốc</th>
                                 <th>Giá KM</th>
                                 <th>Giảm giá</th>
@@ -581,7 +510,61 @@
                             </tr>
                             </thead>
                             <tbody id="productTableBody">
-                            <!-- Dynamic content will be populated by JavaScript -->
+                            <c:forEach items="${products}" var="product">
+                                <tr>
+                                    <td><input type="checkbox" class="product-checkbox" value="${product.id}"></td>
+                                    <td>${product.id}</td>
+                                    <td><img src="${product.image != null ? product.image : '/assets/img/default-product.png'}" class="product-thumb" alt="${product.name}"></td>
+                                    <td class="fw-semibold">${product.name}</td>
+                                    <td><code>${product.id}</code></td>
+                                    <td><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="₫"/></td>
+                                    <td class="text-primary fw-bold"><fmt:formatNumber value="${product.finalPrice}" type="currency" currencySymbol="₫"/></td>
+                                    <td>${product.discountPercent}%</td>
+                                    <td>${product.categoryName}</td>
+                                    <td>
+<%--                                            <span class="admin-badge-stock--%>
+<%--                                                ${product.quantity > 50 ? 'admin-badge-stock-high' :--%>
+<%--                                                  (product.quantity >= 10 ? 'admin-badge-stock-medium' : 'admin-badge-stock-low')}">--%>
+<%--                                                    ${product.quantity}--%>
+<%--                                            </span>--%>1
+                                    </td>
+                                    <td>
+                                            <span class="admin-badge-status
+                                                ${product.status == 1 ? 'admin-badge-active' :
+                                                  (product.status == 0 ? 'admin-badge-inactive' : 'admin-badge-draft')}">
+                                                    ${product.status == 1 ? 'Hoạt động' : (product.status == 0 ? 'Không hoạt động' : 'Nháp')}
+                                            </span>
+                                    </td>
+                                    <td><fmt:formatDate value="${product.createdAt}" pattern="dd/MM/yyyy"/></td>
+                                    <td>
+                                        <a href="/admin/products/detail?id=${product.id}" class="admin-action-btn admin-action-view text-decoration-none">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/admin/products/edit?id=${product.id}" class="admin-action-btn admin-action-edit text-decoration-none">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <form action="/admin/products/delete" method="post" style="display: inline-block;"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                            <input type="hidden" name="id" value="${product.id}">
+                                            <button type="submit" class="admin-action-btn admin-action-delete border-0">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                        <a href="/admin/products/duplicate?id=${product.id}" class="admin-action-btn admin-action-edit text-decoration-none"
+                                           onclick="return confirm('Bạn có muốn nhân bản sản phẩm này?');">
+                                            <i class="bi bi-files"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            <c:if test="${empty products}">
+                                <tr>
+                                    <td colspan="13" class="text-center py-4 text-muted">
+                                        <i class="bi bi-inbox fs-1 d-block"></i>
+                                        Không có sản phẩm nào
+                                    </td>
+                                </tr>
+                            </c:if>
                             </tbody>
                         </table>
                     </div>
@@ -589,271 +572,70 @@
             </div>
         </div>
 
-        <!-- Product Grid View -->
-        <div id="gridView" class="product-grid" style="display: none;">
-            <!-- Dynamic content -->
-        </div>
-
         <!-- Pagination -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center admin-pagination" id="pagination">
-                <!-- Dynamic pagination -->
+                <c:if test="${totalPages > 1}">
+                    <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="admin-page-link" href="?page=1&keyword=${param.keyword}&categoryId=${param.categoryId}&status=${param.status}&stockStatus=${param.stockStatus}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">
+                            Đầu
+                        </a>
+                    </li>
+                    <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="admin-page-link" href="?page=${currentPage - 1}&keyword=${param.keyword}&categoryId=${param.categoryId}&status=${param.status}&stockStatus=${param.stockStatus}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">
+                            Trước
+                        </a>
+                    </li>
+
+                    <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}"/>
+                    <c:set var="endPage" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}"/>
+
+                    <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                        <li class="admin-page-item ${currentPage == i ? 'active' : ''}">
+                            <a class="admin-page-link" href="?page=${i}&keyword=${param.keyword}&categoryId=${param.categoryId}&status=${param.status}&stockStatus=${param.stockStatus}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">
+                                    ${i}
+                            </a>
+                        </li>
+                    </c:forEach>
+
+                    <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="admin-page-link" href="?page=${currentPage + 1}&keyword=${param.keyword}&categoryId=${param.categoryId}&status=${param.status}&stockStatus=${param.stockStatus}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">
+                            Sau
+                        </a>
+                    </li>
+                    <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="admin-page-link" href="?page=${totalPages}&keyword=${param.keyword}&categoryId=${param.categoryId}&status=${param.status}&stockStatus=${param.stockStatus}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&fromDate=${param.fromDate}&toDate=${param.toDate}&sortBy=${param.sortBy}">
+                            Cuối
+                        </a>
+                    </li>
+                </c:if>
             </ul>
         </nav>
     </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Keep existing JavaScript functions, they work with the new class names
-    // The functions remain unchanged as they only use IDs
-    let currentView = 'table';
-    let selectedProducts = new Set();
-    let currentPage = 1;
-    let totalPages = 1;
+    // Simple JavaScript for checkbox selection (no AJAX)
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const productCheckboxes = document.querySelectorAll('.product-checkbox');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        loadProducts();
-    });
-
-    // Rest of JavaScript remains the same...
-    // [All existing JavaScript functions stay unchanged]
-
-    function loadProducts() {
-        showLoading();
-        const params = getFilterParams();
-        fetch('/api/products?' + new URLSearchParams(params))
-            .then(response => response.json())
-            .then(data => {
-                currentPage = data.page;
-                totalPages = data.totalPages;
-                renderProducts(data.products);
-                renderPagination();
-                hideLoading();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                hideLoading();
-                showError('Không thể tải danh sách sản phẩm');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            productCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
             });
+        });
     }
 
-    function getFilterParams() {
-        return {
-            page: currentPage,
-            keyword: document.getElementById('searchKeyword').value,
-            categoryId: document.getElementById('filterCategory').value,
-            status: document.getElementById('filterStatus').value,
-            stockStatus: document.getElementById('filterStock').value,
-            minPrice: document.getElementById('minPrice').value,
-            maxPrice: document.getElementById('maxPrice').value,
-            fromDate: document.getElementById('fromDate').value,
-            toDate: document.getElementById('toDate').value,
-            sortBy: document.getElementById('sortBy').value
-        };
-    }
-
-    function renderProducts(products) {
-        if (currentView === 'table') {
-            renderTableView(products);
-        } else {
-            renderGridView(products);
-        }
-        updateBulkActionsBar();
-    }
-
-    function renderTableView(products) {
-        const tbody = document.getElementById('productTableBody');
-        tbody.innerHTML = products.map(product => `
-            <tr>
-                <td><input type="checkbox" class="product-checkbox" value="${product.id}" onchange="toggleProductSelection(${product.id})"></td>
-                <td>${product.id}</td>
-                <td><img src="${product.thumbnail || '/assets/img/default-product.png'}" class="product-thumb" alt="${product.productName}"></td>
-                <td class="fw-semibold">${product.productName}</td>
-                <td><code>${product.sku}</code></td>
-                <td>${formatCurrency(product.originalPrice)}</td>
-                <td class="text-primary fw-bold">${formatCurrency(product.finalPrice)}</td>
-                <td>${product.discountPercent}%</td>
-                <td>${product.categoryName}</td>
-                <td><span class="admin-badge-stock ${getStockClass(product.quantity)}">${product.quantity}</span></td>
-                <td><span class="admin-badge-status ${getStatusClass(product.status)}">${getStatusText(product.status)}</span></td>
-                <td>${formatDate(product.createdAt)}</td>
-                <td>
-                    <button class="admin-action-btn admin-action-view" onclick="viewProduct(${product.id})"><i class="bi bi-eye"></i></button>
-                    <button class="admin-action-btn admin-action-edit" onclick="editProduct(${product.id})"><i class="bi bi-pencil-square"></i></button>
-                    <button class="admin-action-btn admin-action-delete" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i></button>
-                    <button class="admin-action-btn admin-action-edit" onclick="duplicateProduct(${product.id})"><i class="bi bi-files"></i></button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    function renderGridView(products) {
-        const grid = document.getElementById('gridView');
-        grid.innerHTML = products.map(product => `
-            <div class="product-card">
-                <img src="${product.thumbnail || '/assets/img/default-product.png'}" class="product-card-img" alt="${product.productName}">
-                <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-0 fw-bold">${product.productName}</h6>
-                        <input type="checkbox" class="product-checkbox" value="${product.id}" onchange="toggleProductSelection(${product.id})">
-                    </div>
-                    <code class="small">${product.sku}</code>
-                    <div class="mt-2">
-                        <span class="text-decoration-line-through text-muted small">${formatCurrency(product.originalPrice)}</span>
-                        <span class="text-primary fw-bold ms-2">${formatCurrency(product.finalPrice)}</span>
-                        <span class="badge bg-danger ms-2">-${product.discountPercent}%</span>
-                    </div>
-                    <div class="mt-2 d-flex justify-content-between align-items-center">
-                        <span class="admin-badge-stock ${getStockClass(product.quantity)}"><i class="bi bi-box"></i> ${product.quantity}</span>
-                        <span class="admin-badge-status ${getStatusClass(product.status)}">${getStatusText(product.status)}</span>
-                    </div>
-                    <div class="mt-3">
-                        <button class="admin-action-btn admin-action-view btn-sm" onclick="viewProduct(${product.id})"><i class="bi bi-eye"></i> Xem</button>
-                        <button class="admin-action-btn admin-action-edit btn-sm" onclick="editProduct(${product.id})"><i class="bi bi-pencil-square"></i> Sửa</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function setView(view) {
-        currentView = view;
-        const tableView = document.getElementById('tableView');
-        const gridView = document.getElementById('gridView');
-        const btns = document.querySelectorAll('.admin-view-toggle .admin-btn-outline');
-
-        if (view === 'table') {
-            tableView.style.display = 'block';
-            gridView.style.display = 'none';
-            btns[0].classList.add('active');
-            btns[1].classList.remove('active');
-        } else {
-            tableView.style.display = 'none';
-            gridView.style.display = 'grid';
-            btns[0].classList.remove('active');
-            btns[1].classList.add('active');
-        }
-        loadProducts();
-    }
-
-    function toggleSelectAll() {
-        const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.product-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = selectAll.checked;
-            if (selectAll.checked) {
-                selectedProducts.add(parseInt(checkbox.value));
-            } else {
-                selectedProducts.clear();
+    // Optional: Maintain selected state (client-side only)
+    productCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (selectAllCheckbox) {
+                const allChecked = Array.from(productCheckboxes).every(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
             }
         });
-        updateBulkActionsBar();
-    }
-
-    function toggleProductSelection(productId) {
-        if (selectedProducts.has(productId)) {
-            selectedProducts.delete(productId);
-        } else {
-            selectedProducts.add(productId);
-        }
-        updateBulkActionsBar();
-    }
-
-    function updateBulkActionsBar() {
-        const bar = document.getElementById('bulkActionsBar');
-        const count = selectedProducts.size;
-        document.getElementById('selectedCount').innerText = count;
-        if (count > 0) {
-            bar.classList.add('show');
-        } else {
-            bar.classList.remove('show');
-        }
-    }
-
-    function clearSelection() {
-        selectedProducts.clear();
-        document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = false);
-        updateBulkActionsBar();
-    }
-
-    function searchProducts() { currentPage = 1; loadProducts(); }
-    function filterProducts() { currentPage = 1; loadProducts(); }
-
-    function renderPagination() {
-        const pagination = document.getElementById('pagination');
-        let html = `
-            <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
-                <a class="admin-page-link" href="#" onclick="changePage(1)">Đầu</a>
-            </li>
-            <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
-                <a class="admin-page-link" href="#" onclick="changePage(${currentPage - 1})">Trước</a>
-            </li>
-        `;
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
-        for (let i = startPage; i <= endPage; i++) {
-            html += `<li class="admin-page-item ${currentPage == i ? 'active' : ''}">
-                        <a class="admin-page-link" href="#" onclick="changePage(${i})">${i}</a>
-                     </li>`;
-        }
-        html += `
-            <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                <a class="admin-page-link" href="#" onclick="changePage(${currentPage + 1})">Sau</a>
-            </li>
-            <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                <a class="admin-page-link" href="#" onclick="changePage(${totalPages})">Cuối</a>
-            </li>
-        `;
-        pagination.innerHTML = html;
-    }
-
-    function changePage(page) {
-        if (page >= 1 && page <= totalPages) {
-            currentPage = page;
-            loadProducts();
-        }
-    }
-
-    function viewProduct(id) { window.location.href = '/productDetail?id=' + id; }
-    function editProduct(id) { window.location.href = '/updateProduct?id=' + id; }
-
-    function deleteProduct(id) {
-        if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-            fetch('/api/products/' + id, { method: 'DELETE' })
-                .then(response => response.ok ? (showSuccess('Xóa thành công'), loadProducts()) : showError('Xóa thất bại'));
-        }
-    }
-
-    function duplicateProduct(id) {
-        if (confirm('Bạn có muốn nhân bản sản phẩm này?')) {
-            fetch('/api/products/' + id + '/duplicate', { method: 'POST' })
-                .then(response => response.ok ? (showSuccess('Nhân bản thành công'), loadProducts()) : showError('Nhân bản thất bại'));
-        }
-    }
-
-    function bulkDelete() {
-        if (confirm(`Xóa ${selectedProducts.size} sản phẩm?`)) {
-            fetch('/api/products/bulk-delete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids: Array.from(selectedProducts) })
-            }).then(response => response.ok ? (showSuccess('Xóa thành công'), clearSelection(), loadProducts()) : showError('Xóa thất bại'));
-        }
-    }
-
-    function exportProducts() { window.location.href = '/api/products/export?' + new URLSearchParams(getFilterParams()); }
-    function getStockClass(q) { if (q > 50) return 'admin-badge-stock-high'; if (q >= 10) return 'admin-badge-stock-medium'; return 'admin-badge-stock-low'; }
-    function getStatusClass(s) { return { 'active': 'admin-badge-active', 'inactive': 'admin-badge-inactive', 'draft': 'admin-badge-draft' }[s] || 'admin-badge-draft'; }
-    function getStatusText(s) { return { 'active': 'Hoạt động', 'inactive': 'Không hoạt động', 'draft': 'Nháp' }[s] || s; }
-    function formatDate(d) { return d ? new Date(d).toLocaleDateString('vi-VN') : ''; }
-    function formatCurrency(amount) { return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount); }
-    function showLoading() { document.getElementById('loadingSpinner').style.display = 'block'; }
-    function hideLoading() { document.getElementById('loadingSpinner').style.display = 'none'; }
-    function showSuccess(m) { alert(m); }
-    function showError(m) { alert(m); }
-    function bulkChangeStatus() { alert('Tính năng đang phát triển'); }
-    function bulkAssignCategory() { alert('Tính năng đang phát triển'); }
+    });
 </script>
 </body>
 </html>

@@ -16,6 +16,8 @@ public class Discount implements Serializable {
     private Date createAt;
     private Date updateAt;
 
+    private double percent;
+
     public Discount() {
     }
 
@@ -41,6 +43,14 @@ public class Discount implements Serializable {
         CATEGORY,
         PRODUCT,
         BRAND
+    }
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public void setPercent(double percent) {
+        this.percent = percent;
     }
 
     public Date getUpdateAt() {
