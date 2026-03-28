@@ -958,25 +958,19 @@
                 </div>
 
                 <!-- Action Buttons - FIXED: cùng hàng, size bằng nhau -->
-                <div class="action-buttons">
+                <div class="d-grid gap-2">
 
-                    <form action="${pageContext.request.contextPath}/cart-add" method="get" class="flex-grow-1">
+
+
+                    <!-- them sp vao cart -->
+                    <form id="add-to-cart" action="cart-add" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.id}">
-                        <input type="hidden" name="quantity" id="buyQuantity" value="1">
-                        <input type="hidden" name="action" value="buyNow">
-                        <button type="submit" class="btn-action btn-buy-now">
-                            <i class="bi bi-lightning-charge"></i> Mua ngay
+
+
+
+                        <button type="button" class="btn btn-outline-dark w-100"
+                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">Thêm vào giỏ hàng
                         </button>
-                    </form>
-
-
-                    <input type="hidden" name="productId" value="${product.id}">
-                    <%--                        <input type="hidden" name="quantity" id="cartQuantity" value="1">--%>
-                    <%--                        <input type="hidden" name="action" value="addCart">--%>
-                    <button type="submit" class="btn-action btn-add-cart"
-                            onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">
-                        <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                    </button>
                     </form>
 
                     <form id="buy-now" action="buy-now" method="get" class="w-100">
@@ -1328,14 +1322,39 @@
                     } else {
 
                         // hien thi thong bao(TOAST)
-                        let toast = document.getElementById("toastMessage");
-                        document.getElementById("toastMessage").innerText = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
+                        let toast = document.getElementById("customToast");
+                        document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
 
                         toast.style.visibility = "visible";
                         toast.style.opacity = "1";
-                    }
+
+                        setTimeout( function(){
+                           toast.style.opacity = "0";
+
+                           setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+                        }, 3000);
+
+
+                        // CỘNG SỐ GIỎ HÀNG
+                        let count = document.getElementById("cart-count");
+
+                        if (count != null){
+                                       let crrNumber = parseInt(count.innerText);
+
+                                       if (isNaN(crrNumber)){
+                                           crrNumber = 0; }
+                                       count.innerText = crrNumber + parseInt(quantity);
+                                   }
+                                   }
+                } else if (data.trim() === 'need_login'){
+                    let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
+                    loginModal.show();
                 }
             })
+            .catch(function(error) {
+                console.error("Lỗi khi thêm giỏ hàng:", error);
+                alert("có lỗi xãy ra, vui lòng thử lại!");
+            });
     }
 
     // ========== ZOOM FUNCTION ==========
@@ -1361,9 +1380,6 @@
         if (buyQuantity) buyQuantity.value = newValue;
     }
 
-    // CỘNG SỐ GIỎ HÀNG
-    let count = document.getElementById("cart-count");
-
     // ========== TAB SWITCHING ==========
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -1374,17 +1390,8 @@
 
             tabBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-
-        } else if (data.trim() === 'need_login'){
-            let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
-            loginModal.show();
-        }
-    })
-        .catch(function(error) {
-            console.error("Lỗi khi thêm giỏ hàng:", error);
-            alert("có lỗi xãy ra, vui lòng thử lại!");
         });
-
+    });
 </script>
 
 <%@ include file="/common/footer.jsp" %>

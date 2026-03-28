@@ -146,4 +146,34 @@ public class OrderDAO {
         }
     }
 
+    // HÀM MỚI BỔ SUNG: Lấy tất cả đơn hàng cho Admin
+    public List<Order> getAllOrders() {
+        List<Order> lstOrder = new ArrayList<>();
+
+        String query = "SELECT * FROM `order` ORDER BY id DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order ord = new Order();
+
+                ord.setId(rs.getInt("id"));
+                ord.setUserId(rs.getInt("user_id"));
+                ord.setOrderDate(rs.getTimestamp("order_date"));
+                ord.setTotalAmount(rs.getDouble("total_price"));
+                ord.setShippingAddress(rs.getString("address"));
+                ord.setPaymentMethod(rs.getString("payment_method"));
+                ord.setOrderStatus(rs.getString("order_status"));
+
+                lstOrder.add(ord);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lstOrder;
+    }
+
 }
