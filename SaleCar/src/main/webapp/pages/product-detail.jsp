@@ -947,7 +947,8 @@
                     <span class="quantity-label">Số lượng:</span>
                     <div class="quantity-control">
                         <button type="button" class="qty-btn" id="qtyMinus">−</button>
-                        <input type="number" name="quantity" id= "quantity" class="quantity-input" value="1" min="1" max="99"
+                        <input type="number" name="quantity" id="quantity" class="quantity-input" value="1" min="1"
+                               max="99"
                                form="add-to-cart">
                         <button type="button" class="qty-btn" id="qtyPlus">+</button>
                     </div>
@@ -976,7 +977,8 @@
                         <input type="hidden" name="productId" value="${product.id}">
 
                         <button type="button" class="btn btn-buy w-100"
-                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)" >Mua ngay</button>
+                                onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)">Mua ngay
+                        </button>
                     </form>
 
                     <form method="post" action="/favorites" class="w-100">
@@ -1251,7 +1253,8 @@
     </c:if>
 </div>
 <!-- khai bao TOAST -->
-<div id="customToast" style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
+<div id="customToast"
+     style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
     <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
 </div>
 <!-- thong bao dang nhap -->
@@ -1266,15 +1269,19 @@
             </div>
 
             <div class="modal-body text-center" style="padding: 30px 20px;">
-                <i class="bi bi-person-circle" style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
-                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào giỏ nhé!</h6>
+                <i class="bi bi-person-circle"
+                   style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
+                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào
+                    giỏ nhé!</h6>
             </div>
 
             <div class="modal-footer justify-content-center" style="border-top: none; padding-bottom: 25px;">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                        style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
                     Tiếp tục lướt
                 </button>
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark" style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark"
+                   style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
                     Đi đến đăng nhập
                 </a>
             </div>
@@ -1283,35 +1290,34 @@
 </div>
 
 
-
 <script>
-    function addToCartAjax(event, productId, productName, isBuyNow){
+    function addToCartAjax(event, productId, productName, isBuyNow) {
         event.preventDefault();
 
         let quantityInput = document.querySelector('input[name="quantity"]');
         let quantity;
 
-        if (quantityInput != null){
+        if (quantityInput != null) {
             quantity = quantityInput.value
-        } else{
+        } else {
             quantity = 1;
         }
 
         let apiUrl;
-        if (isBuyNow == true){
+        if (isBuyNow == true) {
             apiUrl = 'buy-now';
-        } else{
+        } else {
             apiUrl = 'cart-add';
         }
 
         fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
-            .then(function(response) {
+            .then(function (response) {
                 return response.text();
             })
-            .then(function(data) {
-                if (data.trim() === 'success'){
+            .then(function (data) {
+                if (data.trim() === 'success') {
 
-                    if(isBuyNow === true){
+                    if (isBuyNow === true) {
                         window.location.href = "checkout?type=buynow";
                     } else {
 

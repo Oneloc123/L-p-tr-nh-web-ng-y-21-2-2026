@@ -1,0 +1,114 @@
+    product list
+        Variable	Meaning	Datatype	API Field
+        ${product.id}	Product ID	Long	id
+        ${product.sku}	SKU code	String	sku
+        ${product.productName}	Product name	String	productName
+        ${product.slug}	URL slug	String	slug
+        ${product.thumbnail}	Thumbnail image URL	String	thumbnail
+        ${product.mainImage}	Main image URL	String	mainImage
+        ${product.galleryImages}	Gallery images list	List<String>	galleryImages
+        ${product.originalPrice}	Original price	double	originalPrice
+        ${product.finalPrice}	Final price	double	finalPrice
+        ${product.discountPercent}	Discount percentage	double	discountPercent
+        ${product.quantity}	Stock quantity	int	quantity
+        ${product.lowStockThreshold}	Low stock warning threshold	int	lowStockThreshold
+        ${product.status}	Product status	String	status
+        ${product.featured}	Featured flag	boolean	featured
+        ${product.newArrival}	New arrival flag	boolean	newArrival
+        ${product.bestSeller}	Best seller flag	boolean	bestSeller
+        ${product.categoryId}	Category ID	Long	categoryId
+        ${product.categoryName}	Category name	String	categoryName
+        ${product.brandId}	Brand ID	Long	brandId
+        ${product.brandName}	Brand name	String	brandName
+        ${product.tags}	Product tags	String	tags
+        ${product.shortDescription}	Short description	String	shortDescription
+        ${product.description}	Full description	String	description
+        ${product.metaTitle}	SEO meta title	String	metaTitle
+        ${product.metaDescription}	SEO meta description	String	metaDescription
+        ${product.metaKeywords}	SEO meta keywords	String	metaKeywords
+        ${product.createdAt}	Creation timestamp	LocalDateTime	createdAt
+        ${product.updatedAt}	Update timestamp	LocalDateTime	updatedAt
+        ${product.createdBy}	Creator username	String	createdBy
+        ${product.updatedBy}	Last updater username	String	updatedBy
+        ${product.warehouseId}	Warehouse ID	Long	warehouseId
+        ${product.warehouseName}	Warehouse name	String	warehouseName
+        ${product.activityLogs}	Activity logs list	List<ActivityLog>	activityLogs
+        ${categories}	Category list	List<Category>	categories
+        ${brands}	Brand list	List<Brand>	brands
+        ${warehouses}	Warehouse list	List<Warehouse>	warehouses
+
+    product detail
+        Variable	Meaning	Datatype	API Field
+        ${product.id}	Product ID	Long	id
+        ${product.productName}	Product name	String	productName
+        ${product.sku}	SKU code	String	sku
+        ${product.slug}	URL slug	String	slug
+        ${product.mainImage}	Main image URL	String	mainImage
+        ${product.galleryImages}	Gallery images list	List<String>	galleryImages
+        ${product.thumbnail}	Thumbnail URL	String	thumbnail
+        ${product.originalPrice}	Original price	double	originalPrice
+        ${product.finalPrice}	Final price after discount	double	finalPrice
+        ${product.discountPercent}	Discount percentage	double	discountPercent
+        ${product.quantity}	Stock quantity	int	quantity
+        ${product.lowStockThreshold}	Low stock warning threshold	int	lowStockThreshold
+        ${product.status}	Product status (active/inactive/draft)	String	status
+        ${product.featured}	Featured product flag	boolean	featured
+        ${product.newArrival}	New arrival flag	boolean	newArrival
+        ${product.bestSeller}	Best seller flag	boolean	bestSeller
+        ${product.categoryId}	Category ID	Long	categoryId
+        ${product.categoryName}	Category name	String	categoryName
+        ${product.brandId}	Brand ID	Long	brandId
+        ${product.brandName}	Brand name	String	brandName
+        ${product.tags}	Product tags (comma separated)	String	tags
+        ${product.shortDescription}	Short description	String	shortDescription
+        ${product.description}	Full description	String	description
+        ${product.metaTitle}	SEO meta title	String	metaTitle
+        ${product.metaDescription}	SEO meta description	String	metaDescription
+        ${product.metaKeywords}	SEO meta keywords	String	metaKeywords
+        ${product.createdAt}	Creation timestamp	LocalDateTime	createdAt
+        ${product.updatedAt}	Update timestamp	LocalDateTime	updatedAt
+        ${product.createdBy}	Creator username	String	createdBy
+        ${product.updatedBy}	Last updater username	String	updatedBy
+        ${product.warehouseId}	Warehouse ID	Long	warehouseId
+        ${product.activityLogs}	Activity logs list	List<ActivityLog>	activityLogs
+        ${log.action}	Log action description	String	action
+        ${log.timestamp}	Log timestamp	LocalDateTime	timestamp
+        ${log.user}	User who performed action	String	user
+        ${log.details}	Action details	String	details
+
+    Product form
+
+    Variable	Meaning	Datatype	API Field	Form Field Name
+    ${product.id}	Product ID	Long	id	id
+    ${product.productName}	Product name	String	productName	productName
+    ${product.sku}	SKU code	String	sku	sku
+    ${product.slug}	URL slug	String	slug	slug
+    ${product.categoryId}	Category ID	Long	categoryId	categoryId
+    ${product.brandId}	Brand ID	Long	brandId	brandId
+    ${product.tags}	Product tags	String	tags	tags
+    ${product.shortDescription}	Short description	String	shortDescription	shortDescription
+    ${product.description}	Full description	String	description	description
+    ${product.originalPrice}	Original price	double	originalPrice	originalPrice
+    ${product.discountPercent}	Discount percentage	double	discountPercent	discountPercent
+    ${product.finalPrice}	Final price	double	finalPrice	finalPrice
+    ${product.quantity}	Stock quantity	int	quantity	quantity
+    ${product.warehouseId}	Warehouse ID	Long	warehouseId	warehouseId
+    ${product.lowStockThreshold}	Low stock threshold	int	lowStockThreshold	lowStockThreshold
+    ${product.status}	Product status	String	status	status
+    ${product.featured}	Featured flag	boolean	featured	featured
+    ${product.newArrival}	New arrival flag	boolean	newArrival	newArrival
+    ${product.bestSeller}	Best seller flag	boolean	bestSeller	bestSeller
+    ${product.mainImage}	Main image URL	String	mainImage	mainImage (file)
+    ${product.galleryImages}	Gallery images list	List<String>	galleryImages	galleryImages (files)
+    ${product.metaTitle}	SEO meta title	String	metaTitle	metaTitle
+    ${product.metaDescription}	SEO meta description	String	metaDescription	metaDescription
+    ${product.metaKeywords}	SEO meta keywords	String	metaKeywords	metaKeywords
+    ${categories}	Category list	List<Category>	categories	-
+    ${cat.id}	Category ID	Long	id	-
+    ${cat.name}	Category name	String	name	-
+    ${brands}	Brand list	List<Brand>	brands	-
+    ${brand.id}	Brand ID	Long	id	-
+    ${brand.name}	Brand name	String	name	-
+    ${warehouses}	Warehouse list	List<Warehouse>	warehouses	-
+    ${warehouse.id}	Warehouse ID	Long	id	-
+    ${warehouse.name}	Warehouse name	String	name	-

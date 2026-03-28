@@ -27,7 +27,7 @@ public class PromotionEngine {
         List<ProductItem> products = productDAO.getAllProducts();
         System.out.println("Product " + products.size());
         List<Discount> discounts = discountDAO.selectAll();
-        System.out.println("DC " + products.size());
+        System.out.println("DC " + discounts.size());
 
         for (ProductItem product : products) {
 
@@ -40,7 +40,7 @@ public class PromotionEngine {
             if (bestDiscount != null) {
 
                 finalPrice = calculateAmount(product.getPrice(), bestDiscount);
-                percent = bestDiscount.getValue();
+                percent = BigDecimal.valueOf(bestDiscount.getPercent());
                 discountUpdatedAt = bestDiscount.getUpdateAt();
 
             }
@@ -83,7 +83,7 @@ public class PromotionEngine {
 
             if (applicable) {
 
-                double value = d.getValue().doubleValue();
+                double value = caculateDiscountPercent(product.getPrice(),d);
 
                 if (value > bestValue) {
                     bestValue = value;
@@ -91,7 +91,9 @@ public class PromotionEngine {
                 }
             }
         }
-
+        if (best != null) {
+            best.setPercent(bestValue);
+        }
         return best;
     }
 
@@ -101,6 +103,15 @@ public class PromotionEngine {
         }
         if (d.getValueType() == Discount.DiscountValueType.AMOUNT) {
             return price - d.getValue().doubleValue();
+        }
+        return 0;
+    }
+    private double caculateDiscountPercent(double price, Discount d) {
+        if (d.getValueType() == Discount.DiscountValueType.RATE) {
+            return d.getValue().doubleValue() ;
+        }
+        if (d.getValueType() == Discount.DiscountValueType.AMOUNT) {
+            return   d.getValue().doubleValue() / price * 100;
         }
         return 0;
     }

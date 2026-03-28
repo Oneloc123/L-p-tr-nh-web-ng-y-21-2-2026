@@ -1,5 +1,6 @@
 package code.salecar.service.product;
 
+import code.salecar.controller.admin.product.productDetail;
 import code.salecar.model.Image;
 import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
@@ -25,6 +26,7 @@ public class ProductService {
     ReviewsService rs = new ReviewsService();
     CategoryService cs = new CategoryService();
     ImageService is = new ImageService();
+
     public ProductDetail getProductByID(int id) {
 
         Product product = productDAO.getProductByID(id);
@@ -35,7 +37,7 @@ public class ProductService {
 
         //get img
         List<String> image = is.getImageProduct(detail.getId());
-        image.add(is.getImage(Image.entityType.brand,detail.getBrandId()));
+        image.add(is.getImage(Image.entityType.brand, detail.getBrandId()));
         detail.setImage(image);
 
         Brand brand = bs.getBrandByID(detail.getBrandId());
@@ -59,7 +61,6 @@ public class ProductService {
             detail.setAvgRating(0);
         }
         detail.setRating(rating);
-
 
 
         return detail;
@@ -106,26 +107,7 @@ public class ProductService {
 
     public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
         List<ProductItem> product = productDAO.getProductFilter(filter, page, limit);
-        for (ProductItem productItem : product) {
-            String brand = bs.getBrandName(productItem.getBrandId());
-            productItem.setBrandName(brand != null ? brand : "");
-
-            String categoryName = cs.getCategoryName(productItem.getCategoryId());
-            productItem.setCategoryName(categoryName != null ? categoryName : "");
-
-            List<Reviews> reviews = rs.getReviewsByID(productItem.getId());
-            if (reviews != null && !reviews.isEmpty()) {
-                productItem.setAvgRating(caculateRates(reviews));
-            } else {
-                productItem.setAvgRating(0);
-            }
-            List<String> image = is.getImageProduct(productItem.getId());
-            image.add(is.getImage(Image.entityType.brand,productItem.getBrandId()));
-            productItem.setImage(image.get(0));
-
-        }
-
-
+        addMoreInformation(product);
         return product;
     }
 
@@ -268,7 +250,7 @@ public class ProductService {
     }
 
     public List<ProductItem> getProductNew() {
-       return productDAO.getProductNew();
+        return productDAO.getProductNew();
     }
 
     public List<ProductItem> getProductHot() {
@@ -276,12 +258,43 @@ public class ProductService {
     }
 
     public List<ProductDetail> getRelatedProductBrand(int brandId) {
-        List<ProductItem> items = productDAO.getRelatedProductBrand( brandId);
+        List<ProductItem> items = productDAO.getRelatedProductBrand(brandId);
         List<ProductDetail> details = new ArrayList<>();
-        for (ProductItem item : items.subList(0, items.size() > 8 ? 8 : items.size() )) {
+        for (ProductItem item : items.subList(0, items.size() > 8 ? 8 : items.size())) {
             details.add(getProductByID(item.getId()));
         }
 
         return details;
+    }
+
+    public List<ProductItem> getProductForAdmin(ProductFilter productFilter, int page, int limit) {
+        List<ProductItem> products = productDAO.getProductForAdmin(productFilter, page, limit);
+        addMoreInformation(products);
+        return products;
+    }
+
+    public void addMoreInformation(List<ProductItem> pi) {
+        for (ProductItem productItem : pi) {
+            String brand = bs.getBrandName(productItem.getBrandId());
+            productItem.setBrandName(brand != null ? brand : "");
+
+            String categoryName = cs.getCategoryName(productItem.getCategoryId());
+            productItem.setCategoryName(categoryName != null ? categoryName : "");
+
+            List<String> image = is.getImageProduct(productItem.getId());
+            image.add(is.getImage(Image.entityType.brand, productItem.getBrandId()));
+            productItem.setImage(image.get(0));
+
+            List<Reviews> reviews = rs.getReviewsByID(productItem.getId());
+            if (reviews != null && !reviews.isEmpty()) {
+                productItem.setAvgRating(caculateRates(reviews));
+            } else {
+                productItem.setAvgRating(0);
+            }
+        }
+    }
+
+    public int getTotalProductForAdmin(ProductFilter productFilter) {
+        return productDAO.getTotalProductForAdmin( productFilter);
     }
 }

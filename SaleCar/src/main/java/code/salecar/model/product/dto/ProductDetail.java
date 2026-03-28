@@ -49,6 +49,7 @@ public class ProductDetail implements Serializable {
     public ProductDetail() {
     }
 
+
     public ProductDetail(Product product) {
         this.id = product.getId();
         this.name = product.getName();
