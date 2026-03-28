@@ -1,6 +1,7 @@
 package code.salecar.model.product.filter;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,12 @@ public class ProductFilter {
     private BigDecimal maxPrice;
     private BigDecimal minPrice;
 
+    private List<Integer> category ;
+    private List<Integer> brand;
+    private int status;
+    private String stock;
+    private Date fromDate;
+    private Date toDate;
 
     private sortBy sortBy;
 
@@ -28,10 +35,75 @@ public class ProductFilter {
         this.sortByNewestDiscount = false;
     }
 
+    public ProductFilter(String keyword, List<Integer> category, List<Integer> brand, int status, String stock, BigDecimal maxPrice, BigDecimal minPrice, Date fromDate, Date toDate, sortBy sortBy) {
+        this.keyword = keyword;
+        this.category = category;
+        this.brand = brand;
+        this.status = status;
+        this.stock = stock;
+        this.maxPrice = maxPrice;
+        this.minPrice = minPrice;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.sortBy = sortBy;
+    }
+
     public enum sortBy {
         PRICE_ASC,
         PRICE_DESC,
-        NEWEST
+        NEWEST,
+        NAME_ASC,
+        NAME_DESC,
+        CREATED_ASC,
+        CREATED_DESC
+    }
+
+    public List<Integer> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<Integer> category) {
+        this.category = category;
+    }
+
+    public List<Integer> getBrand() {
+        return brand;
+    }
+
+    public void setBrand(List<Integer> brand) {
+        this.brand = brand;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
     }
 
     public sortBy getSortBy() {
