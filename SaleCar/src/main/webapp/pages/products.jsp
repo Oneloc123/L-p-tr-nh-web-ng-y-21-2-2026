@@ -63,7 +63,7 @@
     .container-fluid {
         /*min-height: 100vh;*/
         height: 100vh;
-        overflow: hidden;
+        /*overflow: hidden;*/
     }
 
     .row {
@@ -695,28 +695,22 @@
                     <!-- Phân loại theo Model Scale -->
                     <div class="filter-section">
                         <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#scaleCollapse"
-                             aria-expanded="true">
+                             aria-expanded="true" aria-controls="scaleCollapse">
                             <span><i class="bi bi-grid-3x3-gap me-2"></i>Tỉ lệ mô hình (${totalScale})</span>
                             <i class="bi bi-chevron-down"></i>
                         </div>
                         <div class="collapse show" id="scaleCollapse">
                             <div class="filter-scroll">
-                                <%--                                <c:set var="scales" value="1:12,1:18,1:24,1:32,1:43,1:64"/>--%>
                                 <c:forEach items="${scaleName}" var="scale">
                                     <c:set var="checked" value="false"/>
-
                                     <c:forEach items="${paramValues.scale}" var="s">
                                         <c:if test="${s == scale}">
                                             <c:set var="checked" value="true"/>
                                         </c:if>
                                     </c:forEach>
-
                                     <div class="form-check">
-                                        <input name="scale"
-                                               value="${scale}"
-                                               class="form-check-input"
-                                               type="checkbox"
-                                            ${checked ? 'checked' : ''}>
+                                        <input name="scale" value="${scale}" class="form-check-input"
+                                               type="checkbox" ${checked ? 'checked' : ''}>
                                         <label class="form-check-label">Tỉ lệ ${scale}</label>
                                     </div>
                                 </c:forEach>
@@ -727,31 +721,24 @@
                     <!-- Phân loại theo Hãng -->
                     <div class="filter-section">
                         <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#brandCollapse"
-                             aria-expanded="false">
+                             aria-expanded="false" aria-controls="brandCollapse">
                             <span><i class="bi bi-tags me-2"></i>Thương hiệu (${totalBrand})</span>
                             <i class="bi bi-chevron-down"></i>
                         </div>
                         <div class="collapse" id="brandCollapse">
                             <div class="filter-scroll">
                                 <c:forEach var="bn" items="${brandName}">
-
                                     <c:set var="checked" value="false"/>
-
                                     <c:forEach items="${paramValues.brand}" var="b">
                                         <c:if test="${b == bn}">
                                             <c:set var="checked" value="true"/>
                                         </c:if>
                                     </c:forEach>
-
                                     <div class="form-check">
-                                        <input name="brand"
-                                               value="${bn}"
-                                               class="form-check-input"
-                                               type="checkbox"
-                                            ${checked ? 'checked' : ''}>
+                                        <input name="brand" value="${bn}" class="form-check-input"
+                                               type="checkbox" ${checked ? 'checked' : ''}>
                                         <label class="form-check-label">${bn}</label>
                                     </div>
-
                                 </c:forEach>
                             </div>
                         </div>
@@ -760,31 +747,24 @@
                     <!-- Phân loại theo Loại -->
                     <div class="filter-section">
                         <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#categoryCollapse"
-                             aria-expanded="false">
+                             aria-expanded="false" aria-controls="categoryCollapse">
                             <span><i class="bi bi-collection me-2"></i>Danh mục (${totalCategory})</span>
                             <i class="bi bi-chevron-down"></i>
                         </div>
                         <div class="collapse" id="categoryCollapse">
                             <div class="filter-scroll">
                                 <c:forEach var="cn" items="${categoryName}">
-
                                     <c:set var="checked" value="false"/>
-
                                     <c:forEach items="${paramValues.category}" var="c">
                                         <c:if test="${c == cn}">
                                             <c:set var="checked" value="true"/>
                                         </c:if>
                                     </c:forEach>
-
                                     <div class="form-check">
-                                        <input name="category"
-                                               value="${cn}"
-                                               class="form-check-input"
-                                               type="checkbox"
-                                            ${checked ? 'checked' : ''}>
+                                        <input name="category" value="${cn}" class="form-check-input"
+                                               type="checkbox" ${checked ? 'checked' : ''}>
                                         <label class="form-check-label">${cn}</label>
                                     </div>
-
                                 </c:forEach>
                             </div>
                         </div>
@@ -793,7 +773,7 @@
                     <!-- Price Range Slider -->
                     <div class="filter-section">
                         <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#priceCollapse"
-                             aria-expanded="true">
+                             aria-expanded="true" aria-controls="priceCollapse">
                             <span><i class="bi bi-currency-dollar me-2"></i>Khoảng giá</span>
                             <i class="bi bi-chevron-down"></i>
                         </div>
@@ -802,8 +782,8 @@
                                 <div id="price-range"></div>
                                 <div class="price-inputs">
                                     <input type="text" class="price-input" id="min-price"
-                                           value="${param.minPrice != null ? param.minPrice : 0}"
-                                           placeholder="Từ" readonly>
+                                           value="${param.minPrice != null ? param.minPrice : 0}" placeholder="Từ"
+                                           readonly>
                                     <input type="text" class="price-input" id="max-price"
                                            value="${param.maxPrice != null ? param.maxPrice : requestScope.maxPrice}"
                                            placeholder="Đến" readonly>
@@ -813,29 +793,29 @@
                     </div>
 
                     <!-- Discount Options -->
-                    <%--                    <div class="filter-section">--%>
-                    <%--                        <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#discountCollapse"--%>
-                    <%--                             aria-expanded="false">--%>
-                    <%--                            <span><i class="bi bi-gift me-2"></i>Khuyến mãi</span>--%>
-                    <%--                            <i class="bi bi-chevron-down"></i>--%>
-                    <%--                        </div>--%>
-                    <%--                        <div class="collapse" id="discountCollapse">--%>
-                    <%--                            <div class="form-check">--%>
-                    <%--                                <input name="discount" value="newest" class="form-check-input" type="checkbox"--%>
-                    <%--                                ${param.discount == 'newest' ? 'checked' : ''}>--%>
-                    <%--                                <label class="form-check-label">Giảm giá mới nhất <img--%>
-                    <%--                                        src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
-                    <%--                                        style="height: 12px; margin-left: 3px;"></label>--%>
-                    <%--                            </div>--%>
-                    <%--                            <div class="form-check">--%>
-                    <%--                                <input name="discount" value="highest" class="form-check-input" type="checkbox"--%>
-                    <%--                                ${param.discount == 'highest' ? 'checked' : ''}>--%>
-                    <%--                                <label class="form-check-label">Giảm giá nhiều nhất <img--%>
-                    <%--                                        src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
-                    <%--                                        style="height: 12px; margin-left: 3px;"></label>--%>
-                    <%--                            </div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </div>--%>
+                    <%--                                        <div class="filter-section">--%>
+                    <%--                                            <div class="filter-title" data-bs-toggle="collapse" data-bs-target="#discountCollapse"--%>
+                    <%--                                                 aria-expanded="false">--%>
+                    <%--                                                <span><i class="bi bi-gift me-2"></i>Khuyến mãi</span>--%>
+                    <%--                                                <i class="bi bi-chevron-down"></i>--%>
+                    <%--                                            </div>--%>
+                    <%--                                            <div class="collapse" id="discountCollapse">--%>
+                    <%--                                                <div class="form-check">--%>
+                    <%--                                                    <input name="discount" value="newest" class="form-check-input" type="checkbox"--%>
+                    <%--                                                    ${param.discount == 'newest' ? 'checked' : ''}>--%>
+                    <%--                                                    <label class="form-check-label">Giảm giá mới nhất <img--%>
+                    <%--                                                            src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
+                    <%--                                                            style="height: 12px; margin-left: 3px;"></label>--%>
+                    <%--                                                </div>--%>
+                    <%--                                                <div class="form-check">--%>
+                    <%--                                                    <input name="discount" value="highest" class="form-check-input" type="checkbox"--%>
+                    <%--                                                    ${param.discount == 'highest' ? 'checked' : ''}>--%>
+                    <%--                                                    <label class="form-check-label">Giảm giá nhiều nhất <img--%>
+                    <%--                                                            src="https://nettruyen.work/assets/images/icon-hot.gif"--%>
+                    <%--                                                            style="height: 12px; margin-left: 3px;"></label>--%>
+                    <%--                                                </div>--%>
+                    <%--                                            </div>--%>
+                    <%--                                        </div>--%>
                 </div>
 
                 <!-- Footer buttons - always at bottom -->
@@ -951,10 +931,19 @@
 
 
                                             <div class="product-actions">
+
+                                                <form action="buy-now" method="get" style="display: contents;">
+                                                    <input type="hidden" name="productId" value="${p.id}">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button type="button" class="btn-buy"
+                                                            onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
+                                                        <i class="bi bi-lightning-charge me-1"></i>Mua
+                                                    </button>
+                                                </form>
+
                                                 <form action="cart-add" method="get" style="display: contents;">
                                                     <input type="hidden" name="productId" value="${p.id}">
                                                     <input type="hidden" name="quantity" value="1">
-
 
 
                                                     <!--sua type act thanh btt -->
@@ -966,14 +955,7 @@
                                                 </form>
 
 
-                                                <form action="buy-now" method="get" style="display: contents;">
-                                                <input type="hidden" name="productId" value="${p.id}">
-                                                <input type="hidden" name="quantity" value="1">
-                                                <button type="button" class="btn-buy"
-                                                    onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
-                                                    <i class="bi bi-lightning-charge me-1"></i>Mua
-                                                </button>
-                                                </form>
+
 
                                                 <form method="post" action="/favorites" style="display: contents;">
                                                     <button class="btn-action" name="productid" value="${p.id}">
@@ -1041,7 +1023,8 @@
         </div>
     </div>
 </div>
-<div id="customToast" style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
+<div id="customToast"
+     style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
     <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
 </div>
 
@@ -1057,15 +1040,19 @@
             </div>
 
             <div class="modal-body text-center" style="padding: 30px 20px;">
-                <i class="bi bi-person-circle" style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
-                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào giỏ nhé!</h6>
+                <i class="bi bi-person-circle"
+                   style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
+                <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào
+                    giỏ nhé!</h6>
             </div>
 
             <div class="modal-footer justify-content-center" style="border-top: none; padding-bottom: 25px;">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                        style="border-radius: 30px; padding: 8px 24px; font-weight: 500;">
                     Tiếp tục lướt
                 </button>
-                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark" style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-dark"
+                   style="border-radius: 30px; padding: 8px 24px; background-color: var(--black); font-weight: 500;">
                     Đi đến đăng nhập
                 </a>
             </div>
@@ -1075,89 +1062,80 @@
 </body>
 
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 
 <script>
-    function addToCartAjax(event, productId, productName, isBuyNow){
-            event.preventDefault();
+    function addToCartAjax(event, productId, productName, isBuyNow) {
+        event.preventDefault();
 
-            let quantityInput = document.querySelector('input[name="quantity"]');
-            let quantity;
+        let quantityInput = document.querySelector('input[name="quantity"]');
+        let quantity;
 
-            if (quantityInput != null){
-                quantity = quantityInput.value
-            } else{
-                quantity = 1;
-            }
+        if (quantityInput != null) {
+            quantity = quantityInput.value
+        } else {
+            quantity = 1;
+        }
 
-            let apiUrl;
-            if (isBuyNow == true){
-                apiUrl = 'buy-now';
-            } else{
-                apiUrl = 'cart-add';
-            }
+        let apiUrl;
+        if (isBuyNow == true) {
+            apiUrl = 'buy-now';
+        } else {
+            apiUrl = 'cart-add';
+        }
 
-            fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
-                .then(function(response) {
-                    return response.text();
-                })
-                .then(function(data) {
-                    if (data.trim() === 'success'){
+        fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (data) {
+                if (data.trim() === 'success') {
 
-                        if(isBuyNow === true){
-                            window.location.href = "checkout?type=buynow";
-                } else {
+                    if (isBuyNow === true) {
+                        window.location.href = "checkout?type=buynow";
+                    } else {
 
-                // hien thi thong bao(TOAST)
-                let toast = document.getElementById("customToast");
-                document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+                        // hien thi thong bao(TOAST)
+                        let toast = document.getElementById("customToast");
+                        document.getElementById("toastMessage").innerText = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
 
-                toast.style.visibility = "visible";
-                toast.style.opacity = "1";
+                        toast.style.visibility = "visible";
+                        toast.style.opacity = "1";
 
-                setTimeout( function(){
-                    toast.style.opacity = "0";
+                        setTimeout(function () {
+                            toast.style.opacity = "0";
 
-                    setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
-                }, 3000);
+                            setTimeout(function () {
+                                toast.style.visibility = "hidden";
+                            }, 500);
+                        }, 3000);
 
-                // CỘNG SỐ GIỎ HÀNG
-                let count = document.getElementById("cart-count");
+                        // CỘNG SỐ GIỎ HÀNG
+                        let count = document.getElementById("cart-count");
 
-                if (count != null){
-                    let crrNumber = parseInt(count.innerText);
+                        if (count != null) {
+                            let crrNumber = parseInt(count.innerText);
 
-                    if (isNaN(crrNumber)){
-                        crrNumber = 0; }
-                    count.innerText = crrNumber + parseInt(quantity);
-                }
-                }
+                            if (isNaN(crrNumber)) {
+                                crrNumber = 0;
+                            }
+                            count.innerText = crrNumber + parseInt(quantity);
+                        }
+                    }
 
 
-                } else if (data.trim() === 'need_login'){
+                } else if (data.trim() === 'need_login') {
                     let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
                     loginModal.show();
                 }
-        })
-        .catch(function(error) {
-            console.error("Lỗi khi thêm giỏ hàng:", error);
-            alert("có lỗi xãy ra, vui lòng thử lại!");
-        });
-}
-
-    // Initialize Bootstrap collapse
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize all collapses
-        var collapseElements = document.querySelectorAll('.collapse');
-        collapseElements.forEach(function (collapseEl) {
-            new bootstrap.Collapse(collapseEl, {
-                toggle: false
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi thêm giỏ hàng:", error);
+                alert("có lỗi xãy ra, vui lòng thử lại!");
             });
-        });
-    });
+    }
+
 
     // Initialize price range slider
     const priceSlider = document.getElementById('price-range');

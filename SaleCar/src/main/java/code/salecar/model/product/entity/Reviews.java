@@ -9,8 +9,8 @@ public class Reviews implements Serializable {
     private int productId;
     private int rating;
     private String comment;
-    private Date CreateAt;
-    private Date UpdateAt;
+    private Date createdAt;
+    private Date updatedAt;
     private String userName;
     private String avatar = null;
 
@@ -21,8 +21,8 @@ public class Reviews implements Serializable {
         this.userId = userId;
         this.productId = productId;
         this.comment = comment;
-        CreateAt = createAt;
-        UpdateAt = updateAt;
+        this.createdAt = createAt;
+        this.updatedAt = updateAt;
     }
 
     public Reviews() {
@@ -32,7 +32,7 @@ public class Reviews implements Serializable {
         this.userId = userId;
         this.rating = rating;
         this.comment = comment;
-        CreateAt = createAt;
+        this.createdAt = createAt;
     }
 
 
@@ -92,19 +92,19 @@ public class Reviews implements Serializable {
         this.comment = comment;
     }
 
-    public Date getCreateAt() {
-        return CreateAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        CreateAt = createAt;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Date getUpdateAt() {
-        return UpdateAt;
+        return updatedAt;
     }
 
     public void setUpdateAt(Date updateAt) {
-        UpdateAt = updateAt;
+        this.updatedAt = updateAt;
     }
 }

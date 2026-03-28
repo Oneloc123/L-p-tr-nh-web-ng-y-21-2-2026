@@ -961,15 +961,14 @@
                 <div class="d-grid gap-2">
 
 
-
                     <!-- them sp vao cart -->
                     <form id="add-to-cart" action="cart-add" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.id}">
 
 
-
                         <button type="button" class="btn btn-outline-dark w-100"
-                        onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">Thêm vào giỏ hàng
+                                onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">Thêm vào giỏ
+                            hàng
                         </button>
                     </form>
 
@@ -1323,74 +1322,132 @@
 
                         // hien thi thong bao(TOAST)
                         let toast = document.getElementById("customToast");
-                        document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+                        document.getElementById("toastMessage").innerText = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
 
                         toast.style.visibility = "visible";
                         toast.style.opacity = "1";
 
-                        setTimeout( function(){
-                           toast.style.opacity = "0";
+                        setTimeout(function () {
+                            toast.style.opacity = "0";
 
-                           setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+                            setTimeout(function () {
+                                toast.style.visibility = "hidden";
+                            }, 500);
                         }, 3000);
 
 
                         // CỘNG SỐ GIỎ HÀNG
                         let count = document.getElementById("cart-count");
 
-                        if (count != null){
-                                       let crrNumber = parseInt(count.innerText);
+                        if (count != null) {
+                            let crrNumber = parseInt(count.innerText);
 
-                                       if (isNaN(crrNumber)){
-                                           crrNumber = 0; }
-                                       count.innerText = crrNumber + parseInt(quantity);
-                                   }
-                                   }
-                } else if (data.trim() === 'need_login'){
+                            if (isNaN(crrNumber)) {
+                                crrNumber = 0;
+                            }
+                            count.innerText = crrNumber + parseInt(quantity);
+                        }
+                    }
+                } else if (data.trim() === 'need_login') {
                     let loginModal = new bootstrap.Modal(document.getElementById("requireLoginModal"));
                     loginModal.show();
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error("Lỗi khi thêm giỏ hàng:", error);
                 alert("có lỗi xãy ra, vui lòng thử lại!");
             });
     }
 
-    // ========== ZOOM FUNCTION ==========
-    if (mainImage) {
-        mainImage.addEventListener('click', function () {
-            this.classList.toggle('zoomed');
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // ========== IMAGE GALLERY ==========
+        const mainImage = document.getElementById('mainImage');
+        const thumbItems = document.querySelectorAll('.thumb-item');
+
+        thumbItems.forEach(thumb => {
+            thumb.addEventListener('click', function () {
+                const imgSrc = this.getAttribute('data-image');
+                if (imgSrc && mainImage) {
+                    mainImage.src = imgSrc;
+                    thumbItems.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
         });
-    }
 
-    // ========== tity SELECTOR ==========
-    const quantityInput = document.getElementById('quantity');
-    const cartQuantity = document.getElementById('cartQuantity');
-    const buyQuantity = document.getElementById('buyQuantity');
-    const qtyMinus = document.getElementById('qtyMinus');
-    const qtyPlus = document.getElementById('qtyPlus');
+        // ========== ZOOM FUNCTION ==========
+        const galleryMain = document.getElementById('galleryMain');
+        if (galleryMain) {
+            let zoomed = false;
+            galleryMain.addEventListener('click', function () {
+                if (window.innerWidth > 768) {
+                    zoomed = !zoomed;
+                    if (zoomed) {
+                        this.classList.add('zoomed');
+                    } else {
+                        this.classList.remove('zoomed');
+                    }
+                }
+            });
 
-    function updateQuantity(value) {
-        let newValue = parseInt(value);
-        if (isNaN(newValue)) newValue = 1;
-        newValue = Math.max(1, Math.min(99, newValue));
-        if (quantityInput) quantityInput.value = newValue;
-        if (cartQuantity) cartQuantity.value = newValue;
-        if (buyQuantity) buyQuantity.value = newValue;
-    }
+            galleryMain.addEventListener('mouseleave', function () {
+                if (zoomed) {
+                    zoomed = false;
+                    this.classList.remove('zoomed');
+                }
+            });
+        }
+
+        // ========== QUANTITY SELECTOR ==========
+        const quantityInput = document.getElementById('quantity');
+        const qtyMinus = document.getElementById('qtyMinus');
+        const qtyPlus = document.getElementById('qtyPlus');
+
+        function updateQuantity(value) {
+
+            let newVal = parseInt(value);
+
+            if (isNaN(newVal)) newVal = 1;
+
+            newVal = Math.max(1, Math.min(99, newVal));
+
+            quantityInput.value = newVal;
+        }
+
+        qtyMinus.addEventListener('click', () => {
+            updateQuantity(parseInt(quantityInput.value) - 1);
+        });
+
+        qtyPlus.addEventListener('click', () => {
+            updateQuantity(parseInt(quantityInput.value) + 1);
+        });
+
+        quantityInput.addEventListener('change', () => {
+            updateQuantity(quantityInput.value);
+        });
+    })
 
     // ========== TAB SWITCHING ==========
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    document.addEventListener("DOMContentLoaded", function () {
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            const tabId = this.getAttribute('data-tab');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-            tabBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+
+                const tabId = this.getAttribute('data-tab');
+
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(p => p.classList.remove('active'));
+
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+
+            });
         });
+
     });
 </script>
 
