@@ -496,7 +496,7 @@
                 <li><a href="dashboard"><i class="bi bi-speedometer2"></i><span> Dashboard</span></a></li>
                 <li><a href="products"><i class="bi bi-box"></i><span> Sản phẩm</span></a></li>
                 <li><a href="categories"><i class="bi bi-tags"></i><span> Danh mục</span></a></li>
-                <li><a href="orders"><i class="bi bi-cart"></i><span> Đơn hàng</span></a></li>
+                <li><a href="/orderAdmin"><i class="bi bi-cart"></i><span> Đơn hàng</span></a></li>
                 <li><a href="admin-payment.jsp"><i class="bi bi-credit-card"></i><span> Thanh toán</span></a></li>
                 <li><a href="users" class="active"><i class="bi bi-people"></i><span> Người dùng</span></a></li>
                 <li><a href="blogs"><i class="bi bi-journal-text"></i><span> Blog</span></a></li>
