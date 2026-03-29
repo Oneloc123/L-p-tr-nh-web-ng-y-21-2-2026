@@ -23,7 +23,7 @@ public class ProductDetail implements Serializable {
     private String size;
     private String material;
     private String origin;
-    private boolean status;
+    private int status;
     private Date createdAt;
     private Date updatedAt;
     
@@ -54,6 +54,8 @@ public class ProductDetail implements Serializable {
     public ProductDetail() {
     }
 
+    //update-basic-infor
+
 
     public ProductDetail(Product product) {
         this.id = product.getId();
@@ -69,7 +71,7 @@ public class ProductDetail implements Serializable {
         this.size = product.getSize();
         this.material = product.getMaterial();
         this.origin = product.getOrigin();
-        this.status = product.isStatus();
+        this.status = product.getStatus();
         this.createdAt = product.getCreatedAt();
         this.updatedAt = product.getUpdatedAt();
     }
@@ -89,6 +91,14 @@ public class ProductDetail implements Serializable {
     public Product getProduct(){
         Product product = new Product(id,name,price,finalPrice,discountPercent,discountUpdatedAt,brandId,categoryId,description,ratio,size,material,origin,status,createdAt,updatedAt);
         return product;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<String> getActivityLogs() {
@@ -313,14 +323,6 @@ public class ProductDetail implements Serializable {
 
     public void setOrigin(String origin) {
         this.origin = origin;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 
     public Date getCreatedAt() {
