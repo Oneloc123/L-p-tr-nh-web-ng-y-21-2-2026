@@ -62,6 +62,7 @@ public class OTPforForgotPassword extends HttpServlet {
             response.sendRedirect("/home");
             return;
         }
+        request.setAttribute("OTPError","OTP không chính xác");
         request.getRequestDispatcher("/pages/OTP-Register.jsp").forward(request,response);
     }
 }

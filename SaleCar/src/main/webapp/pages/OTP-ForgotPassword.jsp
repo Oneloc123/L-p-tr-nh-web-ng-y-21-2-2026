@@ -184,6 +184,11 @@
             <label for="code">Mã xác nhận (6 số)</label>
             <input type="text" id="code" name="otp" maxlength="6"
                    placeholder="------">
+            <c:if test="${not empty OTPError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${OTPError}
+            </span>
+            </c:if>
         </div>
 
         <button type="submit" class="btn-verify">XÁC NHẬN</button>

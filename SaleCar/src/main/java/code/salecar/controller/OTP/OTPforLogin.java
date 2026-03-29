@@ -64,6 +64,7 @@ public class OTPforLogin extends HttpServlet {
             response.sendRedirect("/home");
             return;
         }
+        request.setAttribute("OTPError","OTP không chính xác");
         request.getRequestDispatcher("/pages/OTP-Login.jsp").forward(request,response);
     }
 }
