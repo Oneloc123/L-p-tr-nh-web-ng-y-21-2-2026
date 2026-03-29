@@ -5,8 +5,11 @@
   Time: 22:34
   To change this template use File | Settings | File Templates.
 --%>
-<!-- File: sidebar.jsp (hoặc sidebar.html) -->
+<!-- File: sidebar.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <style>
     /* File: sidebar.css */
 
@@ -117,6 +120,7 @@
     }
 
 </style>
+
 <aside class="sidebar">
     <h2 class="logo">
         <i class="bi bi-car-front-fill me-2"></i>
@@ -124,15 +128,69 @@
     </h2>
     <nav>
         <ul>
-            <li><a href="dashboard"><i class="bi bi-speedometer2"></i><span> Dashboard</span></a></li>
-            <li><a href="products"><i class="bi bi-box"></i><span> Sản phẩm</span></a></li>
-            <li><a href="categories"><i class="bi bi-tags"></i><span> Danh mục</span></a></li>
-            <li><a href="/orderAdmin"><i class="bi bi-cart"></i><span> Đơn hàng</span></a></li>
-            <li><a href="admin-payment.jsp"><i class="bi bi-credit-card"></i><span> Thanh toán</span></a></li>
-            <li><a href="users" class="active"><i class="bi bi-people"></i><span> Người dùng</span></a></li>
-            <li><a href="blogs"><i class="bi bi-journal-text"></i><span> Blog</span></a></li>
-            <li><a href="banners"><i class="bi bi-image"></i><span> Banner</span></a></li>
-            <li><a href="/logout"><i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span></a></li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/dashboard"
+                   class="${fn:contains(pageContext.request.requestURI, 'dashboard') ? 'active' : ''}">
+                    <i class="bi bi-speedometer2"></i><span> Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/products"
+                   class="${fn:contains(pageContext.request.requestURI, 'products') || fn:contains(pageContext.request.requestURI, 'product') ? 'active' : ''}">
+                    <i class="bi bi-box"></i><span> Sản phẩm</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/categories"
+                   class="${fn:contains(pageContext.request.requestURI, 'categories') || fn:contains(pageContext.request.requestURI, 'category') ? 'active' : ''}">
+                    <i class="bi bi-tags"></i><span> Danh mục</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/orders"
+                   class="${fn:contains(pageContext.request.requestURI, 'orders') || fn:contains(pageContext.request.requestURI, 'order') ? 'active' : ''}">
+                    <i class="bi bi-cart"></i><span> Đơn hàng</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/payment"
+                   class="${fn:contains(pageContext.request.requestURI, 'payment') ? 'active' : ''}">
+                    <i class="bi bi-credit-card"></i><span> Thanh toán</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/userAdmin"
+                   class="${fn:contains(pageContext.request.requestURI, 'users') || fn:contains(pageContext.request.requestURI, 'user') ? 'active' : ''}">
+                    <i class="bi bi-people"></i><span> Người dùng</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/blogs"
+                   class="${fn:contains(pageContext.request.requestURI, 'blogs') || fn:contains(pageContext.request.requestURI, 'blog') ? 'active' : ''}">
+                    <i class="bi bi-journal-text"></i><span> Blog</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/banners"
+                   class="${fn:contains(pageContext.request.requestURI, 'banners') || fn:contains(pageContext.request.requestURI, 'banner') ? 'active' : ''}">
+                    <i class="bi bi-image"></i><span> Banner</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/logout">
+                    <i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span>
+                </a>
+            </li>
+
         </ul>
     </nav>
 </aside>

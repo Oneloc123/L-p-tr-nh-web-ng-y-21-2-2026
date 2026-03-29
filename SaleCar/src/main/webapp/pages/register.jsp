@@ -145,7 +145,9 @@
 </head>
 <body>
 <div class="register-container">
-    <div class="car-icon">🚗</div>
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
+        LUXCAR
+    </a>
     <h1>ĐĂNG KÝ</h1>
     <div class="subtitle">TRỞ THÀNH THÀNH VIÊN LUXCAR</div>
 
@@ -156,38 +158,93 @@
     <form method="post" action="/register">
         <div class="form-group">
             <label for="fullname">Họ và tên *</label>
-            <input type="text" id="fullname" name="fullname"
+            <input type="text" id="fullname" name="fullname" value="${param.fullname}"
                    placeholder="Nhập họ và tên">
+            <small class="form-text text-muted">
+                Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
+            </small>
+            <c:if test="${not empty fullnameError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${fullnameError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="username">Tên đăng nhập *</label>
-            <input type="text" id="username" name="username"
+            <input type="text" id="username" name="username" value="${param.username}"
                    placeholder="Nhập tên đăng nhập">
+            <!-- USERNAME -->
+            <small class="form-text text-muted">
+                Tên đăng nhập từ 4–20 ký tự, chỉ gồm chữ cái và số, không chứa khoảng trắng
+            </small>
+            <c:if test="${not empty usernameError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${usernameError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="email">Email *</label>
-            <input type="email" id="email" name="email"
+            <input type="email" id="email" name="email" value="${param.email}"
                    placeholder="Nhập địa chỉ email">
+            <small class="form-text text-muted">
+                Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
+            </small>
+            <c:if test="${not empty emailError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${emailError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="password">Mật khẩu *</label>
-            <input type="password" id="password" name="password"
+            <input type="password" id="password" name="password" value="${param.password}"
                    placeholder="Nhập mật khẩu">
+            <small class="form-text text-muted">
+                Mật khẩu tối thiểu 6 ký tự, nên bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt để tăng bảo mật
+            </small>
+            <c:if test="${not empty passwordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${passwordError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="confirm-password">Xác nhận mật khẩu *</label>
             <input type="password" id="confirm-password" name="confirm-password"
                    placeholder="Nhập lại mật khẩu">
+            <small class="form-text text-muted">
+                Nhập lại chính xác mật khẩu đã nhập ở trên
+            </small>
+            <c:if test="${not empty confirmPasswordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${confirmPasswordError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
-            <input type="text" id="phone" name="phonenumber"
-                   placeholder="Nhập số điện thoại">
+            <input type="tel"
+                   id="phone"
+                   name="phonenumber"
+                   value="${phonenumber != null ? phonenumber : param.phonenumber}"
+                   placeholder="VD: 0912345678"
+                   pattern="^(0|\+84)[0-9]{9}$"
+                   maxlength="11"
+                   class="form-control ${not empty phonenumberError ? 'is-invalid' : ''}">
+            <small class="form-text text-muted">
+                Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
+            </small>
+            <c:if test="${not empty phonenumberError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${phonenumberError}
+            </span>
+            </c:if>
         </div>
 
         <button type="submit" class="btn-register">ĐĂNG KÝ</button>
@@ -205,5 +262,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<%@ include file="/common/footer.jsp" %>
+
 </body>
 </html>

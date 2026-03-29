@@ -184,6 +184,11 @@
       <label for="code">Mã xác nhận (6 số)</label>
       <input type="text" id="code" name="otp" maxlength="6"
              placeholder="------">
+      <c:if test="${not empty OTPError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${OTPError}
+            </span>
+      </c:if>
     </div>
 
     <button type="submit" class="btn-verify">XÁC NHẬN</button>
@@ -196,7 +201,7 @@
   <a href="/OTPforChangePassword" class="btn-secondary">GỬI LẠI MÃ</a>
   <a href="/changePassword" class="back-link">Quay lại</a>
 </div>
-
+<%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package code.salecar.controller.admin.user;
 
 import code.salecar.model.Address;
 import code.salecar.model.User;
+import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -38,6 +39,53 @@ public class AddUser extends HttpServlet {
         String commune = request.getParameter("commune");
         String province = request.getParameter("province");
 
+        String fullnameError = UserInvalidate.checkFullname(fullname);
+        if(!fullnameError.equals("true")){
+            request.setAttribute("fullnameError",fullnameError);
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String usernameError = UserInvalidate.checkUsername(username);
+        if(!usernameError.equals("true")){
+            request.setAttribute("usernameError",usernameError);
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String emailError = UserInvalidate.checkEmail(email);
+        if(!emailError.equals("true")){
+            request.setAttribute("emailError",emailError);
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String passwordError = UserInvalidate.checkPassword(password);
+        if(!passwordError.equals("true")){
+            request.setAttribute("passwordError",passwordError);
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String phonenumberError = UserInvalidate.checkPhonenumber(phone);
+        if(!phonenumberError.equals("true")){
+            request.setAttribute("phonenumberError",phonenumberError);
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+
+
+        UserService us = new UserService();
+
+        User user = us.getUserByUsername(username);
+        if(user!=null){
+            request.setAttribute("usernameError","tên đăng nhập đã tồn tại");
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+
         AddressService as = new AddressService();
         Address add = new Address();
         add.setName(name);
@@ -62,11 +110,15 @@ public class AddUser extends HttpServlet {
         u.setImgURL(imgURL);
         u.setCreatedat(new Date(System.currentTimeMillis()));
         u.setUpdatedat(new Date(System.currentTimeMillis()));
-        UserService us  = new UserService();
         us.register(u);
         u = us.getUserByUsername(username);
         add.setUserId(u.getId());
         as.addAddress(add);
+
+        //alert
+        request.getSession().setAttribute("toastMessage", "Thêm User thành công");
+        request.getSession().setAttribute("toastType", "success");
+
         response.sendRedirect("/userAdmin");
     }
     private String uploads(HttpServletRequest request) throws ServletException, IOException {

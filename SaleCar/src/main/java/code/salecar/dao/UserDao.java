@@ -91,6 +91,7 @@ public class UserDao {
                 ", status =?" +
                 ", password = ?" +
                 ", imgURL = ?" +
+                ", username = ?" +
                 " WHERE id = ?;";
 
         try (Connection con = DBConnection.getConnection();
@@ -103,7 +104,8 @@ public class UserDao {
             ps.setBoolean(6, user.getStatus());
             ps.setString(7, user.getPassword());
             ps.setString(8, user.getImgURL());
-            ps.setInt(9, user.getId());
+            ps.setString(9,user.getUsername());
+            ps.setInt(10, user.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
