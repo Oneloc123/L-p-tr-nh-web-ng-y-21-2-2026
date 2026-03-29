@@ -199,21 +199,40 @@
 </head>
 <body>
 <div class="login-container">
-    <div class="car-icon">🚗</div>
-    <h1>LUXCAR</h1>
+    <div class="car-icon">
+        <!-- LOGO -->
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
+            LUXCAR
+        </a>
+    </div>
     <div class="subtitle">ĐĂNG NHẬP HỆ THỐNG</div>
 
     <form method="post" action="/login">
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i> ${errorMessage}
+            </div>
+        </c:if>
         <div class="form-group">
             <label for="username">Tên đăng nhập</label>
-            <input type="text" id="username" name="username"
+            <input type="text" id="username" name="username" value="${param.username}"
                    placeholder="Nhập tên đăng nhập">
+            <c:if test="${not empty usernameError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${usernameError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="password">Mật khẩu</label>
-            <input type="password" id="password" name="password"
+            <input type="password" id="password" name="password" value="${param.password}"
                    placeholder="Nhập mật khẩu">
+            <c:if test="${not empty passwordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${passwordError}
+            </span>
+            </c:if>
         </div>
 
         <div class="forgot-password">
@@ -249,5 +268,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<%@ include file="/common/footer.jsp" %>
+
 </body>
 </html>
