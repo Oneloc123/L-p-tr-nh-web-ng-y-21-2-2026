@@ -1,12 +1,18 @@
 package code.salecar.service.order;
 
 import code.salecar.dao.OrderDAO;
+import code.salecar.dao.UserDao;
 import code.salecar.model.Cart;
 import code.salecar.model.Order;
+import code.salecar.model.OrderItem;
 import code.salecar.model.User;
+import code.salecar.service.user.UserService;
+
+import java.util.List;
 
 public class OrderService {
     OrderDAO ordDAO = new OrderDAO();
+    UserService userSV = new UserService();
 
     public boolean processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod) {
 
@@ -40,5 +46,13 @@ public class OrderService {
         String finalStatus = "Đã huỷ (" + reason + ")";
 
         ordDAO.updateOrderStatusAndReason(orderId, userId, finalStatus);
+    }
+    public List<OrderItem> getOrderItem(int orderId){
+        return ordDAO.getOrderItemsByOrderId(orderId);
+    }
+
+    public List<Order> getOrderByUserId(int userId){
+        List<Order> result = ordDAO.getOrdersByUserId(userId);
+        return result;
     }
 }

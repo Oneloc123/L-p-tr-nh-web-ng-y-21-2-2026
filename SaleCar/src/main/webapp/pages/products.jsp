@@ -1112,17 +1112,19 @@
                 } else {
 
                 // hien thi thong bao(TOAST)
-                let toast = document.getElementById("customToast");
-                document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+             //   let toast = document.getElementById("customToast");
+              //  document.getElementById("toastMessage").innerText = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
 
-                toast.style.visibility = "visible";
-                toast.style.opacity = "1";
+               // toast.style.visibility = "visible";
+               // toast.style.opacity = "1";
 
-                setTimeout( function(){
-                    toast.style.opacity = "0";
+               // setTimeout( function(){
+              //      toast.style.opacity = "0";
 
-                    setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
-                }, 3000);
+               //     setTimeout(function(){ toast.style.visibility = "hidden"; }, 500);
+               // }, 3000);
+                let mess = "Đã thêm "+ quantity + " chiếc [" + productName + "] vào giỏ!";
+                showAlert(mess, "success");
 
                 // CỘNG SỐ GIỎ HÀNG
                 let count = document.getElementById("cart-count");
