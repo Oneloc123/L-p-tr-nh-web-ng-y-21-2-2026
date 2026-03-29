@@ -12,8 +12,7 @@
 
 <%@ include file="/common/header.jsp" %>
 
-<!DOCTYPE html>
-<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -834,7 +833,7 @@
                 <div class="main-image-wrapper">
                     <c:choose>
                         <c:when test="${not empty product.image and fn:length(product.image) > 0}">
-                            <img src="${product.image[0]}" alt="${product.name}" class="main-image" id="mainImage">
+                            <img src="${product.image[0]}" alt="${product.name}" class="main-image" id="galleryMain">
                         </c:when>
                         <c:otherwise>
                             <!-- Fixed: set size trước cho ảnh mặc định -->
@@ -1147,7 +1146,7 @@
                                             </c:choose>
                                         </c:forEach>
                                     </div>
-                                    <span class="review-date">${review.createAt}</span>
+                                    <span class="review-date">${review.createdAt}</span>
                                 </div>
                                 <p class="review-comment">${review.comment}</p>
                             </div>
