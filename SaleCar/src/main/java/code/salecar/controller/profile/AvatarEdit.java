@@ -61,6 +61,9 @@ public class AvatarEdit extends HttpServlet {
         user.setImgURL(avatarUrl);
         us.UpdateProfile(user);
         request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("toastMessage", "thay đổi ảnh thành công");
+        request.getSession().setAttribute("toastType", "success");
+
         response.sendRedirect("/profile");
     }
 }

@@ -2,6 +2,7 @@ package code.salecar.controller.admin.user;
 
 import code.salecar.model.Address;
 import code.salecar.model.User;
+import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -50,6 +51,34 @@ public class UpdateUser extends HttpServlet {
         String description = request.getParameter("description").toString();
         String statuss = request.getParameter("status");
         String role = request.getParameter("role");
+
+        String fullnameError = UserInvalidate.checkFullname(fullname);
+        if(!fullnameError.equals("true")){
+            request.setAttribute("fullnameError",fullnameError);
+            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+            return;
+        }
+        String usernameError = UserInvalidate.checkUsername(username);
+        if(!usernameError.equals("true")){
+            request.setAttribute("usernameError",usernameError);
+            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+            return;
+        }
+        String emailError = UserInvalidate.checkEmail(email);
+        if(!emailError.equals("true")){
+            request.setAttribute("emailError",emailError);
+            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+            return;
+        }
+
+        String phonenumberError = UserInvalidate.checkPhonenumber(phoneNumber);
+        if(!phonenumberError.equals("true")){
+            request.setAttribute("phonenumberError",phonenumberError);
+            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+            return;
+        }
+
+
         boolean status= false;
         if(statuss.equals("true")){
             status = true;
@@ -90,7 +119,12 @@ public class UpdateUser extends HttpServlet {
         }
         request.setAttribute("listAddress", listAddress);
         request.setAttribute("user", user);
-        request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+
+        //alert
+        request.getSession().setAttribute("toastMessage", "cật nhật User thành công");
+        request.getSession().setAttribute("toastType", "success");
+
+        response.sendRedirect("/userAdmin");
     }
     private String uploads(HttpServletRequest request) throws ServletException, IOException {
         Part filePart = request.getPart("avatar");
