@@ -41,6 +41,10 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    public Product() {
+
+    }
+
     public double getFinalPrice() {
         return finalPrice;
     }

@@ -15,7 +15,7 @@
 
     <style>
         :root {
-            --admin-primary: #1e81b0; /* Xanh chuẩn theo ảnh mẫu */
+            --admin-primary: #1e81b0;
             --admin-bg: #f5f7f9;
             --admin-sidebar: #ffffff;
             --admin-text: #333333;
@@ -30,21 +30,19 @@
             overflow-x: hidden;
         }
 
-        /* ================= BỐ CỤC CHUẨN (KHÔNG KHOẢNG TRẮNG) ================= */
         .admin-layout {
             display: flex;
             min-height: 100vh;
             width: 100%;
         }
 
-        /* ================= SIDEBAR ================= */
         .sidebar {
             width: 260px;
-            flex-shrink: 0; /* Không cho sidebar bị bóp nhỏ */
+            flex-shrink: 0;
             background-color: var(--admin-sidebar);
             border-right: 1px solid var(--admin-border);
             height: 100vh;
-            position: sticky; /* Bám dính khi cuộn */
+            position: sticky;
             top: 0;
             padding: 20px 15px;
             overflow-y: auto;
@@ -79,7 +77,7 @@
             align-items: center;
             gap: 12px;
             padding: 10px 15px;
-            border-radius: 50px; /* Bo tròn hoàn toàn theo ảnh mẫu */
+            border-radius: 50px;
             color: #64748b;
             font-weight: 500;
             text-decoration: none;
@@ -101,23 +99,20 @@
             color: var(--admin-primary);
         }
 
-        /* ================= MAIN CONTENT ================= */
         .main-content {
-            flex: 1; /* Tự động lấp đầy phần còn lại */
+            flex: 1;
             padding: 30px;
-            /* ĐÃ XÓA MARGIN-LEFT ĐỂ TRÁNH KHOẢNG TRẮNG */
-            max-width: calc(100% - 260px); /* Giới hạn độ rộng chống tràn bảng */
+            max-width: calc(100% - 260px);
         }
 
         .content-card {
             background: #ffffff;
-            border-radius: 16px; /* Bo góc to hơn */
+            border-radius: 16px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             padding: 25px;
             border: 1px solid var(--admin-border);
         }
 
-        /* Header block giống ảnh mẫu User */
         .page-header-block {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -143,7 +138,6 @@
             color: var(--admin-primary);
         }
 
-        /* Custom Input & Button bo tròn */
         .search-input, .custom-select, .btn-pill {
             border-radius: 50px !important;
             padding: 10px 20px !important;
@@ -167,7 +161,6 @@
             color: white;
         }
 
-        /* ================= TABLE ================= */
         .table > thead > tr > th {
             text-transform: uppercase;
             font-size: 12px;
@@ -176,6 +169,7 @@
             padding: 15px;
             border-bottom: 2px solid var(--admin-border);
             background-color: transparent;
+            white-space: nowrap;
         }
 
         .table > tbody > tr > td {
@@ -186,23 +180,28 @@
             border-bottom: 1px solid var(--admin-border);
         }
 
-        /* Trạng thái */
+        .col-nowrap {
+            white-space: nowrap;
+        }
+
         .status-badge {
             padding: 5px 12px;
             border-radius: 50px;
             font-size: 12px;
             font-weight: 500;
             border: 1px solid transparent;
+            display: inline-block;
+            white-space: nowrap;
         }
+
         .status-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
         .status-confirmed { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
         .status-delivered { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
         .status-cancelled { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
-        /* Nút Action trong bảng */
         .btn-action {
             border-radius: 50px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             font-size: 12px;
             font-weight: 500;
             background: transparent;
@@ -211,248 +210,383 @@
             gap: 5px;
             border: 1px solid;
             transition: 0.2s;
+            white-space: nowrap;
         }
+
         .btn-view { border-color: #64748b; color: #64748b; }
         .btn-view:hover { background: #64748b; color: white; }
-
         .btn-confirm { border-color: #0ea5e9; color: #0ea5e9; }
         .btn-confirm:hover { background: #0ea5e9; color: white; }
-
         .btn-deliver { border-color: #22c55e; color: #22c55e; }
         .btn-deliver:hover { background: #22c55e; color: white; }
-
         .btn-cancel { border-color: #ef4444; color: #ef4444; }
         .btn-cancel:hover { background: #ef4444; color: white; }
 
-        form { margin: 0; }
+        /* Nút Xem mới */
+        .action-view {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            border-radius: 50px;
+            padding: 6px 14px;
+            transition: 0.2s;
+        }
+        .action-view:hover {
+            background: #64748b;
+            color: white;
+        }
+
+        /* CSS CHO MODAL CHI TIẾT ĐƠN HÀNG */
+        .form-card { padding: 25px; }
+        .form-section {
+            background: #fefefe;
+            border: 1px solid #eef2f6;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .form-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c7da0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-cancel-modal {
+            border: 1px solid #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 30px;
+            color: #64748b;
+            text-decoration: none;
+            background: transparent;
+        }
+        .btn-cancel-modal:hover {
+            border-color: #2c7da0;
+            color: #2c7da0;
+        }
+        .form-control:read-only {
+            background-color: #f8fafc;
+            color: #475569;
+        }
     </style>
 </head>
 <body>
 
 <div class="admin-layout">
 
-<!-- SIDEBAR MODERN -->
-    <aside class="sidebar">
-        <h2 class="logo"><i class="bi bi-car-front-fill me-2"></i><span>LUXCAR Admin</span></h2>
-        <nav>
-            <ul>
-                <li><a href="dashboard"><i class="bi bi-speedometer2"></i><span> Dashboard</span></a></li>
-                <li><a href="products"><i class="bi bi-box"></i><span> Sản phẩm</span></a></li>
-                <li><a href="categories"><i class="bi bi-tags"></i><span> Danh mục</span></a></li>
-                <li><a href="/orderAdmin"><i class="bi bi-cart"></i><span> Đơn hàng</span></a></li>
-                <li><a href="admin-payment.jsp"><i class="bi bi-credit-card"></i><span> Thanh toán</span></a></li>
-                <li><a href="users" class="active"><i class="bi bi-people"></i><span> Người dùng</span></a></li>
-                <li><a href="blogs"><i class="bi bi-journal-text"></i><span> Blog</span></a></li>
-                <li><a href="banners"><i class="bi bi-image"></i><span> Banner</span></a></li>
-                <li><a href="/logout"><i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span></a></li>
-            </ul>
-        </nav>
-    </aside>
+    <%@ include file="sidebar/sidebar.jsp"%>
 
     <main class="main-content">
+        <div class="content-card">
+            <div class="page-header-block">
+                <h2 class="page-title"><i class="bi bi-receipt"></i> Quản lý đơn hàng</h2>
+                <button class="btn btn-pill"><i class="bi bi-download me-1"></i> Xuất dữ liệu</button>
+            </div>
 
-        <c:choose>
-            <%-- ================================================================
-                 VIEW 1: DANH SÁCH ĐƠN HÀNG (Khi không có param 'id')
-                 ================================================================ --%>
-            <c:when test="${empty param.id}">
-                
-                <div class="content-card">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="page-title m-0"><i class="bi bi-receipt"></i> Quản lý đơn hàng</h2>
-                        <button class="btn btn-teal"><i class="bi bi-download"></i> Xuất dữ liệu</button>
+            <form action="order-admin" method="GET" class="row g-3 mb-4 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0" style="border-radius: 50px 0 0 50px; border-color: #cbd5e1; padding-left: 20px;">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control search-input border-start-0 ps-0" style="border-radius: 0 50px 50px 0 !important;" placeholder="Tìm kiếm mã đơn...">
                     </div>
+                </div>
 
-                    <form action="order-admin" method="GET" class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm mã đơn, tên khách hàng...">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="status" class="form-select">
-                                <option value="">Tất cả trạng thái</option>
-                                <option value="PENDING">Chờ xử lý</option>
-                                <option value="CONFIRMED">Đã xác nhận</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-teal w-100"><i class="bi bi-funnel"></i> Lọc dữ liệu</button>
-                        </div>
-                    </form>
+                <div class="col-md-4">
+                    <select name="status" class="form-select custom-select">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="PENDING">Chờ xử lý</option>
+                        <option value="CONFIRMED">Đã xác nhận</option>
+                        <option value="DELIVERED">Đã giao</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-pill w-100"><i class="bi bi-funnel me-1"></i> Lọc dữ liệu</button>
+                </div>
+            </form>
 
+            <c:choose>
+                <c:when test="${empty orders}">
+                    <div class="alert alert-info text-center mt-4">Không tìm thấy đơn hàng nào.</div>
+                </c:when>
+                <c:otherwise>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
+                            <thead class="table-light">
+                                <tr class="text-uppercase small">
                                     <th>Mã ĐH</th>
-                                    <th>Khách hàng</th>
+                                    <th>Mã Khách hàng</th>
                                     <th>Ngày đặt</th>
+                                    <th style="width: 15%;">Địa chỉ</th>
+                                    <th>Sản phẩm</th>
                                     <th>Tổng tiền</th>
+                                    <th>Thanh toán</th>
                                     <th>Trạng thái</th>
                                     <th class="text-center">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 <c:forEach var="ord" items="${orders}">
-                                <tr>
-                                    <td><strong>#ORD-${ord.id}</strong></td>
-                                    <td>
-                                        <div class="fw-bold">${ord.shippingAddress}</div>
+                                    <tr>
+                                        <td class="fw-bold col-nowrap" style="color: #0f172a;">#ORD-${ord.id}</td>
 
-                                    </td>
-                                    <td>${ord.orderDate}</td>
-                                    <td class="fw-bold text-danger">${ord.totalAmount} ₫</td>
-                                    <td><span class="status-badge status-pending">${ord.orderStatus}</span></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            
-                                            <form action="order-admin" method="GET">
-                                                <input type="hidden" name="id" value="${ord.id}"> <button type="submit" class="btn btn-outline-dark btn-action" title="Xem chi tiết">
-                                                    <i class="bi bi-eye"></i> Xem
-                                                </button>
-                                            </form>
+                                        <td>
+                                            <div class="fw-semibold" style="color: #334155;">${ord.userId}</div>
+                                            <small class="text-muted">UID: ${ord.userId}</small>
+                                        </td>
 
-                                            <form action="update-order-status" method="POST">
-                                                <input type="hidden" name="orderId" value="${ord.id}">
-                                                <input type="hidden" name="status" value="CONFIRMED">
-                                                <button type="submit" class="btn btn-outline-info btn-action" title="Xác nhận đơn">
-                                                    <i class="bi bi-check-circle"></i> Xác nhận
-                                                </button>
-                                            </form>
+                                        <td class="col-nowrap">${ord.orderDate}</td>
 
-                                            <form action="update-order-status" method="POST">
-                                                <input type="hidden" name="orderId" value="${ord.id}">
-                                                <input type="hidden" name="status" value="DELIVERED">
-                                                <button type="submit" class="btn btn-outline-success btn-action" title="Đã giao hàng">
-                                                    <i class="bi bi-truck"></i> Đã giao
-                                                </button>
-                                            </form>
-
-                                            <form action="update-order-status" method="POST">
-                                                <input type="hidden" name="orderId" value="${ord.id}">
-                                                <input type="hidden" name="status" value="CANCELLED">
-                                                <button type="submit" class="btn btn-outline-danger btn-action" title="Hủy đơn">
-                                                    <i class="bi bi-x-circle"></i> Cancel
-                                                </button>
-                                            </form>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                                </c:forEach>
-                                </tbody>
-                        </table>
-                    </div>
-                    
-                    </div>
-            </c:when>
-
-
-            <%-- ================================================================
-                 VIEW 2: CHI TIẾT 1 ĐƠN HÀNG (Khi có param 'id')
-                 ================================================================ --%>
-            <c:otherwise>
-                
-                <div class="content-card">
-                    
-                    <div class="mb-4">
-                        <form action="order-admin" method="GET">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-arrow-left"></i> Quay lại danh sách
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="detail-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="m-0 fw-bold">Chi tiết đơn hàng #${param.id}</h4>
-                            <small class="text-muted">Ngày đặt: 27-03-2026 14:30:00</small> </div>
-                        <div>
-                            <span class="status-badge status-pending fs-6">Trạng thái: Đang xử lý</span>
-                        </div>
-                    </div>
-
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <div class="info-title"><i class="bi bi-person-lines-fill"></i> Thông tin khách hàng</div>
-                                <p class="mb-1"><strong>Họ tên:</strong> Lê Trần Nhật Huy</p> <p class="mb-1"><strong>Số điện thoại:</strong> 0123456789</p>
-                                <p class="mb-0"><strong>Địa chỉ:</strong> Công ty, 120 Yên Lãng, Đống Đa, Hà Nội</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <div class="info-title"><i class="bi bi-credit-card"></i> Phương thức thanh toán</div>
-                                <p class="mb-1"><strong>Hình thức:</strong> Thanh toán khi nhận hàng (COD)</p>
-                                <p class="mb-1"><strong>Trạng thái thanh toán:</strong> <span class="text-danger">Chưa thanh toán</span></p>
-                                <h5 class="mt-3 text-danger fw-bold">Tổng tiền: 41.948.000 ₫</h5> </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="info-box">
-                                <div class="info-title"><i class="bi bi-clock-history"></i> Lịch sử đơn hàng</div>
-                                <ul class="timeline m-0">
-                                    <li>
-                                        <strong>Đang xử lý</strong>
-                                        <div class="text-muted" style="font-size: 12px;">27-03-2026 14:30:00</div>
-                                    </li>
-                                    <li>
-                                        <strong>Đơn hàng đã được tạo</strong>
-                                        <div class="text-muted" style="font-size: 12px;">27-03-2026 14:29:15</div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h5 class="fw-bold mb-3"><i class="bi bi-box"></i> Danh sách sản phẩm</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Sản phẩm</th>
-                                    <th class="text-center">Số lượng</th>
-                                    <th class="text-end">Đơn giá</th>
-                                    <th class="text-end">Thành tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div style="width: 50px; height: 50px; background: #eee; border-radius: 4px;" class="d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-car-front text-muted fs-4"></i>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 150px;" title="${ord.shippingAddress}">
+                                                ${ord.shippingAddress}
                                             </div>
-                                            <span class="fw-bold">Ford Defender 2019</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-end">41.948.000 ₫</td>
-                                    <td class="text-end fw-bold">41.948.000 ₫</td>
-                                </tr>
+                                        </td>
+
+                                        <td>${ord.items}</td>
+
+                                        <td class="col-nowrap fw-bold text-danger">
+                                            <fmt:formatNumber value="${ord.totalAmount}" type="number" groupingUsed="true"/> ₫
+                                        </td>
+
+                                        <td><span class="badge bg-secondary">COD</span></td>
+
+                                        <td class="col-nowrap" id="status-cell-${ord.id}">
+                                            <c:choose>
+                                                <c:when test="${ord.orderStatus == 'PENDING' || ord.orderStatus == 'Đang xử lý'}">
+                                                    <span class="status-badge status-pending">Đang xử lý</span>
+                                                </c:when>
+                                                <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
+                                                    <span class="status-badge status-confirmed">Đã xác nhận</span>
+                                                </c:when>
+                                                <c:when test="${ord.orderStatus == 'DELIVERED' || ord.orderStatus == 'Đã giao'}">
+                                                    <span class="status-badge status-delivered">Đã giao</span>
+                                                </c:when>
+                                                <c:when test="${ord.orderStatus == 'CANCELLED' || ord.orderStatus == 'Đã hủy'}">
+                                                    <span class="status-badge status-cancelled">Đã hủy</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="status-badge status-pending">${ord.orderStatus}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <td class="col-nowrap">
+                                            <div id="action-buttons-${ord.id}" class="d-flex justify-content-center gap-2 flex-nowrap">
+
+                                                <button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal${ord.id}">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+
+                                                <c:choose>
+                                                <%-- trao nut --%>
+                                                    <c:when test="${ord.orderStatus == 'PENDING' || ord.orderStatus == 'Đang xử lý'}">
+                                                        <button type="button" class="btn-action btn-confirm" onclick="updateStatusOrder(event, ${ord.id}, 'CONFIRMED')">
+                                                            <i class="bi bi-check2-circle"></i> Xác nhận
+                                                        </button>
+
+
+                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        </button>
+                                                    </c:when>
+                                                    <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
+                                                        <button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ${ord.id}, 'DELIVERED')">
+                                                            <i class="bi bi-truck"></i> Đã giao
+                                                        </button>
+                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        </button>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
-                            <tfoot class="table-light">
-                                <tr>
-                                    <td colspan="3" class="text-end fw-bold">Mã giảm giá (Nếu có):</td>
-                                    <td class="text-end text-success">- 0 ₫</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" class="text-end fw-bold">Tổng thanh toán:</td>
-                                    <td class="text-end text-danger fw-bold fs-5">41.948.000 ₫</td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
 
+        <c:forEach var="ord" items="${orders}">
+            <div class="modal fade" id="viewOrderModal${ord.id}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="form-card">
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="bi bi-cart-check-fill"></i> Thông tin Đơn hàng #ORD-${ord.id}
+                                </h3>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small">Ngày đặt</label>
+                                        <input type="text" class="form-control" value="${ord.orderDate}" readonly>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small">Trạng thái</label>
+                                        <input type="text" class="form-control text-primary fw-bold" value="${ord.orderStatus}" readonly>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small">Phương thức thanh toán</label>
+                                        <input type="text" class="form-control" value="COD (Mặc định)" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="bi bi-person-lines-fill"></i> Thông tin Khách hàng & Giao hàng
+                                </h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small">ID Người mua</label>
+                                        <input type="text" class="form-control" value="${ord.userId}" readonly>
+                                    </div>
+
+
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label text-muted small">Địa chỉ giao hàng</label>
+                                        <input type="text" class="form-control" value="${ord.shippingAddress}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="bi bi-box-seam"></i> Chi tiết Sản phẩm
+                                </h3>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label text-muted small">Tên sản phẩm</label>
+                                        <c:forEach items="${ord.items}" var="i">
+                                           <div class="d-flex justify-content-between align-items-center border-bottom py-2">${i.product.name}</div>
+                                        </c:forEach>
+                                    </div>
+                                    <div class="col-12 mt-2 text-end">
+                                        <h4 class="text-danger fw-bold m-0">Tổng tiền: <fmt:formatNumber value="${ord.totalAmount}" type="number" groupingUsed="true"/> ₫</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel-modal" data-bs-dismiss="modal">
+                                    <i class="bi bi-x-lg"></i> Đóng
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-            </c:otherwise>
-        </c:choose>
-
+            </div>
+        </c:forEach>
     </main>
 </div>
+
+<div id="customToast"
+     style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đơn hàng đã được xác nhận!</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function updateStatusOrder(event, orderId, newStatus){
+        event.preventDefault()
+
+        if(newStatus === 'CANCELLED'){
+            let xacnhan = confirm("Bạn có chắc chắn muốn huỷ đơn hàng này không?");
+            if(xacnhan === false){
+                return;
+            }
+        }
+
+        let formData = new URLSearchParams({orderId: orderId, status: newStatus});
+
+        fetch('update-order-status' ,{method: 'POST', body: formData})
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(data){
+                if(data.trim() === 'success'){
+
+                    let toast = document.getElementById("customToast");
+                    toast.style.visibility = "visible";
+                    toast.style.opacity = "1";
+
+                    let trangThai = document.getElementById("status-cell-" + orderId);
+                    let actionGroup = document.getElementById("action-buttons-" + orderId);
+
+                    if("CONFIRMED" === newStatus){
+                        document.getElementById("toastMessage").innerText = "Đơn hàng #ORD-"+ orderId + " đã được duyệt!";
+
+
+                        actionGroup.innerHTML =
+                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                                '<i class="bi bi-eye"></i>' +
+                            '</button>' +
+                            '<button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ' + orderId + ', \'DELIVERED\')">' +
+                                '<i class="bi bi-truck"></i> Đã giao' +
+                            '</button>' +
+                            '<button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
+                                '<i class="bi bi-x-circle"></i> Cancel' +
+                            '</button>';
+
+                        trangThai.innerHTML = '<span class="status-badge status-confirmed">Đã xác nhận</span>';
+
+                    } else if("DELIVERED" === newStatus){
+                        document.getElementById("toastMessage").innerText = "Đơn hàng #ORD-"+ orderId + " đã được giao!";
+
+                        // giu lai nut xem
+                        actionGroup.innerHTML =
+                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                                '<i class="bi bi-eye"></i>' +
+                            '</button>';
+
+                        trangThai.innerHTML = '<span class="status-badge status-delivered">Đã giao</span>';
+
+                    } else {
+                        document.getElementById("toastMessage").innerText = "Đã huỷ đơn hàng: #ORD-"+ orderId + "!";
+
+
+                        actionGroup.innerHTML =
+                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                                '<i class="bi bi-eye"></i>' +
+                            '</button>';
+
+                        trangThai.innerHTML = '<span class="status-badge status-cancelled">Đã huỷ đơn</span>';
+                    }
+
+                    setTimeout(function(){
+                        toast.style.opacity = "0";
+                        setTimeout(function(){
+                            toast.style.visibility ="hidden";
+                        }, 300);
+                    }, 3000);
+
+                } else {
+                    alert("Máy chủ từ chối cập nhật! lý do: " + data);
+                }
+            })
+            .catch(function(error) {
+                console.log("Lỗi hệ thống:", error);
+            });
+    }
+</script>
 
 </body>
 </html>

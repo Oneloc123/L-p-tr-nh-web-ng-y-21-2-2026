@@ -128,6 +128,7 @@
     </h2>
     <nav>
         <ul>
+
             <li>
                 <a href="${pageContext.request.contextPath}/admin/dashboard"
                    class="${fn:contains(pageContext.request.requestURI, 'dashboard') ? 'active' : ''}">
@@ -150,7 +151,7 @@
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/admin/orders"
+                <a href="${pageContext.request.contextPath}/orderAdmin"
                    class="${fn:contains(pageContext.request.requestURI, 'orders') || fn:contains(pageContext.request.requestURI, 'order') ? 'active' : ''}">
                     <i class="bi bi-cart"></i><span> Đơn hàng</span>
                 </a>
@@ -189,6 +190,7 @@
                     <i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span>
                 </a>
             </li>
+
         </ul>
     </nav>
 </aside>
