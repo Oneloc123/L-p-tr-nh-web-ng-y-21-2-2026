@@ -973,18 +973,14 @@
 
                                             <div class="product-actions">
 
-                                                <form action="buy-now" method="get" style="display: contents;">
-                                                    <input type="hidden" name="productId" value="${p.id}">
-                                                    <input type="hidden" name="quantity" value="1">
+
                                                     <button type="button" class="btn-buy"
                                                             onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
                                                         <i class="bi bi-lightning-charge me-1"></i>Mua
                                                     </button>
-                                                </form>
 
-                                                <form action="cart-add" method="get" style="display: contents;">
-                                                    <input type="hidden" name="productId" value="${p.id}">
-                                                    <input type="hidden" name="quantity" value="1">
+
+
 
 
                                                     <!--sua type act thanh btt -->
@@ -993,7 +989,7 @@
                                                         <i class="bi bi-cart-plus"></i>
                                                     </button>
 
-                                                </form>
+
 
 
                                                 <form method="post" action="/favorites" style="display: contents;">
@@ -1082,7 +1078,7 @@
                 <i class="bi bi-person-circle"
                    style="font-size: 50px; color: #ddd; margin-bottom: 15px; display: block;"></i>
                 <h6 style="font-size: 16px; color: #333; line-height: 1.5;">Vui lòng đăng nhập để thêm mặt hàng này vào
-                    giỏ nhé!</h6>
+                    giỏ!</h6>
             </div>
 
             <div class="modal-footer justify-content-center" style="border-top: none; padding-bottom: 25px;">
@@ -1118,12 +1114,26 @@
         }
 
         let apiUrl;
-        if (isBuyNow == true) {
-            apiUrl = 'buy-now';
+                if (isBuyNow == true) {
+                    apiUrl = 'buy-now';
+                } else {
+                    apiUrl = 'cart-add';
+                }
+
+                fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (data) {
+                        if (data.trim() === 'success') {
+
+                            if (isBuyNow === true) {
+                                window.location.href = "checkout?type=buynow";
+                            } else {
                         // hien thi thong bao(TOAST)
                         // let toast = document.getElementById("customToast");
                         // document.getElementById("toastMessage").innerText = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
-                        let mess = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
+
 
                         // toast.style.visibility = "visible";
                         // toast.style.opacity = "1";
@@ -1136,12 +1146,11 @@
                         //     }, 500);
                         // }, 3000);
 
+                        let mess = "Đã thêm " + quantity + " chiếc [" + productName + "] vào giỏ!";
                         showAlert(mess, "success");
 
                         // CỘNG SỐ GIỎ HÀNG
                         let count = document.getElementById("cart-count");
-
-
                         if (count != null) {
                             let crrNumber = parseInt(count.innerText);
 
