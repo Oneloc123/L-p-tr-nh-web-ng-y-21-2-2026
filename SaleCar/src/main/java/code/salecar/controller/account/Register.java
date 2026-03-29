@@ -1,6 +1,7 @@
 package code.salecar.controller.account;
 
 import code.salecar.model.User;
+import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -31,13 +32,52 @@ public class Register extends HttpServlet {
         String confirmPassword = request.getParameter("confirm-password");
         String phonenumber = request.getParameter("phonenumber");
 
-    //    System.out.println(fullname+" "+username+" "+email+" "+password+" "+confirmPassword+" "+phonenumber);
-        if(!password.equals(confirmPassword)){
-  //          request.setAttribute("response","mật khẩu không khớp");
+        String fullnameError = UserInvalidate.checkFullname(fullname);
+        if(!fullnameError.equals("true")){
+            request.setAttribute("fullnameError",fullnameError);
             request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
             return;
         }
+        String usernameError = UserInvalidate.checkUsername(username);
+        if(!usernameError.equals("true")){
+            request.setAttribute("usernameError",usernameError);
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+        String emailError = UserInvalidate.checkEmail(email);
+        if(!emailError.equals("true")){
+            request.setAttribute("emailError",emailError);
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+        String passwordError = UserInvalidate.checkPassword(password);
+        if(!passwordError.equals("true")){
+            request.setAttribute("passwordError",passwordError);
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+        String phonenumberError = UserInvalidate.checkPhonenumber(phonenumber);
+        if(!phonenumberError.equals("true")){
+            request.setAttribute("phonenumberError",phonenumberError);
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+
+        if(!password.equals(confirmPassword)){
+            request.setAttribute("confirmPasswordError","mật khẩu không khớp");
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+
         UserService us = new UserService();
+
+        User u = us.getUserByUsername(username);
+        if(u!=null){
+            request.setAttribute("usernameError","tên đăng nhập đã tồn tại");
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+
         AddressService as = new AddressService();
         User user = new User();
         user.setUsername(username);

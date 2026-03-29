@@ -153,14 +153,24 @@
     <form method="post" action="/forgotPassword">
         <div class="form-group">
             <label for="username">Tên đăng nhập</label>
-            <input type="text" id="username" name="username"
+            <input type="text" id="username" name="username" value="${param.username}"
                    placeholder="Nhập tên đăng nhập">
+            <c:if test="${not empty usernameError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${usernameError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email"
+            <input type="email" id="email" name="email" value="${param.email}"
                    placeholder="Nhập email đã đăng ký">
+            <c:if test="${not empty emailError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${emailError}
+            </span>
+            </c:if>
         </div>
 
         <button type="submit" class="btn-submit">GỬI YÊU CẦU</button>

@@ -139,15 +139,31 @@
   <form method="post" action="${pageContext.request.contextPath}/resetPassword">
 
     <div class="form-group">
-      <label>Mật khẩu mới</label>
-      <input type="password" name="newPassword"
-             placeholder="Nhập mật khẩu mới" required>
+      <label for="password">Mật khẩu mới*</label>
+      <input type="password" id="password" name="newPassword" value="${param.newPassword}"
+             placeholder="Nhập mật khẩu">
+      <small class="form-text text-muted">
+        Mật khẩu tối thiểu 6 ký tự, nên bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt để tăng bảo mật
+      </small>
+      <c:if test="${not empty passwordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${passwordError}
+            </span>
+      </c:if>
     </div>
 
     <div class="form-group">
-      <label>Xác nhận mật khẩu</label>
-      <input type="password" name="confirmPassword"
-             placeholder="Nhập lại mật khẩu" required>
+      <label for="confirm-password">Xác nhận mật khẩu *</label>
+      <input type="password" id="confirm-password" name="confirmPassword"
+             placeholder="Nhập lại mật khẩu">
+      <small class="form-text text-muted">
+        Nhập lại chính xác mật khẩu đã nhập ở trên
+      </small>
+      <c:if test="${not empty confirmPasswordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${confirmPasswordError}
+            </span>
+      </c:if>
     </div>
 
     <button type="submit" class="btn-reset">

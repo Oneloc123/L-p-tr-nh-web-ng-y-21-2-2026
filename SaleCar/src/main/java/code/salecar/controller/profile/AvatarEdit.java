@@ -34,7 +34,15 @@ public class AvatarEdit extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part filePart = request.getPart("avatar");
         if (filePart == null || filePart.getSize() == 0) {
-            response.sendRedirect("/profile");
+            request.setAttribute("avatarError"," vui lòng chọn file ảnh");
+            request.getRequestDispatcher("/avatarEdit").forward(request,response);
+            return;
+        }
+        long fileSize = filePart.getSize();
+        long maxFileSize = 4 * 1024 * 1024;
+        if (fileSize > maxFileSize) {
+            request.setAttribute("avatarError", "Kích thước file không được vượt quá 4MB");
+            request.getRequestDispatcher("/avatarEdit").forward(request, response);
             return;
         }
         String fileName = filePart.getSubmittedFileName();
@@ -45,6 +53,7 @@ public class AvatarEdit extends HttpServlet {
         }
         String newFileName = System.currentTimeMillis() + "_" + fileName;
         filePart.write(uploadPath + File.separator + newFileName);
+
         String avatarUrl = "uploads/avatar/" + newFileName;
         UserService us =new UserService();
         HttpSession session = request.getSession();
@@ -52,6 +61,9 @@ public class AvatarEdit extends HttpServlet {
         user.setImgURL(avatarUrl);
         us.UpdateProfile(user);
         request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("toastMessage", "thay đổi ảnh thành công");
+        request.getSession().setAttribute("toastType", "success");
+
         response.sendRedirect("/profile");
     }
 }

@@ -56,9 +56,15 @@ public class OTPforChangePassword extends HttpServlet {
             session.removeAttribute("id");
             session.removeAttribute("userTemp");
             session.setAttribute("user",user);
+
+            //alert
+            request.getSession().setAttribute("toastMessage", "Đổi mật khẩu thành công");
+            request.getSession().setAttribute("toastType", "success");
+
             response.sendRedirect("/home");
             return;
         }
+        request.setAttribute("OTPError","OTP không chính xác");
         request.getRequestDispatcher("/pages/OTP-Register.jsp").forward(request,response);
     }
 }

@@ -19,12 +19,12 @@ public class ReviewsDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Reviews r = new Reviews(
-                        rs.getInt("user_id"),
-                        rs.getInt("rating"),
-                        rs.getString("comment"),
-                        rs.getDate("CreateAt")
-                );
+                Reviews r = new Reviews();
+                r.setUserId(rs.getInt("user_id"));
+                r.setProductId(rs.getInt("product_id"));
+                r.setRating(rs.getInt("rating"));
+                r.setComment(rs.getString("comment"));
+                r.setCreatedAt(rs.getDate("CreateAt"));
                 list.add(r);
 
             }

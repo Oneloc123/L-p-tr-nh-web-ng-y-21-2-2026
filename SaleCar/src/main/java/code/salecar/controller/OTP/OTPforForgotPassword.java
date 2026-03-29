@@ -60,8 +60,14 @@ public class OTPforForgotPassword extends HttpServlet {
             session.removeAttribute("userTemp");
             session.setAttribute("user",user);
             response.sendRedirect("/home");
+
+            //alert
+            request.getSession().setAttribute("toastMessage", "Đặt lại mật khẩu thành công");
+            request.getSession().setAttribute("toastType", "success");
+
             return;
         }
+        request.setAttribute("OTPError","OTP không chính xác");
         request.getRequestDispatcher("/pages/OTP-Register.jsp").forward(request,response);
     }
 }

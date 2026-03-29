@@ -554,6 +554,11 @@
                                            accept="image/jpeg,image/png,image/gif,image/jpg"
                                            style="display: none;">
                                     <small class="text-muted d-block mt-2">Hỗ trợ: JPG, PNG, GIF. Tối đa 5MB</small>
+                                    <c:if test="${not empty avatarError}">
+                                        <span class="error-message" style="color: red;">
+                                            <i class="bi bi-x-circle"></i> ${avatarError}
+                                        </span>
+                                    </c:if>
                                 </div>
 
                                 <div id="uploadPreview" class="mt-2" style="display: none;">
@@ -571,24 +576,56 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">ID người dùng</label>
-                                        <input type="text" class="form-control" name="id" value="${user.getId()}" readonly >
+                                        <input type="text" class="form-control" name="id" value="${not empty param.id ? param.id : user.getId()}" readonly >
                                         <small class="text-muted">ID không thể thay đổi</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Tên đăng nhập</label>
-                                        <input type="text" class="form-control" name="username" value="${user.getUsername()}" required>
+                                        <input type="text" class="form-control" name="username" value="${not empty param.username ? param.username : user.getUsername()}" required>
+                                        <c:if test="${not empty usernameError}">
+                                            <span class="error-message" style="color: red;">
+                                                <i class="bi bi-x-circle"></i> ${usernameError}
+                                            </span>
+                                        </c:if>
+                                        <small class="form-text text-muted">
+                                            Tên đăng nhập từ 4–20 ký tự, chỉ gồm chữ cái và số, không chứa khoảng trắng
+                                        </small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="fullname" value="${user.getFullname()}" required>
+                                        <input type="text" class="form-control" name="fullname" value="${not empty param.fullname ? param.fullname : user.getFullname()}" required>
+                                        <c:if test="${not empty fullnameError}">
+                                            <span class="error-message" style="color: red;">
+                                                <i class="bi bi-x-circle"></i> ${fullnameError}
+                                            </span>
+                                        </c:if>
+                                        <small class="form-text text-muted">
+                                            Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
+                                        </small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" name="email" value="${user.getEmail()}" required>
+                                        <input type="email" class="form-control" name="email" value="${not empty param.email ? param.email : user.getEmail()}" required>
+                                        <c:if test="${not empty emailError}">
+                                            <span class="error-message" style="color: red;">
+                                                <i class="bi bi-x-circle"></i> ${emailError}
+                                            </span>
+                                        </c:if>
+                                        <small class="form-text text-muted">
+                                            Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
+                                        </small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" name="phoneNumber" value="${user.getPhonenumber()}">
+                                        <input type="text" class="form-control" name="phoneNumber" value="${not empty param.phoneNumber ? param.phoneNumber : user.getPhonenumber()}">
+                                        <c:if test="${not empty phonenumberError}">
+                                            <span class="error-message" style="color: red;">
+                                                <i class="bi bi-x-circle"></i> ${phonenumberError}
+                                            </span>
+                                        </c:if>
+                                        <small class="form-text text-muted">
+                                            Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
+                                        </small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Vai trò</label>
@@ -807,5 +844,7 @@
         }
     });
 </script>
+<%@ include file="/common/footer.jsp" %>
+
 </body>
 </html>

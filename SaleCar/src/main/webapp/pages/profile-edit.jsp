@@ -431,16 +431,40 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="fullname" value="${user.getFullname()}" required>
+                            <small class="form-text text-muted">
+                                Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
+                            </small>
+                            <c:if test="${not empty fullnameError}">
+                                <span class="error-message" style="color: red;">
+                                    <i class="bi bi-x-circle"></i> ${fullnameError}
+                                </span>
+                            </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" name="email" value="${user.getEmail()}" required>
+                            <small class="form-text text-muted">
+                                Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
+                            </small>
+                            <c:if test="${not empty emailError}">
+                                <span class="error-message" style="color: red;">
+                                    <i class="bi bi-x-circle"></i> ${emailError}
+                                </span>
+                            </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Số điện thoại</label>
                             <input type="text" class="form-control" name="phoneNumber" value="${user.getPhonenumber()}">
+                            <small class="form-text text-muted">
+                                Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
+                            </small>
+                            <c:if test="${not empty phonenumberError}">
+                                <span class="error-message" style="color: red;">
+                                    <i class="bi bi-x-circle"></i> ${phonenumberError}
+                                </span>
+                            </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -472,7 +496,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Address ID</label>
+                            <label class="form-label">Chọn địa chỉ chính</label>
                             <select class="form-select" name="addressId">
                                 <c:choose>
                                     <c:when test="${not empty listAddress}">
@@ -697,7 +721,7 @@
         </div>
     </div>
 </div>
-
+<%@ include file="/common/footer.jsp" %>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

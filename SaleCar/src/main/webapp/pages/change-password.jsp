@@ -183,23 +183,37 @@
         <div class="form-group">
             <label for="current_password">Mật khẩu hiện tại</label>
             <input type="password" id="current_password" name="current_password"
-                   placeholder="Nhập mật khẩu hiện tại">
+                   placeholder="Nhập mật khẩu hiện tại" value="${param.current_password}">
+            <c:if test="${not empty currPasswordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${currPasswordError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="new_password">Mật khẩu mới</label>
             <input type="password" id="new_password" name="new_password"
-                   placeholder="Nhập mật khẩu mới">
-            <div class="password-requirements">
-                <p>✓ Mật khẩu phải có ít nhất 6 ký tự</p>
-                <p>✓ Nên bao gồm chữ hoa, chữ thường và số</p>
-            </div>
+                   placeholder="Nhập mật khẩu mới" value="${param.new_password}">
+            <small class="form-text text-muted">
+                Mật khẩu tối thiểu 6 ký tự, nên bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt để tăng bảo mật
+            </small>
+            <c:if test="${not empty newPasswordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${newPasswordError}
+            </span>
+            </c:if>
         </div>
 
         <div class="form-group">
             <label for="confirm_password">Xác nhận mật khẩu mới</label>
-            <input type="password" id="confirm_password" name="confirm_password"
-                   placeholder="Nhập lại mật khẩu mới">
+            <input type="password" id="confirm_password" name="confirm_password" value="${param.confirm_password}"  placeholder="Nhập lại mật khẩu mới">
+
+            <c:if test="${not empty confirmPasswordError}">
+            <span class="error-message" style="color: red;">
+                <i class="bi bi-x-circle"></i> ${confirmPasswordError}
+            </span>
+            </c:if>
         </div>
 
         <button type="submit" class="btn-change">CẬP NHẬT</button>

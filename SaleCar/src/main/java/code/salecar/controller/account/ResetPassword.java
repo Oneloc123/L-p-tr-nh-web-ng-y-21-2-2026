@@ -1,6 +1,7 @@
 package code.salecar.controller.account;
 
 import code.salecar.model.User;
+import code.salecar.model.invalidate.UserInvalidate;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -25,8 +26,16 @@ public class ResetPassword extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
+        String newPasswordError = UserInvalidate.checkPassword(newPassword);
+        if(!newPasswordError.equals("true")){
+            request.setAttribute("newPasswordError",newPasswordError);
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
+
         if(!newPassword.equals(confirmPassword)){
-            response.sendRedirect("/resetPassword");
+            request.setAttribute("confirmPasswordError","mật khẩu không khớp");
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
             return;
         }
 

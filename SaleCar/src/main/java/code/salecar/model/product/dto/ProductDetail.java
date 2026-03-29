@@ -31,12 +31,17 @@ public class ProductDetail implements Serializable {
     private String brandLink;
     private String brandLogo;
 
+    private String sku;
+    private int quantity;
+    private int soldQuantity;
+
     private String categoryName;
 
     private List<String> image;
 
     private Discount discount;
 
+    private List<String> activityLogs;
 
     private List<Reviews> reviews;
 
@@ -85,7 +90,39 @@ public class ProductDetail implements Serializable {
         Product product = new Product(id,name,price,finalPrice,discountPercent,discountUpdatedAt,brandId,categoryId,description,ratio,size,material,origin,status,createdAt,updatedAt);
         return product;
     }
-    
+
+    public List<String> getActivityLogs() {
+        return activityLogs;
+    }
+
+    public void setActivityLogs(List<String> activityLogs) {
+        this.activityLogs = activityLogs;
+    }
+
+    public int getSoldQuantity() {
+        return soldQuantity;
+    }
+
+    public void setSoldQuantity(int soldQuantity) {
+        this.soldQuantity = soldQuantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
     public String getBrandLogo() {
         return brandLogo;
     }
