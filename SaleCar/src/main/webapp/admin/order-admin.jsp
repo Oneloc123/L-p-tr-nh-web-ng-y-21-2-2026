@@ -283,22 +283,7 @@
 
 <div class="admin-layout">
 
-    <aside class="sidebar">
-        <h2 class="logo"><i class="bi bi-car-front-fill me-2"></i><span>LUXCAR Admin</span></h2>
-        <nav>
-            <ul>
-                <li><a href="dashboard"><i class="bi bi-speedometer2"></i><span> Dashboard</span></a></li>
-                <li><a href="products"><i class="bi bi-box"></i><span> Sản phẩm</span></a></li>
-                <li><a href="categories"><i class="bi bi-tags"></i><span> Danh mục</span></a></li>
-                <li><a href="/orderAdmin" class="active"><i class="bi bi-cart"></i><span> Đơn hàng</span></a></li>
-                <li><a href="admin-payment.jsp"><i class="bi bi-credit-card"></i><span> Thanh toán</span></a></li>
-                <li><a href="users"><i class="bi bi-people"></i><span> Người dùng</span></a></li>
-                <li><a href="blogs"><i class="bi bi-journal-text"></i><span> Blog</span></a></li>
-                <li><a href="banners"><i class="bi bi-image"></i><span> Banner</span></a></li>
-                <li><a href="/logout"><i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span></a></li>
-            </ul>
-        </nav>
-    </aside>
+    <%@ include file="sidebar/sidebar.jsp"%>
 
     <main class="main-content">
         <div class="content-card">
