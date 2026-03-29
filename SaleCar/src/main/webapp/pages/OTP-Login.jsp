@@ -201,7 +201,7 @@
     <a href="/OTPforLogin" class="btn-secondary">GỬI LẠI MÃ</a>
     <a href="/login" class="back-link">Quay lại đăng nhập</a>
 </div>
-
+<%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

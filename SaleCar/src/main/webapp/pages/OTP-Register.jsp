@@ -179,7 +179,7 @@
     <p style="font-size: 12px;">(Mã xác nhận mẫu: 123456)</p>
   </div>
 
-  <form method="post" action="${pageContext.request.contextPath}/OTPforChangePassword">
+  <form method="post" action="${pageContext.request.contextPath}/OTPforRegister">
     <div class="form-group">
       <label for="code">Mã xác nhận (6 số)</label>
       <input type="text" id="code" name="otp" maxlength="6"
@@ -201,7 +201,7 @@
   <a href="/OTPforChangePassword" class="btn-secondary">GỬI LẠI MÃ</a>
   <a href="/changePassword" class="back-link">Quay lại</a>
 </div>
-
+<%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
