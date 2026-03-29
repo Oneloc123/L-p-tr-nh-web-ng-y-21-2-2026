@@ -490,13 +490,13 @@
                         <div class="col-md-6">
                             <div class="info-label">Giá gốc</div>
                             <div class="price-original">
-                                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="₫"/>
+                                <fmt:formatNumber value="${product.price}" type="currency" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-label">Giá sau giảm</div>
                             <div class="price-current">
-                                <fmt:formatNumber value="${product.finalPrice}" type="currency" currencySymbol="₫"/>
+                                <fmt:formatNumber value="${product.finalPrice}" type="currency"/>
                             </div>
                         </div>
                         <div class="col-md-12 mt-2">
