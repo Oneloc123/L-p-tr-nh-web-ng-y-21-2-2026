@@ -6,6 +6,8 @@ import java.util.List;
 public class Order{
     private int id;
     private int userId;
+
+
     private Date orderDate;
     private double totalAmount;
     private String shippingAddress;
