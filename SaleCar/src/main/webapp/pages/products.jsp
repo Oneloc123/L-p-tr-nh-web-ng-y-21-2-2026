@@ -81,8 +81,9 @@
         box-shadow: 2px 0 20px rgba(0, 0, 0, 0.03);
     }
 
+
     .sidebar::-webkit-scrollbar {
-        width: 4px;
+        width: 8px;
     }
 
     .sidebar::-webkit-scrollbar-track {
@@ -94,14 +95,29 @@
         border-radius: 4px;
     }
 
+    .filter-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .filter-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .filter-body::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 4px;
+    }
+
     .sidebar-footer {
-        position: sticky;
+        /*position: sticky;*/
         bottom: 0;
         background: #fff;
         padding: 20px 0 10px;
         margin-top: 20px;
         border-top: 1px solid var(--gray-border);
         z-index: 10;
+        flex-shrink: 0;
+        background: #fff;
     }
 
     /* ================= FILTER STYLE ================= */
@@ -229,12 +245,24 @@
 
     .price-inputs {
         display: flex;
+        flex-direction: column;
         gap: 8px;
-        margin-top: 10px;
+    }
+
+    .price-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .price-row p {
+        margin: 0;
+        min-width: 30px;
     }
 
     .price-input {
-        flex: 1;
+        /*flex: 1;*/
+        margin-bottom: 10px;
         padding: 8px 10px;
         border: 1px solid var(--gray-border);
         border-radius: 4px;
@@ -321,7 +349,7 @@
     }
 
     .product-wrapper::-webkit-scrollbar {
-        width: 4px;
+        width: 10px;
     }
 
     .product-wrapper::-webkit-scrollbar-track {
@@ -675,8 +703,8 @@
         <!-- ================= SIDEBAR FILTER ================= -->
         <div class="col-lg-3 col-md-4 sidebar p-0">
             <form id="filterForm" action="products" method="get"
-                  style="height: 100%; display: flex; flex-direction: column;">
-                <div style="flex: 1; overflow-y: auto; padding: 25px 20px 10px;">
+                  style="height: 90%; display: flex; flex-direction: column;">
+                <div class="filter-body" style="flex: 1; overflow-y: auto; padding: 25px 20px 10px; margin-right:1px">
                     <!-- Tìm kiếm -->
                     <div class="filter-section">
                         <div class="filter-title">
@@ -781,12 +809,25 @@
                             <div class="price-range-container">
                                 <div id="price-range"></div>
                                 <div class="price-inputs">
-                                    <input type="text" class="price-input" id="min-price"
-                                           value="${param.minPrice != null ? param.minPrice : 0}" placeholder="Từ"
-                                           readonly>
-                                    <input type="text" class="price-input" id="max-price"
-                                           value="${param.maxPrice != null ? param.maxPrice : requestScope.maxPrice}"
-                                           placeholder="Đến" readonly>
+
+                                    <div class="price-row">
+                                        <p class="form-check-label">Từ</p>
+                                        <input type="text"
+                                               class="price-input"
+                                               id="min-price"
+                                               value="${param.minPrice != null ? param.minPrice : 0}"
+                                               readonly>
+                                    </div>
+
+                                    <div class="price-row">
+                                        <p class="form-check-label">Đến</p>
+                                        <input type="text"
+                                               class="price-input"
+                                               id="max-price"
+                                               value="${param.maxPrice != null ? param.maxPrice : requestScope.maxPrice}"
+                                               readonly>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -953,8 +994,6 @@
                                                     </button>
 
                                                 </form>
-
-
 
 
                                                 <form method="post" action="/favorites" style="display: contents;">
