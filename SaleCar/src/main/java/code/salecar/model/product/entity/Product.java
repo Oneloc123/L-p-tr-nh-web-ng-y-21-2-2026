@@ -17,12 +17,12 @@ public class Product {
     private String size;
     private String material;
     private String origin;
-    private boolean status;
+    private int status;
     private Date createdAt;
     private Date updatedAt;
 
 
-    public Product(int id, String name, double price, double finalPrice, double discountPercent, Date discountUpdatedAt, int brandId, int categoryId, String description, String ratio, String size, String material, String origin, boolean status, Date createdAt, Date updatedAt) {
+    public Product(int id, String name, double price, double finalPrice, double discountPercent, Date discountUpdatedAt, int brandId, int categoryId, String description, String ratio, String size, String material, String origin, int status, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -150,11 +150,10 @@ public class Product {
         this.description = description;
     }
 
-    public boolean isStatus() {
+    public int getStatus() {
         return status;
     }
-
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

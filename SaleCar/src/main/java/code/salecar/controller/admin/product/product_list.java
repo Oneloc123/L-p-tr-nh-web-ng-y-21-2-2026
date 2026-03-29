@@ -1,9 +1,10 @@
-package code.salecar.controller.admin.product.api;
+package code.salecar.controller.admin.product;
 
+import code.salecar.model.Category;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.filter.ProductFilter;
+import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -14,16 +15,15 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-@WebServlet("/api/products")
-public class productList extends HttpServlet {
-
+@WebServlet("/admin/products")
+public class product_list extends HttpServlet {
     ProductService productService = new ProductService();
-
+    CategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int limit = 10;
+        int limit = 20;
         int page = 1;
         String param = request.getParameter("page");
         if (param != null) {
@@ -32,29 +32,51 @@ public class productList extends HttpServlet {
 
         String searchKeyword = request.getParameter("keyword");
         String[] filterCategoryParam = request.getParameterValues("categoryId");
-        List<Integer> filterCategory = filterCategoryParam == null ? new ArrayList<>() : Arrays.stream(filterCategoryParam).map(Integer::parseInt).toList();
+        List<Integer> filterCategory = filterCategoryParam == null ? new ArrayList<>()
+                : Arrays.stream(filterCategoryParam)
+                .filter(s -> s != null && !s.isBlank())
+                .map(Integer::parseInt)
+                .toList();
         String[] filterBrandParam = request.getParameterValues("brandId");
-        List<Integer> filterBrand = filterBrandParam == null ? new ArrayList<>() : Arrays.stream(filterBrandParam).map(Integer::parseInt).toList();
+        List<Integer> filterBrand = filterBrandParam == null ? new ArrayList<>()
+                : Arrays.stream(filterBrandParam)
+                .filter(s -> s != null && !s.isBlank())
+                .map(Integer::parseInt)
+                .toList();
         String filterStatus = request.getParameter("status"); // active , inactive , draft
+        int status = -1;
+        if (filterStatus != null) {
+            switch (filterStatus) {
+                case "active":
+                    status = 1;
+                    break;
+                case "inactive":
+                    status = 0;
+                    break;
+                case "draft":
+                    status = 2;
+                    break;
+            }
+        }
         String filterStock = request.getParameter("stockStatus"); // high , medium , low
         String minPriceParam = request.getParameter("minPrice");
         BigDecimal minPrice = null;
-        if (minPriceParam != null) {
+        if (minPriceParam != null && !minPriceParam.isBlank()) {
             minPrice = new BigDecimal(minPriceParam);
         }
         String maxPriceParam = request.getParameter("maxPrice");
         BigDecimal maxPrice = null;
-        if (maxPriceParam != null) {
+        if (maxPriceParam != null && !maxPriceParam.isBlank()) {
             maxPrice = new BigDecimal(maxPriceParam);
         }
         String fromDateParam = request.getParameter("fromDate");
-        Date fromDate = null;
+        java.sql.Date fromDate = null;
         if (fromDateParam != null && !fromDateParam.isEmpty()) {
             LocalDate localDate = LocalDate.parse(fromDateParam);
-            fromDate = Date.valueOf(localDate);
+            fromDate = java.sql.Date.valueOf(localDate);
         }
         String toDateParam = request.getParameter("toDate");
-        Date toDate = null;
+        java.sql.Date toDate = null;
         if (toDateParam != null && !toDateParam.isEmpty()) {
             LocalDate localDate = LocalDate.parse(toDateParam);
             toDate = Date.valueOf(localDate);
@@ -84,29 +106,30 @@ public class productList extends HttpServlet {
             }
         }
 
-        ProductFilter productFilter = new ProductFilter(searchKeyword, filterCategory, filterBrand, 1, filterStock, maxPrice, minPrice, fromDate, toDate, sortBy);
+        List<Category> categories = categoryService.getCategory();
+
+        ProductFilter productFilter = new ProductFilter(searchKeyword, filterCategory, filterBrand, status, filterStock, maxPrice, minPrice, fromDate, toDate, sortBy);
         List<ProductItem> list = productService.getProductForAdmin(productFilter, page, limit);
 
-        int totalProduct = 200;//ps.getTotalProduct(filter);
+        int totalProduct = productService.getTotalProductForAdmin(productFilter);
         int totalPage = (int) Math.ceil((double) totalProduct / limit);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("page", page);
-        result.put("totalPages", totalPage);
-        result.put("totalItems", totalProduct);
-        result.put("products", list);
+        request.setAttribute("products", list);
+        request.setAttribute("categories", categories);
+        request.setAttribute("totalProduct", totalProduct);
+        request.setAttribute("totalPages", totalPage);
+        request.setAttribute("currentPage", page);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), result);
-        return;
+
+        request.getRequestDispatcher("/admin/product/product-list.jsp")
+                .forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
-
 }
