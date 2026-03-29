@@ -156,7 +156,7 @@
             color: #000000;
         }
 
-        /* Info Sections */
+        /* Enhanced Info Sections */
         .info-section {
             padding: 30px;
             border-top: 1px solid #eeeeee;
@@ -166,39 +166,73 @@
             font-size: 18px;
             font-weight: 600;
             color: #000000;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-        }
-
-        .info-label {
-            font-size: 13px;
-            color: #666666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .info-value {
-            font-size: 16px;
-            font-weight: 500;
+        .section-title i {
+            font-size: 20px;
             color: #000000;
         }
 
-        .info-value.description {
-            line-height: 1.6;
+        /* Enhanced Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
         }
 
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-color: #dee2e6;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-label i {
+            font-size: 12px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #212529;
+            word-break: break-word;
+        }
+
+        .info-value.description {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        /* Status Badge Enhanced */
         .status-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -206,74 +240,202 @@
         }
 
         .status-active {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: #e7f3e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
         }
 
         .status-inactive {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
         }
 
-        .address-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
+        .role-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: #e9ecef;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #495057;
         }
 
-        .address-item {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .address-item i {
-            width: 25px;
-            color: #000000;
-            font-size: 16px;
-        }
-
-        .date-info {
-            display: flex;
-            gap: 30px;
+        /* Description Section */
+        .description-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eeeeee;
+            border: 1px solid #e9ecef;
         }
 
-        .date-item {
+        .description-section .info-label {
+            margin-bottom: 12px;
+        }
+
+        /* Address Grid Layout */
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        /* Address Card */
+        .address-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .address-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .address-card-main {
+            border-left: 4px solid #ffc107;
+            background: linear-gradient(to right, #fff9e6, white);
+        }
+
+        .address-card-sub {
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* Badge Styles */
+        .address-badge {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .badge-main, .badge-sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-main {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-sub {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-main i, .badge-sub i {
+            font-size: 11px;
+        }
+
+        /* Address Content */
+        .address-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .address-field {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 4px 0;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+
+        .address-field:last-child {
+            border-bottom: none;
+        }
+
+        .field-icon {
+            width: 20px;
+            color: #6c757d;
+            font-size: 14px;
             text-align: center;
         }
 
-        .date-label {
-            font-size: 12px;
-            color: #666666;
-            text-transform: uppercase;
-        }
-
-        .date-value {
-            font-size: 14px;
-            font-weight: 500;
-            color: #000000;
-            margin-top: 5px;
-        }
-
-        /* Sample data for demo */
-        .sample-data {
-            background-color: #f0f0f0;
-            border-left: 4px solid #000000;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
+        .field-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 100px;
             font-size: 13px;
-            color: #666;
+        }
+
+        .field-value {
+            color: #212529;
+            flex: 1;
+            word-break: break-word;
+        }
+
+        /* Empty State */
+        .empty-address {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: #adb5bd;
+            margin-bottom: 15px;
+        }
+
+        .empty-address p {
+            color: #6c757d;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-address {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-add-address:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .address-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field-label {
+                min-width: 85px;
+            }
+
+            .address-field {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
             .sidebar-menu {
                 width: 0;
                 display: none;
@@ -290,8 +452,6 @@
 <div class="profile-wrapper">
     <!-- Sidebar Menu -->
     <div class="sidebar-menu">
-
-
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i>
@@ -366,7 +526,6 @@
             </nav>
         </div>
 
-
         <!-- Profile Card -->
         <div class="profile-card">
             <div class="profile-cover"></div>
@@ -374,7 +533,6 @@
             <div class="profile-header">
                 <div class="avatar-section">
                     <div class="avatar-wrapper">
-
                         <c:choose>
                             <c:when test="${not empty user.imgURL}">
                                 <img src="${pageContext.request.contextPath}/${user.imgURL}" class="profile-avatar" alt="Avatar">
@@ -386,7 +544,6 @@
                         <a href="${pageContext.request.contextPath}/avatarEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
-
                     </div>
 
                     <div class="profile-title">
@@ -400,199 +557,188 @@
                 </div>
             </div>
 
-            <!-- User Information from USER table -->
+            <!-- User Information from USER table - Enhanced -->
             <div class="info-section">
                 <h3 class="section-title">
-                    <i class="fas fa-user"></i>
-                    Thông tin tài khoản (USER)
+                    <i class="fas fa-user-circle"></i>
+                    Thông tin tài khoản
                 </h3>
 
                 <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">ID người dùng</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-id-card"></i>
+                            ID người dùng
+                        </div>
                         <div class="info-value">${user.getId()}</div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Tên đăng nhập</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-user-tag"></i>
+                            Tên đăng nhập
+                        </div>
                         <div class="info-value">${user.getUsername()}</div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Họ và tên</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-user"></i>
+                            Họ và tên
+                        </div>
                         <div class="info-value">${user.getFullname()}</div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Email</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </div>
                         <div class="info-value">${user.getEmail()}</div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Số điện thoại</div>
-                        <div class="info-value">${user.getPhonenumber()} </div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-phone"></i>
+                            Số điện thoại
+                        </div>
+                        <div class="info-value">${user.getPhonenumber()}</div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Vai trò</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-briefcase"></i>
+                            Vai trò
+                        </div>
                         <div class="info-value">
                             <span class="role-badge">${user.getRole()}</span>
                         </div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Trạng thái</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-circle-info"></i>
+                            Trạng thái
+                        </div>
                         <div class="info-value">
                             <c:choose>
                                 <c:when test="${user.getStatus()==true}">
                                     <span class="status-badge status-active">
-                                    <i class="fas fa-check-circle"></i> hoạt động
-                                </span>
+                                        <i class="fas fa-check-circle"></i> Hoạt động
+                                    </span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="status-badge status-active">
-                                    <i class="fa-slab-press fa-regular fa-xmark"></i> không hoạt động
-                                </span>
+                                    <span class="status-badge status-inactive">
+                                        <i class="fas fa-times-circle"></i> Không hoạt động
+                                    </span>
                                 </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Address ID</div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Địa chỉ mặc định
+                        </div>
                         <div class="info-value">${user.getAddressid()}</div>
                     </div>
+
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-plus"></i>
+                            Ngày tạo
+                        </div>
+                        <div class="info-value">${user.getCreatedat()}</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            Cập nhật lần cuối
+                        </div>
+                        <div class="info-value">${user.getUpdatedat()}</div>
+                    </div>
                 </div>
 
-                <div class="info-item" style="margin-top: 20px;">
-                    <div class="info-label">Mô tả</div>
+                <!-- Description Section - Enhanced -->
+                <div class="description-section">
+                    <div class="info-label">
+                        <i class="fas fa-align-left"></i>
+                        Mô tả
+                    </div>
                     <div class="info-value description">
-                        ${user.getDescription()}
-                    </div>
-                </div>
-
-                <div class="date-info">
-                    <div class="date-item">
-                        <div class="date-label">Ngày tạo</div>
-                        <div class="date-value">${user.getCreatedat()}</div>
-                    </div>
-                    <div class="date-item">
-                        <div class="date-label">Cập nhật lần cuối</div>
-                        <div class="date-value">${user.getUpdatedat()}</div>
+                        ${not empty user.getDescription() ? user.getDescription() : 'Chưa có mô tả'}
                     </div>
                 </div>
             </div>
 
-            <!-- Address Information from ADDRESS table -->
-            <div class="info-section" style="border-top: 2px solid #000000;">
+            <!-- Address Information from ADDRESS table - Enhanced -->
+            <div class="info-section">
                 <h3 class="section-title">
                     <i class="fas fa-map-marker-alt"></i>
-                    Thông tin địa chỉ (ADDRESS)
+                    Sổ địa chỉ
                 </h3>
 
                 <c:choose>
                     <c:when test="${not empty listAddress}">
-                        <c:forEach var="a" items="${listAddress}">
-                            <c:choose>
-                                <c:when test="${a.type=='main'}">
-                                    <div class="address-box">
-                                        <div class="address-item">
-                                            <i class="fas fa-hashtag"></i>
-                                            <div><strong>địa chỉ chính</strong> </div>
+                        <div class="address-grid">
+                            <c:forEach var="a" items="${listAddress}">
+                                <div class="address-card ${a.type == 'main' ? 'address-card-main' : 'address-card-sub'}">
+                                    <div class="address-badge">
+                                        <c:choose>
+                                            <c:when test="${a.type == 'main'}">
+                                                <span class="badge-main"><i class="fas fa-star"></i> Địa chỉ chính</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="badge-sub"><i class="fas fa-home"></i> Địa chỉ phụ</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="address-content">
+                                        <div class="address-field">
+                                            <i class="fas fa-qrcode field-icon"></i>
+                                            <span class="field-label">Mã địa chỉ:</span>
+                                            <span class="field-value">${a.id}</span>
                                         </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-hashtag"></i>
-                                            <div><strong>ID:</strong> ${a.id}</div>
+                                        <div class="address-field">
+                                            <i class="fas fa-tag field-icon"></i>
+                                            <span class="field-label">Tên địa chỉ:</span>
+                                            <span class="field-value">${a.name}</span>
                                         </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-road"></i>
-                                            <div><strong>tên địa chỉ:</strong> ${a.name}</div>
+                                        <div class="address-field">
+                                            <i class="fas fa-road field-icon"></i>
+                                            <span class="field-label">Đường:</span>
+                                            <span class="field-value">${a.street}</span>
                                         </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-road"></i>
-                                            <div><strong>Đường:</strong> ${a.street}</div>
+                                        <div class="address-field">
+                                            <i class="fas fa-map-pin field-icon"></i>
+                                            <span class="field-label">Xã/Phường:</span>
+                                            <span class="field-value">${a.commune}</span>
                                         </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-map-pin"></i>
-                                            <div><strong>Xã/Phường:</strong> ${a.commune}</div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-city"></i>
-                                            <div><strong>Tỉnh/Thành phố:</strong> ${a.province}</div>
+                                        <div class="address-field">
+                                            <i class="fas fa-city field-icon"></i>
+                                            <span class="field-label">Tỉnh/Thành phố:</span>
+                                            <span class="field-value">${a.province}</span>
                                         </div>
                                     </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="address-box">
-                                        <div class="address-item">
-                                            <i class="fas fa-hashtag"></i>
-                                            <div><strong>địa chỉ phụ</strong> </div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-hashtag"></i>
-                                            <div><strong>ID:</strong> ${a.id}</div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-road"></i>
-                                            <div><strong>tên địa chỉ:</strong> ${a.name}</div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-road"></i>
-                                            <div><strong>Đường:</strong> ${a.street}</div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-map-pin"></i>
-                                            <div><strong>Xã/Phường:</strong> ${a.commune}</div>
-                                        </div>
-                                        <div class="address-item">
-                                            <i class="fas fa-city"></i>
-                                            <div><strong>Tỉnh/Thành phố:</strong> ${a.province}</div>
-                                        </div>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="address-box">
-                            <div class="address-item">
-                                <i class="fas fa-hashtag"></i>
-                                <div><strong>Chưa có địa chỉ</strong> </div>
-                            </div>
+                        <div class="empty-address">
+                            <i class="fas fa-map-marker-alt empty-icon"></i>
+                            <p>Chưa có địa chỉ nào</p>
+                            <button class="btn-add-address">Thêm địa chỉ mới</button>
                         </div>
                     </c:otherwise>
                 </c:choose>
-
-
-
-                <!-- Additional sample addresses -->
-<%--                <div style="margin-top: 20px;">--%>
-<%--                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">Địa chỉ khác</h4>--%>
-
-<%--                    <div class="address-box" style="margin-top: 0;">--%>
-<%--                        <div class="address-item">--%>
-<%--                            <i class="fas fa-hashtag"></i>--%>
-<%--                            <div><strong>ID:</strong> ADD002</div>--%>
-<%--                        </div>--%>
-<%--                        <div class="address-item">--%>
-<%--                            <i class="fas fa-road"></i>--%>
-<%--                            <div><strong>Đường:</strong> 456 Đường Nguyễn Huệ</div>--%>
-<%--                        </div>--%>
-<%--                        <div class="address-item">--%>
-<%--                            <i class="fas fa-map-pin"></i>--%>
-<%--                            <div><strong>Xã/Phường:</strong> Phường Bến Thành</div>--%>
-<%--                        </div>--%>
-<%--                        <div class="address-item">--%>
-<%--                            <i class="fas fa-city"></i>--%>
-<%--                            <div><strong>Tỉnh/Thành phố:</strong> Quận 1, TP. Hồ Chí Minh</div>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
             </div>
         </div>
     </div>
 </div>
-
+<%@ include file="/common/footer.jsp" %>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
