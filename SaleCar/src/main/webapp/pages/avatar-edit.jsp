@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chỉnh sửa ảnh đại diện - LUXCAR</title>
 
-    <%-- Include header --%>
-    <%@ include file="/common/header-for-login-ex.jsp" %>
-
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -237,6 +234,10 @@
     </style>
 </head>
 <body>
+
+<%-- Include header --%>
+<%@ include file="/common/header-for-login-ex.jsp" %>
+
 <div class="container">
     <!-- Breadcrumb -->
     <div class="breadcrumb-nav">
@@ -265,7 +266,11 @@
                         : pageContext.request.contextPath.concat('/').concat(user.imgURL)}"
                      alt="Avatar">
             </div>
-
+            <c:if test="${not empty avatarError}">
+                                <span class="error-message" style="color: red;">
+                                    <i class="bi bi-x-circle"></i> ${avatarError}
+                                </span>
+            </c:if>
             <!-- Upload Area -->
             <form action="${pageContext.request.contextPath}/avatarEdit"
                   method="post"

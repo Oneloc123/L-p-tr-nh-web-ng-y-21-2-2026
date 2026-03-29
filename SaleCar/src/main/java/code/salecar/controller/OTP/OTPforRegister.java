@@ -59,6 +59,7 @@ public class OTPforRegister extends HttpServlet {
             //alert
             request.getSession().setAttribute("toastMessage", "Đăng ký thành công");
             request.getSession().setAttribute("toastType", "success");
+
             response.sendRedirect("/home");
 
             return;
