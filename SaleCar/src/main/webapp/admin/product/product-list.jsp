@@ -517,8 +517,8 @@
                                     <td><img src="${product.image != null ? product.image : '/assets/img/default-product.png'}" class="product-thumb" alt="${product.name}"></td>
                                     <td class="fw-semibold">${product.name}</td>
                                     <td><code>${product.id}</code></td>
-                                    <td><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="₫"/></td>
-                                    <td class="text-primary fw-bold"><fmt:formatNumber value="${product.finalPrice}" type="currency" currencySymbol="₫"/></td>
+                                    <td><fmt:formatNumber value="${product.price}" type="currency" /></td>
+                                    <td class="text-primary fw-bold"><fmt:formatNumber value="${product.finalPrice}" type="currency" /></td>
                                     <td class="text-danger fw-bold">${product.discountPercent}%</td>
                                     <td>${product.categoryName}</td>
                                     <td>
