@@ -77,6 +77,12 @@ public class Register extends HttpServlet {
             request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
             return;
         }
+        u = us.getUserByEmail(email);
+        if(u!=null){
+            request.setAttribute("emailError","Email đã tồn tại");
+            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            return;
+        }
 
         AddressService as = new AddressService();
         User user = new User();

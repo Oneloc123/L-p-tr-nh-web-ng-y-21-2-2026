@@ -1,6 +1,5 @@
 package code.salecar.service.product;
 
-import code.salecar.controller.admin.product.productDetail;
 import code.salecar.model.Image;
 import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
@@ -295,6 +294,10 @@ public class ProductService {
     }
 
     public int getTotalProductForAdmin(ProductFilter productFilter) {
-        return productDAO.getTotalProductForAdmin( productFilter);
+        return productDAO.getTotalProductForAdmin(productFilter);
+    }
+
+    public void updateBasicInfo(ProductDetail product) {
+        productDAO.updateBasicInfo(product);
     }
 }

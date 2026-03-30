@@ -25,13 +25,10 @@ public class OTPforLogin extends HttpServlet {
         User user = us.getUserById(Integer.parseInt(session.getAttribute("id").toString()));
         request.setAttribute("user",user);
 //        new Thread(() -> {
-//            Random ran = new Random();
-//            int otp = ran.nextInt(9000)+1000;
-//            session.setAttribute("otp",otp);
 //            String email = user.getEmail();
 //            String content = """
 //                <div style="font-family:Arial,sans-serif">
-//                <h2 style="color:#004a99">TechX - Xác thực đăng nhập</h2>
+//                <h2 style="color:#004a99">LuxCar - Xác thực đăng nhập</h2>
 //                <p>Mã xác thực của bạn là:</p>
 //                <h1 style="letter-spacing:4px">%s</h1>
 //                <p>Mã có hiệu lực trong 5 phút.</p>
