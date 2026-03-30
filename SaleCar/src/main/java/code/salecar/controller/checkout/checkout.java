@@ -1,6 +1,9 @@
 package code.salecar.controller.checkout;
 
+import code.salecar.dao.AddressDao;
+import code.salecar.model.Address;
 import code.salecar.model.Cart;
+import code.salecar.model.User;
 import code.salecar.model.product.entity.Voucher;
 import code.salecar.service.product.VoucherService;
 import jakarta.servlet.ServletException;
@@ -22,6 +25,8 @@ public class checkout extends HttpServlet {
         String type = request.getParameter("type");
         HttpSession session = request.getSession();
         Cart checkoutCart = null;
+
+
 
         if("buynow".equals(type)){
             checkoutCart = (Cart) session.getAttribute("buyNowCart");
