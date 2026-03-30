@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 
 @WebServlet("/admin/products/detail")
-public class productDetail extends HttpServlet {
+public class product_detail extends HttpServlet {
     ProductService productService = new ProductService();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

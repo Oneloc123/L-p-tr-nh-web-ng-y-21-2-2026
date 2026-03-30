@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/admin/products/create")
-public class productCreate extends HttpServlet {
+public class product_create extends HttpServlet {
     CategoryService categoryService = new CategoryService();
     BrandService brandService = new BrandService();
     @Override

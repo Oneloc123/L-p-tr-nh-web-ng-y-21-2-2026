@@ -276,7 +276,7 @@ public class ProductDAO {
                         rs.getString("size"),
                         rs.getString("material"),
                         rs.getString("origin"),
-                        rs.getBoolean("status"),
+                        rs.getInt("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
                 );
@@ -354,7 +354,6 @@ public class ProductDAO {
             ps.setInt(5, id);
 
             ps.executeUpdate();
-            System.out.println("Product updated");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
@@ -664,5 +663,27 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    public void updateBasicInfo(ProductDetail product) {
+        String query = "update product  " +
+                " set name = ?, category_id = ?, brand_id = ?,status = ?  " +
+                " where id = ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, product.getName());
+            ps.setInt(2, product.getCategoryId());
+            ps.setInt(3, product.getBrandId());
+            ps.setInt(4, product.getStatus());
+            ps.setInt(5, product.getId());
+
+            ps.executeUpdate();
+            System.out.println("Product updated ++++++++++++++++++++");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

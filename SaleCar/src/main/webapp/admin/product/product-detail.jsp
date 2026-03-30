@@ -457,8 +457,8 @@
                         <div class="col-md-6 mt-2">
                             <div class="info-label">Trạng thái</div>
                             <div class="info-value">
-                                <span class="admin-badge ${product.status ? 'badge-active' : 'badge-inactive'}">
-                                    ${product.status ? 'Hoạt động' : 'Không hoạt động'}
+                                <span class="admin-badge ${product.status == 1 ? 'badge-active' : 'badge-inactive'}">
+                                    ${product.status == 1 ? 'Hoạt động' : 'Không hoạt động'}
                                 </span>
                             </div>
                         </div>

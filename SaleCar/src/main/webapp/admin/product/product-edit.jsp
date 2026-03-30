@@ -282,21 +282,22 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" value="${product.name}" placeholder="${product.name}" required minlength="3" maxlength="255">
-                        <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div>
+                        <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div><div id="nameError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">SKU <span class="text-danger">*</span></label>
                         <input type="text" class="form-control sku-input" name="sku" value="${product.sku}" required pattern="[A-Za-z0-9-]+" placeholder="Chức năng đang phát triển">
-                        <div class="invalid-feedback">SKU chỉ gồm chữ, số và dấu gạch ngang, phải duy nhất</div>
+                        <div class="invalid-feedback">SKU chỉ gồm chữ, số và dấu gạch ngang, phải duy nhất</div><div id="skuError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Danh mục</label>
                         <select class="form-select" name="categoryId">
                             <option value="">-- Chọn danh mục --</option>
-                            <c:forEach var="cat" items="${categoryList}">
+                           <c:forEach var="cat" items="${categoryList}">
                                 <option value="${cat.id}" ${product.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
                             </c:forEach>
                         </select>
+                        <div id="categoryIdError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Thương hiệu</label>
@@ -306,14 +307,16 @@
                                 <option value="${brand.id}" ${product.brandId == brand.id ? 'selected' : ''}>${brand.name}</option>
                             </c:forEach>
                         </select>
+                        <div id="brandIdError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Trạng thái</label>
                         <select class="form-select" name="status">
-                            <option value="true" ${product.status ? 'selected' : ''}>Hoạt động (Active)</option>
-                            <option value="false" ${!product.status ? 'selected' : ''}>Không hoạt động (Inactive)</option>
+                            <option value="1" ${product.status == 1? 'selected' : ''}>Hoạt động (Active)</option>
+                            <option value="0" ${product.status == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
                         </select>
                         <small class="text-muted">Inactive: sản phẩm tạm ẩn trên shop</small>
+                        <div id="statusError" class="text-danger"></div>
                     </div>
                 </div>
                 <div class="mt-3 d-flex justify-content-end">
@@ -716,6 +719,35 @@
         });
     }
 
+    // base info
+    const errors = {
+        name: "${errors.name}",
+        sku: "${errors.sku}",
+        categoryId: "${errors.categoryId}",
+        brandId: "${errors.brandId}",
+        status: "${errors.status}"
+    };
+
+    for (const key in errors) {
+
+        const message = errors[key];
+
+        if (message && message !== "null" && message !== "") {
+
+            const errorElementId = key + "Error";
+
+            const element = document.getElementById(errorElementId);
+
+            if (element) {
+                element.innerText = message;
+            }
+
+        }
+    }
+
+
+
+
     // Price validation
     const priceForm = document.getElementById('priceForm');
     if(priceForm) {
@@ -731,6 +763,8 @@
         basePrice.addEventListener('input', validatePrice);
         salePrice.addEventListener('input', validatePrice);
     }
+
+
 </script>
 </body>
 </html>
