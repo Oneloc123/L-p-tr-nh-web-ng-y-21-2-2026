@@ -204,13 +204,15 @@
     <c:set var="statusCategory" value="pending" />
 
     <!-- check gtri val PENDING -->
-    <c:if test="${fn:contains(order.orderStatus, 'Đã huỷ') || fn:contains(order.orderStatus, 'Đã hủy')}">
-        <c:set var="statusCategory" value="cancelled" />
-    </c:if>
+   <c:set var="statusCategory" value="pending" />
 
-    <c:if test="${fn:contains(order.orderStatus, 'Đã giao') || fn:contains(order.orderStatus, 'Thành công')}">
-        <c:set var="statusCategory" value="completed" />
-    </c:if>
+       <c:if test="${fn:contains(order.orderStatus, 'Đã huỷ') || fn:contains(order.orderStatus, 'Đã hủy') || order.orderStatus == 'CANCELLED'}">
+           <c:set var="statusCategory" value="cancelled" />
+       </c:if>
+
+       <c:if test="${fn:contains(order.orderStatus, 'Đã giao') || fn:contains(order.orderStatus, 'Thành công') || order.orderStatus == 'DELIVERED'}">
+           <c:set var="statusCategory" value="completed" />
+       </c:if>
 
     <div class="order-card order-item-card" data-status="${statusCategory}">
 
@@ -222,33 +224,58 @@
                 </span>
             </div>
 
-            <c:choose>
-                <%-- NẾU LÀ ĐƠN ĐÃ HỦY --%>
-                <c:when test="${statusCategory == 'cancelled'}">
-                    <div class="order-status" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
-                        <i class="bi bi-x-circle-fill"></i> ${order.orderStatus}
-                    </div>
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="reOrder('${order.id}')">
-                            <i class="bi bi-arrow-repeat"></i> Mua lại đơn này
-                        </button>
-                    </div>
-                </c:when>
+        <c:choose>
+             <%-- trang thai HUY --%>
+               <c:when test="${statusCategory == 'cancelled'}">
+                <div class="order-status" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+                     <i class="bi bi-x-circle-fill"></i> ${order.orderStatus}
+                </div>
+                <div class="mt-2">
+                  <button type="button" class="btn btn-outline-dark btn-sm" onclick="reOrder('${order.id}')">
+                     <i class="bi bi-arrow-repeat"></i> Mua lại đơn này
+                  </button>
+                </div>
+            </c:when>
 
-                <%-- NẾU LÀ ĐƠN BÌNH THƯỜNG --%>
-                <c:otherwise>
-                    <div class="order-status status-processing">
-                        <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
-                    </div>
-                    <c:if test="${order.orderStatus == 'Đang xử lý' || order.orderStatus == 'Pending'}">
-                        <div class="mt-2">
-                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="openCancelModal('${order.id}')">
-                                <i class="bi bi-x-circle"></i> Huỷ đơn hàng
-                            </button>
-                        </div>
-                    </c:if>
-                </c:otherwise>
-            </c:choose>
+            <%-- trang thai da giao --%>
+            <c:when test="${statusCategory == 'completed'}">
+               <div class="order-status status-completed">
+                  <i class="bi bi-check-circle-fill"></i> ${order.orderStatus}
+               </div>
+               <div class="mt-2">
+                  <button type="button" class="btn btn-outline-dark btn-sm" onclick="reOrder('${order.id}')">
+                    <i class="bi bi-arrow-repeat"></i> Mua lại lần nữa
+                  </button>
+               </div>
+            </c:when>
+
+
+           <c:otherwise>
+                   <c:choose>
+                       <%-- trang thai da xac nhan --%>
+                       <c:when test="${order.orderStatus == 'CONFIRMED' || fn:contains(order.orderStatus, 'Đã xác nhận')}">
+                           <div class="order-status" style="background-color: #cce5ff; color: #004085; border: 1px solid #b8daff;">
+                               <i class="bi bi-check2-circle"></i> ${order.orderStatus}
+                           </div>
+                       </c:when>
+                       <%-- dang xu ly --%>
+                       <c:otherwise>
+                           <div class="order-status status-processing">
+                               <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
+                           </div>
+                       </c:otherwise>
+                   </c:choose>
+
+                  <%-- nut huy cho don dang xu ly --%>
+                  <c:if test="${order.orderStatus == 'Đang xử lý' || order.orderStatus == 'PENDING'}">
+                      <div class="mt-2">
+                          <button type="button" class="btn btn-outline-danger btn-sm" onclick="openCancelModal('${order.id}')">
+                            <i class="bi bi-x-circle"></i> Huỷ đơn hàng
+                          </button>
+                      </div>
+                  </c:if>
+               </c:otherwise>
+        </c:choose>
         </div>
 
         <div class="order-info-grid">

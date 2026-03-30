@@ -2,11 +2,12 @@ package code.salecar.service.buyNCart;
 
 import code.salecar.model.Cart;
 import code.salecar.model.User;
+import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.entity.Product;
 
 public class buyNowService {
 
-    public Cart buyNow(Product product, int quantity){
+    public Cart buyNow(ProductDetail product, int quantity){
 
 
             Cart cartBuy = new Cart();

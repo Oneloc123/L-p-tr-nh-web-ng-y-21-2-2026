@@ -37,8 +37,8 @@ public class addToCart extends HttpServlet {
         }
 
         ProductService ps = new ProductService();
-        ProductDetail product = ps.getProductByID(id);
-        if (product == null) {
+        ProductDetail productDT = ps.getProductByID(id);
+        if (productDT == null) {
             response.sendRedirect("list-product");
             return;
         }
@@ -70,7 +70,7 @@ public class addToCart extends HttpServlet {
             }
 
             int userId = user.getId();
-            cart.addProduct(product.getProduct(), quantity);
+            cart.addProduct(productDT, quantity);
             session.setAttribute("cart", cart);
 
             List<Address> lstAddress = AddrDAO.getListAddressById(userId);
@@ -84,7 +84,7 @@ public class addToCart extends HttpServlet {
 
             if ("addCart".equals(action)) {
                 // Lấy tên sản phẩm từ database
-                String productName = product.getProduct().getName();
+                String productName = productDT.getProduct().getName();
 
                 // Redirect với tham số thông báo
                 String encodedProductName = URLEncoder.encode(productName, "UTF-8");
