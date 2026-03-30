@@ -265,7 +265,8 @@
                             <c:forEach var="item" items="${checkoutCart.items}">
                                 <div class="summary-item">
                                     <div class="summary-item-info">
-                                        <div class="summary-img"><i class="fas fa-car"></i></div>
+                                        <img src="${item.productDetail.image[0]}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.product.name}" />
+
                                         <div>
                                             <div class="summary-name">${item.product.name}</div>
                                             <div class="summary-qty">Số lượng: ${item.quantity}</div>
