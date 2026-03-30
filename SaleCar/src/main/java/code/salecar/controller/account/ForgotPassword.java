@@ -30,8 +30,15 @@ public class ForgotPassword extends HttpServlet {
         String email = request.getParameter("email");
         UserService us = new UserService();
         User user = us.getUserByUsername(username);
+        if(user==null){
+            request.setAttribute("usernameError","tên đăng nhập không tồn tại");
+            request.getRequestDispatcher("/pages/forgot-password.jsp").forward(request,response);
+            return;
+        }
+
         if(!email.equals(user.getEmail())){
-            response.sendRedirect("/pages/forgot-password.jsp");
+            request.setAttribute("emailError","email không đúng");
+            request.getRequestDispatcher("/pages/forgot-password.jsp").forward(request,response);
             return;
         }
         HttpSession session = request.getSession();

@@ -4,13 +4,10 @@ import code.salecar.model.*;
 
 import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
+import com.fasterxml.jackson.core.JsonStreamContext;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 
 public class OrderDAO {
@@ -146,7 +143,40 @@ public class OrderDAO {
         }
     }
 
-    // HÀM MỚI BỔ SUNG: Lấy tất cả đơn hàng cho Admin
+    public boolean updateOrderStatus(int orderId, String status){
+
+        String checkQuery = "SELECT order_status FROM `order` WHERE id = ?";
+
+        String query = "UPDATE `order` SET order_status = ? WHERE id = ?";
+
+
+        try(Connection conn = DBConnection.getConnection();
+        PreparedStatement psCheck = conn.prepareStatement(checkQuery)){
+
+            psCheck.setInt(1, orderId);
+
+            ResultSet rs = psCheck.executeQuery();
+            if(rs.next()){
+                String crrStatus = rs.getString("order_status");
+                if("CANCELLED".equals(crrStatus) || "DELIVERED".equals(crrStatus)){
+                    return false;
+                }else {
+                    try(PreparedStatement ps =conn.prepareStatement(query)){
+                        ps.setString(1, status);
+                        ps.setInt(2, orderId);
+
+                        int row = ps.executeUpdate();
+                        return row > 0;
+                    }
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
     public List<Order> getAllOrders() {
         List<Order> lstOrder = new ArrayList<>();
 
@@ -175,5 +205,81 @@ public class OrderDAO {
         }
         return lstOrder;
     }
+//    public List<Order> getAllOrdersWithItems() {
+//        String query = "SELECT \n" +
+//                "    o.id AS order_id, \n" +
+//                "    o.userId, \n" +
+//                "    o.orderDate, \n" +
+//                "    o.totalAmount, \n" +
+//                "    o.shippingAddress, \n" +
+//                "    o.phone, \n" +
+//                "    o.paymentMethod, \n" +
+//                "    o.orderStatus,\n" +
+//                "    oi.id AS item_id, \n" +
+//                "    oi.quantity, \n" +
+//                "    oi.price AS item_price,\n" +
+//                "    p.id AS product_id, \n" +
+//                "    p.name AS product_name \n" +
+//                "FROM `order` o\n" +
+//                "LEFT JOIN order_item oi ON o.id = oi.orderId\n" +
+//                "LEFT JOIN product p ON oi.productId = p.id\n" +
+//                "ORDER BY o.id DESC;";
+//
+//        try (Connection conn = DBConnection.getConnection();
+//             PreparedStatement ps = conn.prepareStatement(query)) {
+//
+//            ResultSet rs = ps.executeQuery();
+//
+//            Map<Integer, Order> ord = new LinkedHashMap<>();
+//
+//            while (rs.next()) {
+//                int crrOrder = rs.getInt("order_id");
+//
+//                Order order = ord.get(crrOrder);
+//
+//                if (order == null) {
+//                    order = new Order();
+//                    order.setId(crrOrder);
+//                    order.setUserId(rs.getInt("userId"));
+//                    order.setOrderDate(rs.getDate("orderDate"));
+//                    order.setTotalAmount(rs.getDouble("totalAmount"));
+//
+//
+//                    order.setShippingAddress(rs.getString("shippingAddress"));
+//                    order.setPhone(rs.getString("phone"));
+//                    order.setPaymentMethod(rs.getString("paymentMethod"));
+//                    order.setOrderStatus(rs.getString("orderStatus"));
+//                    order.setItems(new ArrayList<>());
+//
+//                    ord.put(crrOrder, order);
+//                }
+//
+//                int itemId = rs.getInt("item_id");
+//
+//                if (itemId != 0) {
+//                    Product p = new Product();
+//                    p.setId(rs.getInt("product_id"));
+//                    p.setName(rs.getString("product_name"));
+//
+//                    OrderItem item = new OrderItem();
+//                    item.setId(itemId);
+//                    item.setQuantity(rs.getInt("quantity"));
+//                    item.setPrice(rs.getDouble("item_price"));
+//
+//                    item.setProduct(p);
+//
+//                    order.getItems().add(item);
+//                }
+//            }
+//
+//            return new ArrayList<>(ord.values());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return new ArrayList<>();
+//    }
+    }
 
-}
+
+

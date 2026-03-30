@@ -84,12 +84,12 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link ${pageContext.request.requestURI.contains('contact') ? 'active' : ''}"
-                       href="${pageContext.request.contextPath}/contact">
-                        <i class="bi bi-envelope me-1"></i>Liên hệ
-                    </a>
-                </li>
+<%--                <li class="nav-item">--%>
+<%--                    <a class="nav-link ${pageContext.request.requestURI.contains('contact') ? 'active' : ''}"--%>
+<%--                       href="${pageContext.request.contextPath}/contact">--%>
+<%--                        <i class="bi bi-envelope me-1"></i>Liên hệ--%>
+<%--                    </a>--%>
+<%--                </li>--%>
             </ul>
 
             <!-- RIGHT SIDE -->
@@ -125,10 +125,10 @@
                                         <i class="bi bi-box"></i>
                                         <span>Đơn hàng</span>
                                     </a>
-                                    <a href="${pageContext.request.contextPath}/settings" class="auth-dropdown-item">
-                                        <i class="bi bi-gear"></i>
-                                        <span>Cài đặt</span>
-                                    </a>
+<%--                                    <a href="${pageContext.request.contextPath}/settings" class="auth-dropdown-item">--%>
+<%--                                        <i class="bi bi-gear"></i>--%>
+<%--                                        <span>Cài đặt</span>--%>
+<%--                                    </a>--%>
                                     <a href="${pageContext.request.contextPath}/loggout" class="auth-dropdown-item">
                                         <i class="bi bi-box-arrow-right"></i>
                                         <span>Đăng xuất</span>
