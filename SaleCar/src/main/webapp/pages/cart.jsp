@@ -168,7 +168,8 @@
                     <td>
                         <div class="product-col">
                             <div class="product-img">
-                                <i class="fas fa-car"></i>
+                            <img src="${item.productDetail.image[0]}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.product.name}" />
+
                             </div>
 
                             <div>

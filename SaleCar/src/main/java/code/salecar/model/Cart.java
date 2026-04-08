@@ -1,6 +1,7 @@
 package code.salecar.model;
 
 
+import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.entity.Product;
 
 import java.io.Serializable;
@@ -66,7 +67,7 @@ public class Cart implements Serializable {
         this.items = items;
     }
 
-    public void addProduct(Product product, int quantity) {
+    public void addProduct(ProductDetail product, int quantity) {
 
         if (quantity <= 0) {
             quantity = 1;
@@ -80,7 +81,7 @@ public class Cart implements Serializable {
     }
 
 
-    public void updateItem(Product product, int quantity) {
+    public void updateItem(ProductDetail product, int quantity) {
         items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
 
 

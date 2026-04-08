@@ -38,7 +38,7 @@ public class updateCart extends HttpServlet {
             response.sendRedirect("cart");
             return;
         }
-        cart.updateItem(product.getProduct(),value + item.getQuantity());
+        cart.updateItem(product,value + item.getQuantity());
 
 
         session.setAttribute("cart", cart);
