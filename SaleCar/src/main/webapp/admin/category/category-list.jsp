@@ -416,7 +416,7 @@
                 <div class="col-md-4">
                     <div class="input-group">
                         <input type="text" class="admin-input" name="search"
-                               placeholder="Search by name, slug, or ID..."
+                               placeholder="Search by name"
                                value="${param.search}">
                     </div>
                 </div>
@@ -426,7 +426,7 @@
                         <option value="">All Status</option>
                         <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
                         <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-                        <option value="hidden" ${param.status == 'hidden' ? 'selected' : ''}>Hidden</option>
+<%--                        <option value="hidden" ${param.status == 'hidden' ? 'selected' : ''}>Hidden</option>--%>
                     </select>
                 </div>
                 <!-- Submit search -->
@@ -451,7 +451,7 @@
                     <div class="input-group">
                         <select class="admin-select" id="bulkActionSelect" style="width: auto;">
                             <option value="">Bulk Actions</option>
-                            <option value="delete">Delete Selected</option>
+<%--                            <option value="delete">Delete Selected</option>--%>
                             <option value="active">Change Status → Active</option>
                             <option value="inactive">Change Status → Inactive</option>
                         </select>
@@ -513,9 +513,9 @@
                                 </a>
                             </th>
                             <th>
-                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="created_date">
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="created_at">
                                     Created Date
-                                    <c:if test="${param.sort == 'created_date'}">
+                                    <c:if test="${param.sort == 'created_at'}">
                                         <i class="bi bi-arrow-${param.order == 'asc' ? 'up' : 'down'}"></i>
                                     </c:if>
                                 </a>

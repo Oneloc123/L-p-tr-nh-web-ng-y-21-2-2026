@@ -1,6 +1,6 @@
 package code.salecar.controller.admin.product;
 
-import code.salecar.model.Category;
+import code.salecar.model.category.Category;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.CategoryService;

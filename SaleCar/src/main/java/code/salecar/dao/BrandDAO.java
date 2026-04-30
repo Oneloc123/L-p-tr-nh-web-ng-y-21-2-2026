@@ -71,7 +71,7 @@ public class BrandDAO {
 
         }
 
-        // GROUP BY (phải đặt trước ORDER BY + LIMIT)
+        // GROUP BY
         query.append(" GROUP BY br.id, br.name, br.link_brand, br.description, br.status, br.created_at, br.updated_at ");
 
         // sort (giữ kiểu đơn giản)
