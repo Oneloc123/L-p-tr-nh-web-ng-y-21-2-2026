@@ -1,6 +1,6 @@
 package code.salecar.controller.admin.product;
 
-import code.salecar.model.Brand;
+import code.salecar.model.brand.Brand;
 import code.salecar.model.Category;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;

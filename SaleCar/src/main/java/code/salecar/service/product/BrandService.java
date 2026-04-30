@@ -1,8 +1,9 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.BrandDAO;
-import code.salecar.model.Brand;
+import code.salecar.model.brand.Brand;
 import code.salecar.model.Image;
+import code.salecar.model.brand.BrandFilter;
 import code.salecar.service.Image.ImageService;
 
 import java.util.List;
@@ -13,7 +14,10 @@ public class BrandService {
     ImageService  imageService = new ImageService();
 
     public Brand getBrandByID(int brandid) {
-        return brandDAO.getBrandByID(brandid);
+        Brand brand = brandDAO.getBrandByID(brandid);
+        String image = imageService.getImage(Image.entityType.brand,brand.getId());
+        brand.setImage(image);
+        return brand;
     }
 
     public int getTotalBrand() {
@@ -34,5 +38,17 @@ public class BrandService {
             brand.setImage(image);
         }
         return brands;
+    }
+    public List<Brand> getBrands(BrandFilter brandFilter) {
+        List<Brand> brands =  brandDAO.getBrands(brandFilter);
+        for (Brand brand : brands) {
+            String image = imageService.getImage(Image.entityType.brand,brand.getId());
+            brand.setImage(image);
+        }
+        return brands;
+    }
+
+    public boolean updateBrand(Brand brand) {
+        return brandDAO.updateBrand(brand);
     }
 }
