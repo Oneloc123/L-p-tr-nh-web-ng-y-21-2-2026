@@ -1,7 +1,6 @@
 package code.salecar.controller.admin.category;
 
-import code.salecar.model.Category;
-import code.salecar.model.brand.Brand;
+import code.salecar.model.category.Category;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/admin/categories/edit")
 public class category_edit extends HttpServlet {
@@ -48,5 +46,22 @@ public class category_edit extends HttpServlet {
         if (nameParam != null  && !nameParam.isEmpty()) {
             category.setName(nameParam);
         }
+        String  descriptionParam = request.getParameter("description");
+        if (descriptionParam != null  && !descriptionParam.isEmpty()) {
+            category.setDescription(descriptionParam);
+        }
+        String iconParam =  request.getParameter("icon");
+        if (iconParam != null  && !iconParam.isEmpty()) {
+            category.setIcon(iconParam);
+        }
+        String statusParam  = request.getParameter("status");
+        if (statusParam != null  && !statusParam.isEmpty()) {
+            category.setStatus(statusParam.trim().toLowerCase());
+        }
+
+        boolean update = categoryService.updateCategory(category);
+        response.sendRedirect("/admin/categories");
+
+
     }
 }
