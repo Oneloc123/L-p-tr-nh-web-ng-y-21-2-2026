@@ -615,7 +615,8 @@
 </div>
 
 <script>
-    // Simple JavaScript for checkbox selection (no AJAX)
+
+    // Chọn 1 sản phẩm
     const selectAllCheckbox = document.getElementById('selectAll');
     const productCheckboxes = document.querySelectorAll('.product-checkbox');
 

@@ -220,8 +220,8 @@ public class ProductDAO {
         query.append("  limit  ? offset  ? ");
         params.add(limit);
         params.add(offset);
-        System.out.println("SQL: " + query);
-        System.out.println("Params: " + params);
+//        System.out.println("SQL: " + query);
+//        System.out.println("Params: " + params);
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query.toString())) {
 

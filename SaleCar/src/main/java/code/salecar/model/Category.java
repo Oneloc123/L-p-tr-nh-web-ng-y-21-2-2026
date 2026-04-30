@@ -6,11 +6,13 @@ public class Category {
     private int id;
     private String name;
     private String description;
-    private String image;
-    private Date createat;
-    private Date updateat;
-
     private String icon;
+    private int status;
+    private Date createdAt;
+    private Date updatedAt;
+
+    private String image;
+    private int productCount;
 
 
     public Category(int id, String name,String icon) {
@@ -19,28 +21,54 @@ public class Category {
         this.icon = icon;
     }
 
+    public Category() {
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
+    }
+
+    public int getIntStatus() {
+        return status;
+    }
+    public String getStatus() {
+        if (status == 1) {
+            return "active";
+        }else  {
+            return "inactive";
+        }
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public String getIcon() {
         return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public Date getUpdateat() {
-        return updateat;
-    }
-
-    public void setUpdateat(Date updateat) {
-        this.updateat = updateat;
-    }
-
-    public Date getCreateat() {
-        return createat;
-    }
-
-    public void setCreateat(Date createat) {
-        this.createat = createat;
     }
 
     public String getImage() {

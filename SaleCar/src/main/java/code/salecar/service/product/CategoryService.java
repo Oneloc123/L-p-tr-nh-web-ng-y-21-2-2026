@@ -18,6 +18,15 @@ public class CategoryService {
         return categories;
     }
 
+
+    public  List<Category> getCategories() {
+        List<Category> categories = categoryDAO.getCategories();
+        for(Category category:categories){
+            category.setImage(imageService.getImage(Image.entityType.category,category.getId()));
+        }
+        return categories;
+    }
+
     public int getTotalCategory() {
         return categoryDAO.getTotalCategory();
     }
@@ -28,4 +37,8 @@ public class CategoryService {
     public String  getCategoryName(int id) {
         return categoryDAO.getCategoryName(id);
     }
+    public Category  getCategoryById(int id) {
+        return categoryDAO.getCategoryById(id);
+    }
+
 }
