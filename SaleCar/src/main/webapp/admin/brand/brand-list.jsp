@@ -517,12 +517,14 @@
                     <div class="input-group">
                         <select class="admin-select" id="bulkActionSelect" style="width: auto;">
                             <option value="">Bulk Actions</option>
-                            <option value="delete">Delete Selected</option>
+<%--                            <option value="delete">Delete Selected</option>--%>
                             <option value="active">Change Status → Active</option>
                             <option value="inactive">Change Status → Inactive</option>
                         </select>
                         <button type="button" class="admin-btn-outline" onclick="executeBulkAction()">Apply</button>
                     </div>
+                    <input type="hidden" name="redirectUrl" value="${currentUrl}">
+
                 </form>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -580,9 +582,9 @@
                                 </a>
                             </th>
                             <th>
-                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="created_date">
+                                <a href="#" class="sort-link text-dark text-decoration-none" data-sort="created_at">
                                     Created Date
-                                    <c:if test="${param.sort == 'created_date'}">
+                                    <c:if test="${param.sort == 'created_at'}">
                                         <i class="bi bi-arrow-${param.order == 'asc' ? 'up' : 'down'}"></i>
                                     </c:if>
                                 </a>
@@ -661,15 +663,15 @@
                                                title="Edit brand">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <button type="button"
-                                                    class="admin-action-btn admin-action-delete border-0"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal"
-                                                    data-brand-id="${brand.id}"
-                                                    data-brand-name="${brand.name}"
-                                                    title="Delete brand">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+<%--                                            <button type="button"--%>
+<%--                                                    class="admin-action-btn admin-action-delete border-0"--%>
+<%--                                                    data-bs-toggle="modal"--%>
+<%--                                                    data-bs-target="#deleteModal"--%>
+<%--                                                    data-brand-id="${brand.id}"--%>
+<%--                                                    data-brand-name="${brand.name}"--%>
+<%--                                                    title="Delete brand">--%>
+<%--                                                <i class="bi bi-trash"></i>--%>
+<%--                                            </button>--%>
                                         </td>
                                     </tr>
                                 </c:forEach>

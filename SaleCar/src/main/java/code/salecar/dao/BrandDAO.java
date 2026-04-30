@@ -84,6 +84,8 @@ public class BrandDAO {
                 sortField = "br.created_at";
             } else if (brandFilter.getSort().equals("product_count")) {
                 sortField = "product_count";
+            } else  if (brandFilter.getSort().equals("status")) {
+                sortField = "br.status";
             }
 
             String sortOrder = (brandFilter.getOrder() != null)

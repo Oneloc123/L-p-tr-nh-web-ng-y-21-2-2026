@@ -15,5 +15,7 @@ public class category_create extends HttpServlet {
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+
+        request.getRequestDispatcher("/admin/category/category-create.jsp").forward(request, response);
     }
 }

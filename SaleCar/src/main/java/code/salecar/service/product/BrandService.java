@@ -4,6 +4,7 @@ import code.salecar.dao.BrandDAO;
 import code.salecar.model.brand.Brand;
 import code.salecar.model.Image;
 import code.salecar.model.brand.BrandFilter;
+import code.salecar.model.category.Category;
 import code.salecar.service.Image.ImageService;
 
 import java.util.List;
@@ -50,5 +51,25 @@ public class BrandService {
 
     public boolean updateBrand(Brand brand) {
         return brandDAO.updateBrand(brand);
+    }
+
+    public boolean toggleStatus(int id) {
+        Brand brand = brandDAO.getBrandByID(id);
+        if (brand != null) {
+            // toggle
+            int newStatus = brand.getIntStatus() == 1 ? 0 : 1;
+            brand.setStatus(newStatus);
+            return brandDAO.updateBrand(brand);
+        }
+        return false;
+    }
+    public boolean toggleStatus(int id, int status) {
+        Brand brand = brandDAO.getBrandByID(id);
+        if (brand != null) {
+            // toggle
+            brand.setStatus(status);
+            return brandDAO.updateBrand(brand);
+        }
+        return false;
     }
 }

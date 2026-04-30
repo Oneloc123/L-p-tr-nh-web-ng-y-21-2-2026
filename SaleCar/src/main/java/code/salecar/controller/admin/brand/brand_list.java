@@ -52,6 +52,13 @@ public class brand_list extends HttpServlet {
         List<Brand> brands = brandService.getBrands(brandFilter);
         request.setAttribute("brands", brands);
 
+        //CurrenURL
+        String currentUrl = request.getRequestURI();
+        String queryString = request.getQueryString();
+        if (queryString != null) {
+            currentUrl += "?" + queryString;
+        }
+        request.setAttribute("currentUrl", currentUrl);
 
         request.getRequestDispatcher("/admin/brand/brand-list.jsp").forward(request, response);
 
