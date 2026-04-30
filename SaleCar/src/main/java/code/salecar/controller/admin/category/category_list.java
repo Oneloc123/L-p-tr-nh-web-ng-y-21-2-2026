@@ -15,8 +15,8 @@ public class category_list extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<Category> categories = categoryService.getCategory();
-        request.setAttribute("parentCategories", categories);
+        List<Category> categories = categoryService.getCategories();
+        request.setAttribute("categories", categories);
 
 
         request.getRequestDispatcher("/admin/category/category-list.jsp").forward(request, response);

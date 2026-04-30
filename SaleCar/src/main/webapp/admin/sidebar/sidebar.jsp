@@ -143,10 +143,18 @@
                 </a>
             </li>
 
+
             <li>
                 <a href="${pageContext.request.contextPath}/admin/categories"
                    class="${fn:contains(pageContext.request.requestURI, 'categories') || fn:contains(pageContext.request.requestURI, 'category') ? 'active' : ''}">
                     <i class="bi bi-tags"></i><span> Danh mục</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/brands"
+                   class="${fn:contains(pageContext.request.requestURI, 'brands') || fn:contains(pageContext.request.requestURI, 'brand') ? 'active' : ''}">
+                    <i class="bi bi-boxes"></i><span> Thương hiệu</span>
                 </a>
             </li>
 

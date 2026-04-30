@@ -1,6 +1,6 @@
 package code.salecar.controller.home;
 
-import code.salecar.model.Brand;
+import code.salecar.model.brand.Brand;
 import code.salecar.model.Category;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.entity.Discount;

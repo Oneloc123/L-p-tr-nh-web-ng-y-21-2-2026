@@ -6,7 +6,7 @@ import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.dto.ProductRating;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
-import code.salecar.model.Brand;
+import code.salecar.model.brand.Brand;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.model.product.entity.Reviews;
