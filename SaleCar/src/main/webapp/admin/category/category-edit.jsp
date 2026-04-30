@@ -368,8 +368,8 @@
                         </label>
                         <input type="text"
                                class="admin-input"
-                               id="name"
-                               name="name"
+                               id="icon"
+                               name="icon"
                                placeholder="hyper"
                                value="${category.icon}"
                                required>
