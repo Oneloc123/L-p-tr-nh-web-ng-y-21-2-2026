@@ -247,11 +247,11 @@
 
         <!-- Social Login -->
         <div class="social-login">
-            <a href="/googleLogin" class="btn-social btn-google">
+            <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/login/GoogleLoginServlet&response_type=code&client_id=CODEODAYNE&approval_prompt=force" class="btn-social btn-google">
                 <i class="bi bi-google"></i> Đăng nhập với Google
             </a>
 
-            <a href="/login-facebook" class="btn-social btn-facebook">
+            <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=AAAAAAAAAAAAAAAAA&redirect_uri=https://localhost:8080/login/loginFacebook&scope=email" class="btn-social btn-facebook">
                 <i class="bi bi-facebook"></i> Đăng nhập với Facebook
             </a>
         </div>

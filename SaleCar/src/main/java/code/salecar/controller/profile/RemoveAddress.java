@@ -1,6 +1,5 @@
 package code.salecar.controller.profile;
 
-import code.salecar.model.User;
 import code.salecar.service.address.AddressService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

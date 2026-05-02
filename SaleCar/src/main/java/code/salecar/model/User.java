@@ -16,6 +16,8 @@ public class User {
     private Date createdat;
     private Date updatedat;
     private String imgURL;
+    private String authProvider;
+    private String googleId;
 
     public User(){
 
@@ -49,6 +51,22 @@ public class User {
         this.createdat = createdat;
         this.updatedat = updatedat;
         this.imgURL = imgURL;
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 
     public int getId() {
