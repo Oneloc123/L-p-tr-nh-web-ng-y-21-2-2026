@@ -40,8 +40,16 @@ public class ProfileEdit extends HttpServlet {
         String description = request.getParameter("description").toString();
         String statuss = request.getParameter("status");
 
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+
+        AddressService as = new AddressService();
+        List<Address> listAddress = as.getListAddressById(user.getId());
+
         String fullnameError = UserInvalidate.checkFullname(fullname);
         if(!fullnameError.equals("true")){
+            request.setAttribute("listAddress", listAddress);
+            request.setAttribute("user", user);
             request.setAttribute("fullnameError",fullnameError);
             request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
             return;
@@ -49,6 +57,8 @@ public class ProfileEdit extends HttpServlet {
 
         String emailError = UserInvalidate.checkEmail(email);
         if(!emailError.equals("true")){
+            request.setAttribute("listAddress", listAddress);
+            request.setAttribute("user", user);
             request.setAttribute("emailError",emailError);
             request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
             return;
@@ -56,6 +66,8 @@ public class ProfileEdit extends HttpServlet {
 
         String phonenumberError = UserInvalidate.checkPhonenumber(phoneNumber);
         if(!phonenumberError.equals("true")){
+            request.setAttribute("listAddress", listAddress);
+            request.setAttribute("user", user);
             request.setAttribute("phonenumberError",phonenumberError);
             request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
             return;
@@ -65,10 +77,8 @@ public class ProfileEdit extends HttpServlet {
         if(statuss.equals("active")){
             status = true;
         }
-        int addressId = Integer.parseInt(request.getParameter("addressId"));
 
-        HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user");
+
         user.setFullname(fullname);
         user.setEmail(email);
         user.setPhonenumber(phoneNumber);
@@ -78,12 +88,6 @@ public class ProfileEdit extends HttpServlet {
         UserService us = new UserService();
         us.UpdateProfile(user);
 
-        if(addressId!=0){
-            AddressService as = new AddressService();
-            as.setMainAddress(addressId,user.getId());
-        }
-        AddressService as = new AddressService();
-        List<Address> listAddress = as.getListAddressById(user.getId());
 
         if(!listAddress.isEmpty()){
             for(Address a :listAddress){
@@ -99,7 +103,7 @@ public class ProfileEdit extends HttpServlet {
         request.setAttribute("listAddress", listAddress);
         request.setAttribute("user", user);
 
-        //alert
+
         request.getSession().setAttribute("toastMessage", "cật nhật thành công");
         request.getSession().setAttribute("toastType", "success");
 
