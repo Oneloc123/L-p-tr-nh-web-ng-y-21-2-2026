@@ -251,7 +251,7 @@
                 <i class="bi bi-google"></i> Đăng nhập với Google
             </a>
 
-            <a href="/login-facebook" class="btn-social btn-facebook">
+            <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=AAAAAAAAAAAAAAAAA&redirect_uri=https://localhost:8080/login/loginFacebook&scope=email" class="btn-social btn-facebook">
                 <i class="bi bi-facebook"></i> Đăng nhập với Facebook
             </a>
         </div>

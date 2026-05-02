@@ -389,7 +389,7 @@
         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/login/GoogleLoginServlet&response_type=code&client_id=CODEODAYNE&approval_prompt=force" class="btn-social">
             <i class="bi bi-google"></i> Google
         </a>
-        <a href="${pageContext.request.contextPath}/login/facebook" class="btn-social">
+        <a href="https://www.facebook.com/v18.0/dialog/oauth?client_id=AAAAAAAAAAAAAAAA&redirect_uri=https://localhost:8080/login/loginFacebook&scope=email" class="btn-social">
             <i class="bi bi-facebook"></i> Facebook
         </a>
     </div>

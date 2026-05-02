@@ -18,7 +18,7 @@ public class GoogleLogin extends HttpServlet {
             throws ServletException, IOException {
         String code = request.getParameter("code");
         if (code == null || code.isEmpty()) {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher(request.getContextPath()).forward(request, response);
             return;
         }
         String accessToken = GoogleUtils.getToken(code);
