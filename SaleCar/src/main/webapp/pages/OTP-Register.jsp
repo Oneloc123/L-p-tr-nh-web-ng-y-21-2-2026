@@ -198,8 +198,8 @@
     Mã có hiệu lực trong 5 phút
   </div>
 
-  <a href="/OTPforChangePassword" class="btn-secondary">GỬI LẠI MÃ</a>
-  <a href="/changePassword" class="back-link">Quay lại</a>
+  <a href="/OTPforRegister" class="btn-secondary">GỬI LẠI MÃ</a>
+  <a href="/register" class="back-link">Quay lại</a>
 </div>
 <%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

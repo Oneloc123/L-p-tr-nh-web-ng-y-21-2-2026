@@ -355,20 +355,6 @@
             </c:if>
         </div>
 
-        <%--        <div class="form-group">--%>
-        <%--            <label for="confirm-password">Xác nhận mật khẩu *</label>--%>
-        <%--            <input type="password" id="confirm-password" name="confirm-password"--%>
-        <%--                   placeholder="Nhập lại mật khẩu">--%>
-        <%--            <small class="form-text text-muted">--%>
-        <%--                Nhập lại chính xác mật khẩu đã nhập ở trên--%>
-        <%--            </small>--%>
-        <%--            <c:if test="${not empty confirmPasswordError}">--%>
-        <%--            <span class="error-message" style="color: red;">--%>
-        <%--                <i class="bi bi-x-circle"></i> ${confirmPasswordError}--%>
-        <%--            </span>--%>
-        <%--            </c:if>--%>
-        <%--        </div>--%>
-
         <div class="form-group">
             <label for="phone">Số điện thoại</label>
             <input type="tel" id="phone" name="phonenumber"
@@ -400,7 +386,7 @@
     </div>
 
     <div class="social-login">
-        <a href="${pageContext.request.contextPath}/login/google" class="btn-social">
+        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/login/GoogleLoginServlet&response_type=code&client_id=CODEODAYNE&approval_prompt=force" class="btn-social">
             <i class="bi bi-google"></i> Google
         </a>
         <a href="${pageContext.request.contextPath}/login/facebook" class="btn-social">
