@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: PC
+  Date: 4/28/2026
+  Time: 16:06
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -6,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Danh mục | LUXCAR</title>
+    <title>Admin - Quản lý Thương hiệu | LUXCAR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -364,6 +371,61 @@
             margin-bottom: 1rem;
         }
 
+        /* ========== LOGO PREVIEW ========== */
+        .brand-logo-preview {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 10px;
+            border: 1px solid #e9edf2;
+            background: #f8fafc;
+            padding: 2px;
+            transition: transform 0.2s;
+        }
+
+        .brand-logo-preview:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            position: relative;
+        }
+
+        .logo-placeholder {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+            background: #f8fafc;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        /* ========== COUNTRY FLAG / INDICATOR ========== */
+        .country-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .country-badge i {
+            color: #2c7da0;
+            font-size: 0.9rem;
+        }
+
+        /* ========== TOOLTIP OVERRIDE ========== */
+        [data-bs-toggle="tooltip"] {
+            cursor: pointer;
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 992px) {
             .sidebar {
@@ -382,51 +444,55 @@
             .sidebar nav ul li a i {
                 font-size: 1.5rem;
             }
+
+            .main-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 <div class="d-flex">
-    <!-- Include sidebar (same as product management) -->
+    <!-- Include sidebar -->
     <%@ include file="/admin/sidebar/sidebar.jsp" %>
 
     <main class="main-content">
         <!-- Header with Breadcrumb -->
         <header class="admin-header d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h3 class="fw-bold m-0"><i class="bi bi-tags me-2" style="color:#2c7da0;"></i> Category Management</h3>
+                <h3 class="fw-bold m-0">
+                    <i class="bi bi-building me-2" style="color:#2c7da0;"></i> Brand Management
+                </h3>
                 <nav aria-label="breadcrumb" class="mt-1">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                        <li class="breadcrumb-item active" aria-current="page">Brands</li>
                     </ol>
                 </nav>
             </div>
             <div>
-                <a href="/admin/categories/create" class="admin-btn-primary text-decoration-none">
-                    <i class="bi bi-plus-lg"></i> Create Category
+                <a href="/admin/brands/create" class="admin-btn-primary text-decoration-none">
+                    <i class="bi bi-plus-lg"></i> Create Brand
                 </a>
             </div>
         </header>
 
         <!-- Search and Filter Bar -->
-        <form action="/admin/categories" method="get" id="filterForm" class="mb-4">
+        <form action="/admin/brands" method="get" id="filterForm" class="mb-4">
             <div class="row g-3 align-items-end">
-                <!-- Search -->
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <input type="text" class="admin-input" name="search"
-                               placeholder="Search by name"
-                               value="${param.search}">
-                    </div>
+                <!-- Search by name -->
+                <div class="col-md-3">
+                    <input type="text" class="admin-input" name="search"
+                           placeholder="Search by name..."
+                           value="${param.search}">
                 </div>
+
                 <!-- Status Filter -->
                 <div class="col-md-2">
                     <select class="admin-select" name="status" onchange="this.form.submit()">
                         <option value="">All Status</option>
                         <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
                         <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-<%--                        <option value="hidden" ${param.status == 'hidden' ? 'selected' : ''}>Hidden</option>--%>
                     </select>
                 </div>
                 <!-- Submit search -->
@@ -446,7 +512,7 @@
         <!-- Bulk Actions Bar -->
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <div class="d-flex gap-2 align-items-center">
-                <form action="/admin/categories/bulk-action" method="post" id="bulkActionForm">
+                <form action="/admin/brands/bulk-action" method="post" id="bulkActionForm">
                     <input type="hidden" name="action" id="bulkActionType">
                     <div class="input-group">
                         <select class="admin-select" id="bulkActionSelect" style="width: auto;">
@@ -457,6 +523,8 @@
                         </select>
                         <button type="button" class="admin-btn-outline" onclick="executeBulkAction()">Apply</button>
                     </div>
+                    <input type="hidden" name="redirectUrl" value="${currentUrl}">
+
                 </form>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -470,7 +538,7 @@
             </div>
         </div>
 
-        <!-- Category Table -->
+        <!-- Brand Table -->
         <div class="admin-card shadow-sm">
             <div class="admin-card-body p-0">
                 <div class="table-responsive">
@@ -478,7 +546,7 @@
                         <thead class="table-light">
                         <tr>
                             <th width="40">
-                                <input type="checkbox" id="selectAll">
+                                <input type="checkbox" id="selectAll" data-bs-toggle="tooltip" title="Select all brands">
                             </th>
                             <th>
                                 <a href="#" class="sort-link text-dark text-decoration-none" data-sort="id">
@@ -488,9 +556,10 @@
                                     </c:if>
                                 </a>
                             </th>
+                            <th>Logo</th>
                             <th>
                                 <a href="#" class="sort-link text-dark text-decoration-none" data-sort="name">
-                                    Category Name
+                                    Brand Name
                                     <c:if test="${param.sort == 'name'}">
                                         <i class="bi bi-arrow-${param.order == 'asc' ? 'up' : 'down'}"></i>
                                     </c:if>
@@ -526,61 +595,81 @@
                         </thead>
                         <tbody>
                         <c:choose>
-                            <c:when test="${not empty categories}">
-                                <c:forEach items="${categories}" var="category">
+                            <c:when test="${not empty brands}">
+                                <c:forEach items="${brands}" var="brand">
                                     <tr>
-                                        <td><input type="checkbox" class="category-checkbox" value="${category.id}">
-                                        </td>
-                                        <td class="fw-semibold">${category.id}</td>
-                                        <td class="fw-semibold"><i class="bi ${category.icon}"></i> ${category.name}</td>
                                         <td>
-                                                <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill">
-                                                                                                            <i class="bi bi-box me-1"></i> ${category.productCount}
-                                                </span>
+                                            <input type="checkbox" class="brand-checkbox" value="${brand.id}">
+                                        </td>
+                                        <td class="fw-semibold">${brand.id}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${not empty brand.image}">
+                                                    <img src="${brand.image}"
+                                                         alt="${brand.name} logo"
+                                                         class="brand-logo-preview"
+                                                         data-bs-toggle="tooltip"
+                                                         title="${brand.name}"
+                                                         onerror="this.onerror=null; this.style.display='none'; this.parentNode.querySelector('.logo-placeholder').style.display='inline-flex';">
+                                                    <span class="logo-placeholder" style="display:none;">
+                                                        <i class="bi bi-image"></i>
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="logo-placeholder">
+                                                        <i class="bi bi-building"></i>
+                                                    </span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td class="fw-semibold">${brand.name}</td>
+
+                                        <td>
+                                            <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill">
+                                                <i class="bi bi-box me-1"></i> ${brand.productCount}
+                                            </span>
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${category.status == 'active'}">
+                                                <c:when test="${brand.status == 'active'}">
                                                     <span class="badge bg-success badge-status">Active</span>
                                                 </c:when>
-                                                <c:when test="${category.status == 'inactive'}">
-                                                    <span class="badge bg-secondary badge-status">Inactive</span>
-                                                </c:when>
                                                 <c:otherwise>
-                                                    <span class="badge bg-dark badge-status">Hidden</span>
+                                                    <span class="badge bg-secondary badge-status">Inactive</span>
                                                 </c:otherwise>
                                             </c:choose>
                                             <!-- Quick toggle form -->
-                                            <form action="/admin/categories/toggle-status" method="post"
-                                                  class="status-toggle-form">
-                                                <input type="hidden" name="id" value="${category.id}">
+                                            <form action="/admin/brands/toggle-status" method="post" class="status-toggle-form">
+                                                <input type="hidden" name="id" value="${brand.id}">
                                                 <input type="hidden" name="redirectUrl" value="${currentUrl}">
-                                                <button type="submit" class="status-toggle-btn" title="Toggle status">
+                                                <button type="submit"
+                                                        class="status-toggle-btn"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Toggle status">
                                                     <i class="bi bi-arrow-repeat"></i>
                                                 </button>
                                             </form>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${category.createdAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${brand.createdAt}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${category.updatedAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${brand.updatedAt}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
-<%--                                            <a href="/admin/categories/${category.id}"--%>
-<%--                                               class="admin-action-btn admin-action-view text-decoration-none"--%>
-<%--                                               title="View">--%>
-<%--                                                <i class="bi bi-eye"></i>--%>
-<%--                                            </a>--%>
-                                            <a href="/admin/categories/edit?id=${category.id}"
+                                            <a href="/admin/brands/edit?id=${brand.id}"
                                                class="admin-action-btn admin-action-edit text-decoration-none"
-                                               title="Edit">
+                                               data-bs-toggle="tooltip"
+                                               title="Edit brand">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-<%--                                            <button type="button" class="admin-action-btn admin-action-delete border-0"--%>
-<%--                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"--%>
-<%--                                                    data-category-id="${category.id}"--%>
-<%--                                                    data-category-name="${category.name}" title="Delete">--%>
+<%--                                            <button type="button"--%>
+<%--                                                    class="admin-action-btn admin-action-delete border-0"--%>
+<%--                                                    data-bs-toggle="modal"--%>
+<%--                                                    data-bs-target="#deleteModal"--%>
+<%--                                                    data-brand-id="${brand.id}"--%>
+<%--                                                    data-brand-name="${brand.name}"--%>
+<%--                                                    title="Delete brand">--%>
 <%--                                                <i class="bi bi-trash"></i>--%>
 <%--                                            </button>--%>
                                         </td>
@@ -589,14 +678,29 @@
                             </c:when>
                             <c:otherwise>
                                 <tr>
-                                    <td colspan="9" class="empty-state">
-                                        <i class="bi bi-folder2-open"></i>
-                                        <h5 class="mt-2">No categories found</h5>
-                                        <p class="text-muted">Get started by creating your first category.</p>
-                                        <a href="/admin/categories/create"
-                                           class="admin-btn-primary text-decoration-none">
-                                            Create your first category
-                                        </a>
+                                    <td colspan="10" class="empty-state">
+                                        <i class="bi bi-building-dash"></i>
+                                        <h5 class="mt-2">No brands found</h5>
+                                        <p class="text-muted">
+                                            <c:choose>
+                                                <c:when test="${not empty param.search || not empty param.status}">
+                                                    No brands match your search criteria. Try adjusting your filters.
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Get started by creating your first brand.
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                         <c:if test="${empty param.search && empty param.status}">
+                                            <a href="/admin/brands/create" class="admin-btn-primary text-decoration-none">
+                                                <i class="bi bi-plus-lg"></i> Create your first brand
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${not empty param.search || not empty param.status}">
+                                            <a href="/admin/brands" class="admin-btn-outline text-decoration-none">
+                                                <i class="bi bi-x-circle"></i> Clear filters
+                                            </a>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:otherwise>
@@ -612,10 +716,16 @@
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center admin-pagination">
                     <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="admin-page-link" href="#" data-page="1">First</a>
+                        <a class="admin-page-link" href="#" data-page="1"
+                           data-bs-toggle="tooltip" title="First page">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
                     </li>
                     <li class="admin-page-item ${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="admin-page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                        <a class="admin-page-link" href="#" data-page="${currentPage - 1}"
+                           data-bs-toggle="tooltip" title="Previous page">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
                     </li>
 
                     <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}"/>
@@ -628,13 +738,27 @@
                     </c:forEach>
 
                     <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="admin-page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                        <a class="admin-page-link" href="#" data-page="${currentPage + 1}"
+                           data-bs-toggle="tooltip" title="Next page">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
                     </li>
                     <li class="admin-page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="admin-page-link" href="#" data-page="${totalPages}">Last</a>
+                        <a class="admin-page-link" href="#" data-page="${totalPages}"
+                           data-bs-toggle="tooltip" title="Last page">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>
+        </c:if>
+
+        <!-- Results summary -->
+        <c:if test="${not empty brands}">
+            <div class="text-center text-muted small mt-2">
+                Showing page ${currentPage} of ${totalPages}
+                <c:if test="${not empty totalItems}"> · ${totalItems} brands total</c:if>
+            </div>
         </c:if>
     </main>
 </div>
@@ -642,20 +766,30 @@
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Category</h5>
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 px-4 pt-4">
+                <h5 class="modal-title fw-bold" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i> Delete Brand
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the category <strong id="deleteCategoryName"></strong>?</p>
-                <p class="text-danger mb-0"><i class="bi bi-exclamation-triangle"></i> This action cannot be undone.</p>
+            <div class="modal-body px-4">
+                <p class="mb-1">Are you sure you want to delete the brand:</p>
+                <p class="fw-bold fs-5 text-dark" id="deleteBrandName"></p>
+                <p class="text-danger mb-0 small">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    This will also affect all products associated with this brand. This action cannot be undone.
+                </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="admin-btn-outline" data-bs-dismiss="modal">Cancel</button>
-                <form action="/admin/categories/delete" method="post" id="deleteForm">
-                    <input type="hidden" name="id" id="deleteCategoryId">
-                    <button type="submit" class="admin-btn-danger">Delete</button>
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="admin-btn-outline" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </button>
+                <form action="/admin/brands/delete" method="post" id="deleteForm">
+                    <input type="hidden" name="id" id="deleteBrandId">
+                    <button type="submit" class="admin-btn-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
                 </form>
             </div>
         </div>
@@ -664,9 +798,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // ========== INIT TOOLTIPS ==========
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                delay: { show: 300, hide: 100 }
+            });
+        });
+    });
+
     // ========== SORTING ==========
     document.querySelectorAll('.sort-link').forEach(link => {
-        link.addEventListener('click', function (e) {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
             const sort = this.dataset.sort;
             const currentSort = '${param.sort}';
@@ -685,7 +829,7 @@
 
     // ========== PAGINATION ==========
     document.querySelectorAll('.admin-page-link').forEach(link => {
-        link.addEventListener('click', function (e) {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
             const page = this.dataset.page;
             if (page && !this.parentElement.classList.contains('disabled')) {
@@ -707,41 +851,48 @@
     // ========== DELETE MODAL ==========
     const deleteModal = document.getElementById('deleteModal');
     if (deleteModal) {
-        deleteModal.addEventListener('show.bs.modal', function (event) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
-            const categoryId = button.getAttribute('data-category-id');
-            const categoryName = button.getAttribute('data-category-name');
-            document.getElementById('deleteCategoryId').value = categoryId;
-            document.getElementById('deleteCategoryName').textContent = categoryName;
+            const brandId = button.getAttribute('data-brand-id');
+            const brandName = button.getAttribute('data-brand-name');
+            document.getElementById('deleteBrandId').value = brandId;
+            document.getElementById('deleteBrandName').textContent = brandName;
         });
     }
 
     // ========== SELECT ALL CHECKBOXES ==========
     const selectAllCheckbox = document.getElementById('selectAll');
-    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    const brandCheckboxes = document.querySelectorAll('.brand-checkbox');
+
+    function updateSelectAllState() {
+        if (selectAllCheckbox) {
+            const allChecked = Array.from(brandCheckboxes).every(cb => cb.checked);
+            const anyChecked = Array.from(brandCheckboxes).some(cb => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = anyChecked && !allChecked;
+        }
+    }
 
     if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function () {
-            categoryCheckboxes.forEach(checkbox => {
+        selectAllCheckbox.addEventListener('change', function() {
+            brandCheckboxes.forEach(checkbox => {
                 checkbox.checked = selectAllCheckbox.checked;
             });
+            updateSelectAllState();
         });
     }
 
-    categoryCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (selectAllCheckbox) {
-                const allChecked = Array.from(categoryCheckboxes).every(cb => cb.checked);
-                selectAllCheckbox.checked = allChecked;
-            }
+    brandCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSelectAllState();
         });
     });
 
     // ========== BULK ACTIONS ==========
     function executeBulkAction() {
-        const selected = Array.from(categoryCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+        const selected = Array.from(brandCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
         if (selected.length === 0) {
-            alert('Please select at least one category.');
+            alert('Please select at least one brand.');
             return;
         }
 
@@ -753,11 +904,11 @@
 
         let confirmMessage = '';
         if (action === 'delete') {
-            confirmMessage = `Are you sure you want to delete ${selected.length} selected category(ies)? This action cannot be undone.`;
+            confirmMessage = 'Are you sure you want to delete ' + selected.length + ' selected brand(s)?\n\nThis will also affect all associated products. This action cannot be undone.';
         } else if (action === 'active') {
-            confirmMessage = `Are you sure you want to change ${selected.length} category(ies) status to Active?`;
+            confirmMessage = 'Are you sure you want to change ' + selected.length + ' brand(s) status to Active?';
         } else if (action === 'inactive') {
-            confirmMessage = `Are you sure you want to change ${selected.length} category(ies) status to Inactive?`;
+            confirmMessage = 'Are you sure you want to change ' + selected.length + ' brand(s) status to Inactive?';
         }
 
         if (confirm(confirmMessage)) {

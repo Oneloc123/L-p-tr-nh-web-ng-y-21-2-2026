@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -221,6 +223,28 @@
             margin-right: 5px;
         }
 
+        .address-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-set-main {
+            color: #0d6efd;
+            border: 1px solid #0d6efd;
+            background-color: transparent;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-set-main:hover {
+            background-color: #0d6efd;
+            color: #ffffff;
+        }
         /* Form Actions */
         .form-actions {
             padding: 30px;
@@ -307,8 +331,6 @@
 <div class="profile-wrapper">
     <!-- Sidebar Menu -->
     <div class="sidebar-menu">
-
-
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i>
@@ -342,23 +364,6 @@
                 <span>Sản phẩm yêu thích</span>
             </a>
 
-<%--            <div class="menu-divider"></div>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>
-<%--                <i class="fas fa-map-marker-alt"></i>--%>
-<%--                <span>Sổ địa chỉ</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
-<%--                <i class="fas fa-bell"></i>--%>
-<%--                <span>Thông báo</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/settings" class="menu-item">--%>
-<%--                <i class="fas fa-cog"></i>--%>
-<%--                <span>Cài đặt</span>--%>
-<%--            </a>--%>
-
             <div class="menu-divider"></div>
 
             <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
@@ -384,7 +389,7 @@
 
         <!-- Edit Form Card -->
         <div class="form-card">
-            <form action="/profileEdit" method="post" >
+            <form action="${pageContext.request.contextPath}/profileEdit" method="post">
                 <!-- Avatar Upload Section -->
                 <div class="avatar-upload-section">
                     <div class="current-avatar">
@@ -430,94 +435,79 @@
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="fullname" value="${user.getFullname()}" required>
+                            <input type="text" class="form-control ${not empty fullnameError ? 'is-invalid' : ''}"
+                                   name="fullname"
+                                   value="${fn:escapeXml(param.fullname != null ? param.fullname : user.fullname)}"
+                                   required>
                             <small class="form-text text-muted">
                                 Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
                             </small>
                             <c:if test="${not empty fullnameError}">
-                                <span class="error-message" style="color: red;">
+                                <div class="invalid-feedback">
                                     <i class="bi bi-x-circle"></i> ${fullnameError}
-                                </span>
+                                </div>
                             </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email" value="${user.getEmail()}" required>
+                            <input type="email" class="form-control ${not empty emailError ? 'is-invalid' : ''}"
+                                   name="email"
+                                   value="${fn:escapeXml(param.email != null ? param.email : user.email)}"
+                                   required>
                             <small class="form-text text-muted">
                                 Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
                             </small>
                             <c:if test="${not empty emailError}">
-                                <span class="error-message" style="color: red;">
+                                <div class="invalid-feedback">
                                     <i class="bi bi-x-circle"></i> ${emailError}
-                                </span>
+                                </div>
                             </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" name="phoneNumber" value="${user.getPhonenumber()}">
+                            <input type="text" class="form-control ${not empty phonenumberError ? 'is-invalid' : ''}"
+                                   name="phoneNumber"
+                                   value="${fn:escapeXml(param.phoneNumber != null ? param.phoneNumber : user.phonenumber)}">
                             <small class="form-text text-muted">
                                 Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
                             </small>
                             <c:if test="${not empty phonenumberError}">
-                                <span class="error-message" style="color: red;">
+                                <div class="invalid-feedback">
                                     <i class="bi bi-x-circle"></i> ${phonenumberError}
-                                </span>
+                                </div>
                             </c:if>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Vai trò</label>
                             <select class="form-select" name="role" disabled>
-                                <option value="ROLE_USER" selected>ROLE_USER</option>
-                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                <option value="ROLE_USER" ${(param.role != null ? param.role : user.role) == 'ROLE_USER' ? 'selected' : ''}>ROLE_USER</option>
+                                <option value="ROLE_ADMIN" ${(param.role != null ? param.role : user.role) == 'ROLE_ADMIN' ? 'selected' : ''}>ROLE_ADMIN</option>
                             </select>
                             <small class="text-muted">Vai trò chỉ được thay đổi bởi Admin</small>
                         </div>
 
                         <div class="col-12 mb-3">
                             <label class="form-label">Mô tả</label>
-                            <textarea class="form-control" name="description">${user.getDescription()}</textarea>
+                            <textarea class="form-control" name="description">${fn:escapeXml(param.description != null ? param.description : user.description)}</textarea>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng thái</label>
                             <div class="status-options">
                                 <label class="status-option">
-                                    <input type="radio" name="status" value="active" checked>
+                                    <input type="radio" name="status" value="active"
+                                    ${(param.status != null ? param.status : user.status) == 'active' ? 'checked' : ''}>
                                     <span class="status-badge status-active">Hoạt động</span>
                                 </label>
                                 <label class="status-option">
-                                    <input type="radio" name="status" value="inactive">
+                                    <input type="radio" name="status" value="inactive"
+                                    ${(param.status != null ? param.status : user.status) == 'inactive' ? 'checked' : ''}>
                                     <span class="status-badge status-inactive">Không hoạt động</span>
                                 </label>
                             </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Chọn địa chỉ chính</label>
-                            <select class="form-select" name="addressId">
-                                <c:choose>
-                                    <c:when test="${not empty listAddress}">
-                                        <c:forEach var="a" items="${listAddress}" >
-                                            <c:choose>
-                                                <c:when test="${a.type=='main'}">
-                                                    <option value="${a.id}" selected>${a.id}- ${a.name}-địa chỉ chính</option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <option value="${a.id}">${a.id}- ${a.name}-địa chỉ phụ</option>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value="0" selected>chưa có địa chỉ</option>
-                                    </c:otherwise>
-                                </c:choose>
-
-
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -531,139 +521,127 @@
                     <c:choose>
                         <c:when test="${not empty listAddress}">
                             <c:forEach var="a" items="${listAddress}">
-                                <c:choose>
-                                    <c:when test="${a.type=='main'}">
-                                        <!-- Main Address -->
-                                        <div class="address-box">
-                                            <div class="address-box-header">
-                                                <h4>Địa chỉ chính: ${a.name} (id = ${a.id})</h4>
+                                <c:if test="${a.type == 'main'}">
+                                    <div class="address-box" style="border-color: #000; box-shadow: 0 0 5px rgba(0,0,0,0.1);">
+                                        <div class="address-box-header">
+                                            <h4><i class="fas fa-star text-warning"></i> Địa chỉ chính: ${fn:escapeXml(a.name)} (id = ${a.id})</h4>
+                                            <div class="address-actions">
                                                 <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
-                                                <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Xác nhận xóa</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-                                                                Bạn có chắc muốn xóa địa chỉ này không?
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                                    Hủy
-                                                                </button>
-                                                                <input type="hidden" name="id" value="${a.id}">
-                                                                <a href="/removeAddress?id=${a.id}" type="submit" class="btn btn-danger">
-                                                                    Xóa
-                                                                </a>
-                                                            </div>
-
+                                            </div>
+                                            <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Xác nhận xóa</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Số nhà, tên đường</label>
-                                                    <input type="text" class="form-control" name="street${a.id}" value="${a.street}">
-                                                </div>
-
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Xã/Phường</label>
-                                                    <input type="text" class="form-control" name="commune${a.id}" value="${a.commune}">
-                                                </div>
-
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Tỉnh/Thành phố</label>
-                                                    <input type="text" class="form-control" name="province${a.id}" value="${a.province}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <!-- Secondary Address -->
-                                        <div class="address-box">
-                                            <div class="address-box-header">
-                                                <h4>Địa chỉ phụ: ${a.name} (id = ${a.id})</h4>
-                                                <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                                <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Xác nhận xóa</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-                                                                Bạn có chắc muốn xóa địa chỉ này không?
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                                    Hủy
-                                                                </button>
-                                                                    <input type="hidden" name="id" value="${a.id}">
-                                                                    <a href="/removeAddress?id=${a.id}" type="submit" class="btn btn-danger">
-                                                                        Xóa
-                                                                    </a>
-                                                            </div>
-
+                                                        <div class="modal-body">
+                                                            Bạn có chắc muốn xóa địa chỉ chính này không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                            <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-danger">Xóa</a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="row">
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Số nhà, tên đường</label>
-                                                    <input type="text" class="form-control" name="street${a.id}" value="${a.street}">
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Số nhà, tên đường</label>
+                                                <input type="text" class="form-control" name="street${a.id}"
+                                                       value="${fn:escapeXml(param['street'.concat(a.id)] != null ? param['street'.concat(a.id)] : a.street)}">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Xã/Phường</label>
+                                                <input type="text" class="form-control" name="commune${a.id}"
+                                                       value="${fn:escapeXml(param['commune'.concat(a.id)] != null ? param['commune'.concat(a.id)] : a.commune)}">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Tỉnh/Thành phố</label>
+                                                <input type="text" class="form-control" name="province${a.id}"
+                                                       value="${fn:escapeXml(param['province'.concat(a.id)] != null ? param['province'.concat(a.id)] : a.province)}">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="addressId" value="${a.id}">
+                                    </div>
+                                </c:if>
+                            </c:forEach>
 
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Xã/Phường</label>
-                                                    <input type="text" class="form-control" name="commune${a.id}" value="${a.commune}">
-                                                </div>
-
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Tỉnh/Thành phố</label>
-                                                    <input type="text" class="form-control" name="province${a.id}" value="${a.province}">
+                            <c:forEach var="a" items="${listAddress}">
+                                <c:if test="${a.type != 'main'}">
+                                    <div class="address-box">
+                                        <div class="address-box-header">
+                                            <h4>Địa chỉ phụ: ${fn:escapeXml(a.name)} (id = ${a.id})</h4>
+                                            <div class="address-actions">
+                                                <a href="${pageContext.request.contextPath}/setMainAddress?id=${a.id}" class="btn-set-main">
+                                                    <i class="fas fa-check-circle"></i> Đặt làm mặc định
+                                                </a>
+                                                <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Xác nhận xóa</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Bạn có chắc muốn xóa địa chỉ này không?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                            <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-danger">Xóa</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:otherwise>
-                                </c:choose>
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Số nhà, tên đường</label>
+                                                <input type="text" class="form-control" name="street${a.id}"
+                                                       value="${fn:escapeXml(param['street'.concat(a.id)] != null ? param['street'.concat(a.id)] : a.street)}">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Xã/Phường</label>
+                                                <input type="text" class="form-control" name="commune${a.id}"
+                                                       value="${fn:escapeXml(param['commune'.concat(a.id)] != null ? param['commune'.concat(a.id)] : a.commune)}">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Tỉnh/Thành phố</label>
+                                                <input type="text" class="form-control" name="province${a.id}"
+                                                       value="${fn:escapeXml(param['province'.concat(a.id)] != null ? param['province'.concat(a.id)] : a.province)}">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="addressId" value="${a.id}">
+                                    </div>
+                                </c:if>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <!-- Main Address -->
                             <div class="address-box">
                                 <div class="address-box-header">
-                                    <h4>chưa có địa chỉ</h4>
+                                    <h4>Chưa có địa chỉ nào</h4>
                                 </div>
                             </div>
                         </c:otherwise>
                     </c:choose>
-                    <!-- Add new address button -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                        <i class="fas fa-plus"></i> Thêm địa chỉ
-                    </button>
 
+                    <button type="button" class="btn btn-dark mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus"></i> Thêm địa chỉ mới
+                    </button>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <a href="/profile" class="btn-cancel">
+                    <a href="${pageContext.request.contextPath}/profile" class="btn-cancel">
                         <i class="fas fa-times"></i> Hủy bỏ
                     </a>
                     <button type="submit" class="btn-save">
@@ -672,6 +650,7 @@
                 </div>
             </form>
 
+            <!-- Modal Add Address -->
             <div class="modal fade" id="addAddressModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -681,28 +660,36 @@
                         </div>
                         <form action="${pageContext.request.contextPath}/addAddress" method="post">
                             <div class="modal-body">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">tên địa chỉ <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name" placeholder="ví dụ: địa chỉ nhà, công ty, vv" required>
+                                <div class="mb-3">
+                                    <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name"
+                                           value="${fn:escapeXml(param.name != null ? param.name : '')}"
+                                           placeholder="ví dụ: địa chỉ nhà, công ty, vv" required>
                                 </div>
-                                <label class="form-label">Loại địa chỉ</label>
-                                <select class="form-select" name="type">
-                                    <option value="normal" selected>địa chỉ phụ</option>
-                                    <option value="main" >địa chỉ chính</option>
-                                </select>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Loại địa chỉ</label>
+                                    <select class="form-select" name="type">
+                                        <option value="normal" ${param.type == 'normal' ? 'selected' : ''}>Địa chỉ phụ</option>
+                                        <option value="main" ${param.type == 'main' ? 'selected' : ''}>Địa chỉ chính</option>
+                                    </select>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Số nhà, tên đường</label>
-                                        <input type="text" class="form-control" name="street" >
+                                        <input type="text" class="form-control" name="street"
+                                               value="${fn:escapeXml(param.street != null ? param.street : '')}">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Xã/Phường</label>
-                                        <input type="text" class="form-control" name="commune" >
+                                        <input type="text" class="form-control" name="commune"
+                                               value="${fn:escapeXml(param.commune != null ? param.commune : '')}">
                                     </div>
-
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Tỉnh/Thành phố</label>
-                                        <input type="text" class="form-control" name="province" >
+                                        <input type="text" class="form-control" name="province"
+                                               value="${fn:escapeXml(param.province != null ? param.province : '')}">
                                     </div>
                                 </div>
                             </div>
@@ -721,8 +708,17 @@
         </div>
     </div>
 </div>
+
 <%@ include file="/common/footer.jsp" %>
+
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    <c:if test="${not empty addressError}">
+    var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+    addAddressModal.show();
+    </c:if>
+</script>
 </body>
 </html>
