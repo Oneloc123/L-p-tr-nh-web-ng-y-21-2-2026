@@ -128,6 +128,7 @@
     </h2>
     <nav>
         <ul>
+
             <li>
                 <a href="${pageContext.request.contextPath}/admin/dashboard"
                    class="${fn:contains(pageContext.request.requestURI, 'dashboard') ? 'active' : ''}">
@@ -197,6 +198,7 @@
                     <i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span>
                 </a>
             </li>
+
         </ul>
     </nav>
 </aside>
