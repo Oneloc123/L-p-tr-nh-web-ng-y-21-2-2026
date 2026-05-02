@@ -84,6 +84,65 @@
             .checkout-container { flex-direction: column; }
             .checkout-summary-section { position: static; width: 100%; }
         }
+
+        /* edit address */
+        .address-slot {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: block;
+            background: #fff;
+        }
+        .address-slot:hover {
+            border-color: #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+        .address-slot.selected {
+            border-color: #000;
+            background-color: #fafafa;
+        }
+        .address-slot.selected::after {
+            content: '\F26A';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #000;
+            font-size: 1.2rem;
+        }
+        .address-slot input[type="radio"] {
+            display: none;
+        }
+        .address-name { font-weight: 600; color: #000; margin-bottom: 5px; font-size: 15px; }
+        .address-phone { font-size: 13px; color: #555; margin-bottom: 5px; }
+        .address-detail { font-size: 13px; color: #666; margin-bottom: 0; line-height: 1.4; }
+        .badge-default {
+            background: #000; color: #fff; font-size: 10px;
+            padding: 3px 8px; border-radius: 12px; margin-left: 8px; vertical-align: middle;
+        }
+
+        /* Nút thêm địa chỉ dashed */
+        .btn-add-address {
+            border: 2px dashed #ccc;
+            background: transparent;
+            color: #666;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.2s;
+            text-align: center;
+            cursor: pointer;
+        }
+        .btn-add-address:hover {
+            border-color: #000;
+            color: #000;
+            background: #fafafa;
+        }
     </style>
 </head>
 <body>
@@ -186,38 +245,38 @@
 
 
                         <!--Dia chi nhan hang -->
-                        <div class="form-group">
-                            <label>Địa chỉ nhận hàng (Shipping Address) <span class="text-danger">*</span></label>
+                        <div class="form-group mb-4">
+                            <label class="mb-3">Địa chỉ nhận hàng (Shipping Address) <span class="text-danger">*</span></label>
 
+                            <div id="address-slots-container">
                             <c:choose>
-                                <%-- TRƯỜNG HỢP 1: KHÁCH CHƯA CÓ ĐỊA CHỈ NÀO --%>
-                                <c:when test="${empty listAddress}">
-                                    <div style="background-color: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; border: 1px solid #ffeeba; font-size: 14px; margin-bottom: 10px;">
-                                        <i class="fas fa-exclamation-triangle"></i> Bạn chưa thiết lập địa chỉ giao hàng.
-                                    </div>
-                                    <a href="${pageContext.request.contextPath}/profileEdit" class="btn btn-outline-danger w-100" style="padding: 10px;">
-                                        <i class="fas fa-plus"></i> Sang trang cá nhân Thêm địa chỉ ngay
-                                    </a>
+                        <c:when test="${empty listAddress}">
+                            <div class="alert alert-warning py-2 mb-3" style="font-size: 14px; border-radius: 8px;">
+                                <i class="fas fa-exclamation-triangle"></i> Bạn chưa có địa chỉ nào, hãy thêm mới để đặt hàng!
+                            </div>
+                        </c:when>
+                            <c:otherwise>
+                                <c:forEach var="addr" items="${listAddress}" varStatus="status">
 
-                                    <input type="hidden" name="shippingAddress" value="">
-                                </c:when>
+                                    <label class="address-slot ${status.first ? 'selected' : ''}" onclick="selectAddressUI(this)">
 
-                                <%-- TRƯỜNG HỢP 2: KHÁCH ĐÃ CÓ ĐỊA CHỈ --%>
-                                <c:otherwise>
-                                    <select name="shippingAddress" class="form-control" required style="padding: 12px; cursor: pointer;">
-                                        <c:forEach var="addr" items="${listAddress}">
-                                            <option value="${addr.street}, ${addr.commune}, ${addr.province}">
-                                                ${addr.name}: ${addr.street}, ${addr.commune}, ${addr.province} ${addr.type == 'main' ? '(Mặc định)' : ''}
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                    <div style="margin-top: 8px; font-size: 13px; text-align: right;">
-                                        <a href="${pageContext.request.contextPath}/profileEdit" style="color: #000; text-decoration: underline;">
-                                            <i class="fas fa-cog"></i> Quản lý địa chỉ
-                                        </a>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
+                                        <input type="radio" name="shippingAddress" value="${addr.street}, ${addr.commune}, ${addr.province}" ${status.first ? 'checked' : ''}>
+                                        <div class="address-name">
+                                            <i class="fas fa-user-tag text-muted me-1"></i> ${addr.name}
+                                            <c:if test="${addr.type == 'main'}"><span class="badge-default">Mặc định</span></c:if>
+                                        </div>
+
+
+                                        <div class="address-detail"><i class="fas fa-map-marker-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
+                                    </label>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                            <button type="button" class="btn-add-address mt-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <i class="fas fa-plus-circle me-1"></i> Thêm địa chỉ mới
+                            </button>
                         </div>
                     </div>
 
@@ -318,8 +377,70 @@
         </form>
     </div>
 </div>
+
+
+<%-- Modal dia chi --%>
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px; border: none;">
+            <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                <h5 class="modal-title fw-bold" style="color: #000;">
+                    <i class="fas fa-map-marked-alt me-2"></i> Thêm địa chỉ giao hàng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" style="padding: 25px;">
+                <form id="newAddressForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Tên người nhận</label>
+                        <input type="text" class="form-control" id="newAddrName" name="newName" placeholder="Nhập họ tên..." required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                        <select class="form-select" id="newAddrProvince" required>
+                            <option value="" selected disabled>Chọn Tỉnh / Thành phố</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold small">Quận / Huyện <span class="text-danger">*</span></label>
+                            <select class="form-select" id="newAddrDistrict" required disabled>
+                                <option value="" selected disabled>Chọn Quận / Huyện</option>
+                            </select>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold small">Phường / Xã <span class="text-danger">*</span></label>
+                            <select class="form-select" id="newAddrWard" required disabled>
+                                <option value="" selected disabled>Chọn Phường / Xã</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Số nhà, Tên đường <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="newAddrStreet" name="newStreet" placeholder="VD: Số 120 Yên Lãng" required>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer" style="border-top: none;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
+
+                <button type="button" class="btn btn-dark" id="btnSaveAddress" style="border-radius: 8px;">
+                    <i class="fas fa-save me-1"></i> Lưu địa chỉ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script>
+
+    //ap voucher
     document.getElementById("voucherSelect").addEventListener("change", function() {
 
         let voucherId = this.value;
@@ -348,5 +469,136 @@
             .catch(error => console.error("Error:", error));
 
     });
+
+    //add adr
+    document.getElementById("btnSaveAddress").addEventListener("click", function(){
+
+        const name = document.getElementById('newAddrName').value.trim();
+        const province = document.getElementById('newAddrProvince').value; // Bỏ trim() vì đây là Select
+        const district = document.getElementById('newAddrDistrict').value;
+        const ward = document.getElementById('newAddrWard').value;
+        const street = document.getElementById('newAddrStreet').value.trim();
+
+        //check form
+        if(!name || !province || !district || !ward || !street){
+            alert("vui lòng điền đủ thông tin!");
+            return;
+        }
+
+        const fullCommune = ward + ", " + district;
+
+        const formData = new URLSearchParams();
+        formData.append("name", name);
+        formData.append("province", province);
+        formData.append("commune", fullCommune);
+        formData.append("street", street);
+        formData.append("type", "sub");
+
+        //set dia chi moi la phu
+        formData.append("type", "sub");
+
+        // UI hien thi dang luu
+        const btnSave = document.getElementById('btnSaveAddress');
+        btnSave.innerHTML = '<i class ="fas fa-spinner fa-spin me-1"></i> Đang lưu...';
+        btnSave.disabled = true;
+
+        fetch('${pageContext.request.contextPath}/add-address', {
+            method: 'POST',
+            headers: {
+                'Content-type' : 'application/x-www-form-urlencoded',
+            },
+            body:  formData.toString()
+        })
+        .then(response => response.text())
+        .then(data => {
+            if(data === 'success') {
+                window.location.reload();
+            }else if(data === 'full_slot') {
+                alert("Bạn chỉ lưu tối đa được 6 địa chỉ, vui lòng xóa để thêm!");
+                btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                btnSave.disabled = false;
+            }else{
+                alert("Có lỗi xảy ra, không thể lưu địa chỉ!");
+                btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                btnSave.disabled = false;
+            }
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Lỗi");
+            btnSave.disabled = false;
+
+        });
+    });
+
+//Tỉnh thành
+let addressData = [];
+
+fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
+    .then(response => response.json())
+    .then(data => {
+        addressData = data;
+        const provinceSelect = document.getElementById('newAddrProvince');
+
+        data.forEach(province => {
+            let option = document.createElement('option');
+            option.value = province.Name;
+            option.text = province.Name;
+
+            //Id tp/tinh da chon
+            option.dataset.id = province.Id;
+            provinceSelect.add(option);
+        });
+    });
+
+    document.getElementById('newAddrProvince').addEventListener('change', function() {
+        const districtSelect = document.getElementById('newAddrDistrict');
+        const wardSelect = document.getElementById('newAddrWard');
+
+        districtSelect.innerHTML = '<option value="" selected disabled>Chọn Quận / Huyện</option>';
+        wardSelect.innerHTML = '<option value="" selected disabled>Chọn Phường / Xã</option>';
+        districtSelect.disabled = false;
+        wardSelect.disabled = true;
+
+        const selectedOption = this.options[this.selectedIndex];
+        const provinceId = selectedOption.dataset.id;
+        const province = addressData.find(p => p.Id === provinceId);
+
+        if (province && province.Districts) {
+            province.Districts.forEach(district => {
+                let option = document.createElement('option');
+                option.value = district.Name;
+                option.text = district.Name;
+                option.dataset.id = district.Id;
+                districtSelect.add(option);
+            });
+        }
+    });
+
+    document.getElementById('newAddrDistrict').addEventListener('change', function() {
+        const wardSelect = document.getElementById('newAddrWard');
+        wardSelect.innerHTML = '<option value="" selected disabled>Chọn Phường / Xã</option>';
+        wardSelect.disabled = false;
+
+        const provinceSelect = document.getElementById('newAddrProvince');
+            const selectedProvOption = provinceSelect.options[provinceSelect.selectedIndex];
+            const province = addressData.find(p => p.Id === selectedProvOption.dataset.id);
+
+            const selectedDistOption = this.options[this.selectedIndex];
+            const districtId = selectedDistOption.dataset.id;
+            const district = province.Districts.find(d => d.Id === districtId);
+
+
+            if (district && district.Wards) {
+                district.Wards.forEach(ward => {
+                    let option = document.createElement('option');
+                    option.value = ward.Name;
+                    option.text = ward.Name;
+                    wardSelect.add(option);
+                });
+            }
+        });
+
 </script>
 </html>
