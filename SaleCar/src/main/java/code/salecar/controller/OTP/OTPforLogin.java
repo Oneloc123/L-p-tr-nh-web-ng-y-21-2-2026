@@ -1,5 +1,6 @@
 package code.salecar.controller.OTP;
 
+import code.salecar.mail.Mail;
 import code.salecar.model.User;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -24,20 +25,20 @@ public class OTPforLogin extends HttpServlet {
         UserService us = new UserService();
         User user = us.getUserById(Integer.parseInt(session.getAttribute("id").toString()));
         request.setAttribute("user",user);
-//        new Thread(() -> {
-//            String email = user.getEmail();
-//            String content = """
-//                <div style="font-family:Arial,sans-serif">
-//                <h2 style="color:#004a99">LuxCar - Xác thực đăng nhập</h2>
-//                <p>Mã xác thực của bạn là:</p>
-//                <h1 style="letter-spacing:4px">%s</h1>
-//                <p>Mã có hiệu lực trong 5 phút.</p>
-//                <hr>
-//                <small>Nếu bạn không yêu cầu, hãy bỏ qua email này.</small>
-//                </div>
-//                """.formatted(otp);
-//            Mail.send(email,"xác thực đăng nhập", content);
-//        }).start();
+        new Thread(() -> {
+            String email = user.getEmail();
+            String content = """
+                <div style="font-family:Arial,sans-serif">
+                <h2 style="color:#004a99">LuxCar - Xác thực đăng nhập</h2>
+                <p>Mã xác thực của bạn là:</p>
+                <h1 style="letter-spacing:4px">%s</h1>
+                <p>Mã có hiệu lực trong 5 phút.</p>
+                <hr>
+                <small>Nếu bạn không yêu cầu, hãy bỏ qua email này.</small>
+                </div>
+                """.formatted(otp);
+            Mail.send(email,"xác thực đăng nhập", content);
+        }).start();
         request.getRequestDispatcher("/pages/OTP-Login.jsp").forward(request,response);
     }
 

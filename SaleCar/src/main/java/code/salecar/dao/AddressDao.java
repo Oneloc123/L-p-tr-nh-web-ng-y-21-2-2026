@@ -140,4 +140,26 @@ public class AddressDao {
         }
         return  list;
     }
+
+    public int countAddress(int userId){
+        int result = 0;
+        String sql = "select count(*) from address where user_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);) {
+            ps.setInt(1,userId);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                result = rs.getInt(1);
+            }
+
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
 }

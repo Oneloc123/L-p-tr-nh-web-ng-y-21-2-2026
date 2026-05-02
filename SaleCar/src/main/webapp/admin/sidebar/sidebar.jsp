@@ -194,7 +194,7 @@
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/logout">
+                <a href="${pageContext.request.contextPath}/loggout">
                     <i class="bi bi-box-arrow-right"></i><span> Đăng xuất</span>
                 </a>
             </li>
