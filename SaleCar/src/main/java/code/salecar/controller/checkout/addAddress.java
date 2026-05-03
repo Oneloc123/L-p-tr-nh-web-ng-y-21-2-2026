@@ -3,11 +3,13 @@ package code.salecar.controller.checkout;
 import code.salecar.dao.AddressDao;
 import code.salecar.model.Address;
 import code.salecar.model.User;
+import code.salecar.service.address.AddressService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "addAddress", value = "/add-address")
 public class addAddress extends HttpServlet {
@@ -25,7 +27,7 @@ public class addAddress extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.getWriter().print("error");
+            response.getWriter().print("vui lòng đăng nhập để thanh toán");
             return;
         }
 
@@ -36,12 +38,23 @@ public class addAddress extends HttpServlet {
         String street = request.getParameter("street");
         String type = request.getParameter("type");
 
-        AddressDao aDao = new AddressDao();
-        int numAddress = aDao.countAddress(userId);
+        AddressService addSv = new AddressService();
+        List<Address> crrAddr = addSv.getListAddressById(userId);
 
-        if(numAddress < 6){
-            Address addr = new Address(userId, street, commune, province, type, name);
-            aDao.addAddress(addr);
+        if(crrAddr.size() < 6){
+            Address addr = new Address();
+            addr.setUserId(userId);
+            addr.setName(name);
+            addr.setProvince(province);
+            addr.setCommune(commune);
+            addr.setStreet(street);
+            addr.setType(type);
+
+            addSv.addAddress(addr);
+
+            List<Address> newAddresses = addSv.getListAddressById(userId);
+            session.setAttribute("listAddress", newAddresses);
+
             response.getWriter().print("success");
         } else {
             response.getWriter().print("full_slot");
