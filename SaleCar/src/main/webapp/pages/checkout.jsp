@@ -114,8 +114,11 @@
             color: #000;
             font-size: 1.2rem;
         }
-        .address-slot input[type="radio"] {
-            display: none;
+        .address-radio-hidden {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
         .address-name { font-weight: 600; color: #000; margin-bottom: 5px; font-size: 15px; }
         .address-phone { font-size: 13px; color: #555; margin-bottom: 5px; }
@@ -240,7 +243,7 @@
 
                         <div class="form-group">
                             <label for="phone">Số điện thoại (Phone)</label>
-                            <input type="text" id="phone" name="phone" class="form-control" value="" placeholder="Nhập số điện thoại..." required>
+                            <input type="text" id="phone" name="phone" class="form-control" value="${sessionScope.user != null ? sessionScope.user.phonenumber : ''}" placeholder="Nhập số điện thoại..." required>
                         </div>
 
 
@@ -256,19 +259,21 @@
                             </div>
                         </c:when>
                             <c:otherwise>
+                                <%-- xu ly nut chon dia chi giao hang --%>
                                 <c:forEach var="addr" items="${listAddress}" varStatus="status">
 
-                                    <label class="address-slot ${status.first ? 'selected' : ''}" onclick="selectAddressUI(this)">
+                                    <c:set var="radioId" value="addr_${addr.id}" />
 
-                                        <input type="radio" name="shippingAddress" value="${addr.street}, ${addr.commune}, ${addr.province}" ${status.first ? 'checked' : ''}>
+                                    <input type="radio" class="address-radio-hidden" id="${radioId}" name="shippingAddress" value="${addr.street}, ${addr.commune}, ${addr.province}" ${status.first ? 'checked' : ''}>
+
+                                    <label for="${radioId}" class="address-slot ${status.first ? 'selected' : ''}">
                                         <div class="address-name">
                                             <i class="fas fa-user-tag text-muted me-1"></i> ${addr.name}
                                             <c:if test="${addr.type == 'main'}"><span class="badge-default">Mặc định</span></c:if>
                                         </div>
-
-
                                         <div class="address-detail"><i class="fas fa-map-marker-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
                                     </label>
+
                                 </c:forEach>
                             </c:otherwise>
                         </c:choose>
@@ -598,6 +603,26 @@ fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/dat
                     wardSelect.add(option);
                 });
             }
+        });
+
+        //xu ly UI chon dia chi
+        const addressRadios = document.querySelectorAll('input[name="shippingAddress"]');
+
+            addressRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+
+                    document.querySelectorAll('.address-slot').forEach(function(slot) {
+                        slot.classList.remove('selected');
+                    });
+
+
+                    if(this.checked) {
+                        const targetLabel = document.querySelector('label[for="' + this.id + '"]');
+                        if (targetLabel) {
+                            targetLabel.classList.add('selected');
+                    }
+                }
+            });
         });
 
 </script>
