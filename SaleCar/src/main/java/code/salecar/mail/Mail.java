@@ -9,8 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class Mail {
-    private static final String email = "";
-    private static final String appPassword = "";
+    private static final String email = "231301@st.hcmuaf.edu.vn";
+    private static final String appPassword = "zibm gfqf okgn seui";
     public static void send(String sendTo, String subject, String content){
         Properties pro = new Properties();
         pro.put("mail.smtp.host","smtp.gmail.com");
