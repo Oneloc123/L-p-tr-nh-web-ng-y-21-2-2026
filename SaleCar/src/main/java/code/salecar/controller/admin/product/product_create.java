@@ -77,11 +77,11 @@ public class product_create extends HttpServlet {
             doGet(request, response);
             return;
         }
-        if (!statusParam.matches("^(active|inactive|hidden|draft)$")) {
-            request.setAttribute("error", "Trạng thái không hợp lệ");
-            doGet(request, response);
-            return;
-        }
+//        if (!statusParam.matches("^(active|inactive|hidden|draft)$")) {
+//            request.setAttribute("error", "Trạng thái không hợp lệ");
+//            doGet(request, response);
+//            return;
+//        }
 
         //validation price, parse to double
         double price;
@@ -103,12 +103,9 @@ public class product_create extends HttpServlet {
             return;
         }
 
-        //validation ratio, parse to double
-        double ratio;
-        try {
-            ratio = Double.parseDouble(ratioParam);
-        } catch (NumberFormatException e) {
-            request.setAttribute("error", "Tỷ lệ không hợp lệ");
+        //validation ratio
+        if (ratioParam == null || ratioParam.trim().isEmpty()) {
+            request.setAttribute("error", "Tỉ lệ không được để trống");
             doGet(request, response);
             return;
         }
@@ -173,7 +170,7 @@ public class product_create extends HttpServlet {
         product.setBrandId(brandId);
         product.setCategoryId(categoryId);
         product.setDescription(descriptionParam);
-        product.setRatio(String.valueOf(ratio));
+        product.setRatio(ratioParam);
         product.setSize(sizeParam);
         product.setMaterial(materialParam);
         product.setOrigin(originParam);
@@ -182,6 +179,7 @@ public class product_create extends HttpServlet {
         // Create product using service
         ProductService productService = new ProductService();
         int productId = productService.createProduct(product);
+        System.out.println(productId);
 
         if (productId > 0) {
             // Success, redirect to product list

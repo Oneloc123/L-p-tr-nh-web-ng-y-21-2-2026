@@ -365,12 +365,12 @@
                             Icon <span class="text-danger">*</span>
                         </label>
                         <input type="text"
-                               class="admin-input"
-                               id="icon"
-                               name="icon"
-                               placeholder="e.g. bi-icon"
-                               value="${param.icon}"
-                               required>
+                                class="admin-input"
+                                id="icon"
+                                name="icon"
+                                placeholder="e.g. bi-icon"
+                                value="${not empty category ? category.icon : param.icon}"
+                                required>
                         <c:if test="${not empty errors.icon}">
                             <div class="text-danger">${errors.icon}</div>
                         </c:if>
@@ -386,7 +386,7 @@
                                id="name"
                                name="name"
                                placeholder="e.g. Sedan, SUV, Sport..."
-                               value="${param.name}"
+                               value="${not empty category ? category.name : param.name}"
                                required>
                         <c:if test="${not empty errors.name}">
                             <div class="text-danger">${errors.name}</div>
@@ -426,8 +426,8 @@
                     <div class="col-md-4">
                         <label for="status" class="form-label">Status</label>
                         <select class="admin-select" id="status" name="status">
-                            <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
-                            <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                            <option value="active" ${not empty category ? (category.status == 'active' ? 'selected' : '') : (param.status == 'active' ? 'selected' : '')}>Active</option>
+                            <option value="inactive" ${not empty category ? (category.status == 'inactive' ? 'selected' : '') : (param.status == 'inactive' ? 'selected' : '')}>Inactive</option>
 <%--                            <option value="hidden" ${param.status == 'hidden' ? 'selected' : ''}>Hidden</option>--%>
                         </select>
                         <c:if test="${not empty errors.status}">
@@ -442,7 +442,7 @@
                                   id="description"
                                   name="description"
                                   rows="5"
-                                  placeholder="Enter category description...">${param.description}</textarea>
+                                  placeholder="Enter category description...">${not empty category ? category.description : param.description}</textarea>
                         <c:if test="${not empty errors.description}">
                             <div class="text-danger">${errors.description}</div>
                         </c:if>
