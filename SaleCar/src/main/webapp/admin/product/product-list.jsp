@@ -380,6 +380,7 @@
                 <form action="/admin/products/export" method="get" style="display: inline-block;">
                     <input type="hidden" name="keyword" value="${param.keyword}">
                     <input type="hidden" name="categoryId" value="${param.categoryId}">
+                    <input type="hidden" name="brandId" value="${param.brandId}">
                     <input type="hidden" name="status" value="${param.status}">
                     <input type="hidden" name="stockStatus" value="${param.stockStatus}">
                     <input type="hidden" name="minPrice" value="${param.minPrice}">
@@ -423,13 +424,24 @@
                             </c:forEach>
                         </select>
                     </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Thương hiệu</label>
+                        <select class="admin-select" id="filterBrand" name="brandId" onchange="this.form.submit()">
+                            <option value="">Tất cả thương hiệu</option>
+                            <c:forEach items="${brands}" var="br">
+                                <option value="${br.id}" ${param.brandId == br.id ? 'selected' : ''}>${br.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
                     <div class="col-md-3">
                         <label class="form-label">Trạng thái</label>
                         <select class="admin-select" id="filterStatus" name="status" onchange="this.form.submit()">
                             <option value="">Tất cả</option>
                             <option value="active" ${param.status == 'active' ? 'selected' : ''}>Hoạt động</option>
                             <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Không hoạt động</option>
-                            <option value="draft" ${param.status == 'draft' ? 'selected' : ''}>Nháp</option>
+<%--                            <option value="draft" ${param.status == 'draft' ? 'selected' : ''}>Nháp</option>--%>
                         </select>
                     </div>
                     <div class="col-md-3">

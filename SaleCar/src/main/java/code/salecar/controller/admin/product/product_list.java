@@ -1,8 +1,10 @@
 package code.salecar.controller.admin.product;
 
+import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.filter.ProductFilter;
+import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.*;
@@ -19,6 +21,7 @@ import java.util.*;
 public class product_list extends HttpServlet {
     ProductService productService = new ProductService();
     CategoryService categoryService = new CategoryService();
+    BrandService brandService = new BrandService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -107,6 +110,7 @@ public class product_list extends HttpServlet {
         }
 
         List<Category> categories = categoryService.getCategory();
+        List<Brand> brands = brandService.getBrands();
 
         ProductFilter productFilter = new ProductFilter(searchKeyword, filterCategory, filterBrand, status, filterStock, maxPrice, minPrice, fromDate, toDate, sortBy);
         List<ProductItem> list = productService.getProductForAdmin(productFilter, page, limit);
@@ -119,6 +123,7 @@ public class product_list extends HttpServlet {
 
         request.setAttribute("products", list);
         request.setAttribute("categories", categories);
+        request.setAttribute("brands", brands);
         request.setAttribute("totalProduct", totalProduct);
         request.setAttribute("totalPages", totalPage);
         request.setAttribute("currentPage", page);

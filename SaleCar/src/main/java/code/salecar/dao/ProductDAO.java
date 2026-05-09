@@ -517,10 +517,10 @@ public class ProductDAO {
                     query.append(" order by pr.name desc");
                     break;
                 case CREATED_ASC:
-                    query.append(" order by created_at asc");
+                    query.append(" order by pr.created_at asc");
                     break;
                 case CREATED_DESC:
-                    query.append(" order by created_at desc");
+                    query.append(" order by pr.created_at desc");
                     break;
             }
         }else {
@@ -638,10 +638,10 @@ public class ProductDAO {
                     query.append(" order by pr.name desc");
                     break;
                 case CREATED_ASC:
-                    query.append(" order by created_at asc");
+                    query.append(" order by pr.created_at asc");
                     break;
                 case CREATED_DESC:
-                    query.append(" order by created_at desc");
+                    query.append(" order by pr.created_at desc");
                     break;
             }
         }else {
@@ -685,5 +685,37 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public int insertProduct(Product product) {
+        String query = "insert into product (name, price, final_price, discount_percent, brand_id, category_id, description, ratio, size, material, origin, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setDouble(3, product.getFinalPrice());
+            ps.setDouble(4, product.getDiscountPercent());
+            ps.setInt(5, product.getBrandId());
+            ps.setInt(6, product.getCategoryId());
+            ps.setString(7, product.getDescription());
+            ps.setString(8, product.getRatio());
+            ps.setString(9, product.getSize());
+            ps.setString(10, product.getMaterial());
+            ps.setString(11, product.getOrigin());
+            ps.setInt(12, product.getStatus());
+            ps.setTimestamp(13, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setTimestamp(14, new java.sql.Timestamp(System.currentTimeMillis()));
+
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
     }
 }
