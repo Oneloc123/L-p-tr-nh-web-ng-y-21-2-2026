@@ -235,4 +235,21 @@ public class CategoryDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean createCategory(Category category) {
+        String sql = "INSERT INTO category (name, description, icon, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
+            ps.setString(3, category.getIcon());
+            ps.setInt(4, category.getIntStatus());
+            java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+            ps.setTimestamp(5, now);
+            ps.setTimestamp(6, now);
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

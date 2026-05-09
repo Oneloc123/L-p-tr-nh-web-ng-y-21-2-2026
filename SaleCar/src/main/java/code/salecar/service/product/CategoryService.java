@@ -6,7 +6,9 @@ import code.salecar.model.Image;
 import code.salecar.model.category.CategoryFilter;
 import code.salecar.service.Image.ImageService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryService {
     CategoryDAO categoryDAO = new CategoryDAO();
@@ -71,5 +73,50 @@ public class CategoryService {
             return categoryDAO.updateCategory(category);
         }
         return false;
+    }
+
+    public Map<String, String> validateCategory(Category category) {
+        Map<String, String> errors = new HashMap<>();
+
+        // Validate name
+        if (category.getName() == null || category.getName().trim().isEmpty()) {
+            errors.put("name", "Category name is required");
+        } else if (category.getName().length() > 100) {
+            errors.put("name", "Category name must be less than 100 characters");
+        }
+
+        // Validate icon
+        if (category.getIcon() == null || category.getIcon().trim().isEmpty()) {
+            errors.put("icon", "Icon is required");
+        } else if (category.getIcon().length() > 50) {
+            errors.put("icon", "Icon must be less than 50 characters");
+        }
+
+        // Validate description
+        if (category.getDescription() != null && category.getDescription().length() > 500) {
+            errors.put("description", "Description must be less than 500 characters");
+        }
+
+        // Check for duplicate name
+        if (category.getName() != null && !category.getName().trim().isEmpty()) {
+            List<String> existingNames = categoryDAO.getCategoryName();
+            for (String name : existingNames) {
+                if (name.equalsIgnoreCase(category.getName().trim())) {
+                    errors.put("name", "Category name already exists");
+                    break;
+                }
+            }
+        }
+
+        return errors;
+    }
+
+    public boolean createCategory(Category category) throws Exception {
+        Map<String, String> errors = validateCategory(category);
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException("Validation failed: " + errors.toString());
+        }
+
+        return categoryDAO.createCategory(category);
     }
 }

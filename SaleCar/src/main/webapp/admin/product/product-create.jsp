@@ -455,14 +455,14 @@
                 <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
                 <div class="mb-3">
                     <label class="form-label">Mô tả ngắn</label>
-                    <textarea name="shortDescription" id="shortDescription" class="form-control" rows="2"
+                    <textarea name="description" id="shortDescription" class="form-control" rows="2"
                               maxlength="300"></textarea>
                     <small><span id="shortDescCounter">0</span>/300 ký tự</small>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Mô tả chi tiết</label>
-                    <textarea name="description" id="description" class="form-control" rows="8"></textarea>
-                </div>
+<%--                <div class="mb-3">--%>
+<%--                    <label class="form-label">Mô tả chi tiết</label>--%>
+<%--                    <textarea name="description" id="description" class="form-control" rows="8"></textarea>--%>
+<%--                </div>--%>
             </div>
 
             <!-- ========== SECTION 6: IMAGES (WITH PREVIEW) ========== -->
@@ -783,5 +783,6 @@
         }
     });
 </script>
+<
 </body>
 </html>

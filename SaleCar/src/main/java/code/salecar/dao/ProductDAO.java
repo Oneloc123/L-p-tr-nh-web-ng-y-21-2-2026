@@ -523,7 +523,7 @@ public class ProductDAO {
                     query.append(" order by pr.created_at desc");
                     break;
             }
-        }else {
+        } else {
             query.append(" order by pr.id asc");
         }
 
@@ -644,7 +644,7 @@ public class ProductDAO {
                     query.append(" order by pr.created_at desc");
                     break;
             }
-        }else {
+        } else {
             query.append(" order by pr.id asc");
         }
 
@@ -657,7 +657,7 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-               return rs.getInt(1);
+                return rs.getInt(1);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -678,7 +678,6 @@ public class ProductDAO {
             ps.setInt(5, product.getId());
 
             ps.executeUpdate();
-            System.out.println("Product updated ++++++++++++++++++++");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
@@ -688,34 +687,76 @@ public class ProductDAO {
     }
 
     public int insertProduct(Product product) {
-        String query = "insert into product (name, price, final_price, discount_percent, brand_id, category_id, description, ratio, size, material, origin, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+        String query =
+                "INSERT INTO product " +
+                        "(" +
+                        "name, " +
+                        "price, " +
+                        "final_price, " +
+                        "discount_percent, " +
+                        "discount_updated_at, " +
+                        "brand_id, " +
+                        "category_id, " +
+                        "description, " +
+                        "ratio, " +
+                        "size, " +
+                        "material, " +
+                        "origin, " +
+                        "status, " +
+                        "created_at, " +
+                        "updated_at" +
+                        ") " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        query,
+                        Statement.RETURN_GENERATED_KEYS
+                )
+        ) {
+
             ps.setString(1, product.getName());
             ps.setDouble(2, product.getPrice());
             ps.setDouble(3, product.getFinalPrice());
             ps.setDouble(4, product.getDiscountPercent());
-            ps.setInt(5, product.getBrandId());
-            ps.setInt(6, product.getCategoryId());
-            ps.setString(7, product.getDescription());
-            ps.setString(8, product.getRatio());
-            ps.setString(9, product.getSize());
-            ps.setString(10, product.getMaterial());
-            ps.setString(11, product.getOrigin());
-            ps.setInt(12, product.getStatus());
-            ps.setTimestamp(13, new java.sql.Timestamp(System.currentTimeMillis()));
-            ps.setTimestamp(14, new java.sql.Timestamp(System.currentTimeMillis()));
 
-            ps.executeUpdate();
+            ps.setNull(5, java.sql.Types.TIMESTAMP);
+
+            ps.setInt(6, product.getBrandId());
+            ps.setInt(7, product.getCategoryId());
+
+            ps.setString(8, product.getDescription());
+            ps.setString(9, product.getRatio());
+            ps.setString(10, product.getSize());
+            ps.setString(11, product.getMaterial());
+            ps.setString(12, product.getOrigin());
+
+            ps.setInt(13, product.getStatus());
+
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+
+            ps.setTimestamp(14, now);
+            ps.setTimestamp(15, now);
+
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                return -1;
+            }
+
             ResultSet rs = ps.getGeneratedKeys();
+
             if (rs.next()) {
                 return rs.getInt(1);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
+
         return -1;
     }
 }
