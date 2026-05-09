@@ -25,6 +25,15 @@ public class checkout extends HttpServlet {
         String type = request.getParameter("type");
         HttpSession session = request.getSession();
         Cart checkoutCart = null;
+        User user = (User) session.getAttribute("user");
+
+
+        if (user == null) {
+
+            session.setAttribute("redirectUrl", "checkout");
+            response.sendRedirect("login");
+            return;
+        }
 
 
 
@@ -41,7 +50,7 @@ public class checkout extends HttpServlet {
         List<Voucher> vouchers = vs.getVouchers();
         request.setAttribute("vouchers", vouchers);
 
-        User user = (User) session.getAttribute("user");
+
         AddressDao addrDAO = new AddressDao();
         List<Address> lstAddress = addrDAO.getListAddressById(user.getId());
         session.setAttribute("listAddress", lstAddress);
