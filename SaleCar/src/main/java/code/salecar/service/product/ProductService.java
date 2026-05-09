@@ -300,4 +300,8 @@ public class ProductService {
     public void updateBasicInfo(ProductDetail product) {
         productDAO.updateBasicInfo(product);
     }
+
+    public int createProduct(Product product) {
+        return productDAO.insertProduct(product);
+    }
 }
