@@ -1,14 +1,17 @@
 package code.salecar.controller.admin.category;
 
+import code.salecar.model.brand.Brand;
 import code.salecar.model.brand.BrandFilter;
 import code.salecar.model.category.Category;
 import code.salecar.model.category.CategoryFilter;
+import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/admin/categories")
@@ -42,6 +45,7 @@ public class category_list extends HttpServlet {
         categoryFilter.setOrder(orderParam);
         categoryFilter.setLimit(limit);
         categoryFilter.setPage(page);
+
 
 
         List<Category> categories = categoryService.getCategories(categoryFilter);
