@@ -117,7 +117,7 @@
                                          alt="Avatar">
                                 </div>
                                 <div class="auth-dropdown-content">
-                                    <a href="${pageContext.request.contextPath}/profile" class="auth-dropdown-item">
+                                    <a href="${pageContext.request.contextPath}/dashboard" class="auth-dropdown-item">
                                         <i class="bi bi-person-circle"></i>
                                         <span>Tài khoản của tôi</span>
                                     </a>
