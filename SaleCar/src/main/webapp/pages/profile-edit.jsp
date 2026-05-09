@@ -611,12 +611,19 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label class="form-label">Xã/Phường</label>
-                                                <input type="text" class="form-control" name="commune${a.id}"
+                                                <input type="text"
+                                                       class="form-control"
+                                                       name="commune${a.id}"
+                                                       disabled
                                                        value="${fn:escapeXml(param['commune'.concat(a.id)] != null ? param['commune'.concat(a.id)] : a.commune)}">
                                             </div>
+
                                             <div class="col-md-4 mb-3">
                                                 <label class="form-label">Tỉnh/Thành phố</label>
-                                                <input type="text" class="form-control" name="province${a.id}"
+                                                <input type="text"
+                                                       class="form-control"
+                                                       name="province${a.id}"
+                                                       disabled
                                                        value="${fn:escapeXml(param['province'.concat(a.id)] != null ? param['province'.concat(a.id)] : a.province)}">
                                             </div>
                                         </div>
@@ -653,55 +660,57 @@
             <!-- Modal Add Address -->
             <div class="modal fade" id="addAddressModal" tabindex="-1">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Thêm địa chỉ mới</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <div class="modal-content" style="border-radius: 12px; border: none;">
+                        <div class="modal-header" style="border-bottom: 1px solid #eee;">
+                            <h5 class="modal-title fw-bold" style="color: #000;">
+                                <i class="fas fa-map-marked-alt me-2"></i> Thêm địa chỉ giao hàng
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="${pageContext.request.contextPath}/addAddress" method="post">
-                            <div class="modal-body">
+
+                        <div class="modal-body" style="padding: 25px;">
+                            <form id="newAddressForm">
                                 <div class="mb-3">
-                                    <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name"
-                                           value="${fn:escapeXml(param.name != null ? param.name : '')}"
-                                           placeholder="ví dụ: địa chỉ nhà, công ty, vv" required>
+                                    <label class="form-label fw-bold small">Tên người nhận</label>
+                                    <input type="text" class="form-control" id="newAddrName" name="newName" placeholder="Nhập họ tên..." required>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Loại địa chỉ</label>
-                                    <select class="form-select" name="type">
-                                        <option value="normal" ${param.type == 'normal' ? 'selected' : ''}>Địa chỉ phụ</option>
-                                        <option value="main" ${param.type == 'main' ? 'selected' : ''}>Địa chỉ chính</option>
+                                    <label class="form-label fw-bold small">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="newAddrProvince" required>
+                                        <option value="" selected disabled>Chọn Tỉnh / Thành phố</option>
                                     </select>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Số nhà, tên đường</label>
-                                        <input type="text" class="form-control" name="street"
-                                               value="${fn:escapeXml(param.street != null ? param.street : '')}">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label fw-bold small">Quận / Huyện <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="newAddrDistrict" required disabled>
+                                            <option value="" selected disabled>Chọn Quận / Huyện</option>
+                                        </select>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Xã/Phường</label>
-                                        <input type="text" class="form-control" name="commune"
-                                               value="${fn:escapeXml(param.commune != null ? param.commune : '')}">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Tỉnh/Thành phố</label>
-                                        <input type="text" class="form-control" name="province"
-                                               value="${fn:escapeXml(param.province != null ? param.province : '')}">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label fw-bold small">Phường / Xã <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="newAddrWard" required disabled>
+                                            <option value="" selected disabled>Chọn Phường / Xã</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    Hủy
-                                </button>
-                                <button type="submit" class="btn btn-success">
-                                    Thêm địa chỉ
-                                </button>
-                            </div>
-                        </form>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small">Số nhà, Tên đường <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="newAddrStreet" name="newStreet" placeholder="VD: Số 120 Yên Lãng" required>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer" style="border-top: none;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
+
+                            <button type="button" class="btn btn-dark" id="btnSaveAddress" style="border-radius: 8px;">
+                                <i class="fas fa-save me-1"></i> Lưu địa chỉ
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -719,6 +728,136 @@
     var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
     addAddressModal.show();
     </c:if>
+
+    document.getElementById("btnSaveAddress").addEventListener("click", function(){
+
+        const name = document.getElementById('newAddrName').value.trim();
+        const province = document.getElementById('newAddrProvince').value; // Bỏ trim() vì đây là Select
+        const district = document.getElementById('newAddrDistrict').value;
+        const ward = document.getElementById('newAddrWard').value;
+        const street = document.getElementById('newAddrStreet').value.trim();
+
+        //check form
+        if(!name || !province || !district || !ward || !street){
+            alert("vui lòng điền đủ thông tin!");
+            return;
+        }
+
+        const fullCommune = ward + ", " + district;
+
+        const formData = new URLSearchParams();
+        formData.append("name", name);
+        formData.append("province", province);
+        formData.append("commune", fullCommune);
+        formData.append("street", street);
+        formData.append("type", "sub");
+
+        //set dia chi moi la phu
+        formData.append("type", "sub");
+
+        // UI hien thi dang luu
+        const btnSave = document.getElementById('btnSaveAddress');
+        btnSave.innerHTML = '<i class ="fas fa-spinner fa-spin me-1"></i> Đang lưu...';
+        btnSave.disabled = true;
+
+        fetch('${pageContext.request.contextPath}/add-address', {
+            method: 'POST',
+            headers: {
+                'Content-type' : 'application/x-www-form-urlencoded',
+            },
+            body:  formData.toString()
+        })
+            .then(response => response.text())
+            .then(data => {
+                if(data === 'success') {
+                    window.location.reload();
+                }else if(data === 'full_slot') {
+                    alert("Bạn chỉ lưu tối đa được 6 địa chỉ, vui lòng xóa để thêm!");
+                    btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                    btnSave.disabled = false;
+                }else{
+                    alert("Có lỗi xảy ra, không thể lưu địa chỉ!");
+                    btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                    btnSave.disabled = false;
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Lỗi");
+                btnSave.disabled = false;
+
+            });
+    });
+
+    //Tỉnh thành
+    let addressData = [];
+
+    fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
+        .then(response => response.json())
+        .then(data => {
+            addressData = data;
+            const provinceSelect = document.getElementById('newAddrProvince');
+
+            data.forEach(province => {
+                let option = document.createElement('option');
+                option.value = province.Name;
+                option.text = province.Name;
+
+                //Id tp/tinh da chon
+                option.dataset.id = province.Id;
+                provinceSelect.add(option);
+            });
+        });
+
+    document.getElementById('newAddrProvince').addEventListener('change', function() {
+        const districtSelect = document.getElementById('newAddrDistrict');
+        const wardSelect = document.getElementById('newAddrWard');
+
+        districtSelect.innerHTML = '<option value="" selected disabled>Chọn Quận / Huyện</option>';
+        wardSelect.innerHTML = '<option value="" selected disabled>Chọn Phường / Xã</option>';
+        districtSelect.disabled = false;
+        wardSelect.disabled = true;
+
+        const selectedOption = this.options[this.selectedIndex];
+        const provinceId = selectedOption.dataset.id;
+        const province = addressData.find(p => p.Id === provinceId);
+
+        if (province && province.Districts) {
+            province.Districts.forEach(district => {
+                let option = document.createElement('option');
+                option.value = district.Name;
+                option.text = district.Name;
+                option.dataset.id = district.Id;
+                districtSelect.add(option);
+            });
+        }
+    });
+
+    document.getElementById('newAddrDistrict').addEventListener('change', function() {
+        const wardSelect = document.getElementById('newAddrWard');
+        wardSelect.innerHTML = '<option value="" selected disabled>Chọn Phường / Xã</option>';
+        wardSelect.disabled = false;
+
+        const provinceSelect = document.getElementById('newAddrProvince');
+        const selectedProvOption = provinceSelect.options[provinceSelect.selectedIndex];
+        const province = addressData.find(p => p.Id === selectedProvOption.dataset.id);
+
+        const selectedDistOption = this.options[this.selectedIndex];
+        const districtId = selectedDistOption.dataset.id;
+        const district = province.Districts.find(d => d.Id === districtId);
+
+
+        if (district && district.Wards) {
+            district.Wards.forEach(ward => {
+                let option = document.createElement('option');
+                option.value = ward.Name;
+                option.text = ward.Name;
+                wardSelect.add(option);
+            });
+        }
+    });
+
 </script>
 </body>
 </html>
