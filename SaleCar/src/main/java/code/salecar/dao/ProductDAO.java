@@ -2,6 +2,7 @@ package code.salecar.dao;
 
 import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ProductDAO {
 
 
-    //Home
+    // Lấy danh sách sản phẩm mới nhất (dùng cho trang chủ)
     public List<ProductItem> getProductNew() {
         List<ProductItem> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by created_at desc limit 4";
@@ -43,7 +44,7 @@ public class ProductDAO {
 
     }
 
-    //Home
+    //
     public List<ProductItem> getProductHot() {
         List<ProductItem> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by price desc limit 4";
@@ -70,7 +71,7 @@ public class ProductDAO {
     }
 
 
-    //Products
+    //Tổng số lượng sản phẩm theo filter (không phân trang)
     public int getTotalProduct(ProductFilter filter) {
 
         List<Object> params = new ArrayList<>();
@@ -151,7 +152,7 @@ public class ProductDAO {
         return 0;
     }
 
-    //Produtcs
+    //Lấy danh sách sản phẩm theo filter và phân trang (dùng cho trang danh sách sản phẩm ở phần user)
     public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
 
         List<ProductItem> products = new ArrayList<>();
@@ -253,7 +254,7 @@ public class ProductDAO {
     }
 
 
-    //Detail
+    //Lấy thông tin chi tiết của sản phẩm để hiển thị ở trang chi tiết sản phẩm
     public Product getProductByID(int id) {
         Product p = null;
         String query = "select * from product where id = ? ";
@@ -288,7 +289,7 @@ public class ProductDAO {
         return p;
     }
 
-    //Detail
+    //Lấy danh sách ID sản phẩm liên quan cùng chất liệu (material) để hiển thị ở phần sản phẩm liên quan trong trang chi tiết sản phẩm
     public List<Integer> getRelatedProductMaterial(String byWith) {
         List<Integer> products = new ArrayList<>();
         String query = "select * from product where  status = 1 " +
@@ -309,7 +310,7 @@ public class ProductDAO {
     }
 
 
-    //Discount
+    //Lấy tất cả sản phẩm (dùng để cập nhật giá sau khi có thông tin giảm giá mới nhất)
     public List<ProductItem> getAllProducts() {
         List<ProductItem> products = new ArrayList<>();
         String query = "select * from product ";
@@ -340,7 +341,7 @@ public class ProductDAO {
         return products;
     }
 
-    //Discount
+    //Cập nhật giá sau khi có thông tin giảm giá mới nhất (giá cuối cùng, phần trăm giảm giá, thời gian cập nhật)
     public void updateFinalPrice(int id, double finalPrice, BigDecimal value, Date updatedAt) {
         String query = "update product  " +
                 " set final_price = ?, discount_percent = ?, updated_at = ?,discount_updated_at = ?  " +
@@ -362,7 +363,7 @@ public class ProductDAO {
     }
 
 
-    //Scale
+    //Lấy tổng số lượng scale (tỉ lệ) của sản phẩm để làm tham số filter
     public int getTotalScale() {
         String query = "SELECT COUNT(DISTINCT ratio) AS total_ratio FROM product;";
         try (Connection conn = DBConnection.getConnection();
@@ -382,6 +383,7 @@ public class ProductDAO {
         return 0;
     }
 
+    //Lấy tên các scale (tỉ lệ) của sản phẩm để làm tham số filter
     public List<String> getScaleName() {
         List<String> scaleName = new ArrayList<>();
         String query = "SELECT DISTINCT ratio FROM product;";
@@ -402,6 +404,7 @@ public class ProductDAO {
         return scaleName;
     }
 
+    // Lấy  giá cao nhất của sản phẩm để làm tham số filter
     public BigDecimal getMaxPrice() {
         String query = "SELECT MAX(final_price) AS max_final_price FROM product;";
         try (Connection conn = DBConnection.getConnection();
@@ -421,6 +424,7 @@ public class ProductDAO {
         return BigDecimal.ZERO;
     }
 
+    // Lấy các sản phẩm liên quan cùng thương hiệu
     public List<ProductItem> getRelatedProductBrand(int brandId) {
         List<ProductItem> products = new ArrayList<>();
         String query = "select * from product where brand_id = ? ";
@@ -445,6 +449,7 @@ public class ProductDAO {
         return products;
     }
 
+    //Lấy danh sách sản phẩm cho admin với filter và phân trang
     public List<ProductItem> getProductForAdmin(ProductFilter filter, int page, int limit) {
         List<ProductItem> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
@@ -567,6 +572,7 @@ public class ProductDAO {
         return products;
     }
 
+    //Tổng danh sách sản phẩm cho admin với filter (không phân trang)
     public int getTotalProductForAdmin(ProductFilter filter) {
         List<Object> params = new ArrayList<>();
 
@@ -665,6 +671,7 @@ public class ProductDAO {
         return 0;
     }
 
+    //Cập nhật thông tin cơ bản của sản phẩm (tên, danh mục, thương hiệu, trạng thái)
     public void updateBasicInfo(ProductDetail product) {
         String query = "update product  " +
                 " set name = ?, category_id = ?, brand_id = ?,status = ?  " +
@@ -686,7 +693,8 @@ public class ProductDAO {
 
     }
 
-    public int insertProduct(Product product) {
+    //Thêm sản phẩm mới vào cơ sở dữ liệu và trả về ID của sản phẩm vừa được thêm
+    public int insertProduct(ProductDetail product) {
 
         String query =
                 "INSERT INTO product " +
@@ -758,5 +766,20 @@ public class ProductDAO {
         }
 
         return -1;
+    }
+
+    //
+    public void insertVariant(ProductVariants variant) {
+        String query = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, variant.getProductId());
+            ps.setString(2, variant.getVariantName());
+            ps.setBigDecimal(3, new BigDecimal(variant.getPrice()));
+            ps.setString(4, variant.getSku());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

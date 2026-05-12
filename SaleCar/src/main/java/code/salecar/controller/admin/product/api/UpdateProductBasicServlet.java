@@ -29,7 +29,7 @@ public class UpdateProductBasicServlet extends HttpServlet {
         String brandIdStr = request.getParameter("brandId");
         String statusStr = request.getParameter("status");
 
-        // valid
+        // validate
         Map<String, String> error = new HashMap<>();
         if (productIdStr == null || productIdStr.equals("")) {
             error.put("productId", "Chưa nhân được Id sản phẩm");
@@ -50,7 +50,7 @@ public class UpdateProductBasicServlet extends HttpServlet {
             error.put("status", "Sản phẩm phải được chọn trạng thái hoạt động");
         }
 
-        //prase
+        // Parse integer
         Integer id = null;
         try {
             id = Integer.parseInt(productIdStr);
@@ -90,7 +90,7 @@ public class UpdateProductBasicServlet extends HttpServlet {
         ProductDetail product = new ProductDetail();
         product.setId(id);
         product.setName(name);
-        product.setSku(sku);
+//        product.setSku(sku);
         product.setCategoryId(categoryId);
         product.setBrandId(brandId);
         product.setStatus(status);

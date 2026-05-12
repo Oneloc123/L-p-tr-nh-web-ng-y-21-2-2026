@@ -1,5 +1,6 @@
 package code.salecar.dao;
 
+import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
@@ -14,7 +15,7 @@ import java.util.List;
 public class DiscountDAO {
 
 
-    public  List<Discount> getProductDiscount(Product p) {
+    public List<Discount> getProductDiscount(Product p) {
         List<Discount> discounts = new ArrayList<>();
         String query = "select * from discount where entity_type = 'product' and entity_id = ? and start_at <= NOW() and end_at >= NOW()";
         try (Connection con = (Connection) DBConnection.getConnection();
@@ -166,5 +167,34 @@ public class DiscountDAO {
             throw new RuntimeException(e);
         }
         return discounts;
+    }
+
+    public int insertProductDiscount(Discount discount) {
+        String query = "INSERT INTO discount (name, value_type, value, entity_type, entity_id, priority, start_at, end_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, discount.getName());
+            ps.setString(2, discount.getValueType().toString().toLowerCase());
+            ps.setBigDecimal(3, discount.getValue());
+            ps.setString(4, discount.getEntityType().toString().toLowerCase());
+            ps.setInt(5, discount.getEntityId());
+            ps.setObject(6, discount.getId() > 0 ? null : 1); // priority
+            ps.setDate(7, discount.getStartAt());
+            ps.setDate(8, discount.getEndAt());
+
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+            return -1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

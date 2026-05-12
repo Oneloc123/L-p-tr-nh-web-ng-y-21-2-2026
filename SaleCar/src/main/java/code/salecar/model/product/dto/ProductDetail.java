@@ -2,6 +2,7 @@ package code.salecar.model.product.dto;
 
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.model.product.entity.Reviews;
 
 import java.io.Serializable;
@@ -31,7 +32,6 @@ public class ProductDetail implements Serializable {
     private String brandLink;
     private String brandLogo;
 
-    private String sku;
     private int quantity;
     private int soldQuantity;
 
@@ -50,6 +50,9 @@ public class ProductDetail implements Serializable {
     private ProductRating rating;
 
     private int ratePrice;
+
+    private List<ProductVariants> variants;
+
 
     public ProductDetail() {
     }
@@ -93,6 +96,14 @@ public class ProductDetail implements Serializable {
         return product;
     }
 
+    public List<ProductVariants> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<ProductVariants> variants) {
+        this.variants = variants;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -123,14 +134,6 @@ public class ProductDetail implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
     }
 
     public String getBrandLogo() {
