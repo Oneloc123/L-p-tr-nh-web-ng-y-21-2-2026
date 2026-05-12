@@ -4,6 +4,7 @@ import code.salecar.model.Image;
 import code.salecar.model.product.dto.ProductDetail;
 import code.salecar.model.product.dto.ProductItem;
 import code.salecar.model.product.dto.ProductRating;
+import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
 import code.salecar.model.brand.Brand;
@@ -25,7 +26,9 @@ public class ProductService {
     ReviewsService rs = new ReviewsService();
     CategoryService cs = new CategoryService();
     ImageService is = new ImageService();
+    DiscountService discountService = new DiscountService();
 
+    // Lấy chi tiết sản phẩm theo ID
     public ProductDetail getProductByID(int id) {
 
         Product product = productDAO.getProductByID(id);
@@ -65,6 +68,7 @@ public class ProductService {
         return detail;
     }
 
+    // Lấy danh sách sản phẩm theo bộ lọc và phân trang
     private void addStar(List<Reviews> reviews, ProductRating product) {
         for (Reviews review : reviews) {
             switch (review.getRating()) {
@@ -88,6 +92,7 @@ public class ProductService {
         }
     }
 
+    // Tính điểm trung bình của các đánh giá
     private double caculateRates(List<Reviews> reviews) {
         int sum = 0;
         for (Reviews r : reviews) {
@@ -100,10 +105,12 @@ public class ProductService {
         return avg;
     }
 
+    // Tổng số sản phẩm theo bộ lọc
     public int getTotalProduct(ProductFilter filter) {
         return productDAO.getTotalProduct(filter);
     }
 
+    // Lấy danh sách sản phẩm theo bộ lọc và phân trang
     public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
         List<ProductItem> product = productDAO.getProductFilter(filter, page, limit);
         addMoreInformation(product);
@@ -166,6 +173,7 @@ public class ProductService {
 //        }
 //    }
 
+    //
     private double caculateDiscount(double price, Discount discount) {
 
         if (discount.getValueType() == Discount.DiscountValueType.RATE) {
@@ -177,6 +185,7 @@ public class ProductService {
         return price;
     }
 
+    //
     public List<ProductDetail> getRelatedProductMaterial(String byWith) {
 
         List<Integer> ids = productDAO.getRelatedProductMaterial(byWith);
@@ -193,6 +202,7 @@ public class ProductService {
         return products;
     }
 
+    // Lấy danh sách sản phẩm yêu thích của người dùng theo bộ lọc và phân trang
     public List<ProductDetail> sortProducFilter(List<ProductDetail> favoritesProducts, ProductFilter filter) {
 
         if (filter.getCategories().isEmpty() &&
@@ -236,26 +246,32 @@ public class ProductService {
         return result;
     }
 
+    //
     public int getTotalScale() {
         return productDAO.getTotalScale();
     }
 
+    //
     public List<String> getScaleName() {
         return productDAO.getScaleName();
     }
 
+    //
     public BigDecimal getMaxPrice() {
         return productDAO.getMaxPrice();
     }
 
+    //
     public List<ProductItem> getProductNew() {
         return productDAO.getProductNew();
     }
 
+    //
     public List<ProductItem> getProductHot() {
         return productDAO.getProductHot();
     }
 
+    //
     public List<ProductDetail> getRelatedProductBrand(int brandId) {
         List<ProductItem> items = productDAO.getRelatedProductBrand(brandId);
         List<ProductDetail> details = new ArrayList<>();
@@ -266,12 +282,14 @@ public class ProductService {
         return details;
     }
 
+    //
     public List<ProductItem> getProductForAdmin(ProductFilter productFilter, int page, int limit) {
         List<ProductItem> products = productDAO.getProductForAdmin(productFilter, page, limit);
         addMoreInformation(products);
         return products;
     }
 
+    //
     public void addMoreInformation(List<ProductItem> pi) {
         for (ProductItem productItem : pi) {
             String brand = bs.getBrandName(productItem.getBrandId());
@@ -293,15 +311,24 @@ public class ProductService {
         }
     }
 
+    //
     public int getTotalProductForAdmin(ProductFilter productFilter) {
         return productDAO.getTotalProductForAdmin(productFilter);
     }
 
+    //
     public void updateBasicInfo(ProductDetail product) {
         productDAO.updateBasicInfo(product);
     }
 
-    public int createProduct(Product product) {
-        return productDAO.insertProduct(product);
+    // Tạo sản phẩm mới
+    public int createProduct(ProductDetail product) {
+        int id = productDAO.insertProduct(product);
+        for(ProductVariants variant : product.getVariants()) {
+            variant.setProductId(id);
+            productDAO.insertVariant(variant);
+        }
+        return id;
+
     }
 }

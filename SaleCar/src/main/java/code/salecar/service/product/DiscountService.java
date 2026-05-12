@@ -1,22 +1,38 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.DiscountDAO;
+import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
 
 public class DiscountService {
     DiscountDAO discountDAO = new DiscountDAO();
 
+    /**
+     * Create a new discount for a product
+     */
+    public int createProductDiscount(Discount discount) {
+        return discountDAO.insertProductDiscount(discount);
+    }
 
-//    public Discount getDiscount(Product product) {
-//
-//        Discount discount = DiscountDAO.getProductDiscount(product.getId());
-//
-//        if (discount == null) {
-//            discount = DiscountDAO.getBrandDiscount(product.getBrandid());
-//        }
-//        if  (discount == null) {
-//            discount = DiscountDAO.getCategoryDiscount(product.getCategoryid());
-//        }
-//        return discount;
-//
-//    }
+    /**
+     * Get discount for a specific product (if any)
+     */
+    public java.util.List<Discount> getProductDiscounts(Product product) {
+        return discountDAO.getProductDiscount(product);
+    }
+
+    /**
+     * Get discount for a brand
+     */
+    public static Discount getBrandDiscount(int brandId) {
+        return DiscountDAO.getBrandDiscount(brandId);
+    }
+
+    /**
+     * Get discount for a category
+     */
+    public static Discount getCategoryDiscount(int categoryId) {
+        return DiscountDAO.getCategoryDiscount(categoryId);
+    }
 }

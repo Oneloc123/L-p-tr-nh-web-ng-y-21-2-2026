@@ -23,11 +23,8 @@ public class PromotionEngine {
     DiscountDAO discountDAO = new DiscountDAO();
 
     public void run() {
-        System.out.println("PromotionEngine.run() called");
         List<ProductItem> products = productDAO.getAllProducts();
-        System.out.println("Product " + products.size());
         List<Discount> discounts = discountDAO.selectAll();
-        System.out.println("DC " + discounts.size());
 
         for (ProductItem product : products) {
 
