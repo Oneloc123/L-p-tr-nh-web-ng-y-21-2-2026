@@ -407,7 +407,7 @@
                     </div>
                 </div>
 
-                <div class="row align-items-end">
+                <div class="row ">
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Giá trị khuyến mãi %</label>
                         <input type="number" name="discountPercent" id="discountPercent" class="form-control"
@@ -430,7 +430,7 @@
                         <label class="form-label invisible">Reset</label>
 
                         <button type="button"
-                                class="btn btn-outline-secondary w-100"
+                                class="btn btn-outline-secondary w-100 h-100"
                                 id="resetDiscountBtn">
                             <i class="bi bi-arrow-repeat"></i>
                             Xóa khuyến mãi
@@ -759,7 +759,7 @@
     document.getElementById('resetDiscountBtn').addEventListener('click', function () {
         document.getElementById('discountName').value = '';
         document.getElementById('discountValueType').value = '';
-        document.getElementById('discountValue').value = '';
+        document.getElementById('discountPercent').value = '';
         document.getElementById('discountStartDate').value = '';
         document.getElementById('discountEndDate').value = '';
     });

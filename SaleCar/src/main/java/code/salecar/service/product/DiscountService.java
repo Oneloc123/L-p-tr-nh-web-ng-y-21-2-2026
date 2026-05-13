@@ -12,6 +12,8 @@ public class DiscountService {
      * Create a new discount for a product
      */
     public int createProductDiscount(Discount discount) {
+        // Cập nhập thông báo bên Trang Chủ. Giảm giá mới nhất
+        // ...
         return discountDAO.insertProductDiscount(discount);
     }
 

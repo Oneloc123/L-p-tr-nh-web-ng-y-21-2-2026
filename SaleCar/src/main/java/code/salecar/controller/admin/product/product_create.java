@@ -59,7 +59,7 @@ public class product_create extends HttpServlet {
         // Discount parameters
         String discountNameParam = request.getParameter("discountName");
         String discountValueTypeParam = request.getParameter("discountValueType");
-        String discountValueParam = request.getParameter("discountValue");
+        String discountValueParam = request.getParameter("discountPercent");
         String discountStartDateParam = request.getParameter("discountStartDate");
         String discountEndDateParam = request.getParameter("discountEndDate");
 
@@ -294,14 +294,14 @@ public class product_create extends HttpServlet {
                     if (discountStartDateParam != null && !discountStartDateParam.trim().isEmpty()) {
                         discount.setStartAt(Date.valueOf(discountStartDateParam));
                     } else {
-                        // Default to today
+                        // Mặc định là ngày tạo
                         discount.setStartAt(new Date(System.currentTimeMillis()));
                     }
                     
                     if (discountEndDateParam != null && !discountEndDateParam.trim().isEmpty()) {
                         discount.setEndAt(Date.valueOf(discountEndDateParam));
                     } else {
-                        // Default to 30 days from now
+                        // Thiết lập mặc định là 30 ngày
                         long thirtyDaysMs = 30 * 24 * 60 * 60 * 1000L;
                         discount.setEndAt(new Date(System.currentTimeMillis() + thirtyDaysMs));
                     }
