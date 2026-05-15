@@ -1,14 +1,13 @@
 package code.salecar.dao;
 
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.enumeration.DiscountEntityType;
+import code.salecar.model.enumeration.DiscountValueType;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,21 +19,19 @@ public class DiscountDAO {
         String query = "select * from discount where entity_type = 'product' and entity_id = ? and start_at <= NOW() and end_at >= NOW()";
         try (Connection con = (Connection) DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query);) {
-            ps.setInt(1, p.getId());
+            ps.setLong(1, p.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Discount discount = new Discount(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
-                        rs.getBigDecimal("value"),
-                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
-                        rs.getInt("entity_id"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                Discount discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
                 discounts.add(discount);
             }
 
@@ -55,18 +52,16 @@ public class DiscountDAO {
             ps.setInt(1, brandid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                discount = new Discount(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
-                        rs.getBigDecimal("value"),
-                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
-                        rs.getInt("entity_id"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                 discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
             }
 
         } catch (SQLException e) {
@@ -85,18 +80,16 @@ public class DiscountDAO {
             ps.setInt(1, categoryid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                discount = new Discount(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
-                        rs.getBigDecimal("value"),
-                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
-                        rs.getInt("entity_id"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                 discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
             }
 
         } catch (SQLException e) {
@@ -115,18 +108,16 @@ public class DiscountDAO {
              PreparedStatement ps = con.prepareStatement(query);) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Discount discount = new Discount(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
-                        rs.getBigDecimal("value"),
-                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
-                        rs.getInt("entity_id"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                Discount discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
                 discounts.add(discount);
             }
 
@@ -146,18 +137,16 @@ public class DiscountDAO {
              PreparedStatement ps = con.prepareStatement(query);) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Discount discount = new Discount(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        Discount.DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
-                        rs.getBigDecimal("value"),
-                        Discount.DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()),
-                        rs.getInt("entity_id"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                Discount discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
                 discounts.add(discount);
             }
 
@@ -178,10 +167,10 @@ public class DiscountDAO {
             ps.setString(2, discount.getValueType().toString().toLowerCase());
             ps.setBigDecimal(3, discount.getValue());
             ps.setString(4, discount.getEntityType().toString().toLowerCase());
-            ps.setInt(5, discount.getEntityId());
+            ps.setLong(5, discount.getEntityId());
             ps.setObject(6, discount.getId() > 0 ? null : 1); // priority
-            ps.setDate(7, discount.getStartAt());
-            ps.setDate(8, discount.getEndAt());
+            ps.setTimestamp(7, Timestamp.valueOf(discount.getStartAt()));
+            ps.setTimestamp(8, Timestamp.valueOf(discount.getEndAt()));
 
             int result = ps.executeUpdate();
             if (result > 0) {

@@ -1,6 +1,7 @@
 package code.salecar.controller.admin.category;
 
 import code.salecar.model.category.Category;
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ public class category_create extends HttpServlet {
         category.setName(name);
         category.setIcon(icon);
         category.setDescription(description);
-        category.setStatus(statusStr != null ? statusStr : "active");
+        category.setStatus(statusStr != null ? Status.INACTIVE : Status.ACTIVE);
 
         // Validate input
         Map<String, String> errors = new HashMap<>();

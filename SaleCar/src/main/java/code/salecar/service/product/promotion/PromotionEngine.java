@@ -2,12 +2,13 @@ package code.salecar.service.product.promotion;
 
 import code.salecar.dao.DiscountDAO;
 import code.salecar.dao.ProductDAO;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.enumeration.DiscountEntityType;
+import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.Discount;
-import code.salecar.model.product.entity.Product;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PromotionEngine {
@@ -23,16 +24,16 @@ public class PromotionEngine {
     DiscountDAO discountDAO = new DiscountDAO();
 
     public void run() {
-        List<ProductItem> products = productDAO.getAllProducts();
+        List<ProductItemDTO> products = productDAO.getAllProducts();
         List<Discount> discounts = discountDAO.selectAll();
 
-        for (ProductItem product : products) {
+        for (ProductItemDTO product : products) {
 
             Discount bestDiscount = findBestDiscount(product, discounts);
 
             double finalPrice = product.getPrice();
             BigDecimal percent = BigDecimal.ZERO;
-            Date discountUpdatedAt = new Date(product.getCreatedAt().getTime());
+            LocalDateTime discountUpdatedAt = product.getUpdatedAt();
 
             if (bestDiscount != null) {
 
@@ -53,7 +54,7 @@ public class PromotionEngine {
 
     }
 
-    private Discount findBestDiscount(ProductItem product,
+    private Discount findBestDiscount(ProductItemDTO product,
                                       List<Discount> discounts) {
 
         Discount best = null;
@@ -63,17 +64,17 @@ public class PromotionEngine {
 
             boolean applicable = false;
 
-            if (d.getEntityType() == Discount.DiscountEntityType.PRODUCT
+            if (d.getEntityType() == DiscountEntityType.PRODUCT
                     && d.getEntityId() == product.getId()) {
                 applicable = true;
             }
 
-            if (d.getEntityType() == Discount.DiscountEntityType.BRAND
+            if (d.getEntityType() == DiscountEntityType.BRAND
                     && d.getEntityId() == product.getBrandId()) {
                 applicable = true;
             }
 
-            if (d.getEntityType() == Discount.DiscountEntityType.CATEGORY
+            if (d.getEntityType() == DiscountEntityType.CATEGORY
                     && d.getEntityId() == product.getCategoryId()) {
                 applicable = true;
             }
@@ -95,19 +96,19 @@ public class PromotionEngine {
     }
 
     private double calculateAmount(double price, Discount d) {
-        if (d.getValueType() == Discount.DiscountValueType.RATE) {
+        if (d.getValueType() == DiscountValueType.PERCENT) {
             return price * (1 - d.getValue().doubleValue() / 100);
         }
-        if (d.getValueType() == Discount.DiscountValueType.AMOUNT) {
+        if (d.getValueType() == DiscountValueType.AMOUNT) {
             return price - d.getValue().doubleValue();
         }
         return 0;
     }
     private double caculateDiscountPercent(double price, Discount d) {
-        if (d.getValueType() == Discount.DiscountValueType.RATE) {
+        if (d.getValueType() == DiscountValueType.PERCENT) {
             return d.getValue().doubleValue() ;
         }
-        if (d.getValueType() == Discount.DiscountValueType.AMOUNT) {
+        if (d.getValueType() == DiscountValueType.AMOUNT) {
             return   d.getValue().doubleValue() / price * 100;
         }
         return 0;

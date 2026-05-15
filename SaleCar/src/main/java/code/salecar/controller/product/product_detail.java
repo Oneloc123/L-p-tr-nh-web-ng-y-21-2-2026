@@ -1,8 +1,6 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.dto.ProductItem;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.entity.Voucher;
 import code.salecar.service.product.ProductService;
 import code.salecar.service.product.VoucherService;
@@ -36,14 +34,14 @@ public class product_detail extends HttpServlet {
         }
 
         ProductService ps  = new ProductService();
-        ProductDetail product = ps.getProductByID(id);
+        ProductDetailDTO product = ps.getProductByID(id);
         System.out.println("Product: " + product);
         if(product==null){
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        List<ProductDetail> list1 = ps.getRelatedProductBrand(product.getBrandId());
+        List<ProductDetailDTO> list1 = ps.getRelatedProductBrand(product.getBrand().getBrandId());
         request.setAttribute("related", list1);
 
         // Voucher
@@ -56,7 +54,7 @@ public class product_detail extends HttpServlet {
         request.setAttribute("returnUrl", returnUrl);
 
         request.setAttribute("product", product);
-        request.setAttribute("rating", product.getRating());
+        request.setAttribute("rating", product.getRatingDist());
 
         request.getRequestDispatcher("/pages/product-detail.jsp").forward(request, response);
     }

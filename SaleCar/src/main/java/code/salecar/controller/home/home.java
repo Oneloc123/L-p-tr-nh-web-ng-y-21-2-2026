@@ -2,7 +2,7 @@ package code.salecar.controller.home;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.service.home.HomeService;
@@ -21,10 +21,10 @@ public class home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<ProductItem> productNew = hs.getProductNew();
+        List<ProductItemDTO> productNew = hs.getProductNew();
         request.setAttribute("productNew", productNew);
 
-        List<ProductItem> productHot = hs.getProductHot();
+        List<ProductItemDTO> productHot = hs.getProductHot();
         request.setAttribute("productHot", productHot);
 
         List<Product> productByCategory = hs.getProductByCategory(0);

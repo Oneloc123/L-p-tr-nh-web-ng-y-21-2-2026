@@ -1,6 +1,7 @@
 package code.salecar.controller.admin.category;
 
 import code.salecar.model.category.Category;
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -36,27 +37,27 @@ public class category_edit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Category category = new Category();
-        
-        String  idParam = request.getParameter("id");
-        if (idParam != null  && !idParam.isEmpty()) {
+
+        String idParam = request.getParameter("id");
+        if (idParam != null && !idParam.isEmpty()) {
             int id = Integer.parseInt(idParam.trim());
             category.setId(id);
         }
-        String  nameParam = request.getParameter("name");
-        if (nameParam != null  && !nameParam.isEmpty()) {
+        String nameParam = request.getParameter("name");
+        if (nameParam != null && !nameParam.isEmpty()) {
             category.setName(nameParam);
         }
-        String  descriptionParam = request.getParameter("description");
-        if (descriptionParam != null  && !descriptionParam.isEmpty()) {
+        String descriptionParam = request.getParameter("description");
+        if (descriptionParam != null && !descriptionParam.isEmpty()) {
             category.setDescription(descriptionParam);
         }
-        String iconParam =  request.getParameter("icon");
-        if (iconParam != null  && !iconParam.isEmpty()) {
+        String iconParam = request.getParameter("icon");
+        if (iconParam != null && !iconParam.isEmpty()) {
             category.setIcon(iconParam);
         }
-        String statusParam  = request.getParameter("status");
-        if (statusParam != null  && !statusParam.isEmpty()) {
-            category.setStatus(statusParam.trim().toLowerCase());
+        String statusParam = request.getParameter("status");
+        if (statusParam != null && !statusParam.isEmpty()) {
+            category.setStatus(statusParam.equals("active") ? Status.ACTIVE : Status.INACTIVE);
         }
 
         boolean update = categoryService.updateCategory(category);

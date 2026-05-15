@@ -7,11 +7,11 @@ import java.util.List;
 
 public class ImageService {
     ImageDAO imageDAO = new ImageDAO();
-    public String getImage(Image.entityType type ,int id) {
+    public String getImage(Image.entityType type ,long id) {
         return  imageDAO.getImage(type,id);
     }
 
-    public List<String> getImageProduct(int id) {
+    public List<String> getImageProduct(long id) {
         return imageDAO.getImageProduct(id);
     }
 }

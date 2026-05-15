@@ -4,6 +4,7 @@ import code.salecar.dao.CategoryDAO;
 import code.salecar.model.category.Category;
 import code.salecar.model.Image;
 import code.salecar.model.category.CategoryFilter;
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.Image.ImageService;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class CategoryService {
     public List<String> getCategoryName() {
         return categoryDAO.getCategoryName();
     }
-    public String  getCategoryName(int id) {
+    public String  getCategoryName(long id) {
         return categoryDAO.getCategoryName(id);
     }
     public Category  getCategoryById(int id) {
@@ -59,13 +60,13 @@ public class CategoryService {
         Category category = categoryDAO.getCategoryById(id);
         if (category != null) {
             // toggle
-            int newStatus = category.getIntStatus() == 1 ? 0 : 1;
+            Status newStatus = category.getIntStatus() == 1 ? Status.INACTIVE : Status.ACTIVE;
             category.setStatus(newStatus);
             return categoryDAO.updateCategory(category);
         }
         return false;
     }
-    public boolean toggleStatus(int id, int status) {
+    public boolean toggleStatus(int id, Status status) {
         Category category = categoryDAO.getCategoryById(id);
         if (category != null) {
             // toggle
