@@ -5,6 +5,7 @@ import code.salecar.model.brand.Brand;
 import code.salecar.model.Image;
 import code.salecar.model.brand.BrandFilter;
 import code.salecar.model.category.Category;
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.Image.ImageService;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class BrandService {
     BrandDAO brandDAO = new BrandDAO();
     ImageService  imageService = new ImageService();
 
-    public Brand getBrandByID(int brandid) {
+    public Brand getBrandByID(long brandid) {
         Brand brand = brandDAO.getBrandByID(brandid);
         String image = imageService.getImage(Image.entityType.brand,brand.getId());
         brand.setImage(image);
@@ -28,7 +29,7 @@ public class BrandService {
     public List<String> getBrandName() {
         return brandDAO.getBrandName();
     }
-    public String getBrandName(int productId) {
+    public String getBrandName(long productId) {
         return brandDAO.getBrandName(productId);
     }
 
@@ -57,13 +58,13 @@ public class BrandService {
         Brand brand = brandDAO.getBrandByID(id);
         if (brand != null) {
             // toggle
-            int newStatus = brand.getIntStatus() == 1 ? 0 : 1;
+            Status newStatus = brand.getIntStatus() == 1 ? Status.INACTIVE : Status.ACTIVE;
             brand.setStatus(newStatus);
             return brandDAO.updateBrand(brand);
         }
         return false;
     }
-    public boolean toggleStatus(int id, int status) {
+    public boolean toggleStatus(int id, Status status) {
         Brand brand = brandDAO.getBrandByID(id);
         if (brand != null) {
             // toggle

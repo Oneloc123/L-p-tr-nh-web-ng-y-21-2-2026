@@ -2,7 +2,7 @@ package code.salecar.controller.admin.product;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
@@ -113,7 +113,7 @@ public class product_list extends HttpServlet {
         List<Brand> brands = brandService.getBrands();
 
         ProductFilter productFilter = new ProductFilter(searchKeyword, filterCategory, filterBrand, status, filterStock, maxPrice, minPrice, fromDate, toDate, sortBy);
-        List<ProductItem> list = productService.getProductForAdmin(productFilter, page, limit);
+        List<ProductItemDTO> list = productService.getProductForAdmin(productFilter, page, limit);
 
         int totalProduct = productService.getTotalProductForAdmin(productFilter);
         int totalPage = (int) Math.ceil((double) totalProduct / limit);

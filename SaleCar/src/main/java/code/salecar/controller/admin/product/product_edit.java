@@ -2,7 +2,7 @@ package code.salecar.controller.admin.product;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
@@ -48,7 +48,7 @@ public class product_edit extends HttpServlet {
             session.removeAttribute("errors");
         }
 
-        ProductDetail productDetail = productService.getProductByID(id);
+        ProductDetailDTO productDetail = productService.getProductByID(id);
         List<Category> categories = categoryService.getCategory();
         List<Brand> brands = brandService.getBrands();
 

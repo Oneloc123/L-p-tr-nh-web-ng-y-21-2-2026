@@ -1,6 +1,6 @@
 package code.salecar.controller.admin.product;
 
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -31,7 +31,7 @@ public class product_detail extends HttpServlet {
             return;
         }
 
-        ProductDetail productDetail = productService.getProductByID(id);
+        ProductDetailDTO productDetail = productService.getProductByID(id);
         request.setAttribute("product", productDetail);
         request.getRequestDispatcher(request.getContextPath() + "/admin/product/product-detail.jsp").forward(request, response);
 

@@ -1,8 +1,7 @@
 package code.salecar.model;
 
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 
 import java.io.Serializable;
 import java.util.*;
@@ -67,22 +66,22 @@ public class Cart implements Serializable {
         this.items = items;
     }
 
-    public void addProduct(ProductDetail product, int quantity) {
+    public void addProduct(ProductDetailDTO product, int quantity) {
 
         if (quantity <= 0) {
             quantity = 1;
         }
 
-        if (!items.containsKey(product.getId())) {
-            items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
+        if (!items.containsKey(product.getProduct().getId())) {
+            items.put((int) product.getProduct().getId(), new CartItem(product, quantity, product.getProduct().getPrice()));;
         } else {
-            items.get(product.getId()).upQuantity(quantity);
+            items.get(product.getProduct().getId()).upQuantity(quantity);
         }
     }
 
 
-    public void updateItem(ProductDetail product, int quantity) {
-        items.put(product.getId(), new CartItem(product, quantity, product.getPrice()));
+    public void updateItem(ProductDetailDTO product, int quantity) {
+        items.put((int) product.getProduct().getId(), new CartItem(product, quantity, product.getProduct().getPrice()));
 
 
     }

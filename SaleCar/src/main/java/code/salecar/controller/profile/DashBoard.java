@@ -2,9 +2,8 @@ package code.salecar.controller.profile;
 
 import code.salecar.dao.OrderDAO;
 import code.salecar.model.*;
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.address.AddressService;
-import code.salecar.service.order.OrderService;
 import code.salecar.service.product.FavoritesService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -40,9 +39,9 @@ public class DashBoard extends HttpServlet {
             request.setAttribute("listOrder",listOrder);
             // WishList
             FavoritesService fs = new FavoritesService();
-            List<ProductDetail> listWishList = fs.getFavorites(user.getId());
+            List<ProductDetailDTO> listWishList = fs.getFavorites(user.getId());
             int countWishList = 0;
-            for(ProductDetail p :listWishList){
+            for(ProductDetailDTO p :listWishList){
                 countWishList++;
             }
             request.setAttribute("totalFavorites",countWishList);

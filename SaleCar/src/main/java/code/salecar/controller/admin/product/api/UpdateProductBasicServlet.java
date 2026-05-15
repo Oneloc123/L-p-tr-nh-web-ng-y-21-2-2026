@@ -1,7 +1,6 @@
 package code.salecar.controller.admin.product.api;
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -87,14 +86,15 @@ public class UpdateProductBasicServlet extends HttpServlet {
         }
 
         ProductService productService = new ProductService();
-        ProductDetail product = new ProductDetail();
-        product.setId(id);
-        product.setName(name);
-//        product.setSku(sku);
-        product.setCategoryId(categoryId);
-        product.setBrandId(brandId);
-        product.setStatus(status);
-        productService.updateBasicInfo(product);
+//        Cập nhật thông tin cơ bản của sản phẩm
+
+//        ProductDetailDTO product = new ProductDetailDTO();
+//        product.setId(id);
+//        product.setName(name);
+//        product.setCategoryId(categoryId);
+//        product.setBrandId(brandId);
+//        product.setStatus(status);
+//        productService.updateBasicInfo(product);
 
         response.sendRedirect(request.getContextPath()
                 + "/admin/products/detail?id=" + productIdStr);

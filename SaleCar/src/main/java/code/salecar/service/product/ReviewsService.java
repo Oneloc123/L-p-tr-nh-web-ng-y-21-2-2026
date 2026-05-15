@@ -1,7 +1,7 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.ReviewsDAO;
-import code.salecar.model.product.entity.Reviews;
+import code.salecar.model.product.entity.Review;
 import code.salecar.service.user.UserService;
 
 import java.util.List;
@@ -9,19 +9,17 @@ import java.util.List;
 public class ReviewsService {
     private ReviewsDAO reviewsDAO = new ReviewsDAO();
 
-    public List<Reviews> getReviewsByID(int product_id) {
-        List<Reviews> reviews = reviewsDAO.getReviewsByID(product_id);
+    public List<Review> getReviewsByID(long product_id) {
+        List<Review> reviews = reviewsDAO.getReviewsByID(product_id);
         UserService userService = new UserService();
-        for (Reviews review : reviews){
+        for (Review review : reviews){
             String userName = userService.getUserNameById(review.getUserId());
             review.setUserName(userName);
         }
         return  reviews;
     }
 
-
-
-    public boolean addReviews(Reviews reviews) {
+    public boolean addReviews(Review reviews) {
         if (reviews != null){
             return reviewsDAO.addReviews(reviews);
         }else {

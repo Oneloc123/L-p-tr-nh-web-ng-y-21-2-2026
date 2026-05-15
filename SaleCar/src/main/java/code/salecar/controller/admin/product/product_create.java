@@ -2,9 +2,10 @@ package code.salecar.controller.admin.product;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.enumeration.DiscountEntityType;
+import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.entity.Discount;
-import code.salecar.model.product.entity.Product;
 import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
@@ -16,9 +17,8 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/admin/products/create")
@@ -35,7 +35,8 @@ public class product_create extends HttpServlet {
         request.setAttribute("categories", categories);
         request.setAttribute("brands", brands);
         request.getRequestDispatcher("/admin/product/product-create.jsp")
-                .forward(request, response);    }
+                .forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -118,7 +119,7 @@ public class product_create extends HttpServlet {
             }
         }
 
-        
+
         //validation name
         if (nameParam == null || nameParam.trim().isEmpty()) {
             request.setAttribute("error", "Tên sản phẩm không được để trống");
@@ -251,27 +252,24 @@ public class product_create extends HttpServlet {
         // Create list of ProductVariants
         List<ProductVariants> variants = new ArrayList<>();
         for (int i = 0; i < variantNameParams.length; i++) {
-            ProductVariants variant = new ProductVariants(variantNameParams[i], skuParams[i], priceParams[i]);
-            System.out.println("variant prices = " + priceParams[i]);
-
+            ProductVariants variant = ProductVariants.builder().variantName(variantNameParams[i]).sku(skuParams[i]).price(new BigDecimal(priceParams[i])).build();
             variants.add(variant);
         }
 
 
-
         // Create Product object
-        ProductDetail product = new ProductDetail();
-        product.setName(nameParam);
-        product.setBrandId(brandId);
-        product.setCategoryId(categoryId);
-        product.setDescription(descriptionParam);
-        product.setRatio(ratioParam);
-        product.setSize(sizeParam);
-        product.setMaterial(materialParam);
-        product.setOrigin(originParam);
-        product.setStatus(statusInt);
-        product.setVariants(variants);
-        product.setDiscountPercent(discountPercent);
+//        ProductDetailDTO product = new ProductDetailDTO();
+//        product.setName(nameParam);
+//        product.setBrandId(brandId);
+//        product.setCategoryId(categoryId);
+//        product.setDescription(descriptionParam);
+//        product.setRatio(ratioParam);
+//        product.setSize(sizeParam);
+//        product.setMaterial(materialParam);
+//        product.setOrigin(originParam);
+//        product.setStatus(statusInt);
+//        product.setVariants(variants);
+//        product.setDiscountPercent(discountPercent);
 
         // Create product using service
         ProductService productService = new ProductService();
@@ -279,36 +277,36 @@ public class product_create extends HttpServlet {
 
         if (/*productId*/1 > 0) {
             // Create discount if provided
-            if (discountNameParam != null && !discountNameParam.trim().isEmpty() 
+            if (discountNameParam != null && !discountNameParam.trim().isEmpty()
                     && discountValueParam != null && !discountValueParam.trim().isEmpty()
                     && discountValueTypeParam != null && !discountValueTypeParam.trim().isEmpty()) {
                 try {
                     Discount discount = new Discount();
                     discount.setName(discountNameParam);
-                    discount.setValueType(Discount.DiscountValueType.valueOf(discountValueTypeParam.toUpperCase()));
+                    discount.setValueType(DiscountValueType.valueOf(discountValueTypeParam.toUpperCase()));
                     discount.setValue(new BigDecimal(discountValueParam));
-                    discount.setEntityType(Discount.DiscountEntityType.PRODUCT);
+                    discount.setEntityType(DiscountEntityType.PRODUCT);
                     discount.setEntityId(/*productId*/402);
-                    
+
                     // Parse dates if provided
                     if (discountStartDateParam != null && !discountStartDateParam.trim().isEmpty()) {
-                        discount.setStartAt(Date.valueOf(discountStartDateParam));
+                        discount.setStartAt(LocalDateTime.parse(discountStartDateParam));
                     } else {
                         // Mặc định là ngày tạo
-                        discount.setStartAt(new Date(System.currentTimeMillis()));
+                        discount.setStartAt(LocalDateTime.now());
                     }
-                    
+
                     if (discountEndDateParam != null && !discountEndDateParam.trim().isEmpty()) {
-                        discount.setEndAt(Date.valueOf(discountEndDateParam));
+                        discount.setEndAt(LocalDateTime.parse(discountEndDateParam));
                     } else {
                         // Thiết lập mặc định là 30 ngày
                         long thirtyDaysMs = 30 * 24 * 60 * 60 * 1000L;
-                        discount.setEndAt(new Date(System.currentTimeMillis() + thirtyDaysMs));
+                        discount.setEndAt(LocalDateTime.now().plusDays(30));
                     }
-                    
+
                     DiscountService discountService = new DiscountService();
                     int discountId = discountService.createProductDiscount(discount);
-                    
+
                     if (discountId > 0) {
                         System.out.println("Discount created successfully with ID: " + discountId);
                     }
@@ -318,7 +316,7 @@ public class product_create extends HttpServlet {
                     System.err.println("Error creating discount: " + e.getMessage());
                 }
             }
-            
+
             // Success, redirect to product list
             response.sendRedirect(request.getContextPath() + "/admin/products");
         } else {

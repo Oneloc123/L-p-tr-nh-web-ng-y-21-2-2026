@@ -1,6 +1,6 @@
 package code.salecar.model;
 
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.entity.Product;
 
 import java.io.Serializable;
@@ -13,22 +13,22 @@ public class CartItem implements Serializable {
     private double price;
 
     private Product product;
-    private ProductDetail productDetail;
+    private ProductDetailDTO productDetail;
 
 
-    public CartItem(ProductDetail product, int quantity , double price) {
+    public CartItem(ProductDetailDTO product, int quantity , double price) {
 
         this.productDetail = product;
-        this.productId = product.getId();
+        this.productId = (int) product.getProduct().getId();
         this.quantity = quantity;
         this.price = price;
     }
 
-    public ProductDetail getProductDetail() {
+    public ProductDetailDTO getProductDetail() {
         return productDetail;
     }
 
-    public void setProductDetail(ProductDetail productDetail) {
+    public void setProductDetail(ProductDetailDTO productDetail) {
         this.productDetail = productDetail;
     }
 

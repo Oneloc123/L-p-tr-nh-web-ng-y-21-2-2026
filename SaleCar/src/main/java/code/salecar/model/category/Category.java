@@ -1,21 +1,23 @@
 package code.salecar.model.category;
 
+import code.salecar.model.enumeration.Status;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Category {
-    private int id;
+    private long id;
     private String name;
     private String description;
     private String icon;
-    private int status;
-    private Date createdAt;
-    private Date updatedAt;
-
     private String image;
+    private Status status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private int productCount;
 
 
-    public Category(int id, String name, String icon) {
+    public Category(long id, String name, String icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -24,52 +26,28 @@ public class Category {
     public Category() {
     }
 
-    public int getProductCount() {
-        return productCount;
+    public long getId() {
+        return id;
     }
 
-    public void setProductCount(int productCount) {
-        this.productCount = productCount;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public int getIntStatus() {
-        return status;
+    public String getName() {
+        return name;
     }
 
-    public String getStatus() {
-        if (status == 1) {
-            return "active";
-        } else {
-            return "inactive";
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public String getDescription() {
+        return description;
     }
 
-    public void setStatus(String status) {
-        if (status.equals("active")) {
-            this.status = 1;
-        } else if (status.equals("inactive")) {
-            this.status = 0;
-        }
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getIcon() {
@@ -88,27 +66,39 @@ public class Category {
         this.image = image;
     }
 
-    public String getDescription() {
-        return description;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public String getName() {
-        return name;
+    public int getIntStatus() {
+        return status.getCode();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public int getId() {
-        return id;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }
