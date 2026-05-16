@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm: ${product.name} | LUXCAR Admin</title>
+    <title>Chi tiết sản phẩm: ${product.productName} | LUXCAR Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -372,20 +372,20 @@
                                                        class="text-decoration-none">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/products"
                                                        class="text-decoration-none">Sản phẩm</a></li>
-                        <li class="breadcrumb-item active">${product.name}</li>
+                        <li class="breadcrumb-item active">${product.productName}</li>
                     </ol>
                 </nav>
                 <h3 class="fw-bold m-0 mt-2">
                     <i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i>
-                    ${product.name}
+                    ${product.productName}
                 </h3>
             </div>
             <div class="d-flex gap-2">
-                <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}" target="_blank"
+                <a href="${pageContext.request.contextPath}/product-detail?id=${product.productId}" target="_blank"
                    class="admin-btn-outline">
                     <i class="bi bi-eye"></i> Xem trên web
                 </a>
-                <a href="${pageContext.request.contextPath}/admin/products/edit?id=${product.id}"
+                <a href="${pageContext.request.contextPath}/admin/products/edit?id=${product.productId}"
                    class="admin-btn-primary">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
                 </a>
@@ -402,20 +402,20 @@
                     <h5><i class="bi bi-images me-2"></i>Hình ảnh sản phẩm</h5>
                     <div class="text-center mb-3">
                         <img id="mainImage"
-                             src="${product.image != null && not empty product.image ? product.image[0] : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
-                             class="product-detail-image" alt="${product.name}">
+                             src="${product.images != null && not empty product.images ? product.images[0] : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
+                             class="product-detail-image" alt="${product.productName}">
                     </div>
                     <div class="gallery-preview d-flex gap-2 flex-wrap justify-content-center">
-                        <c:forEach items="${product.image}" var="img" varStatus="status">
+                        <c:forEach items="${product.images}" var="img" varStatus="status">
                             <img src="${img}" class="gallery-thumb ${status.index == 0 ? 'active' : ''}"
                                  onclick="changeMainImage('${img}')" alt="Thumb ${status.index + 1}">
                         </c:forEach>
-                        <c:if test="${empty product.image}">
+                        <c:if test="${empty product.images}">
                             <div class="text-muted text-center w-100">Chưa có ảnh</div>
                         </c:if>
                     </div>
                     <div class="mt-3 text-center">
-                        <form action="${pageContext.request.contextPath}/admin/products/${product.id}/upload-image"
+                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/upload-image"
                               method="post" enctype="multipart/form-data" class="d-inline">
                             <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">
                             <button type="button" class="admin-btn-outline btn-sm"
@@ -435,30 +435,30 @@
                         <div class="col-md-6">
                             <div class="info-label">ID sản phẩm</div>
                             <div class="info-value">
-                                #${product.id}
+                                #${product.productId}
                                 <i class="bi bi-copy ms-2" style="cursor: pointer;"
-                                   onclick="copyToClipboard('${product.id}')" data-tooltip="Copy ID"></i>
+                                   onclick="copyToClipboard('${product.productId}')" data-tooltip="Copy ID"></i>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="info-label">SKU</div>
                             <div class="info-value">
-                                ${product.sku != null ? product.sku : 'N/A'}
-                                <c:if test="${product.sku != null}">
-                                    <i class="bi bi-copy ms-2" style="cursor: pointer;"
-                                       onclick="copyToClipboard('${product.sku}')" data-tooltip="Copy SKU"></i>
-                                </c:if>
+<%--                                ${product.sku != null ? product.sku : 'N/A'}--%>
+<%--                                <c:if test="${product.sku != null}">--%>
+<%--                                    <i class="bi bi-copy ms-2" style="cursor: pointer;"--%>
+<%--                                       onclick="copyToClipboard('${product.sku}')" data-tooltip="Copy SKU"></i>--%>
+<%--                                </c:if>--%>
                             </div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="info-label">Tên sản phẩm</div>
-                            <div class="info-value">${product.name}</div>
+                            <div class="info-value">${product.productName}</div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="info-label">Trạng thái</div>
                             <div class="info-value">
-                                <span class="admin-badge ${product.status == 1 ? 'badge-active' : 'badge-inactive'}">
-                                    ${product.status == 1 ? 'Hoạt động' : 'Không hoạt động'}
+                                <span class="admin-badge ${product.status.code == 1 ? 'badge-active' : 'badge-inactive'}">
+                                    ${product.status.code == 1 ? 'Hoạt động' : 'Không hoạt động'}
                                 </span>
                             </div>
                         </div>
@@ -472,12 +472,12 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="info-label">Ngày tạo</div>
-                            <div class="info-value"><fmt:formatDate value="${product.createdAt}"
+                            <div class="info-value"><fmt:formatDate value="${product.createdAtDate}"
                                                                     pattern="dd/MM/yyyy HH:mm"/></div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="info-label">Cập nhật lần cuối</div>
-                            <div class="info-value"><fmt:formatDate value="${product.updatedAt}"
+                            <div class="info-value"><fmt:formatDate value="${product.updatedAtDate}"
                                                                     pattern="dd/MM/yyyy HH:mm"/></div>
                         </div>
                     </div>
@@ -503,9 +503,9 @@
                             <div class="info-label">Giảm giá</div>
                             <div class="info-value">
                                 <span class="badge bg-danger">-${product.discountPercent}%</span>
-                                <c:if test="${product.discount != null}">
+                                <c:if test="${product.activeDiscount != null}">
                                     <small class="text-muted ms-2">
-                                        (Áp dụng đến: <fmt:formatDate value="${product.discount.endDate}"
+                                        (Áp dụng đến: <fmt:formatDate value="${product.activeDiscount.endAtDate}"
                                                                       pattern="dd/MM/yyyy"/>)
                                     </small>
                                 </c:if>
@@ -513,7 +513,7 @@
                         </div>
                     </div>
                     <div class="mt-3">
-                        <a href="${pageContext.request.contextPath}/admin/products/${product.id}/edit-price"
+                        <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/edit-price"
                            class="admin-btn-outline btn-sm">
                             <i class="bi bi-pencil"></i> Chỉnh sửa giá
                         </a>
@@ -559,7 +559,7 @@
                         </div>
                     </div>
                     <div class="mt-3">
-                        <form action="${pageContext.request.contextPath}/admin/products/${product.id}/update-inventory"
+                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/update-inventory"
                               method="post" class="row g-2">
                             <div class="col-auto">
                                 <input type="number" name="quantity" class="form-control form-control-sm"
@@ -622,7 +622,7 @@
                 </c:if>
             </div>
             <div class="mt-3">
-                <a href="${pageContext.request.contextPath}/admin/products/${product.id}/edit-description"
+                <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/edit-description"
                    class="admin-btn-outline btn-sm">
                     <i class="bi bi-pencil"></i> Chỉnh sửa mô tả
                 </a>
@@ -711,10 +711,10 @@
             <h5><i class="bi bi-star me-2"></i>Đánh giá sản phẩm</h5>
             <div class="row">
                 <div class="col-md-3 text-center">
-                    <div class="display-1 fw-bold text-warning">${product.avgRating != null ? product.avgRating : 0}</div>
+                    <div class="display-1 fw-bold text-warning">${product.averageRating != null ? product.averageRating : 0}</div>
                     <div class="review-rating">
                         <c:forEach begin="1" end="5" var="i">
-                            <i class="bi bi-star${i <= (product.avgRating != null ? product.avgRating : 0) ? '-fill' : ''}"></i>
+                            <i class="bi bi-star${i <= (product.averageRating != null ? product.averageRating : 0) ? '-fill' : ''}"></i>
                         </c:forEach>
                     </div>
                     <div class="small text-muted">${product.totalReviews != null ? product.totalReviews : 0} đánh giá
@@ -882,7 +882,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>${product.name}</strong>?</p>
+                <p>Bạn có chắc chắn muốn xóa sản phẩm <strong>${product.productName}</strong>?</p>
                 <c:if test="${hasOrders}">
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle"></i>
@@ -900,7 +900,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="admin-btn-outline" data-bs-dismiss="modal">Hủy</button>
-                <form action="${pageContext.request.contextPath}/admin/products/${product.id}/delete" method="post"
+                <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/delete" method="post"
                       id="deleteForm">
                     <input type="hidden" name="softDelete" id="softDeleteValue" value="true">
                     <button type="submit" class="admin-btn-danger">Xóa sản phẩm</button>

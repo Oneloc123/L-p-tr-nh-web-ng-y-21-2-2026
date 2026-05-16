@@ -3,7 +3,9 @@ package code.salecar.model.product.entity;
 import code.salecar.model.enumeration.DiscountValueType;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class DiscountInfo {
     private Long discountId;
@@ -21,6 +23,27 @@ public class DiscountInfo {
         this.value = builder.value;
         this.startAt = builder.startAt;
         this.endAt = builder.endAt;}
+
+    public Long getDiscountId() {
+        return discountId;
+    }
+    public String getName() {
+        return name;
+    }
+    public DiscountValueType getDiscountType() {
+        return discountType;
+    }
+    public BigDecimal getValue() {
+        return value;
+    }
+    public LocalDateTime getStartAt() {
+        return startAt;
+    }
+    public LocalDateTime getEndAt() {
+        return endAt;
+    }
+    public Date getStartAtDate() {return Timestamp.valueOf(startAt);}
+    public Date getEndAtDate() {return Timestamp.valueOf(endAt);}
 
     public static Builder builder() { return new Builder(); }
     public static class Builder {

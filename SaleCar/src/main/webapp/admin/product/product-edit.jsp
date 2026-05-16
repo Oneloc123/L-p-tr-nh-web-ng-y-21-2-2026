@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa sản phẩm: ${product.name} | LUXCAR Admin</title>
+    <title>Chỉnh sửa sản phẩm: ${product.productName} | LUXCAR Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Include TinyMCE for rich description editor -->
@@ -252,7 +252,7 @@
                     <ol class="breadcrumb mb-1">
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/dashboard" class="text-decoration-none">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/products" class="text-decoration-none">Sản phẩm</a></li>
-                        <li class="breadcrumb-item active">Chỉnh sửa: ${product.name}</li>
+                        <li class="breadcrumb-item active">Chỉnh sửa: ${product.productName}</li>
                     </ol>
                 </nav>
                 <h3 class="fw-bold m-0 mt-2">
@@ -261,7 +261,7 @@
                 </h3>
             </div>
             <div class="d-flex gap-2">
-                <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}" target="_blank" class="admin-btn-outline">
+                <a href="${pageContext.request.contextPath}/product-detail?id=${product.productId}" target="_blank" class="admin-btn-outline">
                     <i class="bi bi-eye"></i> Xem trên web
                 </a>
                 <a href="${pageContext.request.contextPath}/admin/products" class="admin-btn-outline">
@@ -277,11 +277,11 @@
         <div class="info-section" id="basicInfoSection">
             <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
             <form id="basicInfoForm" action="${pageContext.request.contextPath}/admin/product/update-basic-info" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" value="${product.name}" placeholder="${product.name}" required minlength="3" maxlength="255">
+                        <input type="text" class="form-control" name="name" value="${product.productName}" placeholder="${product.productName}" required minlength="3" maxlength="255">
                         <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div><div id="nameError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -312,8 +312,8 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Trạng thái</label>
                         <select class="form-select" name="status">
-                            <option value="1" ${product.status == 1? 'selected' : ''}>Hoạt động (Active)</option>
-                            <option value="0" ${product.status == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
+                            <option value="1" ${product.status.code == 1? 'selected' : ''}>Hoạt động (Active)</option>
+                            <option value="0" ${product.status.code == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
                         </select>
                         <small class="text-muted">Inactive: sản phẩm tạm ẩn trên shop</small>
                         <div id="statusError" class="text-danger"></div>
@@ -331,7 +331,7 @@
             <h5 class="text-danger">chức năng đang phát triển</h5>
 
             <form id="priceForm" action="${pageContext.request.contextPath}/admin/product/update-price" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="row">
 
                     <div class="col-md-4 mb-3">
@@ -386,7 +386,7 @@
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/product/upload-image" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="productId" value="${product.productId}">
                         <div class="input-group">
                             <input type="file" class="form-control" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
                             <button class="admin-btn-primary" type="submit">Tải ảnh lên</button>
@@ -396,24 +396,24 @@
                 </div>
                 <div class="col-md-12">
                     <div class="d-flex flex-wrap gap-3">
-                        <c:forEach items="${product.image}" var="imgUrl" varStatus="status">
+                        <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
                             <div class="position-relative" style="width: 100px;">
                                 <img src="${imgUrl}" class="gallery-thumb w-100 h-auto" style="height: 80px;">
                                 <div class="mt-1 d-flex gap-1 justify-content-center">
                                     <form action="${pageContext.request.contextPath}/admin/product/set-main-image" method="post">
-                                        <input type="hidden" name="productId" value="${product.id}">
+                                        <input type="hidden" name="productId" value="${product.productId}">
                                         <input type="hidden" name="imageUrl" value="${imgUrl}">
                                         <button type="submit" class="btn btn-sm btn-outline-primary" title="Đặt làm ảnh chính"><i class="bi bi-star-fill"></i></button>
                                     </form>
                                     <form action="${pageContext.request.contextPath}/admin/product/delete-image" method="post" onsubmit="return confirm('Xóa ảnh này?')">
-                                        <input type="hidden" name="productId" value="${product.id}">
+                                        <input type="hidden" name="productId" value="${product.productId}">
                                         <input type="hidden" name="imageUrl" value="${imgUrl}">
                                         <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                     </form>
                                 </div>
                             </div>
                         </c:forEach>
-                        <c:if test="${empty product.image}"><div class="text-muted">Chưa có ảnh</div></c:if>
+                        <c:if test="${empty product.images}"><div class="text-muted">Chưa có ảnh</div></c:if>
                     </div>
                 </div>
             </div>
@@ -423,7 +423,7 @@
         <div class="info-section">
             <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
             <form id="descForm" action="${pageContext.request.contextPath}/admin/product/update-description" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="mb-3">
                     <label class="form-label">Mô tả chi tiết</label>
                     <textarea id="tinyDescription" name="description">${product.description}</textarea>
@@ -438,7 +438,7 @@
         <div class="info-section">
             <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm (Model Car)</h5>
             <form id="attributeForm" action="${pageContext.request.contextPath}/admin/product/update-attributes" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Tỷ lệ (Scale)</label>
@@ -469,7 +469,7 @@
             <h5 class="text-danger">chức năng đang phát triển</h5>
 
             <form id="inventoryForm" action="${pageContext.request.contextPath}/admin/product/update-inventory" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Số lượng tồn kho</label>
@@ -497,7 +497,7 @@
             <h5 class="text-danger">chức năng đang phát triển</h5>
 
             <form id="tagsForm" action="${pageContext.request.contextPath}/admin/product/update-tags" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="mb-3">
                     <label class="form-label">Tags (cách nhau bằng dấu phẩy)</label>
                     <input type="text" class="form-control" name="tags" value="${tagString}" placeholder="VD: mới, hot, best-seller">
@@ -521,7 +521,7 @@
         <div class="info-section">
             <h5><i class="bi bi-link-45deg me-2"></i>SEO & URL</h5>
             <form id="seoForm" action="${pageContext.request.contextPath}/admin/product/update-seo" method="post">
-                <input type="hidden" name="productId" value="${product.id}">
+                <input type="hidden" name="productId" value="${product.productId}">
                 <div class="mb-3">
                     <label class="form-label">Đường dẫn tĩnh (Slug)</label>
                     <input type="text" class="form-control" name="slug" value="${productSlug}" placeholder="ten-san-pham-dep">
@@ -540,8 +540,8 @@
         <!-- 9. EDIT HISTORY & INFO -->
         <div class="info-section">
             <h5><i class="bi bi-clock-history me-2"></i>Lịch sử chỉnh sửa</h5>
-            <div><span class="info-label">Cập nhật lần cuối:</span> <fmt:formatDate value="${product.updatedAt}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
-            <div><span class="info-label">Ngày tạo:</span> <fmt:formatDate value="${product.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
+            <div><span class="info-label">Cập nhật lần cuối:</span> <fmt:formatDate value="${product.updatedAtDate}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
+            <div><span class="info-label">Ngày tạo:</span> <fmt:formatDate value="${product.createdAtDate}" pattern="dd/MM/yyyy HH:mm:ss"/></div>
             <c:if test="${not empty priceHistoryList}">
                 <div class="mt-2"><button class="btn btn-sm admin-btn-outline" type="button" data-bs-toggle="collapse" data-bs-target="#priceHistoryCollapse">Xem lịch sử giá</button></div>
                 <div class="collapse mt-2" id="priceHistoryCollapse">
@@ -565,7 +565,7 @@
                     <div class="fw-bold">Nhân bản sản phẩm</div>
                     <div class="small text-muted">Tạo bản sao với tên mới</div>
                     <form action="${pageContext.request.contextPath}/admin/product/duplicate" method="post">
-                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="productId" value="${product.productId}">
                         <button type="submit" class="admin-btn-outline mt-1"><i class="bi bi-files"></i> Duplicate</button>
                     </form>
                 </div>
@@ -594,11 +594,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Xóa sản phẩm <strong>${product.name}</strong> (ID: ${product.id})</p>
+                <p>Xóa sản phẩm <strong>${product.productName}</strong> (ID: ${product.productId})</p>
                 <p>Vui lòng gõ <strong class="text-danger">DELETE</strong> để xác nhận:</p>
                 <input type="text" id="deleteConfirmText" class="form-control" placeholder="DELETE">
                 <form id="deleteProductForm" action="${pageContext.request.contextPath}/admin/product/delete" method="post">
-                    <input type="hidden" name="productId" value="${product.id}">
+                    <input type="hidden" name="productId" value="${product.productId}">
                 </form>
             </div>
             <div class="modal-footer">
@@ -704,7 +704,7 @@
         skuInput.addEventListener('blur', function() {
             let sku = this.value;
             if(sku) {
-                fetch('${pageContext.request.contextPath}/admin/product/check-sku?sku='+encodeURIComponent(sku)+'&productId=${product.id}')
+                fetch('${pageContext.request.contextPath}/admin/product/check-sku?sku='+encodeURIComponent(sku)+'&productId=${product.productId}')
                     .then(res => res.json())
                     .then(data => {
                         if(data.exists) {
