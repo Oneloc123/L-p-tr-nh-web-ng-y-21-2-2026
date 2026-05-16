@@ -178,7 +178,6 @@ public class BrandDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-
                 list.add(rs.getString("name"));
             }
 

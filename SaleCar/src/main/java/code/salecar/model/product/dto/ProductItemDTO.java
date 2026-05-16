@@ -4,6 +4,7 @@ import code.salecar.model.enumeration.Status;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ProductItemDTO implements Serializable {
 
@@ -159,6 +160,9 @@ public class ProductItemDTO implements Serializable {
     }
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+    public Date getCreatedAtDate() {
+        return java.sql.Timestamp.valueOf(createdAt);
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;

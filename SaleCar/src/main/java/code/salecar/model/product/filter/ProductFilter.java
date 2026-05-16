@@ -13,8 +13,8 @@ public class ProductFilter {
     private BigDecimal maxPrice;
     private BigDecimal minPrice;
 
-    private List<Integer> category ;
-    private List<Integer> brand;
+    private List<Long> category ;
+    private List<Long> brand;
     private int status;
     private String stock;
     private Date fromDate;
@@ -35,7 +35,7 @@ public class ProductFilter {
         this.sortByNewestDiscount = false;
     }
 
-    public ProductFilter(String keyword, List<Integer> category, List<Integer> brand, int status, String stock, BigDecimal maxPrice, BigDecimal minPrice, Date fromDate, Date toDate, sortBy sortBy) {
+    public ProductFilter(String keyword, List<Long> category, List<Long> brand, int status, String stock, BigDecimal maxPrice, BigDecimal minPrice, Date fromDate, Date toDate, sortBy sortBy) {
         this.keyword = keyword;
         this.category = category;
         this.brand = brand;
@@ -58,19 +58,19 @@ public class ProductFilter {
         CREATED_DESC
     }
 
-    public List<Integer> getCategory() {
+    public List<Long> getCategory() {
         return category;
     }
 
-    public void setCategory(List<Integer> category) {
+    public void setCategory(List<Long> category) {
         this.category = category;
     }
 
-    public List<Integer> getBrand() {
+    public List<Long> getBrand() {
         return brand;
     }
 
-    public void setBrand(List<Integer> brand) {
+    public void setBrand(List<Long> brand) {
         this.brand = brand;
     }
 
