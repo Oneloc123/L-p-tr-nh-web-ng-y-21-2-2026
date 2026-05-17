@@ -1,6 +1,7 @@
 package code.salecar.controller.admin.brand;
 
 import code.salecar.model.brand.Brand;
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.BrandService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -47,7 +48,7 @@ public class brand_edit extends HttpServlet {
         }
         String statusParam  = request.getParameter("status");
         if (statusParam != null  && !statusParam.isEmpty()) {
-            brand.setStatus(statusParam.trim().toLowerCase());
+            brand.setStatus(Status.valueOf(statusParam.trim()));
         }
         String linkBrandParam = request.getParameter("linkBrand");
         if (linkBrandParam != null  && !linkBrandParam.isEmpty()) {

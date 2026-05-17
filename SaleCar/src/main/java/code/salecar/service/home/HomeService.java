@@ -2,7 +2,7 @@ package code.salecar.service.home;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.service.product.BrandService;
@@ -40,11 +40,11 @@ public class HomeService {
         return null;
     }
 
-    public List<ProductItem> getProductNew(){
+    public List<ProductItemDTO> getProductNew(){
         return productService.getProductNew();
     }
 
-    public List<ProductItem> getProductHot() {
+    public List<ProductItemDTO> getProductHot() {
         return productService.getProductHot();
     }
 

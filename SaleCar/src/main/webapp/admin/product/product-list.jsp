@@ -542,12 +542,12 @@
                                     </td>
                                     <td>
                                             <span class="admin-badge-status
-                                                ${product.status == 1 ? 'admin-badge-active' :
-                                                  (product.status == 0 ? 'admin-badge-inactive' : 'admin-badge-draft')}">
-                                                    ${product.status == 1 ? 'Hoạt động' : (product.status == 0 ? 'Không hoạt động' : 'Nháp')}
+                                                ${product.status.code == 1 ? 'admin-badge-active' :
+                                                  (product.status.code == 0 ? 'admin-badge-inactive' : 'admin-badge-draft')}">
+                                                    ${product.status.code == 1 ? 'Hoạt động' : (product.status.code == 0 ? 'Không hoạt động' : 'Nháp')}
                                             </span>
                                     </td>
-                                    <td><fmt:formatDate value="${product.createdAt}" pattern="dd/MM/yyyy"/></td>
+                                    <td><fmt:formatDate value="${product.createdAtDate}" pattern="dd/MM/yyyy"/></td>
                                     <td>
                                         <a href="/admin/products/detail?id=${product.id}" class="admin-action-btn admin-action-view text-decoration-none">
                                             <i class="bi bi-eye"></i>

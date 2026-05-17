@@ -1,5 +1,6 @@
 package code.salecar.controller.admin.brand;
 
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.ServletException;
@@ -39,11 +40,11 @@ public class brand_bulk_action extends HttpServlet {
         try {
             if (action.equals("active")) {
                 for (int id : ids) {
-                    brandService.toggleStatus(id,1);
+                    brandService.toggleStatus(id, Status.ACTIVE);
                 }
             }else if (action.equals("inactive")) {
                 for (int id : ids) {
-                    brandService.toggleStatus(id,0);
+                    brandService.toggleStatus(id,Status.INACTIVE);
                 }
             }
 

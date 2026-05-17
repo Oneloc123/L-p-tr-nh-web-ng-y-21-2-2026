@@ -1,6 +1,6 @@
 package code.salecar.dao;
 
-import code.salecar.model.product.entity.Reviews;
+import code.salecar.model.product.entity.Review;
 import code.salecar.utils.DBConnection;
 
 import java.sql.Date;
@@ -11,20 +11,22 @@ import java.util.List;
 
 public class ReviewsDAO {
 
-    public List<Reviews> getReviewsByID(int id) {
-        List<Reviews> list = new ArrayList<>();
+    public List<Review> getReviewsByID(long id) {
+        List<Review> list = new ArrayList<>();
         String query = "select * from reviews r join product p on r.product_id = p.id where p.id = ? ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Reviews r = new Reviews();
-                r.setUserId(rs.getInt("user_id"));
-                r.setProductId(rs.getInt("product_id"));
-                r.setRating(rs.getInt("rating"));
-                r.setComment(rs.getString("comment"));
-                r.setCreatedAt(rs.getDate("CreateAt"));
+                Review r =  Review.builder()
+                        .id(rs.getLong("id"))
+                        .userId(rs.getInt("user_id"))
+                        .productId(rs.getLong("product_id"))
+                        .rating(rs.getInt("rating"))
+                        .comment(rs.getString("comment"))
+                        .createdAt(rs.getTimestamp("CreateAt").toLocalDateTime())
+                        .build();
                 list.add(r);
 
             }
@@ -35,7 +37,7 @@ public class ReviewsDAO {
 
     }
 
-    public boolean addReviews(Reviews r) {
+    public boolean addReviews(Review r) {
         String sql = "insert into reviews" +
                 "(user_id,product_id, rating, comment, CreateAt, UpdateAt) " +
                 "values " +
@@ -43,7 +45,7 @@ public class ReviewsDAO {
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
             ps.setInt(1, r.getUserId());
-            ps.setInt(2, r.getProductId());
+            ps.setLong(2, r.getProductId());
             ps.setInt(3, r.getRating());
             ps.setString(4, r.getComment());
             ps.setDate(5, new Date(System.currentTimeMillis()));

@@ -1,5 +1,6 @@
 package code.salecar.controller.admin.category;
 
+import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -38,11 +39,11 @@ public class category_bulk_action extends HttpServlet {
         try {
             if (action.equals("active")) {
                 for (int id : ids) {
-                    categoryService.toggleStatus(id,1);
+                    categoryService.toggleStatus(id, Status.ACTIVE);
                 }
             }else if (action.equals("inactive")) {
                 for (int id : ids) {
-                    categoryService.toggleStatus(id,0);
+                    categoryService.toggleStatus(id,Status.INACTIVE);
                 }
             }
 

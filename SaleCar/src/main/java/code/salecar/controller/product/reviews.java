@@ -1,6 +1,6 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.product.entity.Reviews;
+import code.salecar.model.product.entity.Review;
 import code.salecar.model.User;
 import code.salecar.service.product.ReviewsService;
 import jakarta.servlet.*;
@@ -18,7 +18,7 @@ public class reviews extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        long productId = Long.parseLong(request.getParameter("productId"));
         int rating = Integer.parseInt(request.getParameter("rating"));
         String comment = request.getParameter("comment");
 
@@ -29,7 +29,7 @@ public class reviews extends HttpServlet {
             return;
         }
 
-        Reviews reviews = new Reviews();
+        Review reviews = new Review();
         reviews.setProductId(productId);
         reviews.setRating(rating);
         reviews.setComment(comment);

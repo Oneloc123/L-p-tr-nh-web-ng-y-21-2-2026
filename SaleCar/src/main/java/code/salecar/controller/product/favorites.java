@@ -1,7 +1,6 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.User;
 import code.salecar.model.product.entity.Voucher;
 import code.salecar.model.product.filter.ProductFilter;
@@ -30,7 +29,7 @@ public class favorites extends HttpServlet {
             response.sendRedirect("/login");
             return;
         }
-        List<ProductDetail> favoritesProducts = favoritesService.getFavorites(user.getId());
+        List<ProductDetailDTO> favoritesProducts = favoritesService.getFavorites(user.getId());
         Set<String> favoritesBrands = favoritesService.getFavoritesBrand(favoritesProducts);
         Set<String> favoritesCategory = favoritesService.getFavoritesCategory(favoritesProducts);
 
@@ -62,7 +61,7 @@ public class favorites extends HttpServlet {
         filter.setSortByNewestDiscount(newest);
 
         ProductService productService = new ProductService();
-        List<ProductDetail> products = productService.sortProducFilter(favoritesProducts, filter);
+        List<ProductDetailDTO> products = productService.sortProducFilter(favoritesProducts, filter);
 
         // Voucher
         VoucherService vs = new VoucherService();

@@ -1,7 +1,6 @@
 package code.salecar.controller.product;
 
-import code.salecar.model.product.dto.ProductItem;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.Voucher;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.BrandService;
@@ -131,7 +130,7 @@ public class products extends HttpServlet {
         /* =========================
            GET PRODUCT DATA
         ========================= */
-        List<ProductItem> list = ps.getProductFilter(filter, page, limit);
+        List<ProductItemDTO> list = ps.getProductFilter(filter, page, limit);
         int totalProduct = ps.getTotalProduct(filter);
 
         int totalPage = (int) Math.ceil((double) totalProduct / limit);

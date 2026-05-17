@@ -1,39 +1,41 @@
 package code.salecar.dao;
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.enumeration.Status;
+import code.salecar.model.product.dto.ProductDetailDTO;
+import code.salecar.model.product.dto.ProductItemDTO;
+import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.model.product.entity.Product;
 import code.salecar.utils.DBConnection;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.sql.Date;
 import java.util.List;
 
 public class ProductDAO {
 
 
-    //Home
-    public List<ProductItem> getProductNew() {
-        List<ProductItem> products = new ArrayList<>();
+    // Lấy danh sách sản phẩm mới nhất (dùng cho trang chủ)
+    public List<ProductItemDTO> getProductNew() {
+        List<ProductItemDTO> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by created_at desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem p = new ProductItem(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("ratio")
-                );
+                ProductItemDTO p = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .build();
                 products.add(p);
             }
         } catch (Exception e) {
@@ -43,24 +45,24 @@ public class ProductDAO {
 
     }
 
-    //Home
-    public List<ProductItem> getProductHot() {
-        List<ProductItem> products = new ArrayList<>();
+    //
+    public List<ProductItemDTO> getProductHot() {
+        List<ProductItemDTO> products = new ArrayList<>();
         String query = "select * from product where status = 1 order by price desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem p = new ProductItem(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("ratio")
-                );
+                ProductItemDTO p = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .build();
                 products.add(p);
             }
         } catch (Exception e) {
@@ -70,7 +72,7 @@ public class ProductDAO {
     }
 
 
-    //Products
+    //Tổng số lượng sản phẩm theo filter (không phân trang)
     public int getTotalProduct(ProductFilter filter) {
 
         List<Object> params = new ArrayList<>();
@@ -151,10 +153,10 @@ public class ProductDAO {
         return 0;
     }
 
-    //Produtcs
-    public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
+    //Lấy danh sách sản phẩm theo filter và phân trang (dùng cho trang danh sách sản phẩm ở phần user)
+    public List<ProductItemDTO> getProductFilter(ProductFilter filter, int page, int limit) {
 
-        List<ProductItem> products = new ArrayList<>();
+        List<ProductItemDTO> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
         String sql = "select   pr.* from product pr  " +
@@ -231,16 +233,16 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem p = new ProductItem(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("ratio")
-                );
+                ProductItemDTO p = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .build();
 
 
                 products.add(p);
@@ -253,13 +255,13 @@ public class ProductDAO {
     }
 
 
-    //Detail
-    public Product getProductByID(int id) {
+    //Lấy thông tin chi tiết của sản phẩm để hiển thị ở trang chi tiết sản phẩm
+    public Product getProductByID(long id) {
         Product p = null;
         String query = "select * from product where id = ? ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 p = new Product(
@@ -268,7 +270,7 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getDouble("final_price"),
                         rs.getDouble("discount_percent"),
-                        rs.getDate("discount_updated_at"),
+                        rs.getTimestamp("discount_updated_at").toLocalDateTime(),
                         rs.getInt("brand_id"),
                         rs.getInt("category_id"),
                         rs.getString("description"),
@@ -276,9 +278,9 @@ public class ProductDAO {
                         rs.getString("size"),
                         rs.getString("material"),
                         rs.getString("origin"),
-                        rs.getInt("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
+                        Status.fromCode(rs.getInt("status")),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at").toLocalDateTime()
                 );
 
             }
@@ -288,7 +290,7 @@ public class ProductDAO {
         return p;
     }
 
-    //Detail
+    //Lấy danh sách ID sản phẩm liên quan cùng chất liệu (material) để hiển thị ở phần sản phẩm liên quan trong trang chi tiết sản phẩm
     public List<Integer> getRelatedProductMaterial(String byWith) {
         List<Integer> products = new ArrayList<>();
         String query = "select * from product where  status = 1 " +
@@ -309,9 +311,9 @@ public class ProductDAO {
     }
 
 
-    //Discount
-    public List<ProductItem> getAllProducts() {
-        List<ProductItem> products = new ArrayList<>();
+    //Lấy tất cả sản phẩm (dùng để cập nhật giá sau khi có thông tin giảm giá mới nhất)
+    public List<ProductItemDTO> getAllProducts() {
+        List<ProductItemDTO> products = new ArrayList<>();
         String query = "select * from product ";
 
         try (Connection conn = DBConnection.getConnection();
@@ -319,16 +321,14 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem product = new ProductItem(
-                        rs.getInt("id"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getDate("created_at")
-                );
-
+                ProductItemDTO product = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .price(rs.getDouble("price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                        .build();
                 products.add(product);
             }
 
@@ -340,8 +340,8 @@ public class ProductDAO {
         return products;
     }
 
-    //Discount
-    public void updateFinalPrice(int id, double finalPrice, BigDecimal value, Date updatedAt) {
+    //Cập nhật giá sau khi có thông tin giảm giá mới nhất (giá cuối cùng, phần trăm giảm giá, thời gian cập nhật)
+    public void updateFinalPrice(long id, double finalPrice, BigDecimal value, LocalDateTime updatedAt) {
         String query = "update product  " +
                 " set final_price = ?, discount_percent = ?, updated_at = ?,discount_updated_at = ?  " +
                 " where id = ? ";
@@ -350,8 +350,8 @@ public class ProductDAO {
             ps.setDouble(1, finalPrice);
             ps.setBigDecimal(2, value);
             ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-            ps.setDate(4, updatedAt);
-            ps.setInt(5, id);
+            ps.setTimestamp(4, Timestamp.valueOf(updatedAt));
+            ps.setLong(5, id);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -362,7 +362,7 @@ public class ProductDAO {
     }
 
 
-    //Scale
+    //Lấy tổng số lượng scale (tỉ lệ) của sản phẩm để làm tham số filter
     public int getTotalScale() {
         String query = "SELECT COUNT(DISTINCT ratio) AS total_ratio FROM product;";
         try (Connection conn = DBConnection.getConnection();
@@ -382,6 +382,7 @@ public class ProductDAO {
         return 0;
     }
 
+    //Lấy tên các scale (tỉ lệ) của sản phẩm để làm tham số filter
     public List<String> getScaleName() {
         List<String> scaleName = new ArrayList<>();
         String query = "SELECT DISTINCT ratio FROM product;";
@@ -402,6 +403,7 @@ public class ProductDAO {
         return scaleName;
     }
 
+    // Lấy  giá cao nhất của sản phẩm để làm tham số filter
     public BigDecimal getMaxPrice() {
         String query = "SELECT MAX(final_price) AS max_final_price FROM product;";
         try (Connection conn = DBConnection.getConnection();
@@ -421,18 +423,20 @@ public class ProductDAO {
         return BigDecimal.ZERO;
     }
 
-    public List<ProductItem> getRelatedProductBrand(int brandId) {
-        List<ProductItem> products = new ArrayList<>();
+    // Lấy các sản phẩm liên quan cùng thương hiệu
+    public List<ProductItemDTO> getRelatedProductBrand(long brandId) {
+        List<ProductItemDTO> products = new ArrayList<>();
         String query = "select * from product where brand_id = ? ";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, brandId);
+            ps.setLong(1, brandId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem product = new ProductItem(
-                        rs.getInt("id")
-                );
+                ProductItemDTO product = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .build();
+
 
                 products.add(product);
             }
@@ -445,8 +449,9 @@ public class ProductDAO {
         return products;
     }
 
-    public List<ProductItem> getProductForAdmin(ProductFilter filter, int page, int limit) {
-        List<ProductItem> products = new ArrayList<>();
+    //Lấy danh sách sản phẩm cho admin với filter và phân trang
+    public List<ProductItemDTO> getProductForAdmin(ProductFilter filter, int page, int limit) {
+        List<ProductItemDTO> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
         String sql = "select   pr.* from product pr  " +
@@ -544,21 +549,19 @@ public class ProductDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductItem p = new ProductItem(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
-
-
-                products.add(p);
+                ProductItemDTO product = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .status(Status.fromCode(rs.getInt("status")))
+                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                        .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
+                        .build();
+                products.add(product);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -567,6 +570,7 @@ public class ProductDAO {
         return products;
     }
 
+    //Tổng danh sách sản phẩm cho admin với filter (không phân trang)
     public int getTotalProductForAdmin(ProductFilter filter) {
         List<Object> params = new ArrayList<>();
 
@@ -665,17 +669,18 @@ public class ProductDAO {
         return 0;
     }
 
-    public void updateBasicInfo(ProductDetail product) {
+    //Cập nhật thông tin cơ bản của sản phẩm (tên, danh mục, thương hiệu, trạng thái)
+    public void updateBasicInfo(ProductDetailDTO product) {
         String query = "update product  " +
                 " set name = ?, category_id = ?, brand_id = ?,status = ?  " +
                 " where id = ? ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getCategoryId());
-            ps.setInt(3, product.getBrandId());
-            ps.setInt(4, product.getStatus());
-            ps.setInt(5, product.getId());
+            ps.setString(1, product.getProduct().getName());
+            ps.setLong(2, product.getCategory().getCategoryId());
+            ps.setLong(3, product.getBrand().getBrandId());
+            ps.setInt(4, product.getProduct().getStatus().getCode());
+            ps.setLong(5, product.getProduct().getId());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -686,7 +691,8 @@ public class ProductDAO {
 
     }
 
-    public int insertProduct(Product product) {
+    //Thêm sản phẩm mới vào cơ sở dữ liệu và trả về ID của sản phẩm vừa được thêm
+    public int insertProduct(ProductDetailDTO product) {
 
         String query =
                 "INSERT INTO product " +
@@ -717,23 +723,23 @@ public class ProductDAO {
                 )
         ) {
 
-            ps.setString(1, product.getName());
-            ps.setDouble(2, product.getPrice());
-            ps.setDouble(3, product.getFinalPrice());
-            ps.setDouble(4, product.getDiscountPercent());
+            ps.setString(1, product.getProduct().getName());
+            ps.setDouble(2, product.getProduct().getPrice());
+            ps.setDouble(3, product.getProduct().getFinalPrice());
+            ps.setDouble(4, product.getProduct().getDiscountPercent());
 
             ps.setNull(5, java.sql.Types.TIMESTAMP);
 
-            ps.setInt(6, product.getBrandId());
-            ps.setInt(7, product.getCategoryId());
+            ps.setLong(6, product.getBrand().getBrandId());
+            ps.setLong(7, product.getCategory().getCategoryId());
 
-            ps.setString(8, product.getDescription());
-            ps.setString(9, product.getRatio());
-            ps.setString(10, product.getSize());
-            ps.setString(11, product.getMaterial());
-            ps.setString(12, product.getOrigin());
+            ps.setString(8, product.getProduct().getDescription());
+            ps.setString(9, product.getProduct().getRatio());
+            ps.setString(10, product.getProduct().getSize());
+            ps.setString(11, product.getProduct().getMaterial());
+            ps.setString(12, product.getProduct().getOrigin());
 
-            ps.setInt(13, product.getStatus());
+            ps.setInt(13, product.getProduct().getStatus().getCode());
 
             Timestamp now = new Timestamp(System.currentTimeMillis());
 
@@ -758,5 +764,20 @@ public class ProductDAO {
         }
 
         return -1;
+    }
+
+    //
+    public void insertVariant(ProductVariants variant) {
+        String query = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setLong(1, variant.getProductId());
+            ps.setString(2, variant.getVariantName());
+            ps.setBigDecimal(3, variant.getPrice());
+            ps.setString(4, variant.getSku());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
