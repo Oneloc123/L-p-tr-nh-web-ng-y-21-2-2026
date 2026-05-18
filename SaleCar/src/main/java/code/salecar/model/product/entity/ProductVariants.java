@@ -12,8 +12,6 @@ public class ProductVariants implements Serializable {
     private String variantName;
     private String sku;
     private BigDecimal price;
-    private int quantity;          // tồn kho
-    private int reservedQuantity;  // số lượng đã đặt nhưng chưa thanh toán (optional)
 
     public ProductVariants() {
     }
@@ -24,8 +22,7 @@ public class ProductVariants implements Serializable {
         this.variantName = variantName;
         this.sku = sku;
         this.price = price;
-        this.quantity = quantity;
-        this.reservedQuantity = reservedQuantity;
+
     }
     private ProductVariants(Builder builder) {
         this.id = builder.id;
@@ -33,8 +30,7 @@ public class ProductVariants implements Serializable {
         this.variantName = builder.variantName;
         this.sku = builder.sku;
         this.price = builder.price;
-        this.quantity = builder.quantity;
-        this.reservedQuantity = builder.reservedQuantity;
+
     }
 
     public long getId() {
@@ -67,18 +63,7 @@ public class ProductVariants implements Serializable {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-    public int getQuantity() {
-        return quantity;
-    }
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-    public int getReservedQuantity() {
-        return reservedQuantity;
-    }
-    public void setReservedQuantity(int reservedQuantity) {
-        this.reservedQuantity = reservedQuantity;
-    }
+
 
     // 5. Builder pattern
     public static Builder builder() {
@@ -160,8 +145,6 @@ public class ProductVariants implements Serializable {
                 ", variantName='" + variantName + '\'' +
                 ", sku='" + sku + '\'' +
                 ", price=" + price +
-                ", quantity=" + quantity +
-                ", reservedQuantity=" + reservedQuantity +
-                '}';
+                         '}';
     }
 }

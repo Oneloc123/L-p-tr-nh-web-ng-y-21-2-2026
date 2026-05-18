@@ -1,6 +1,6 @@
 package code.salecar.Test;
 
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 
