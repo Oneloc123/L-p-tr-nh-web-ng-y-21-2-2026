@@ -3,8 +3,7 @@ package code.salecar.dao;
 import code.salecar.model.*;
 
 import code.salecar.model.product.entity.Product;
-import code.salecar.utils.DBConnection;
-import com.fasterxml.jackson.core.JsonStreamContext;
+import code.salecar.config.DBConnection;
 
 import java.sql.*;
 import java.util.*;

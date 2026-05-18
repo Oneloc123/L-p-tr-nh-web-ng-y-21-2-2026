@@ -4,9 +4,14 @@ import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
 import code.salecar.model.enumeration.DiscountEntityType;
 import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.enumeration.Status;
 import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.entity.Discount;
+import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.ProductImage;
 import code.salecar.model.product.entity.ProductVariants;
+import code.salecar.service.Image.ImageService;
+import code.salecar.service.file.FileStorageService;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.DiscountService;
@@ -19,13 +24,21 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @WebServlet("/admin/products/create")
-@MultipartConfig
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 25
+)
+
 public class product_create extends HttpServlet {
-    CategoryService categoryService = new CategoryService();
-    BrandService brandService = new BrandService();
+    private final CategoryService categoryService = new CategoryService();
+    private final BrandService brandService = new BrandService();
+    private final FileStorageService storageService = new FileStorageService();
+    private final ProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -159,95 +172,21 @@ public class product_create extends HttpServlet {
             return;
         }
 
-        //validation price, parse to double
-//        double price;
-//        try {
-//            price = Double.parseDouble(priceParam);
-//        } catch (NumberFormatException e) {
-//            request.setAttribute("error", "Giá gốc không hợp lệ");
-//            doGet(request, response);
-//            return;
-//        }
 
-        //validation discountPercent, parse to double
-//        double discountPercent;
-//        try {
-//            discountPercent = Double.parseDouble(discountPercentParam);
-//        } catch (NumberFormatException e) {
-//            request.setAttribute("error", "Phần trăm giảm giá không hợp lệ");
-//            doGet(request, response);
-//            return;
-//        }
 
-        //validation ratio
-        if (ratioParam == null || ratioParam.trim().isEmpty()) {
-            request.setAttribute("error", "Tỉ lệ không được để trống");
-            doGet(request, response);
-            return;
-        }
 
-        //validation size
-        if (sizeParam == null || sizeParam.trim().isEmpty()) {
-            request.setAttribute("error", "Kích thước không được để trống");
-            doGet(request, response);
-            return;
-        }
-
-        //validation material
-        if (materialParam == null || materialParam.trim().isEmpty()) {
-            request.setAttribute("error", "Chất liệu không được để trống");
-            doGet(request, response);
-            return;
-        }
-
-        //validation origin
-        if (originParam == null || originParam.trim().isEmpty()) {
-            request.setAttribute("error", "Xuất xứ không được để trống");
-            doGet(request, response);
-            return;
-        }
-
-        //validation description
-        if (descriptionParam == null || descriptionParam.trim().isEmpty()) {
-            request.setAttribute("error", "Mô tả không được để trống");
-            doGet(request, response);
-            return;
-        }
-
-        // Map status to int
-        int statusInt;
-        switch (statusParam) {
-            case "active":
-                statusInt = 1;
-                break;
-            case "inactive":
-                statusInt = 0;
-                break;
-            case "hidden":
-                statusInt = 2;
-                break;
-            case "draft":
-                statusInt = 3;
-                break;
-            default:
-                statusInt = 1; // default to active
-                break;
-        }
-
-        //validation discountPercent
-        if (discountPercentParam == null || discountPercentParam.trim().isEmpty()) {
-            request.setAttribute("error", "Phần trăm giảm giá không được để trống");
-            doGet(request, response);
-            return;
-        }
-        double discountPercent;
-        try {
-            discountPercent = Double.parseDouble(discountPercentParam);
-        } catch (NumberFormatException e) {
-            request.setAttribute("error", "Phần trăm giảm giá không hợp lệ");
-            doGet(request, response);
-            return;
-        }
+        // Tạo product object
+        Product product = Product.builder()
+                .name(nameParam)
+                .brandId(brandId)
+                .categoryId(categoryId)
+                .description(descriptionParam)
+                .ratio(ratioParam)
+                .size(sizeParam)
+                .material(materialParam)
+                .origin(originParam)
+                .status(Status.fromString(statusParam))
+                .build();
 
         // Create list of ProductVariants
         List<ProductVariants> variants = new ArrayList<>();
@@ -256,27 +195,27 @@ public class product_create extends HttpServlet {
             variants.add(variant);
         }
 
-
-        // Create Product object
-//        ProductDetailDTO product = new ProductDetailDTO();
-//        product.setName(nameParam);
-//        product.setBrandId(brandId);
-//        product.setCategoryId(categoryId);
-//        product.setDescription(descriptionParam);
-//        product.setRatio(ratioParam);
-//        product.setSize(sizeParam);
-//        product.setMaterial(materialParam);
-//        product.setOrigin(originParam);
-//        product.setStatus(statusInt);
-//        product.setVariants(variants);
-//        product.setDiscountPercent(discountPercent);
-
         // Create product using service
-        ProductService productService = new ProductService();
-//        int productId = productService.createProduct(product);
+        ProductDetailDTO productDetail = ProductDetailDTO.builder().product(product).variants(variants).build();
+        long productId = productService.createProduct(productDetail);
 
-        if (/*productId*/1 > 0) {
-            // Create discount if provided
+        if (productId > 0) {
+            //Lưu ảnh cho sản phầm
+            try {
+                Collection<Part> parts = request.getParts();
+                for (Part part : parts) {
+                    if ("galleryImages".equals(part.getName()) && part.getSize() > 0) {
+                        String relativePath = storageService.saveProductImage(productId, part, "gallery");
+                        ProductImage image = ProductImage.builder().productId(productId).imageUrl(relativePath).isPrimary(false).build();
+                        ImageService imageService = new ImageService();
+                        imageService.createProductImage(image);
+                    }
+                }
+            } catch (Exception e) {
+                throw new ServletException(e);
+            }
+
+            // Tạo discount if provided
             if (discountNameParam != null && !discountNameParam.trim().isEmpty()
                     && discountValueParam != null && !discountValueParam.trim().isEmpty()
                     && discountValueTypeParam != null && !discountValueTypeParam.trim().isEmpty()) {
@@ -286,7 +225,7 @@ public class product_create extends HttpServlet {
                     discount.setValueType(DiscountValueType.valueOf(discountValueTypeParam.toUpperCase()));
                     discount.setValue(new BigDecimal(discountValueParam));
                     discount.setEntityType(DiscountEntityType.PRODUCT);
-                    discount.setEntityId(/*productId*/402);
+                    discount.setEntityId(productId);
 
                     // Parse dates if provided
                     if (discountStartDateParam != null && !discountStartDateParam.trim().isEmpty()) {
@@ -316,9 +255,8 @@ public class product_create extends HttpServlet {
                     System.err.println("Error creating discount: " + e.getMessage());
                 }
             }
-
             // Success, redirect to product list
-            response.sendRedirect(request.getContextPath() + "/admin/products");
+            response.sendRedirect(request.getContextPath() + "/admin/products/detal?id="+productId);
         } else {
             request.setAttribute("error", "Không thể tạo sản phẩm");
             doGet(request, response);

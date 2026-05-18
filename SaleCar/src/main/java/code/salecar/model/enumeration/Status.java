@@ -2,7 +2,8 @@ package code.salecar.model.enumeration;
 
 public enum Status {
     INACTIVE(0),
-    ACTIVE(1);
+    ACTIVE(1),
+    DRAFT(2);
 
     /*
     Brand, Category, Product, Voucher dùng private Status status;
@@ -29,6 +30,25 @@ public enum Status {
 
     public static Status fromString(String str) {
         if (str == null) return INACTIVE;
-        return str.equalsIgnoreCase("active") ? ACTIVE : INACTIVE;
+        String s = str.trim();
+        if (s.isEmpty()) return INACTIVE;
+
+        // Nếu là chuỗi số, thử parse
+        try {
+            int code = Integer.parseInt(s);
+            return fromCode(code);
+        } catch (NumberFormatException ignored) {
+        }
+
+        // So sánh theo tên
+        if (s.equalsIgnoreCase("active") || s.equalsIgnoreCase("activated")) {
+            return ACTIVE;
+        } else if (s.equalsIgnoreCase("draft")) {
+            return DRAFT;
+        } else if (s.equalsIgnoreCase("inactive") || s.equalsIgnoreCase("deactivated")) {
+            return INACTIVE;
+        }
+
+        return INACTIVE;
     }
 }

@@ -18,6 +18,7 @@ public class ProductDetailDTO {
     private final DiscountInfo activeDiscount;
     private final List<ReviewSummary> reviews;
     private final ProductRatingDistribution ratingDist;
+    private final List<ProductVariants> variants;
 
     private ProductDetailDTO(Builder builder) {
         this.product = builder.product;
@@ -28,6 +29,7 @@ public class ProductDetailDTO {
         this.activeDiscount = builder.activeDiscount;
         this.reviews = builder.reviews;
         this.ratingDist = builder.ratingDist;
+        this.variants = builder.variants;
     }
 
     // Getters
@@ -76,7 +78,11 @@ public class ProductDetailDTO {
     public Status getStatus() { return product != null ? product.getStatus() : Status.INACTIVE; }
     public String getBrandLogo() { return brand != null ? brand.getLogo() : ""; }
     public String getBrandLink() { return brand != null ? brand.getLink() : ""; }
+
+    //Lỗi
     public String getSku() { return product != null ? "WWW" : ""; }
+    public String getVariantName() { return variants != null ? variants.get(0).getVariantName() : ""; }
+
 
     public static Builder builder() {
         return new Builder();
@@ -91,6 +97,7 @@ public class ProductDetailDTO {
         private DiscountInfo activeDiscount;
         private List<ReviewSummary> reviews;
         private ProductRatingDistribution ratingDist;
+        private List<ProductVariants> variants;
 
         public Builder product(Product product) { this.product = product; return this; }
         public Builder brand(BrandInfo brand) { this.brand = brand; return this; }
@@ -100,6 +107,7 @@ public class ProductDetailDTO {
         public Builder activeDiscount(DiscountInfo activeDiscount) { this.activeDiscount = activeDiscount; return this; }
         public Builder reviews(List<ReviewSummary> reviews) { this.reviews = reviews; return this; }
         public Builder ratingDist(ProductRatingDistribution ratingDist) { this.ratingDist = ratingDist; return this; }
+        public Builder variants(List<ProductVariants> variants) { this.variants = variants; return this; }
 
         public ProductDetailDTO build() {
             return new ProductDetailDTO(this);

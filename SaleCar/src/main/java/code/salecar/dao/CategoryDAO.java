@@ -3,7 +3,7 @@ package code.salecar.dao;
 import code.salecar.model.category.Category;
 import code.salecar.model.category.CategoryFilter;
 import code.salecar.model.enumeration.Status;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

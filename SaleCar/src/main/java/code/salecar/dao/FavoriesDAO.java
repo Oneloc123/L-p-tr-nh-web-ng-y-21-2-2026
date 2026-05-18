@@ -1,10 +1,9 @@
 package code.salecar.dao;
 
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FavoriesDAO {
