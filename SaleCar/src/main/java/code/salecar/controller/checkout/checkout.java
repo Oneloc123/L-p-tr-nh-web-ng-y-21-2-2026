@@ -20,29 +20,32 @@ import java.util.List;
 public class checkout extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         String type = request.getParameter("type");
         HttpSession session = request.getSession();
-        Cart checkoutCart = null;
         User user = (User) session.getAttribute("user");
 
-
         if (user == null) {
-
             session.setAttribute("redirectUrl", "checkout");
             response.sendRedirect("login");
             return;
         }
 
 
-
-        if("buynow".equals(type)){
+        Cart checkoutCart;
+        if ("buynow".equals(type)) {
             checkoutCart = (Cart) session.getAttribute("buyNowCart");
-
         } else {
             checkoutCart = (Cart) session.getAttribute("cart");
         }
+
+        if (checkoutCart == null || checkoutCart.getItems().isEmpty()) {
+            response.sendRedirect("cart");
+            return;
+        }
+
         request.setAttribute("checkoutCart", checkoutCart);
 
         // Voucher
@@ -53,7 +56,7 @@ public class checkout extends HttpServlet {
 
         AddressDao addrDAO = new AddressDao();
         List<Address> lstAddress = addrDAO.getListAddressById(user.getId());
-        session.setAttribute("listAddress", lstAddress);
+        request.setAttribute("listAddress", lstAddress);
 
         request.getRequestDispatcher("/pages/checkout.jsp").forward(request, response);
     }

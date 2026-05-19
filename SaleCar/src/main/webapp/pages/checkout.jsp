@@ -260,21 +260,17 @@
                         </c:when>
                             <c:otherwise>
                                 <%-- xu ly nut chon dia chi giao hang --%>
-                                <c:forEach var="addr" items="${listAddress}" varStatus="status">
-
-                                    <c:set var="radioId" value="addr_${addr.id}" />
-
-                                    <input type="radio" class="address-radio-hidden" id="${radioId}" name="shippingAddress" value="${addr.street}, ${addr.commune}, ${addr.province}" ${status.first ? 'checked' : ''}>
-
-                                    <label for="${radioId}" class="address-slot ${status.first ? 'selected' : ''}">
-                                        <div class="address-name">
-                                            <i class="fas fa-user-tag text-muted me-1"></i> ${addr.name}
-                                            <c:if test="${addr.type == 'main'}"><span class="badge-default">Mặc định</span></c:if>
-                                        </div>
-                                        <div class="address-detail"><i class="fas fa-map-marker-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
-                                    </label>
-
-                                </c:forEach>
+                    <c:forEach var="addr" items="${listAddress}" varStatus="status">
+                        <c:set var="radioId" value="addr_${addr.id}" />
+                        <input type="radio" class="address-radio-hidden" id="${radioId}" name="shippingAddress" value="${addr.street}, ${addr.commune}, ${addr.province}" ${status.first ? 'checked' : ''}>
+                            <label for="${radioId}" class="address-slot ${status.first ? 'selected' : ''}">
+                                <div class="address-name">
+                                    <i class="fas fa-user-tag text-muted me-1"></i> ${addr.name}
+                                    <c:if test="${addr.type == 'main'}"><span class="badge-default">Mặc định</span></c:if>
+                                </div>
+                            <div class="address-detail"><i class="fas fa-map-marker-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
+                            </label>
+                    </c:forEach>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -319,28 +315,33 @@
                             <label class="form-label">Chọn Voucher</label>
                             <select id="voucherSelect" name="voucherId" class="form-select">
                                 <c:forEach items="${vouchers}" var="v">
-                                    <option value="${v.id}"><strong>${v.code}</strong> - Giảm ${v.discount}</option>
+                                    <option value="${v.id}">
+                                        <strong>${v.code}</strong> - Giảm ${v.value}${v.valueType == 'PERCENT' ? '%' : ' ₫'}
+                                    </option>
                                 </c:forEach>
                             </select>
                         </div>
 
 
                         <div class="summary-items-list">
-                            <c:forEach var="item" items="${checkoutCart.items}">
+                             <c:forEach var="item" items="${checkoutCart.items}">
                                 <div class="summary-item">
                                     <div class="summary-item-info">
-                                        <img src="${item.productDetail.image[0]}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.product.name}" />
+
+                                        <img src="${not empty item.productDetail.images ? item.productDetail.images[0] : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
 
                                         <div>
-                                            <div class="summary-name">${item.product.name}</div>
+
+                                            <div class="summary-name">${item.productDetail.productName}</div>
                                             <div class="summary-qty">Số lượng: ${item.quantity}</div>
                                         </div>
                                     </div>
                                     <div class="summary-price">
+
                                         <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/> ₫
                                     </div>
                                 </div>
-                            </c:forEach>
+                             </c:forEach>
                         </div>
 
                         <div class="summary-calc">

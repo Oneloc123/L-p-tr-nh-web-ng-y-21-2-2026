@@ -49,7 +49,7 @@ public class buyNow extends HttpServlet {
         }
 
         List<Address> lstAddress = addrDAO.getListAddressById(user.getId());
-        session.setAttribute("listAddress", lstAddress);
+        request.setAttribute("listAddress", lstAddress);
     }
 
     @Override
