@@ -112,7 +112,6 @@
 <%--                <i class="fas fa-map-marker-alt"></i>--%>
 <%--                <span>Sổ địa chỉ</span>--%>
 <%--            </a>--%>
-
 <%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
 <%--                <i class="fas fa-bell"></i>--%>
 <%--                <span>Thông báo</span>--%>
@@ -163,19 +162,18 @@
 
                     <!-- san pham -->
                     <c:forEach var="item" items="${sessionScope.cart.items}">
-
                     <tr>
                     <td>
-                        <div class="product-col">
+                       <div class="product-col">
                             <div class="product-img">
-                            <img src="${item.productDetail.image[0]}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.product.name}" />
-
+                                                    <%-- Đồng nhất gọi productDetail và bọc chống rỗng ảnh --%>
+                                 <img src="${not empty item.productDetail.images ? item.productDetail.images[0] : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
                             </div>
 
                             <div>
-                                <div class="product-name">${item.product.name}</div>
+                                                    <%-- Đồng nhất lấy tên qua productDetail --%>
+                                <div class="product-name">${item.productDetail.productName}</div>
                                 <div class="product-id">ID: ${item.productId}</div>
-
                             </div>
                         </div>
                     </td>

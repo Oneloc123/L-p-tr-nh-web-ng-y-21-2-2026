@@ -71,19 +71,19 @@ public class Cart implements Serializable {
         if (quantity <= 0) {
             quantity = 1;
         }
+        int productId = (int) product.getProduct().getId();
 
-        if (!items.containsKey(product.getProduct().getId())) {
-            items.put((int) product.getProduct().getId(), new CartItem(product, quantity, product.getProduct().getPrice()));;
+        if (!items.containsKey(productId)) {
+            items.put(productId, new CartItem(product, quantity, product.getProduct().getPrice()));;
         } else {
-            items.get(product.getProduct().getId()).upQuantity(quantity);
+            items.get(productId).upQuantity(quantity);
         }
     }
 
 
     public void updateItem(ProductDetailDTO product, int quantity) {
-        items.put((int) product.getProduct().getId(), new CartItem(product, quantity, product.getProduct().getPrice()));
-
-
+        int productId = (int) product.getProduct().getId();
+        items.put(productId, new CartItem(product, quantity, product.getProduct().getPrice()));
     }
 
     //xoa item
