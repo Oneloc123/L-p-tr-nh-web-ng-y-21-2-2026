@@ -6,7 +6,7 @@ import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.model.product.entity.Product;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.math.BigDecimal;
 import java.sql.*;

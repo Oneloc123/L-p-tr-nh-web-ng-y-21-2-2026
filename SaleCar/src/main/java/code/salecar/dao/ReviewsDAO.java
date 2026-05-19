@@ -1,7 +1,7 @@
 package code.salecar.dao;
 
 import code.salecar.model.product.entity.Review;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.Date;
 

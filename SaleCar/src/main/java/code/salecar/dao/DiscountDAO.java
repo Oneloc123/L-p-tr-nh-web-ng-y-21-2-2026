@@ -4,7 +4,7 @@ import code.salecar.model.enumeration.DiscountEntityType;
 import code.salecar.model.enumeration.DiscountValueType;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.*;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package code.salecar.utils;
+package code.salecar.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

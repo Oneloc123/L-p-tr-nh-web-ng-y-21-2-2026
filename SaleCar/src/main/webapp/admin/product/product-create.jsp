@@ -481,30 +481,9 @@
                         </tr>
                         <tr>
                             <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
-                                       value="Nhà sản xuất"
-                                       readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
-                                       value="Năm sản xuất"
-                                       readonly></td>
-                            <td><input type="number" class="form-control form-control-sm" name="attributeValue[]"
-                                       min="1900"
-                                       max="2025"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
                                        value="Màu sắc"
                                        readonly></td>
                             <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
-                                       value="Trọng lượng"
-                                       readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"
-                                       placeholder="Ví dụ: 500g"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -530,7 +509,7 @@
             <div class="info-section">
                 <h5><i class="bi bi-images me-2"></i>Hình ảnh sản phẩm</h5>
                 <div class="mb-3">
-                    <input type="file" name="images" id="imageUpload" multiple
+                    <input type="file" name="galleryImages" id="imageUpload" multiple
                            accept="image/jpeg,image/png,image/webp" class="form-control">
                     <small class="text-muted">Hỗ trợ JPG, PNG, WEBP. Tối đa 5MB/ảnh, tối đa 10 ảnh.</small>
                 </div>

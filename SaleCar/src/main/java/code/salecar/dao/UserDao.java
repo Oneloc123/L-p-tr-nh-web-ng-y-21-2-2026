@@ -1,7 +1,7 @@
 package code.salecar.dao;
 
 import code.salecar.model.User;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
