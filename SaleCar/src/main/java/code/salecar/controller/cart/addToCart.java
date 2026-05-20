@@ -3,8 +3,7 @@ package code.salecar.controller.cart;
 import code.salecar.dao.AddressDao;
 import code.salecar.model.Address;
 import code.salecar.model.Cart;
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.User;
 import code.salecar.service.product.ProductService;
 import jakarta.servlet.ServletException;
@@ -37,7 +36,7 @@ public class addToCart extends HttpServlet {
         }
 
         ProductService ps = new ProductService();
-        ProductDetail productDT = ps.getProductByID(id);
+        ProductDetailDTO productDT = ps.getProductByID(id);
         if (productDT == null) {
             response.sendRedirect("list-product");
             return;
@@ -51,30 +50,31 @@ public class addToCart extends HttpServlet {
 
         String ajax = request.getParameter("ajax");
 
-        //guest thi khong mua hang duoc
-        if (user == null) {
-            // ajax cho login
-            if("true".equals(ajax)){
-                response.getWriter().print("need_login");
-                return;
-            }
 
-            response.sendRedirect("login");
-            return;
 
             //mua ngay va them vao gio hang
-        } else {
+
 
             if (cart == null) {
                 cart = new Cart();
             }
 
-            int userId = user.getId();
+
+
+
             cart.addProduct(productDT, quantity);
             session.setAttribute("cart", cart);
 
-            List<Address> lstAddress = AddrDAO.getListAddressById(userId);
-            session.setAttribute("listAddress", lstAddress);
+
+
+            if(user != null){
+                int userId = user.getId();
+                List<Address> lstAddress = AddrDAO.getListAddressById(userId);
+                session.setAttribute("listAddress", lstAddress);
+            }
+
+
+
 
             // ajax(huy)
             if("true".equals(ajax)){
@@ -100,7 +100,7 @@ public class addToCart extends HttpServlet {
                     response.sendRedirect("home");
 
             }
-        }
+
 
 
     }

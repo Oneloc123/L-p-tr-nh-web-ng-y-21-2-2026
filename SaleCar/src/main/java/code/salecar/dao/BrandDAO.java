@@ -2,7 +2,8 @@ package code.salecar.dao;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.brand.BrandFilter;
-import code.salecar.utils.DBConnection;
+import code.salecar.model.enumeration.Status;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,15 +24,14 @@ public class BrandDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Brand brand = new Brand(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("link_brand"),
-                        rs.getString("description"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
+                Brand brand = new Brand();
+                brand.setId(rs.getInt("id"));
+                brand.setName(rs.getString("name"));
+                brand.setLinkBrand(rs.getString("link_brand"));
+                brand.setDescription(rs.getString("description"));
+                brand.setStatus(Status.fromCode(rs.getInt("status")));
+                brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
                 brands.add(brand);
             }
         } catch (SQLException e) {
@@ -39,7 +39,6 @@ public class BrandDAO {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return brands;
 
     }
@@ -67,7 +66,7 @@ public class BrandDAO {
         if (brandFilter.getStatus() != -1) {
             query.append(" AND br.status = ? ");
             params.add(brandFilter.getStatus());
-        }else {
+        } else {
 
         }
 
@@ -84,7 +83,7 @@ public class BrandDAO {
                 sortField = "br.created_at";
             } else if (brandFilter.getSort().equals("product_count")) {
                 sortField = "product_count";
-            } else  if (brandFilter.getSort().equals("status")) {
+            } else if (brandFilter.getSort().equals("status")) {
                 sortField = "br.status";
             }
 
@@ -111,16 +110,14 @@ public class BrandDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Brand brand = new Brand(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("link_brand"),
-                        rs.getString("description"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
-
+                Brand brand = new Brand();
+                brand.setId(rs.getInt("id"));
+                brand.setName(rs.getString("name"));
+                brand.setLinkBrand(rs.getString("link_brand"));
+                brand.setDescription(rs.getString("description"));
+                brand.setStatus(Status.fromCode(rs.getInt("status")));
+                brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
                 brand.setProductCount(rs.getInt("product_count"));
 
                 brands.add(brand);
@@ -135,24 +132,23 @@ public class BrandDAO {
         return brands;
     }
 
-    public Brand getBrandByID(int brandid) {
+    public Brand getBrandByID(long brandid) {
         Brand brand = null;
         String sql = "select * from brand where id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, brandid);
+            ps.setLong(1, brandid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                brand = new Brand(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getString("link_brand"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at"),
-                        rs.getDate("updated_at")
-                );
-            }
+                brand = new Brand();
+                brand.setId(rs.getInt("id"));
+                brand.setName(rs.getString("name"));
+                brand.setLinkBrand(rs.getString("link_brand"));
+                brand.setDescription(rs.getString("description"));
+                brand.setStatus(Status.fromCode(rs.getInt("status")));
+                brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -182,7 +178,6 @@ public class BrandDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-
                 list.add(rs.getString("name"));
             }
 
@@ -193,12 +188,12 @@ public class BrandDAO {
 
     }
 
-    public String getBrandName(int brandId) {
+    public String getBrandName(long brandId) {
         String name = "";
         String sql = "SELECT name from brand where id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, brandId);
+            ps.setLong(1, brandId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
 
@@ -213,21 +208,21 @@ public class BrandDAO {
     }
 
 
-        public boolean updateBrand(Brand brand) {
-            String sql = "update brand set name = ?, status = ?,link_brand = ?,description = ?, updated_at = ? where id = ?";
-            try (Connection conn = DBConnection.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, brand.getName());
-                ps.setInt(2, brand.getIntStatus());
-                ps.setString(3, brand.getLinkBrand());
-                ps.setString(4, brand.getDescription());
-                ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
-                ps.setInt(6, brand.getId());
-                System.out.println("SQL: " + sql);
-                System.out.println(brand.getId());
-                return ps.executeUpdate() == 1;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    public boolean updateBrand(Brand brand) {
+        String sql = "update brand set name = ?, status = ?,link_brand = ?,description = ?, updated_at = ? where id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, brand.getName());
+            ps.setInt(2, brand.getIntStatus());
+            ps.setString(3, brand.getLinkBrand());
+            ps.setString(4, brand.getDescription());
+            ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setLong(6, brand.getId());
+            System.out.println("SQL: " + sql);
+            System.out.println(brand.getId());
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 }

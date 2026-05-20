@@ -1,27 +1,35 @@
 package code.salecar.model.product.entity;
 
+import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.enumeration.DiscountEntityType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Discount implements Serializable {
-    private int id;
+    private static final long serialVersionUID = 1L;
+
+    private long id;
     private String name;
     private DiscountValueType valueType;
     private BigDecimal value;
     private DiscountEntityType entityType;
-    private int entityId;
-    private Date startAt;
-    private Date endAt;
-    private Date createAt;
-    private Date updateAt;
-
+    private long entityId;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
     private double percent;
 
+    // 1. Constructor mặc định
     public Discount() {
     }
 
-    public Discount(int id, String name, DiscountValueType valueType, BigDecimal value, DiscountEntityType entityType, int entityId, Date startAt, Date endAt, Date createAt, Date updateAt) {
+    // 2. Constructor với tất cả tham số
+    public Discount(long id, String name, DiscountValueType valueType, BigDecimal value,
+                    DiscountEntityType entityType, long entityId, LocalDateTime startAt,
+                    LocalDateTime endAt, LocalDateTime createAt, LocalDateTime updateAt,
+                    double percent) {
         this.id = id;
         this.name = name;
         this.valueType = valueType;
@@ -32,105 +40,198 @@ public class Discount implements Serializable {
         this.endAt = endAt;
         this.createAt = createAt;
         this.updateAt = updateAt;
+        this.percent = percent;
     }
 
-    public enum DiscountValueType {
-        RATE,
-        AMOUNT
+    // 3. Constructor nhận Builder (private)
+    private Discount(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.valueType = builder.valueType;
+        this.value = builder.value;
+        this.entityType = builder.entityType;
+        this.entityId = builder.entityId;
+        this.startAt = builder.startAt;
+        this.endAt = builder.endAt;
+        this.createAt = builder.createAt;
+        this.updateAt = builder.updateAt;
+        this.percent = builder.percent;
     }
 
-    public enum DiscountEntityType {
-        CATEGORY,
-        PRODUCT,
-        BRAND
+    // 4. Getter và Setter
+    public long getId() {
+        return id;
     }
-
+    public void setId(long id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public DiscountValueType getValueType() {
+        return valueType;
+    }
+    public void setValueType(DiscountValueType valueType) {
+        this.valueType = valueType;
+    }
+    public BigDecimal getValue() {
+        return value;
+    }
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+    public DiscountEntityType getEntityType() {
+        return entityType;
+    }
+    public void setEntityType(DiscountEntityType entityType) {
+        this.entityType = entityType;
+    }
+    public long getEntityId() {
+        return entityId;
+    }
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
+    }
+    public LocalDateTime getStartAt() {
+        return startAt;
+    }
+    public void setStartAt(LocalDateTime startAt) {
+        this.startAt = startAt;
+    }
+    public LocalDateTime getEndAt() {
+        return endAt;
+    }
+    public void setEndAt(LocalDateTime endAt) {
+        this.endAt = endAt;
+    }
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+    }
     public double getPercent() {
         return percent;
     }
-
     public void setPercent(double percent) {
         this.percent = percent;
     }
 
-    public Date getUpdateAt() {
-        return updateAt;
+    // 5. Builder pattern
+    public static Builder builder() {
+        return new Builder();
+    }
+    public static class Builder {
+        private long id;
+        private String name;
+        private DiscountValueType valueType;
+        private BigDecimal value;
+        private DiscountEntityType entityType;
+        private long entityId;
+        private LocalDateTime startAt;
+        private LocalDateTime endAt;
+        private LocalDateTime createAt;
+        private LocalDateTime updateAt;
+        private double percent;
+
+        public Builder id(long id) {
+            this.id = id;
+            return this;
+        }
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+        public Builder valueType(DiscountValueType valueType) {
+            this.valueType = valueType;
+            return this;
+        }
+        public Builder value(BigDecimal value) {
+            this.value = value;
+            return this;
+        }
+        public Builder entityType(DiscountEntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
+        public Builder entityId(long entityId) {
+            this.entityId = entityId;
+            return this;
+        }
+        public Builder startAt(LocalDateTime startAt) {
+            this.startAt = startAt;
+            return this;
+        }
+        public Builder endAt(LocalDateTime endAt) {
+            this.endAt = endAt;
+            return this;
+        }
+        public Builder createAt(LocalDateTime createAt) {
+            this.createAt = createAt;
+            return this;
+        }
+        public Builder updateAt(LocalDateTime updateAt) {
+            this.updateAt = updateAt;
+            return this;
+        }
+        public Builder percent(double percent) {
+            this.percent = percent;
+            return this;
+        }
+
+        public Discount build() {
+            // Validation
+            if (name == null ) {
+                throw new IllegalArgumentException("Tên discount không được để trống");
+            }
+            if (valueType == null) {
+                throw new IllegalArgumentException("ValueType không được null");
+            }
+            if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Giá trị discount phải lớn hơn 0");
+            }
+            if (valueType == DiscountValueType.PERCENT && value.compareTo(BigDecimal.valueOf(100)) > 0) {
+                throw new IllegalArgumentException("Phần trăm giảm không được vượt quá 100");
+            }
+            if (entityType == null) {
+                throw new IllegalArgumentException("EntityType không được null");
+            }
+            if (entityId <= 0) {
+                throw new IllegalArgumentException("EntityId phải lớn hơn 0");
+            }
+            if (startAt != null && endAt != null && endAt.isBefore(startAt)) {
+                throw new IllegalArgumentException("Ngày kết thúc phải sau ngày bắt đầu");
+            }
+            if (percent < 0 || percent > 100) {
+                throw new IllegalArgumentException("percent phải nằm trong khoảng 0-100");
+            }
+            return new Discount(this);
+        }
     }
 
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public DiscountValueType getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(DiscountValueType valueType) {
-        this.valueType = valueType;
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
-
-    public DiscountEntityType getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(DiscountEntityType entityType) {
-        this.entityType = entityType;
-    }
-
-    public int getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(int entityId) {
-        this.entityId = entityId;
-    }
-
-    public Date getEndAt() {
-        return endAt;
-    }
-
-    public void setEndAt(Date endAt) {
-        this.endAt = endAt;
-    }
-
-    public Date getStartAt() {
-        return startAt;
-    }
-
-    public void setStartAt(Date startAt) {
-        this.startAt = startAt;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", valueType=" + valueType +
+                ", value=" + value +
+                ", entityType=" + entityType +
+                ", entityId=" + entityId +
+                ", startAt=" + startAt +
+                ", endAt=" + endAt +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                ", percent=" + percent +
+                '}';
     }
 }

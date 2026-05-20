@@ -1,81 +1,40 @@
 package code.salecar.model.brand;
 
-import java.util.Date;
+import code.salecar.model.enumeration.Status;
+import java.time.LocalDateTime;
 
 public class Brand {
-    private int id;
+    private long id;
     private String name;
     private String description;
     private String image;
     private String linkBrand;
-    private int status;
-    private Date createdAt;
-    private Date updatedAt;
+    private Status status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private int productCount;
 
 
-    public Brand(int id, String name, String description, String linkBrand, int status, Date createdAt, Date updatedAt) {
+    public Brand(long id, String name, String description, String image, String linkBrand, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.image = image;
         this.linkBrand = linkBrand;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    // Lấy cho home
-    public Brand(String name, String image) {
-        this.name = name;
-        this.image = image;
-    }
-
     public Brand() {
     }
 
-    public String getStatus() {
-        if (status == 0) {
-            return "inactive";
-        } else if (status == 1) {
-            return "active";
-        }
-        throw new IllegalStateException("Unexpected value: " + status);
-    }
-    public int getIntStatus(){
-        return this.status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-    public void setStatus(String status) {
-        if (status != null && !status.isEmpty()) {
-            if (status.toLowerCase().equals("inactive")) {
-                this.status = 0;
-            } else if (status.toLowerCase().equals("active")) {
-                this.status = 1;
-            }
-        }else {
-            this.status = 2;
-        }
-    }
-
-
-    public int getProductCount() {
-        return productCount;
-    }
-
-    public void setProductCount(int productCount) {
-        this.productCount = productCount;
-    }
-
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -111,19 +70,39 @@ public class Brand {
         this.linkBrand = linkBrand;
     }
 
-    public Date getCreatedAt() {
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public int getIntStatus() {
+        return status.getCode();
+    }
+
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }

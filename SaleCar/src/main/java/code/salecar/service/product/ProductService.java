@@ -1,15 +1,16 @@
 package code.salecar.service.product;
 
 import code.salecar.model.Image;
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.dto.ProductItem;
-import code.salecar.model.product.dto.ProductRating;
+import code.salecar.model.brand.BrandInfo;
+import code.salecar.model.category.Category;
+import code.salecar.model.category.CategoryInfo;
+import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.product.dto.ProductDetailDTO;
+import code.salecar.model.product.dto.ProductItemDTO;
+import code.salecar.model.product.entity.*;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
 import code.salecar.model.brand.Brand;
-import code.salecar.model.product.entity.Discount;
-import code.salecar.model.product.entity.Product;
-import code.salecar.model.product.entity.Reviews;
 import code.salecar.service.Image.ImageService;
 
 import java.math.BigDecimal;
@@ -25,72 +26,113 @@ public class ProductService {
     ReviewsService rs = new ReviewsService();
     CategoryService cs = new CategoryService();
     ImageService is = new ImageService();
+    DiscountService discountService = new DiscountService();
 
-    public ProductDetail getProductByID(int id) {
+    // Lấy chi tiết sản phẩm theo ID
+    public ProductDetailDTO getProductByID(long id) {
 
+        // 1. Lấy entity Product
         Product product = productDAO.getProductByID(id);
-        ProductDetail detail = new ProductDetail(product);
-        if (detail == null) {
-            return null;
-        }
 
-        //get img
-        List<String> image = is.getImageProduct(detail.getId());
-        image.add(is.getImage(Image.entityType.brand, detail.getBrandId()));
-        detail.setImage(image);
+        // 2. Lấy Brand và tạo BrandInfo
+        Brand brand = bs.getBrandByID(product.getBrandId());
+        BrandInfo brandInfo = brand != null
+                ? BrandInfo.builder().id(brand.getId()).name(brand.getName()).link(brand.getLinkBrand()).logo(brand.getImage()).build()
+                : null;
 
-        Brand brand = bs.getBrandByID(detail.getBrandId());
-        if (brand != null) {
-            detail.setBrandName(brand.getName());
-            detail.setBrandLink(brand.getLinkBrand());
-        }
+        // 3. Lấy Category và tạo CategoryInfo
+        Category category = cs.getCategoryById(product.getCategoryId());
+        CategoryInfo categoryInfo = category != null
+                ? CategoryInfo.builder().id(category.getId()).name(category.getName()).build()
+                : null;
 
-        String categoryName = cs.getCategoryName(detail.getCategoryId());
-        detail.setCategoryName(categoryName != null ? categoryName : "");
+        // 4. Lấy danh sách ảnh (chỉ URL)
+//        List<String> images = productImageRepository.findByProductId(productId)
+//                .stream()
+//                .map(ProductImage::getImageUrl)
+//                .collect(Collectors.toList());
 
-        // Rating
-        List<Reviews> reviews = rs.getReviewsByID(detail.getId());
-        ProductRating rating = new ProductRating(detail.getId());
-        if (reviews != null && !reviews.isEmpty()) {
-            detail.setReviews(reviews);
-            detail.setAvgRating(caculateRates(reviews));
-            addStar(reviews, rating);
-        } else {
-            detail.setReviews(new ArrayList<>());
-            detail.setAvgRating(0);
-        }
-        detail.setRating(rating);
+        // 5. Lấy thông tin tồn kho và đã bán
+//        Inventory inventory = inventoryRepository.findByProductId(productId);
+//        ProductSalesInfo salesInfo = new ProductSalesInfo(
+//                inventory != null ? inventory.getQuantity() : 0,
+//                inventory != null ? inventory.getSoldQuantity() : 0
+//        );
 
+        // 6. Lấy discount đang active (nếu có)
+//        Discount discount = ds.findActiveByProductId(productId);
+//        DiscountInfo discountInfo = null;
+//        if (discount != null) {
+//            discountInfo = DiscountInfo.builder()
+//                    .discountId(discount.getId())
+//                    .name(discount.getName())
+//                    .valueType(discount.getValueType())
+//                    .value(discount.getValue())
+//                    .startAt(discount.getStartAt())
+//                    .endAt(discount.getEndAt())
+//                    .build();
+//        }
 
-        return detail;
+        // 7. Lấy danh sách review và map sang ReviewSummary
+        List<Review> reviews = rs.getReviewsByID(product.getId());
+        List<ReviewSummary> reviewSummaries = reviews.stream()
+                .map(r -> new ReviewSummary(
+                        r.getRating(),
+                        r.getComment(),
+                        r.getUserName(),
+                        r.getAvatar(),
+                        r.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
+        // 8. Tính phân bố rating (từ danh sách review)
+        ProductRatingDistribution ratingDist = calculateRatingDistribution(reviews);
+
+        // 9. Dùng Builder để tạo ProductDetailDTO
+        return ProductDetailDTO.builder()
+                .product(product)
+                .brand(brandInfo)
+                .category(categoryInfo)
+//                .images(images)
+//                .salesInfo(salesInfo)
+//                .activeDiscount(discountInfo)
+                .reviews(reviewSummaries)
+                .ratingDist(ratingDist)
+                .build();
+
     }
 
-    private void addStar(List<Reviews> reviews, ProductRating product) {
-        for (Reviews review : reviews) {
-            switch (review.getRating()) {
+    // Tinh toán phân bố rating (số lượng đánh giá 1 sao, 2 sao, ..., 5 sao)
+    private ProductRatingDistribution calculateRatingDistribution(List<Review> reviews) {
+        int one = 0, two = 0, three = 0, four = 0, five = 0;
+        for (Review r : reviews) {
+            switch (r.getRating()) {
                 case 1:
-                    product.setOneStar(product.getOneStar() + 1);
+                    one++;
                     break;
                 case 2:
-                    product.setTwoStar(product.getTwoStar() + 1);
+                    two++;
                     break;
                 case 3:
-                    product.setThreeStar(product.getThreeStar() + 1);
+                    three++;
                     break;
                 case 4:
-                    product.setFourStar(product.getFourStar() + 1);
+                    four++;
                     break;
                 case 5:
-                    product.setFiveStar(product.getFiveStar() + 1);
+                    five++;
                     break;
-
             }
         }
+        return ProductRatingDistribution.builder()
+                .oneStar(one).twoStar(two).threeStar(three).fourStar(four).fiveStar(five)
+                .build();
     }
 
-    private double caculateRates(List<Reviews> reviews) {
+    // Tính điểm trung bình của các đánh giá
+    private double caculateRates(List<Review> reviews) {
         int sum = 0;
-        for (Reviews r : reviews) {
+        for (Review r : reviews) {
             sum += r.getRating();
         }
         double avg = 0;
@@ -100,12 +142,14 @@ public class ProductService {
         return avg;
     }
 
+    // Tổng số sản phẩm theo bộ lọc
     public int getTotalProduct(ProductFilter filter) {
         return productDAO.getTotalProduct(filter);
     }
 
-    public List<ProductItem> getProductFilter(ProductFilter filter, int page, int limit) {
-        List<ProductItem> product = productDAO.getProductFilter(filter, page, limit);
+    // Lấy danh sách sản phẩm theo bộ lọc và phân trang
+    public List<ProductItemDTO> getProductFilter(ProductFilter filter, int page, int limit) {
+        List<ProductItemDTO> product = productDAO.getProductFilter(filter, page, limit);
         addMoreInformation(product);
         return product;
     }
@@ -166,24 +210,26 @@ public class ProductService {
 //        }
 //    }
 
+    //
     private double caculateDiscount(double price, Discount discount) {
 
-        if (discount.getValueType() == Discount.DiscountValueType.RATE) {
+        if (discount.getValueType() == DiscountValueType.PERCENT) {
             return price * (1 - discount.getValue().doubleValue() / 100);
         }
-        if (discount.getValueType() == Discount.DiscountValueType.AMOUNT) {
+        if (discount.getValueType() == DiscountValueType.AMOUNT) {
             return price - discount.getValue().doubleValue();
         }
         return price;
     }
 
-    public List<ProductDetail> getRelatedProductMaterial(String byWith) {
+    //
+    public List<ProductDetailDTO> getRelatedProductMaterial(String byWith) {
 
         List<Integer> ids = productDAO.getRelatedProductMaterial(byWith);
-        List<ProductDetail> products = new ArrayList<>();
+        List<ProductDetailDTO> products = new ArrayList<>();
 
         for (Integer id : ids) {
-            ProductDetail p = getProductByID(id);
+            ProductDetailDTO p = getProductByID(id);
 
             if (p != null) {
                 products.add(p);
@@ -193,7 +239,8 @@ public class ProductService {
         return products;
     }
 
-    public List<ProductDetail> sortProducFilter(List<ProductDetail> favoritesProducts, ProductFilter filter) {
+    // Lấy danh sách sản phẩm yêu thích của người dùng theo bộ lọc và phân trang
+    public List<ProductDetailDTO> sortProducFilter(List<ProductDetailDTO> favoritesProducts, ProductFilter filter) {
 
         if (filter.getCategories().isEmpty() &&
                 filter.getBrands().isEmpty() && filter.getMaxPrice() != null &&
@@ -201,31 +248,31 @@ public class ProductService {
             return favoritesProducts;
         }
 
-        Stream<ProductDetail> stream = favoritesProducts.stream();
+        Stream<ProductDetailDTO> stream = favoritesProducts.stream();
 
         // Keyword
         if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             String keyword = filter.getKeyword().toLowerCase().trim();
-            stream = stream.filter(p -> p.getName().toLowerCase().trim().contains(keyword));
+            stream = stream.filter(p -> p.getProduct().getName().toLowerCase().trim().contains(keyword));
         }
 
         // category
         if (!filter.getCategories().isEmpty() && !filter.getCategories().get(0).equals("all")) {
-            stream = stream.filter(p -> filter.getCategories().contains(p.getCategoryName()));
+            stream = stream.filter(p -> filter.getCategories().contains(p.getCategory().getName()));
         }
 
         // brand
         if (!filter.getBrands().isEmpty() && !filter.getBrands().get(0).equals("all")) {
-            stream = stream.filter(p -> filter.getBrands().contains(p.getBrandName()));
+            stream = stream.filter(p -> filter.getBrands().contains(p.getBrand().getName()));
         }
 
         //maxPrice
         if (filter.getMaxPrice() != null) {
-            stream = stream.filter(p -> p.getPrice() <= filter.getMaxPrice().doubleValue());
+            stream = stream.filter(p -> p.getProduct().getPrice() <= filter.getMaxPrice().doubleValue());
         }
 
 
-        List<ProductDetail> result = stream.collect(Collectors.toList());
+        List<ProductDetailDTO> result = stream.collect(Collectors.toList());
 
 //        if (filter.isSortByNewestDiscount()) {
 //            result.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
@@ -236,72 +283,90 @@ public class ProductService {
         return result;
     }
 
+    //
     public int getTotalScale() {
         return productDAO.getTotalScale();
     }
 
+    //
     public List<String> getScaleName() {
         return productDAO.getScaleName();
     }
 
+    //
     public BigDecimal getMaxPrice() {
         return productDAO.getMaxPrice();
     }
 
-    public List<ProductItem> getProductNew() {
+    //
+    public List<ProductItemDTO> getProductNew() {
         return productDAO.getProductNew();
     }
 
-    public List<ProductItem> getProductHot() {
+    //
+    public List<ProductItemDTO> getProductHot() {
         return productDAO.getProductHot();
     }
 
-    public List<ProductDetail> getRelatedProductBrand(int brandId) {
-        List<ProductItem> items = productDAO.getRelatedProductBrand(brandId);
-        List<ProductDetail> details = new ArrayList<>();
-        for (ProductItem item : items.subList(0, items.size() > 8 ? 8 : items.size())) {
+    //
+    public List<ProductDetailDTO> getRelatedProductBrand(long brandId) {
+        List<ProductItemDTO> items = productDAO.getRelatedProductBrand(brandId);
+        List<ProductDetailDTO> details = new ArrayList<>();
+        for (ProductItemDTO item : items.subList(0, items.size() > 8 ? 8 : items.size())) {
             details.add(getProductByID(item.getId()));
         }
 
         return details;
     }
 
-    public List<ProductItem> getProductForAdmin(ProductFilter productFilter, int page, int limit) {
-        List<ProductItem> products = productDAO.getProductForAdmin(productFilter, page, limit);
+    //
+    public List<ProductItemDTO> getProductForAdmin(ProductFilter productFilter, int page, int limit) {
+        List<ProductItemDTO> products = productDAO.getProductForAdmin(productFilter, page, limit);
         addMoreInformation(products);
         return products;
     }
 
-    public void addMoreInformation(List<ProductItem> pi) {
-        for (ProductItem productItem : pi) {
-            String brand = bs.getBrandName(productItem.getBrandId());
-            productItem.setBrandName(brand != null ? brand : "");
+    //
+    public void addMoreInformation(List<ProductItemDTO> pi) {
+        for (ProductItemDTO productItemDTO : pi) {
+            String brand = bs.getBrandName(productItemDTO.getBrandId());
+            productItemDTO.setBrandName(brand != null ? brand : "");
 
-            String categoryName = cs.getCategoryName(productItem.getCategoryId());
-            productItem.setCategoryName(categoryName != null ? categoryName : "");
+            String categoryName = cs.getCategoryName(productItemDTO.getCategoryId());
+            productItemDTO.setCategoryName(categoryName != null ? categoryName : "");
 
-            List<String> image = is.getImageProduct(productItem.getId());
-            image.add(is.getImage(Image.entityType.brand, productItem.getBrandId()));
-            productItem.setImage(image.get(0));
+            List<String> image = is.getImageProduct(productItemDTO.getId());
+            image.add(is.getImage(Image.entityType.brand, productItemDTO.getBrandId()));
+            productItemDTO.setImage(image.get(0));
 
-            List<Reviews> reviews = rs.getReviewsByID(productItem.getId());
+            List<Review> reviews = rs.getReviewsByID(productItemDTO.getId());
             if (reviews != null && !reviews.isEmpty()) {
-                productItem.setAvgRating(caculateRates(reviews));
+                productItemDTO.setAvgRating(caculateRates(reviews));
             } else {
-                productItem.setAvgRating(0);
+                productItemDTO.setAvgRating(0);
             }
         }
     }
 
+    //
     public int getTotalProductForAdmin(ProductFilter productFilter) {
         return productDAO.getTotalProductForAdmin(productFilter);
     }
 
-    public void updateBasicInfo(ProductDetail product) {
+    //
+    public void updateBasicInfo(ProductDetailDTO product) {
         productDAO.updateBasicInfo(product);
     }
 
-    public int createProduct(Product product) {
-        return productDAO.insertProduct(product);
+    // Tạo sản phẩm mới
+    public int createProduct(ProductDetailDTO product) {
+//        int id = productDAO.insertProduct(product);
+//        for (ProductVariants variant : product..getVariants()) {
+//            variant.setProductId(id);
+//            productDAO.insertVariant(variant);
+//        }
+//        return id;
+
+        return 0;
     }
 }

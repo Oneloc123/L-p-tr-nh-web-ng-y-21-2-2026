@@ -2,7 +2,7 @@ package code.salecar.service.cart;
 
 import code.salecar.model.Cart;
 import code.salecar.model.CartItem;
-import code.salecar.model.product.dto.ProductDetail;
+import code.salecar.model.product.dto.ProductDetailDTO;
 
 import java.util.*;
 
@@ -18,7 +18,7 @@ public class cartService {
     }
 
     // 1. thêm sp
-    public void addProduct(Cart cart, ProductDetail product, int quantity) {
+    public void addProduct(Cart cart, ProductDetailDTO product, int quantity) {
         if (quantity <= 0) {
             quantity = 1;
         }
@@ -27,7 +27,7 @@ public class cartService {
         boolean exists = false;
 
         for (CartItem item : currentItems) {
-            if (item.getProductId() == product.getId()) {
+            if (item.getProductId() ==(int) product.getProduct().getId()) {
                 item.upQuantity(quantity);
                 exists = true;
                 break;
@@ -35,7 +35,7 @@ public class cartService {
         }
 
         if (!exists) {
-            currentItems.add(new CartItem(product, quantity, product.getPrice()));
+            currentItems.add(new CartItem(product, quantity, product.getProduct().getPrice()));
         }
 
         // Cập nhật ngược lại vào Cart
@@ -43,21 +43,21 @@ public class cartService {
     }
 
     // 2. update sp (sl,giá)
-    public void updateItem(Cart cart, ProductDetail product, int quantity) {
+    public void updateItem(Cart cart, ProductDetailDTO product, int quantity) {
         List<CartItem> currentItems = cart.getItems();
         boolean found = false;
 
         for (CartItem item : currentItems) {
-            if (item.getProductId() == product.getId()) {
+            if (item.getProductId() == product.getProduct().getId()) {
                 item.setQuantity(quantity);
-                item.setPrice(product.getPrice());
+                item.setPrice(product.getProduct().getPrice());
                 found = true;
                 break;
             }
         }
 
         if (!found) {
-            currentItems.add(new CartItem(product, quantity, product.getPrice()));
+            currentItems.add(new CartItem(product, quantity, product.getProduct().getPrice()));
         }
 
         cart.setItems(listToMap(currentItems));

@@ -2,7 +2,7 @@ package code.salecar.controller.admin.product;
 
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
-import code.salecar.model.product.dto.ProductItem;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet("/admin/products")
 public class product_list extends HttpServlet {
@@ -35,17 +36,17 @@ public class product_list extends HttpServlet {
 
         String searchKeyword = request.getParameter("keyword");
         String[] filterCategoryParam = request.getParameterValues("categoryId");
-        List<Integer> filterCategory = filterCategoryParam == null ? new ArrayList<>()
+        List<Long> filterCategory = filterCategoryParam == null ? new ArrayList<>()
                 : Arrays.stream(filterCategoryParam)
-                .filter(s -> s != null && !s.isBlank())
-                .map(Integer::parseInt)
-                .toList();
+                .filter(s -> s != null && !s.isEmpty())
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
         String[] filterBrandParam = request.getParameterValues("brandId");
-        List<Integer> filterBrand = filterBrandParam == null ? new ArrayList<>()
+        List<Long> filterBrand = filterBrandParam == null ? new ArrayList<>()
                 : Arrays.stream(filterBrandParam)
-                .filter(s -> s != null && !s.isBlank())
-                .map(Integer::parseInt)
-                .toList();
+                .filter(s -> s != null && !s.isEmpty())
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
         String filterStatus = request.getParameter("status"); // active , inactive , draft
         int status = -1;
         if (filterStatus != null) {
@@ -64,12 +65,12 @@ public class product_list extends HttpServlet {
         String filterStock = request.getParameter("stockStatus"); // high , medium , low
         String minPriceParam = request.getParameter("minPrice");
         BigDecimal minPrice = null;
-        if (minPriceParam != null && !minPriceParam.isBlank()) {
+        if (minPriceParam != null && !minPriceParam.isEmpty()) {
             minPrice = new BigDecimal(minPriceParam);
         }
         String maxPriceParam = request.getParameter("maxPrice");
         BigDecimal maxPrice = null;
-        if (maxPriceParam != null && !maxPriceParam.isBlank()) {
+        if (maxPriceParam != null && !maxPriceParam.isEmpty()) {
             maxPrice = new BigDecimal(maxPriceParam);
         }
         String fromDateParam = request.getParameter("fromDate");
@@ -113,7 +114,7 @@ public class product_list extends HttpServlet {
         List<Brand> brands = brandService.getBrands();
 
         ProductFilter productFilter = new ProductFilter(searchKeyword, filterCategory, filterBrand, status, filterStock, maxPrice, minPrice, fromDate, toDate, sortBy);
-        List<ProductItem> list = productService.getProductForAdmin(productFilter, page, limit);
+        List<ProductItemDTO> list = productService.getProductForAdmin(productFilter, page, limit);
 
         int totalProduct = productService.getTotalProductForAdmin(productFilter);
         int totalPage = (int) Math.ceil((double) totalProduct / limit);

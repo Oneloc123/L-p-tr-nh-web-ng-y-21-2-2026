@@ -886,7 +886,7 @@
                     <c:forEach var="v" items="${vouchers}">
                         <div class="voucher-item">
                             <div class="voucher-code">${v.code}</div>
-                            <div class="voucher-discount">Giảm ${v.discount}</div>
+                            <div class="voucher-discount">Giảm ${v.maxDiscount}</div>
                         </div>
                     </c:forEach>
                     <c:if test="${empty vouchers}">

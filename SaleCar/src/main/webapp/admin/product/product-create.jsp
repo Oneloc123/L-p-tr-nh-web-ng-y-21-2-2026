@@ -383,20 +383,58 @@
                 <button type="button" class="btn btn-sm btn-outline-primary" id="addVariantBtn">
                     <i class="bi bi-plus-lg"></i> Thêm biến thể
                 </button>
-                <small class="text-muted ms-3">Ít nhất một biến thể là bắt buộc.</small>
+                <small class="text-muted ms-3">Ít nhất một biến thể là bắt buộc để làm phiên bản gốc.</small>
             </div>
 
             <!-- ========== SECTION 3: DISCOUNT ========== -->
             <div class="info-section">
-                <h5><i class="bi bi-percent me-2"></i>Giảm giá chung (áp dụng cho tất cả biến thể)</h5>
+                <h5 class="mb-3"><i class="bi bi-tag me-2"></i>Tạo chương trình khuyến mãi riêng cho dòng sản phẩm (áp
+                    dụng cho tất cả biến
+                    thể)</h5>
+                <hr class="my-4">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label">Phần trăm giảm giá (%)</label>
-                        <input type="number" name="discountPercent" id="discountPercent" class="form-control"
-                               min="0" max="100" step="0.1" value="0">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tên khuyến mãi</label>
+                        <input type="text" name="discountName" id="discountName" class="form-control"
+                               placeholder="Ví dụ: Sale Tết Nguyên Đán 2026">
+                        <small class="text-muted">Để trống nếu không muốn tạo khuyến mãi riêng</small>
                     </div>
-                    <div class="col-md-8 d-flex align-items-end">
-                        <small class="text-muted">Nhập 0 nếu không giảm giá. Giá sau giảm sẽ tự động hiển thị ở bảng biến thể.</small>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Loại khuyến mãi</label>
+                        <select name="discountValueType" id="discountValueType" class="form-select">
+                            <option value="rate">Phần trăm (%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row ">
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Giá trị khuyến mãi %</label>
+                        <input type="number" name="discountPercent" id="discountPercent" class="form-control"
+                               min="0" step="0.01" placeholder="Nhập giá trị">
+                        <small class="text-muted">Nhập 0 nếu không giảm giá. Giá sau giảm sẽ tự động hiển thị ở bảng
+                            biến thể.</small>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Ngày bắt đầu</label>
+                        <input type="date" name="discountStartDate" id="discountStartDate" class="form-control">
+                        <small class="text-muted">Mặc định: hôm nay</small>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Ngày kết thúc</label>
+                        <input type="date" name="discountEndDate" id="discountEndDate" class="form-control">
+                        <small class="text-muted">Mặc định: 30 ngày tính từ nay</small>
+                    </div>
+                    <div class="col-md-3 d-flex flex-column justify-content-end mb-3">
+                        <label class="form-label invisible">Reset</label>
+
+                        <button type="button"
+                                class="btn btn-outline-secondary w-100 h-100"
+                                id="resetDiscountBtn">
+                            <i class="bi bi-arrow-repeat"></i>
+                            Xóa khuyến mãi
+                        </button>
                     </div>
                 </div>
             </div>
@@ -414,36 +452,38 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Tỷ lệ (Scale)" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]" placeholder="Ví dụ: 1:18"></td>
+                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
+                                       value="Tỷ lệ (Scale)"
+                                       readonly></td>
+                            <td><input type="text" class="form-control form-control-sm" name="ratio"
+                                       placeholder="Ví dụ: 1:18"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Kích thước" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]" placeholder="Ví dụ: 25 x 10 x 8 cm"></td>
+                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
+                                       value="Kích thước"
+                                       readonly></td>
+                            <td><input type="text" class="form-control form-control-sm" name="size"
+                                       placeholder="Ví dụ: 25 x 10 x 8 cm"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Chất liệu" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]" placeholder="Ví dụ: Diecast, nhựa ABS"></td>
+                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
+                                       value="Chất liệu"
+                                       readonly></td>
+                            <td><input type="text" class="form-control form-control-sm" name="material"
+                                       placeholder="Ví dụ: Diecast, nhựa ABS"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Xuất xứ" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]" placeholder="Ví dụ: Trung Quốc"></td>
+                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
+                                       value="Xuất xứ"
+                                       readonly></td>
+                            <td><input type="text" class="form-control form-control-sm" name="origin"
+                                       placeholder="Ví dụ: Trung Quốc"></td>
                         </tr>
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Nhà sản xuất" readonly></td>
+                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
+                                       value="Màu sắc"
+                                       readonly></td>
                             <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Năm sản xuất" readonly></td>
-                            <td><input type="number" class="form-control form-control-sm" name="attributeValue[]" min="1900" max="2025"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Màu sắc" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]" value="Trọng lượng" readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]" placeholder="Ví dụ: 500g"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -455,21 +495,21 @@
                 <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
                 <div class="mb-3">
                     <label class="form-label">Mô tả ngắn</label>
-                    <textarea name="shortDescription" id="shortDescription" class="form-control" rows="2"
+                    <textarea name="description" id="shortDescription" class="form-control" rows="2"
                               maxlength="300"></textarea>
                     <small><span id="shortDescCounter">0</span>/300 ký tự</small>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Mô tả chi tiết</label>
-                    <textarea name="description" id="description" class="form-control" rows="8"></textarea>
-                </div>
+                <%--                <div class="mb-3">--%>
+                <%--                    <label class="form-label">Mô tả chi tiết</label>--%>
+                <%--                    <textarea name="description" id="description" class="form-control" rows="8"></textarea>--%>
+                <%--                </div>--%>
             </div>
 
             <!-- ========== SECTION 6: IMAGES (WITH PREVIEW) ========== -->
             <div class="info-section">
                 <h5><i class="bi bi-images me-2"></i>Hình ảnh sản phẩm</h5>
                 <div class="mb-3">
-                    <input type="file" name="images" id="imageUpload" multiple
+                    <input type="file" name="galleryImages" id="imageUpload" multiple
                            accept="image/jpeg,image/png,image/webp" class="form-control">
                     <small class="text-muted">Hỗ trợ JPG, PNG, WEBP. Tối đa 5MB/ảnh, tối đa 10 ảnh.</small>
                 </div>
@@ -538,6 +578,7 @@
 
     // ========== VARIANTS DYNAMIC ROWS ==========
     const variantsTbody = document.getElementById('variantsTbody');
+
     function createVariantRow() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -553,6 +594,7 @@
     function attachVariantEvents(row) {
         const priceInput = row.querySelector('.variant-price');
         const discountedInput = row.querySelector('.variant-discounted');
+
         function updateDiscounted() {
             const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
             const price = parseFloat(priceInput.value) || 0;
@@ -563,8 +605,9 @@
                 discountedInput.value = price ? price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₫' : '';
             }
         }
+
         priceInput.addEventListener('input', updateDiscounted);
-        document.getElementById('discountPercent').addEventListener('input', function() {
+        document.getElementById('discountPercent').addEventListener('input', function () {
             document.querySelectorAll('.variant-price').forEach(inp => {
                 inp.dispatchEvent(new Event('input'));
             });
@@ -576,7 +619,7 @@
         const row = createVariantRow();
         variantsTbody.appendChild(row);
         attachVariantEvents(row);
-        row.querySelector('.delete-variant-btn').addEventListener('click', function() {
+        row.querySelector('.delete-variant-btn').addEventListener('click', function () {
             if (variantsTbody.rows.length > 1) {
                 row.remove();
             } else {
@@ -611,7 +654,7 @@
 
         // Attach delete events
         previewContainer.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const idx = parseInt(this.getAttribute('data-index'));
                 removeImage(idx);
             });
@@ -628,7 +671,7 @@
         renderImagePreview();
     }
 
-    imageInput.addEventListener('change', function(e) {
+    imageInput.addEventListener('change', function (e) {
         const newFiles = Array.from(e.target.files);
         let addedCount = 0;
         for (let file of newFiles) {
@@ -659,12 +702,12 @@
     });
 
     // ========== SHORT DESCRIPTION COUNTER ==========
-    document.getElementById('shortDescription').addEventListener('input', function() {
+    document.getElementById('shortDescription').addEventListener('input', function () {
         document.getElementById('shortDescCounter').textContent = this.value.length;
     });
 
     // ========== RESET FORM ==========
-    document.getElementById('resetBtn').addEventListener('click', function() {
+    document.getElementById('resetBtn').addEventListener('click', function () {
         if (confirm('Bạn có chắc chắn muốn làm mới toàn bộ form?')) {
             document.getElementById('productForm').reset();
             // Clear variants except first
@@ -691,8 +734,30 @@
         }
     });
 
+    // ========== DISCOUNT FORM HANDLERS ==========
+    document.getElementById('resetDiscountBtn').addEventListener('click', function () {
+        document.getElementById('discountName').value = '';
+        document.getElementById('discountValueType').value = '';
+        document.getElementById('discountPercent').value = '';
+        document.getElementById('discountStartDate').value = '';
+        document.getElementById('discountEndDate').value = '';
+    });
+
+    // Set default dates for discount
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+
+        const thirtyDaysLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const thirtyDaysString = thirtyDaysLater.toISOString().split('T')[0];
+
+        // don't set by default, let user choose
+        // document.getElementById('discountStartDate').value = todayString;
+        // document.getElementById('discountEndDate').value = thirtyDaysString;
+    });
+
     // ========== FORM VALIDATION & SUBMIT ==========
-    document.getElementById('productForm').addEventListener('submit', function(e) {
+    document.getElementById('productForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         let isValid = true;
@@ -754,7 +819,7 @@
         if (!isValid) {
             const firstError = document.querySelector('.is-invalid');
             if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
             return;
         }
@@ -772,10 +837,14 @@
     let formChanged = false;
     const allInputs = document.querySelectorAll('#productForm input, #productForm select, #productForm textarea');
     allInputs.forEach(inp => {
-        inp.addEventListener('change', () => { formChanged = true; });
-        inp.addEventListener('input', () => { formChanged = true; });
+        inp.addEventListener('change', () => {
+            formChanged = true;
+        });
+        inp.addEventListener('input', () => {
+            formChanged = true;
+        });
     });
-    window.addEventListener('beforeunload', function(e) {
+    window.addEventListener('beforeunload', function (e) {
         if (formChanged) {
             e.preventDefault();
             e.returnValue = 'Bạn có thay đổi chưa lưu. Bạn có chắc chắn muốn rời đi?';
@@ -783,5 +852,6 @@
         }
     });
 </script>
+<
 </body>
 </html>

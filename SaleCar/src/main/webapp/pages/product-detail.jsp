@@ -16,7 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${product.name} - LUXCAR</title>
+    <title>${product.productName} - LUXCAR</title>
 
     <style>
         /* ============================================
@@ -832,12 +832,12 @@
             <div class="product-gallery">
                 <div class="main-image-wrapper">
                     <c:choose>
-                        <c:when test="${not empty product.image and fn:length(product.image) > 0}">
-                            <img src="${product.image[0]}" alt="${product.name}" class="main-image" id="galleryMain">
+                        <c:when test="${not empty product.images and fn:length(product.images) > 0}">
+                            <img src="${product.images[0]}" alt="${product.productName}" class="main-image" id="galleryMain">
                         </c:when>
                         <c:otherwise>
                             <!-- Fixed: set size trước cho ảnh mặc định -->
-                            <img src="https://via.placeholder.com/600x480?text=LUXCAR" alt="${product.name}"
+                            <img src="https://via.placeholder.com/600x480?text=LUXCAR" alt="${product.productName}"
                                  class="main-image" style="width: 100%; height: 100%; object-fit: contain;">
                         </c:otherwise>
                     </c:choose>
@@ -845,12 +845,12 @@
 
                 <!-- Thumbnails - Fixed: chỉ hiển thị tối đa 4 ảnh con -->
                 <div class="thumbnail-list">
-                    <c:forEach items="${product.image}" var="img" varStatus="status" end="3">
+                    <c:forEach items="${product.images}" var="img" varStatus="status" end="3">
                         <div class="thumbnail-item ${status.first ? 'active' : ''}" data-image="${img}">
                             <img src="${img}" alt="Thumbnail ${status.index + 1}">
                         </div>
                     </c:forEach>
-                    <c:if test="${empty product.image or fn:length(product.image) == 0}">
+                    <c:if test="${empty product.images or fn:length(product.images) == 0}">
                         <div class="thumbnail-item active">
                             <img src="https://via.placeholder.com/90x90?text=LUXCAR" alt="No Image">
                         </div>
@@ -862,9 +862,9 @@
         <!-- Right: Product Info -->
         <div class="col-lg-6">
             <div class="product-info">
-                <h1 class="product-title">${product.name}</h1>
+                <h1 class="product-title">${product.productName}</h1>
                 <div class="product-sku">
-                    Mã sản phẩm: LUX-${product.id}
+                    Mã sản phẩm: LUX-${product.productId}
                 </div>
 
                 <!-- Rating -->
@@ -872,10 +872,10 @@
                     <div class="stars">
                         <c:forEach begin="1" end="5" var="i">
                             <c:choose>
-                                <c:when test="${i <= product.avgRating}">
+                                <c:when test="${i <= product.averageRating}">
                                     <i class="bi bi-star-fill"></i>
                                 </c:when>
-                                <c:when test="${i - 0.5 <= product.avgRating}">
+                                <c:when test="${i - 0.5 <= product.averageRating}">
                                     <i class="bi bi-star-half"></i>
                                 </c:when>
                                 <c:otherwise>
@@ -885,7 +885,7 @@
                         </c:forEach>
                     </div>
                     <span class="rating-value">
-                        <fmt:formatNumber value="${product.avgRating}" maxFractionDigits="1"/>
+                        <fmt:formatNumber value="${product.averageRating}" maxFractionDigits="1"/>
                     </span>
                     <span class="review-count">(${product.totalReviews} đánh giá)</span>
                 </div>
@@ -962,20 +962,20 @@
 
                     <!-- them sp vao cart -->
                     <form id="add-to-cart" action="cart-add" method="get" class="w-100">
-                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="productId" value="${product.productId}">
 
 
                         <button type="button" class="btn btn-outline-dark w-100"
-                                onclick="addToCartAjax(event,'${product.id}', '${product.name}', false)">Thêm vào giỏ
+                                onclick="addToCartAjax(event,'${product.productId}', '${product.productName}', false)">Thêm vào giỏ
                             hàng
                         </button>
                     </form>
 
                     <form id="buy-now" action="buy-now" method="get" class="w-100">
-                        <input type="hidden" name="productId" value="${product.id}">
+                        <input type="hidden" name="productId" value="${product.productId}">
 
                         <button type="button" class="btn btn-buy w-100"
-                                onclick="addToCartAjax(event,'${product.id}', '${product.name}', true)">Mua ngay
+                                onclick="addToCartAjax(event,'${product.productId}', '${product.productName}', true)">Mua ngay
                         </button>
                     </form>
 
@@ -983,7 +983,7 @@
                         <button type="submit"
                                 class="btn star-btn w-100"
                                 name="productid"
-                                value="${product.id}">
+                                value="${product.productId}">
                             <i class="bi bi-star me-2"></i>
                             Thêm vào yêu thích
                         </button>
@@ -1041,7 +1041,7 @@
                 </tr>
                 <tr>
                     <th>Mã sản phẩm</th>
-                    <td>LUX-${product.id}</td>
+                    <td>LUX-${product.productId}</td>
                 </tr>
             </table>
         </div>
@@ -1052,12 +1052,12 @@
             <div class="review-summary">
                 <div class="avg-rating">
                     <div class="avg-number">
-                        <fmt:formatNumber value="${product.avgRating}" maxFractionDigits="1"/>
+                        <fmt:formatNumber value="${product.averageRating}" maxFractionDigits="1"/>
                     </div>
                     <div class="stars mt-2">
                         <c:forEach begin="1" end="5" var="i">
                             <c:choose>
-                                <c:when test="${i <= product.avgRating}">
+                                <c:when test="${i <= product.averageRating}">
                                     <i class="bi bi-star-fill"></i>
                                 </c:when>
                                 <c:otherwise>
@@ -1070,46 +1070,46 @@
                 </div>
 
                 <div class="rating-bars">
-                    <c:if test="${not empty product.rating}">
+                    <c:if test="${not empty product.ratingDist}">
                         <div class="rating-bar-item">
                             <span class="rating-bar-label">5 <i class="bi bi-star-fill"></i></span>
                             <div class="rating-bar-track">
                                 <div class="rating-bar-fill"
-                                     style="width: ${product.rating.fiveStar / product.totalReviews * 100}%"></div>
+                                     style="width: ${product.ratingDist.fiveStar / product.totalReviews * 100}%"></div>
                             </div>
-                            <span class="rating-bar-percent">${product.rating.fiveStar}</span>
+                            <span class="rating-bar-percent">${product.ratingDist.fiveStar}</span>
                         </div>
                         <div class="rating-bar-item">
                             <span class="rating-bar-label">4 <i class="bi bi-star-fill"></i></span>
                             <div class="rating-bar-track">
                                 <div class="rating-bar-fill"
-                                     style="width: ${product.rating.fourStar / product.totalReviews * 100}%"></div>
+                                     style="width: ${product.ratingDist.fourStar / product.totalReviews * 100}%"></div>
                             </div>
-                            <span class="rating-bar-percent">${product.rating.fourStar}</span>
+                            <span class="rating-bar-percent">${product.ratingDist.fourStar}</span>
                         </div>
                         <div class="rating-bar-item">
                             <span class="rating-bar-label">3 <i class="bi bi-star-fill"></i></span>
                             <div class="rating-bar-track">
                                 <div class="rating-bar-fill"
-                                     style="width: ${product.rating.threeStar / product.totalReviews * 100}%"></div>
+                                     style="width: ${product.ratingDist.threeStar / product.totalReviews * 100}%"></div>
                             </div>
-                            <span class="rating-bar-percent">${product.rating.threeStar}</span>
+                            <span class="rating-bar-percent">${product.ratingDist.threeStar}</span>
                         </div>
                         <div class="rating-bar-item">
                             <span class="rating-bar-label">2 <i class="bi bi-star-fill"></i></span>
                             <div class="rating-bar-track">
                                 <div class="rating-bar-fill"
-                                     style="width: ${product.rating.twoStar / product.totalReviews * 100}%"></div>
+                                     style="width: ${product.ratingDist.twoStar / product.totalReviews * 100}%"></div>
                             </div>
-                            <span class="rating-bar-percent">${product.rating.twoStar}</span>
+                            <span class="rating-bar-percent">${product.ratingDist.twoStar}</span>
                         </div>
                         <div class="rating-bar-item">
                             <span class="rating-bar-label">1 <i class="bi bi-star-fill"></i></span>
                             <div class="rating-bar-track">
                                 <div class="rating-bar-fill"
-                                     style="width: ${product.rating.oneStar / product.totalReviews * 100}%"></div>
+                                     style="width: ${product.ratingDist.oneStar / product.totalReviews * 100}%"></div>
                             </div>
-                            <span class="rating-bar-percent">${product.rating.oneStar}</span>
+                            <span class="rating-bar-percent">${product.ratingDist.oneStar}</span>
                         </div>
                     </c:if>
                 </div>
@@ -1166,7 +1166,7 @@
             <div class="review-form">
                 <h4 style="margin-bottom: 20px;">Viết đánh giá của bạn</h4>
                 <form action="${pageContext.request.contextPath}/reviews" method="post">
-                    <input type="hidden" name="productId" value="${product.id}">
+                    <input type="hidden" name="productId" value="${product.productId}">
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Đánh giá</label>
@@ -1202,14 +1202,14 @@
             <h2 class="section-title">Sản phẩm liên quan</h2>
             <div class="related-grid">
                 <c:forEach items="${related}" var="rl">
-                    <a href="${pageContext.request.contextPath}/product-detail?id=${rl.id}" class="related-card">
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${rl.productId}" class="related-card">
                         <div class="related-image">
                             <c:choose>
-                                <c:when test="${not empty rl.image and fn:length(rl.image) > 0}">
-                                    <img src="${rl.image[0]}" alt="${rl.name}">
+                                <c:when test="${not empty rl.images and fn:length(rl.images) > 0}">
+                                    <img src="${rl.images[0]}" alt="${rl.productName}">
                                 </c:when>
                                 <c:otherwise>
-                                    <img src="https://via.placeholder.com/300x220?text=LUXCAR" alt="${rl.name}">
+                                    <img src="https://via.placeholder.com/300x220?text=LUXCAR" alt="${rl.productName}">
                                 </c:otherwise>
                             </c:choose>
                             <c:if test="${rl.discountPercent > 0}">
@@ -1218,7 +1218,7 @@
                         </div>
                         <div class="related-info">
                             <div class="related-brand">${rl.brandName}</div>
-                            <div class="related-name">${rl.name}</div>
+                            <div class="related-name">${rl.productName}</div>
                             <div class="related-price">
                                 <span class="related-current-price">
                                     <fmt:formatNumber value="${rl.finalPrice}" type="number" groupingUsed="true"/> ₫
@@ -1233,7 +1233,7 @@
                                 <div class="stars">
                                     <c:forEach begin="1" end="5" var="i">
                                         <c:choose>
-                                            <c:when test="${i <= rl.avgRating}">
+                                            <c:when test="${i <= rl.averageRating}">
                                                 <i class="bi bi-star-fill"></i>
                                             </c:when>
                                             <c:otherwise>

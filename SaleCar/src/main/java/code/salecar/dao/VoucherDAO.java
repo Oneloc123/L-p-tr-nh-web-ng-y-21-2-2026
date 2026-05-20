@@ -1,7 +1,9 @@
 package code.salecar.dao;
 
+import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.enumeration.Status;
 import code.salecar.model.product.entity.Voucher;
-import code.salecar.utils.DBConnection;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,16 +24,16 @@ public class VoucherDAO {
                 Voucher voucher = new Voucher(
                         rs.getInt("id"),
                         rs.getString("code"),
-                        rs.getString("value_type"),
+                        DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()),
                         rs.getBigDecimal("value"),
                         rs.getBigDecimal("max_discount"),
                         rs.getBigDecimal("min_order_value"),
                         rs.getInt("usage_limit"),
                         rs.getInt("used_count"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at")
+                        rs.getTimestamp("start_at").toLocalDateTime(),
+                        rs.getTimestamp("end_at").toLocalDateTime(),
+                        Status.fromCode(rs.getInt("status")),
+                        rs.getTimestamp("created_at").toLocalDateTime()
                 );
                 vouchers.add(voucher);
             }
@@ -56,16 +58,16 @@ public class VoucherDAO {
                 Voucher voucher = new Voucher(
                         rs.getInt("id"),
                         rs.getString("code"),
-                        rs.getString("value_type"),
+                        DiscountValueType.valueOf(rs.getString("value_type")),
                         rs.getBigDecimal("value"),
                         rs.getBigDecimal("max_discount"),
                         rs.getBigDecimal("min_order_value"),
                         rs.getInt("usage_limit"),
                         rs.getInt("used_count"),
-                        rs.getDate("start_at"),
-                        rs.getDate("end_at"),
-                        rs.getInt("status"),
-                        rs.getDate("created_at")
+                        rs.getTimestamp("start_at").toLocalDateTime(),
+                        rs.getTimestamp("end_at").toLocalDateTime(),
+                        Status.fromCode(rs.getInt("status")),
+                        rs.getTimestamp("created_at").toLocalDateTime()
                 );
                 return voucher;
             }

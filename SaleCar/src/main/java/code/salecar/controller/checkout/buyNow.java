@@ -1,13 +1,11 @@
 package code.salecar.controller.checkout;
 
 import code.salecar.dao.AddressDao;
-import code.salecar.dao.ProductDAO;
 import code.salecar.model.Address;
 import code.salecar.model.Cart;
 import code.salecar.model.User;
 
-import code.salecar.model.product.dto.ProductDetail;
-import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.buyNCart.buyNowService;
 
 import code.salecar.service.product.ProductService;
@@ -37,7 +35,7 @@ public class buyNow extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("productId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         ProductService ps = new ProductService();
-        ProductDetail product = ps.getProductByID(id);
+        ProductDetailDTO product = ps.getProductByID(id);
 
         if(product != null){
             buyNowService buyNowS = new buyNowService();
@@ -51,7 +49,7 @@ public class buyNow extends HttpServlet {
         }
 
         List<Address> lstAddress = addrDAO.getListAddressById(user.getId());
-        session.setAttribute("listAddress", lstAddress);
+        request.setAttribute("listAddress", lstAddress);
     }
 
     @Override

@@ -2,7 +2,8 @@ package code.salecar.dao;
 
 import code.salecar.model.category.Category;
 import code.salecar.model.category.CategoryFilter;
-import code.salecar.utils.DBConnection;
+import code.salecar.model.enumeration.Status;
+import code.salecar.config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,12 +46,12 @@ public class CategoryDAO {
         return list;
     }
 
-    public String getCategoryName(int id) {
+    public String getCategoryName(long id) {
 
         String sql = "SELECT name from category where id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
 
@@ -75,9 +76,9 @@ public class CategoryDAO {
                 category.setName(rs.getString("name"));
                 category.setDescription(rs.getString("description"));
                 category.setIcon(rs.getString("icon"));
-                category.setStatus(rs.getInt("status"));
-                category.setCreatedAt(rs.getTimestamp("created_at"));
-                category.setUpdatedAt(rs.getTimestamp("updated_at"));
+                category.setStatus(Status.fromCode(rs.getInt("status")));
+                category.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                category.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
                 return category;            }
 
         } catch (Exception e) {
@@ -120,9 +121,9 @@ public class CategoryDAO {
                 category.setName(rs.getString("name"));
                 category.setDescription(rs.getString("description"));
                 category.setIcon(rs.getString("icon"));
-                category.setStatus(rs.getInt("status"));
-                category.setCreatedAt(rs.getTimestamp("created_at"));
-                category.setUpdatedAt(rs.getTimestamp("updated_at"));
+                category.setStatus(Status.fromCode(rs.getInt("status")));
+                category.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                category.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
                 category.setProductCount(rs.getInt("product_count"));
                 categories.add(category);
             }
@@ -203,9 +204,9 @@ public class CategoryDAO {
                 category.setName(rs.getString("name"));
                 category.setDescription(rs.getString("description"));
                 category.setIcon(rs.getString("icon"));
-                category.setStatus(rs.getInt("status"));
-                category.setCreatedAt(rs.getTimestamp("created_at"));
-                category.setUpdatedAt(rs.getTimestamp("updated_at"));
+                category.setStatus(Status.fromCode(rs.getInt("status")));
+                category.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                category.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
                 category.setProductCount(rs.getInt("product_count"));
                 categories.add(category);
             }
@@ -227,9 +228,26 @@ public class CategoryDAO {
             ps.setString(3, category.getIcon());
             ps.setInt(4, category.getIntStatus());
             ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
-            ps.setInt(6, category.getId());
+            ps.setLong(6, category.getId());
             System.out.println("SQL: " + sql);
             System.out.println(category.getId());
+            return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean createCategory(Category category) {
+        String sql = "INSERT INTO category (name, description, icon, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
+            ps.setString(3, category.getIcon());
+            ps.setInt(4, category.getIntStatus());
+            java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+            ps.setTimestamp(5, now);
+            ps.setTimestamp(6, now);
             return ps.executeUpdate() == 1;
         } catch (Exception e) {
             throw new RuntimeException(e);
