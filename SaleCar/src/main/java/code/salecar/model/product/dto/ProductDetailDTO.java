@@ -78,7 +78,7 @@ public class ProductDetailDTO {
     public Status getStatus() { return product != null ? product.getStatus() : Status.INACTIVE; }
     public String getBrandLogo() { return brand != null ? brand.getLogo() : ""; }
     public String getBrandLink() { return brand != null ? brand.getLink() : ""; }
-
+    public List<ProductVariants> getVariants() {return variants;}
     //Lỗi
     public String getSku() { return product != null ? "WWW" : ""; }
     public String getVariantName() { return variants != null ? variants.get(0).getVariantName() : ""; }

@@ -402,13 +402,15 @@
                     <h5><i class="bi bi-images me-2"></i>Hình ảnh sản phẩm</h5>
                     <div class="text-center mb-3">
                         <img id="mainImage"
-                             src="${product.images != null && not empty product.images ? product.images[0] : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
+                             src="${product.images != null && not empty product.images
+        ? pageContext.request.contextPath.concat('/uploads/').concat(product.images[0])
+        : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
                              class="product-detail-image" alt="${product.productName}">
                     </div>
                     <div class="gallery-preview d-flex gap-2 flex-wrap justify-content-center">
                         <c:forEach items="${product.images}" var="img" varStatus="status">
-                            <img src="${img}" class="gallery-thumb ${status.index == 0 ? 'active' : ''}"
-                                 onclick="changeMainImage('${img}')" alt="Thumb ${status.index + 1}">
+                             <img src="${pageContext.request.contextPath}/uploads/${img}" class="gallery-thumb ${status.index == 0 ? 'active' : ''}"
+                                  onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')" alt="Thumb ${status.index + 1}">
                         </c:forEach>
                         <c:if test="${empty product.images}">
                             <div class="text-muted text-center w-100">Chưa có ảnh</div>
@@ -419,7 +421,7 @@
                               method="post" enctype="multipart/form-data" class="d-inline">
                             <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">
                             <button type="button" class="admin-btn-outline btn-sm"
-                                    onclick="document.getElementById('uploadImageInput').click()">
+                                    onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')">
                                 <i class="bi bi-upload"></i> Upload ảnh
                             </button>
                         </form>
@@ -443,11 +445,11 @@
                         <div class="col-md-6">
                             <div class="info-label">SKU</div>
                             <div class="info-value">
-<%--                                ${product.sku != null ? product.sku : 'N/A'}--%>
-<%--                                <c:if test="${product.sku != null}">--%>
-<%--                                    <i class="bi bi-copy ms-2" style="cursor: pointer;"--%>
-<%--                                       onclick="copyToClipboard('${product.sku}')" data-tooltip="Copy SKU"></i>--%>
-<%--                                </c:if>--%>
+                                <%--                                ${product.sku != null ? product.sku : 'N/A'}--%>
+                                <%--                                <c:if test="${product.sku != null}">--%>
+                                <%--                                    <i class="bi bi-copy ms-2" style="cursor: pointer;"--%>
+                                <%--                                       onclick="copyToClipboard('${product.sku}')" data-tooltip="Copy SKU"></i>--%>
+                                <%--                                </c:if>--%>
                             </div>
                         </div>
                         <div class="col-md-6 mt-2">
@@ -490,7 +492,7 @@
                         <div class="col-md-6">
                             <div class="info-label">Giá gốc</div>
                             <div class="price-original">
-                                <fmt:formatNumber value="${product.price}" type="currency" />
+                                <fmt:formatNumber value="${product.price}" type="currency"/>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -738,9 +740,9 @@
                                                 <div class="small mt-1">${review.comment}</div>
                                             </div>
                                             <div class="text-end">
-                                                <c:if test="${not empty review.createdAt}">
+                                                <c:if test="${not empty review.createdAtDate}">
                                                     <small class="text-muted">
-                                                        <fmt:formatDate value="${review.createdAt}"
+                                                        <fmt:formatDate value="${review.createdAtDate}"
                                                                         pattern="dd/MM/yyyy"/>
                                                     </small>
                                                 </c:if>
@@ -854,18 +856,18 @@
                             <th>Người thực hiện</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <c:forEach items="${priceHistory}" var="history">
-                            <tr>
-                                <td><fmt:formatDate value="${history.changedAt}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                <td><fmt:formatNumber value="${history.oldPrice}" type="currency"
-                                                      currencySymbol="₫"/></td>
-                                <td><fmt:formatNumber value="${history.newPrice}" type="currency"
-                                                      currencySymbol="₫"/></td>
-                                <td>${history.changedBy}</td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
+                        <%--                        <tbody>--%>
+                        <%--                        <c:forEach items="${priceHistory}" var="history">--%>
+                        <%--                            <tr>--%>
+                        <%--                                <td><fmt:formatDate value="${history.changedAt}" pattern="dd/MM/yyyy HH:mm"/></td>--%>
+                        <%--                                <td><fmt:formatNumber value="${history.oldPrice}" type="currency"--%>
+                        <%--                                                      currencySymbol="₫"/></td>--%>
+                        <%--                                <td><fmt:formatNumber value="${history.newPrice}" type="currency"--%>
+                        <%--                                                      currencySymbol="₫"/></td>--%>
+                        <%--                                <td>${history.changedBy}</td>--%>
+                        <%--                            </tr>--%>
+                        <%--                        </c:forEach>--%>
+                        <%--                        </tbody>--%>
                     </table>
                 </div>
             </div>
@@ -900,7 +902,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="admin-btn-outline" data-bs-dismiss="modal">Hủy</button>
-                <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/delete" method="post"
+                <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/delete"
+                      method="post"
                       id="deleteForm">
                     <input type="hidden" name="softDelete" id="softDeleteValue" value="true">
                     <button type="submit" class="admin-btn-danger">Xóa sản phẩm</button>
