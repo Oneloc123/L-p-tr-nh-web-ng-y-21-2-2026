@@ -1,6 +1,8 @@
 package code.salecar.model.product.entity;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ReviewSummary {
     private int rating;
@@ -60,6 +62,7 @@ public class ReviewSummary {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    public Date getCreatAtDate(){return Timestamp.valueOf(createdAt);}
 
     // 5. Builder pattern
     public static Builder builder() {
