@@ -296,11 +296,11 @@
                         </label>
 
                         <label class="payment-method">
-                            <input type="radio" name="paymentMethod" value="BANK_TRANSFER">
-                            <div class="payment-icon"><i class="fas fa-university"></i></div>
+                            <input type="radio" name="paymentMethod" value="VNPAY">
+                            <div class="payment-icon"><i class="fas fa-qrcode" style="color: #005baa;"></i></div>
                             <div class="payment-details">
-                                <h4>Chuyển khoản ngân hàng</h4>
-                                <p>Chuyển khoản trực tiếp qua số tài khoản ngân hàng của cửa hàng.</p>
+                                <h4>Thanh toán qua VNPAY</h4>
+                                <p>Thanh toán an toàn qua ví điện tử VNPay hoặc quét mã QR ứng dụng ngân hàng.</p>
                             </div>
                         </label>
                     </div>

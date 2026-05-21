@@ -10,6 +10,35 @@ import java.util.*;
 
 
 public class OrderDAO {
+
+
+    public Order getOrderById(int orderId) {
+        String query = "SELECT * FROM `order` WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Order ord = new Order();
+                ord.setId(rs.getInt("id"));
+                ord.setUserId(rs.getInt("user_id"));
+                ord.setOrderDate(rs.getTimestamp("order_date"));
+                ord.setTotalAmount(rs.getDouble("total_price"));
+                ord.setShippingAddress(rs.getString("address"));
+                ord.setPaymentMethod(rs.getString("payment_method"));
+                ord.setOrderStatus(rs.getString("order_status"));
+
+
+                return ord;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void insertOrder(Order order, Cart cart) {
 
        try(Connection conn = DBConnection.getConnection()){
@@ -31,6 +60,7 @@ public class OrderDAO {
                ResultSet rs = pstmt.getGeneratedKeys();
                if(rs.next()){
                    int orderId = rs.getInt(1);
+                   order.setId(orderId);
 
                    for(CartItem item : cart.getItems()){
                        String sql1 = "insert into order_item (order_id, product_id, quantity, price, total_price) values (?, ?, ?, ?, ?)";

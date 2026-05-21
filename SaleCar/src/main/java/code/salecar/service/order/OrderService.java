@@ -14,11 +14,11 @@ public class OrderService {
     OrderDAO ordDAO = new OrderDAO();
     UserService userSV = new UserService();
 
-    public boolean processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod) {
+    public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod) {
 
 
         if (user == null || cart == null || cart.getItems().isEmpty()) {
-            return false;
+            return null;
         }
 
 
@@ -34,10 +34,10 @@ public class OrderService {
 
         try {
             ordDAO.insertOrder(order, cart);
-            return true;
+            return order;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
