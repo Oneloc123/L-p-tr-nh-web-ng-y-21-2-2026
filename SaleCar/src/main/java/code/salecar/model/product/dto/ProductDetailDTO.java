@@ -5,6 +5,7 @@ import code.salecar.model.category.CategoryInfo;
 import code.salecar.model.enumeration.Status;
 import code.salecar.model.product.entity.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +65,8 @@ public class ProductDetailDTO {
         double price = product.getPrice();
         double discountPercent = product.getDiscountPercent();
         return price * (100 - discountPercent) / 100;
-    }    public double getDiscountPercent(){return product != null ? product.getDiscountPercent() : 0;}
+    }
+    public double getDiscountPercent(){return product != null ? product.getDiscountPercent() : 0;}
     public double getPrice(){return product != null ? product.getPrice() : 0;}
     public String getSize() { return product != null ? product.getSize() : ""; }
     public String getMaterial() { return product != null ? product.getMaterial() : ""; }
@@ -78,7 +80,19 @@ public class ProductDetailDTO {
     public Status getStatus() { return product != null ? product.getStatus() : Status.INACTIVE; }
     public String getBrandLogo() { return brand != null ? brand.getLogo() : ""; }
     public String getBrandLink() { return brand != null ? brand.getLink() : ""; }
-    public List<ProductVariants> getVariants() {return variants;}
+    public List<ProductVariants> getVariants() {
+        calcFinalPrice();
+        return variants;}
+    public void calcFinalPrice(){
+        for(ProductVariants variant: variants){
+            BigDecimal price = variant.getPrice();
+            double discountPercent = getDiscountPercent();
+            double dn = price.doubleValue() * (100 - discountPercent) /100;
+            variant.setFinalPrice(new BigDecimal(dn));
+        }
+    }
+
+
     //Lỗi
     public String getSku() { return product != null ? "WWW" : ""; }
     public String getVariantName() { return variants != null ? variants.get(0).getVariantName() : ""; }

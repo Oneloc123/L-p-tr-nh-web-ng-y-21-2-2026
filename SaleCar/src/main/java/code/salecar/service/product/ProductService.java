@@ -27,6 +27,7 @@ public class ProductService {
     CategoryService cs = new CategoryService();
     ImageService is = new ImageService();
     DiscountService discountService = new DiscountService();
+    ProductVariantsService pvs = new ProductVariantsService();
 
     // Lấy chi tiết sản phẩm theo ID
     public ProductDetailDTO getProductByID(long id) {
@@ -51,11 +52,11 @@ public class ProductService {
         List<String> images = is.getImageProduct(productId);
 
 //         5. Lấy thông tin tồn kho và đã bán
-//        Inventory inventory = inventoryRepository.findByProductId(productId);
-//        ProductSalesInfo salesInfo = new ProductSalesInfo(
-//                inventory != null ? inventory.getQuantity() : 0,
-//                inventory != null ? inventory.getSoldQuantity() : 0
-//        );
+        ProductSalesInfo inventory = InventoryService.findByProductId(productId);
+        ProductSalesInfo salesInfo = new ProductSalesInfo(
+                inventory != null ? inventory.getQuantity() : 0,
+                inventory != null ? inventory.getSoldQuantity() : 0
+        );
 
 //         6. Lấy discount đang active (nếu có)
         Discount discount = ds.findActiveByProductId(productId);
@@ -72,7 +73,7 @@ public class ProductService {
         }
 
         // 7. Lấy danh sách review và map sang ReviewSummary
-        List<Review> reviews = rs.getReviewsByID(product.getId());
+        List<Review> reviews = rs.getReviewsByID(productId);
         List<ReviewSummary> reviewSummaries = reviews.stream()
                 .map(r -> new ReviewSummary(
                         r.getRating(),
@@ -86,7 +87,12 @@ public class ProductService {
         // 8. Tính phân bố rating (từ danh sách review)
         ProductRatingDistribution ratingDist = calculateRatingDistribution(reviews);
 
-        // 9. Dùng Builder để tạo ProductDetailDTO
+        // 9. Lấy product vảiant
+        List<ProductVariants> variants = pvs.getVariantById(productId);
+
+
+
+        // 10. Dùng Builder để tạo ProductDetailDTO
         return ProductDetailDTO.builder()
                 .product(product)
                 .brand(brandInfo)
@@ -96,6 +102,7 @@ public class ProductService {
                 .activeDiscount(discountInfo)
                 .reviews(reviewSummaries)
                 .ratingDist(ratingDist)
+                .variants(variants)
                 .build();
 
     }
