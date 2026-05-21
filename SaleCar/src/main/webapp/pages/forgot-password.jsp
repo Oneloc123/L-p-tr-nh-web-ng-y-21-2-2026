@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,8 @@
     <style>
         :root {
             --black: #0a0a0a;
-            --red: #e60000;
+            --gold: #D4AF37;
+            --dark-gold: #B8960C;
             --white: #ffffff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +53,7 @@
             top: -140px; right: -100px;
             width: 420px; height: 420px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.07);
+            background: rgba(212,175,55,0.07);
             pointer-events: none;
         }
         .split-left::after {
@@ -60,7 +62,7 @@
             bottom: -100px; left: -80px;
             width: 300px; height: 300px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.04);
+            background: rgba(212,175,55,0.04);
             pointer-events: none;
         }
 
@@ -76,7 +78,7 @@
             transition: opacity .2s;
         }
         .left-brand a:hover { opacity: .85; }
-        .left-brand .highlight { color: var(--red); }
+        .left-brand .highlight { color: var(--gold); }
 
         .left-title { margin-bottom: 40px; }
         .left-title h1 {
@@ -93,9 +95,9 @@
             margin-top: 16px;
             padding: 8px 16px;
             border-radius: 40px;
-            background: rgba(230,0,0,0.12);
-            border: 1px solid rgba(230,0,0,0.25);
-            color: #ff4444;
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.35);
+            color: var(--gold);
             font-size: 13px;
             font-weight: 500;
         }
@@ -112,12 +114,12 @@
         .feat-icon {
             width: 40px; height: 40px;
             border-radius: 10px;
-            background: rgba(230,0,0,0.10);
-            border: 1px solid rgba(230,0,0,0.15);
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.25);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .feat-icon i { font-size: 17px; color: var(--red); }
+        .feat-icon i { font-size: 17px; color: var(--gold); }
         .feat-text strong {
             display: block; color: #fff;
             font-size: 14px; font-weight: 600;
@@ -147,7 +149,7 @@
         }
         .form-header .sep {
             width: 40px; height: 3px;
-            background: var(--red); border-radius: 2px;
+            background: var(--gold); border-radius: 2px;
             margin: 12px auto 0;
         }
 
@@ -195,14 +197,14 @@
             gap: 10px;
             padding: 12px 14px;
             background: #f8f8f8;
-            border-left: 3px solid var(--black);
+            border-left: 3px solid var(--gold);
             border-radius: 0 10px 10px 0;
             margin-bottom: 24px;
             font-size: 12px;
             color: #555;
             line-height: 1.5;
         }
-        .info-box i { font-size: 15px; color: var(--black); margin-top: 1px; flex-shrink: 0; }
+        .info-box i { font-size: 15px; color: var(--gold); margin-top: 1px; flex-shrink: 0; }
 
         /* ── FORM ── */
         .form-group { margin-bottom: 20px; }
@@ -226,13 +228,22 @@
         }
         input::placeholder { color: #bbb; }
         input:focus {
-            border-color: var(--red);
-            box-shadow: 0 0 0 3px rgba(230,0,0,0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
         }
 
         .error-message {
             display: block; font-size: 11px;
-            color: var(--red); margin-top: 5px; font-weight: 500;
+            color: #e67e22; margin-top: 5px; font-weight: 500;
+        }
+        .alert-gold {
+            margin-bottom: 20px;
+            padding: 10px 14px;
+            background: #fffaf0;
+            border-left: 3px solid var(--gold);
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #b8860b;
         }
 
         .btn-submit {
@@ -244,7 +255,7 @@
             border-radius: 12px; cursor: pointer;
             transition: background .2s, transform .1s;
         }
-        .btn-submit:hover { background: var(--red); }
+        .btn-submit:hover { background: var(--gold); }
         .btn-submit:active { transform: scale(.99); }
 
         .back-link {
@@ -258,10 +269,10 @@
         .back-link a {
             color: var(--black); font-weight: 700;
             text-decoration: none;
-            border-bottom: 2px solid var(--red);
+            border-bottom: 2px solid var(--gold);
             padding-bottom: 1px;
         }
-        .back-link a:hover { color: var(--red); }
+        .back-link a:hover { color: var(--gold); }
 
         .note {
             text-align: center;
@@ -327,7 +338,7 @@
         </ul>
     </div>
 
-    <!-- ── CỘT PHẢI : FORM (backend không đổi) ── -->
+    <!-- ── CỘT PHẢI : FORM ── -->
     <div class="split-right">
         <div class="form-box">
             <div class="form-header">
@@ -359,7 +370,11 @@
                 <span>Nhập đúng tên đăng nhập và email đã đăng ký để nhận mã xác nhận.</span>
             </div>
 
-            <form method="post" action="/forgotPassword">
+            <c:if test="${not empty globalError}">
+                <div class="alert-gold"><i class="bi bi-exclamation-triangle-fill"></i> ${globalError}</div>
+            </c:if>
+
+            <form method="post" action="${pageContext.request.contextPath}/forgotPassword">
                 <div class="form-group">
                     <label for="username">Tên đăng nhập</label>
                     <input type="text" id="username" name="username" value="${param.username}"
@@ -384,13 +399,14 @@
             <div class="note">Mã xác nhận sẽ được gửi đến email của bạn</div>
 
             <div class="back-link">
-                Nhớ mật khẩu? <a href="/login">← Quay lại đăng nhập</a>
+                Nhớ mật khẩu? <a href="${pageContext.request.contextPath}/login">← Quay lại đăng nhập</a>
             </div>
             <div class="footer-text">© 2024 LUXCAR · Mô hình xe cao cấp</div>
         </div>
     </div>
 </div>
 
+<%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

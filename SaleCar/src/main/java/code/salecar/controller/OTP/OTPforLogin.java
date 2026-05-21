@@ -55,6 +55,11 @@ public class OTPforLogin extends HttpServlet {
             session.removeAttribute("id");
             session.setAttribute("user",user);
 
+            if(user.getRole().equals("admin")){
+                session.setAttribute("user",user);
+                response.sendRedirect("/userAdmin");
+                return;
+            }
             //alert
             request.getSession().setAttribute("toastMessage", "Đăng nhập thành công");
             request.getSession().setAttribute("toastType", "success");

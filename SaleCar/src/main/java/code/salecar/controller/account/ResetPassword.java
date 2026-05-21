@@ -2,6 +2,7 @@ package code.salecar.controller.account;
 
 import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
+import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -16,7 +17,7 @@ public class ResetPassword extends HttpServlet {
         if(session.getAttribute("resetPasswordState").toString()==null){
             return;
         }
-        User user = (User) session.getAttribute("userTemp");
+        User user = (User) session.getAttribute("user");
         request.setAttribute("user",user);
         request.getRequestDispatcher("/pages/reset-password.jsp").forward(request,response);
     }
@@ -25,22 +26,33 @@ public class ResetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
-
+        HttpSession session = request.getSession();
         String newPasswordError = UserInvalidate.checkPassword(newPassword);
         if(!newPasswordError.equals("true")){
+            User user = (User) session.getAttribute("user");
+            request.setAttribute("user",user);
             request.setAttribute("newPasswordError",newPasswordError);
-            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            request.getRequestDispatcher("/pages/reset-password.jsp").forward(request,response);
             return;
         }
 
         if(!newPassword.equals(confirmPassword)){
+            User user = (User) session.getAttribute("user");
+            request.setAttribute("user",user);
             request.setAttribute("confirmPasswordError","mật khẩu không khớp");
-            request.getRequestDispatcher("/pages/register.jsp").forward(request,response);
+            request.getRequestDispatcher("/pages/reset-password.jsp").forward(request,response);
             return;
         }
+        User user = (User)session.getAttribute("userTemp");
+        UserService us = new UserService();
+        user.setPassword(newPassword);
+        us.UpdateProfile(user);
+        session.removeAttribute("resetPasswordState");
+        session.removeAttribute("userTemp");
 
-        HttpSession session = request.getSession();
-        session.setAttribute("confirmPassword",confirmPassword);
-        response.sendRedirect("/OTPforForgotPassword");
+        //alert
+        request.getSession().setAttribute("toastMessage", "Đặt lại mật khẩu thành công vui lòng đăng nhập lại");
+        request.getSession().setAttribute("toastType", "success");
+        response.sendRedirect("/login");
     }
 }

@@ -14,6 +14,9 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+
+    <link rel="stylesheet" href="/common/all.css">
+    <link rel="stylesheet" href="/common/assets/alert.css">
     <style>
         :root {
             --black: #000000;
@@ -384,7 +387,7 @@
 </head>
 
 <body>
-
+<div id="alertContainer"></div>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
 

@@ -8,10 +8,10 @@
     <style>
         :root {
             --black: #0a0a0a;
-            --red: #e60000;
             --white: #ffffff;
             --gold: #D4AF37;
             --dark-gold: #B8960C;
+            --light-gold: #f5e2b0;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -53,7 +53,7 @@
             top: -140px; right: -100px;
             width: 420px; height: 420px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.07);
+            background: rgba(212,175,55,0.07);
             pointer-events: none;
         }
         .split-left::after {
@@ -62,7 +62,7 @@
             bottom: -100px; left: -80px;
             width: 300px; height: 300px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.04);
+            background: rgba(212,175,55,0.04);
             pointer-events: none;
         }
 
@@ -78,7 +78,7 @@
             transition: opacity .2s;
         }
         .left-brand a:hover { opacity: .85; }
-        .left-brand .highlight { color: var(--red); }
+        .left-brand .highlight { color: var(--gold); }
 
         .left-title { margin-bottom: 40px; }
         .left-title h1 {
@@ -95,9 +95,9 @@
             margin-top: 16px;
             padding: 8px 16px;
             border-radius: 40px;
-            background: rgba(230,0,0,0.12);
-            border: 1px solid rgba(230,0,0,0.25);
-            color: #ff4444;
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.35);
+            color: var(--gold);
             font-size: 13px;
             font-weight: 500;
         }
@@ -114,12 +114,12 @@
         .feat-icon {
             width: 40px; height: 40px;
             border-radius: 10px;
-            background: rgba(230,0,0,0.10);
-            border: 1px solid rgba(230,0,0,0.15);
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.25);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .feat-icon i { font-size: 17px; color: var(--red); }
+        .feat-icon i { font-size: 17px; color: var(--gold); }
         .feat-text strong {
             display: block; color: #fff;
             font-size: 14px; font-weight: 600;
@@ -149,7 +149,7 @@
         }
         .form-header .sep {
             width: 40px; height: 3px;
-            background: var(--red); border-radius: 2px;
+            background: var(--gold); border-radius: 2px;
             margin: 12px auto 0;
         }
 
@@ -175,8 +175,8 @@
         }
         input::placeholder { color: #bbb; }
         input:focus {
-            border-color: var(--red);
-            box-shadow: 0 0 0 3px rgba(230,0,0,0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
         }
         .password-wrapper { position: relative; }
         .password-wrapper input { padding-right: 44px; }
@@ -186,11 +186,24 @@
             cursor: pointer; color: #aaa; font-size: 17px;
             transition: color .2s;
         }
-        .toggle-password:hover { color: #333; }
+        .toggle-password:hover { color: var(--gold); }
 
         .error-message {
             display: block; font-size: 11px;
-            color: var(--red); margin-top: 5px; font-weight: 500;
+            color: var(--gold); margin-top: 5px; font-weight: 500;
+        }
+        .alert-gold {
+            margin-bottom: 20px;
+            padding: 10px 14px;
+            background: #fffaf0;
+            border-left: 3px solid var(--gold);
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #b8860b;
+        }
+        .alert-gold i {
+            margin-right: 6px;
+            color: var(--gold);
         }
 
         .forgot-password {
@@ -206,7 +219,7 @@
             transition: color .2s, border-color .2s;
         }
         .forgot-password a:hover {
-            color: var(--red); border-color: var(--red);
+            color: var(--gold); border-color: var(--gold);
         }
 
         .btn-login {
@@ -218,7 +231,7 @@
             border-radius: 12px; cursor: pointer;
             transition: background .2s, transform .1s;
         }
-        .btn-login:hover { background: var(--red); }
+        .btn-login:hover { background: var(--gold); }
         .btn-login:active { transform: scale(.99); }
 
         .divider {
@@ -243,7 +256,7 @@
             transition: all .2s;
         }
         .btn-social i { font-size: 17px; }
-        .btn-social:hover { background: var(--black); color: #fff; border-color: var(--black); }
+        .btn-social:hover { background: var(--black); color: #fff; border-color: var(--gold); }
 
         .register-link {
             text-align: center; font-size: 13px;
@@ -253,10 +266,10 @@
         .register-link a {
             color: var(--black); font-weight: 700;
             text-decoration: none;
-            border-bottom: 2px solid var(--red);
+            border-bottom: 2px solid var(--gold);
             padding-bottom: 1px;
         }
-        .register-link a:hover { color: var(--red); }
+        .register-link a:hover { color: var(--gold); }
 
         .footer-text {
             text-align: center; font-size: 11px;
@@ -327,7 +340,7 @@
 
             <form method="post" action="/login">
                 <c:if test="${not empty errorMessage}">
-                    <div class="alert alert-danger" style="margin-bottom:20px;padding:10px 14px;background:#fff5f5;border-left:3px solid #e60000;border-radius:0 8px 8px 0;font-size:13px;color:#c00;">
+                    <div class="alert-gold">
                         <i class="bi bi-exclamation-triangle-fill"></i> ${errorMessage}
                     </div>
                 </c:if>
