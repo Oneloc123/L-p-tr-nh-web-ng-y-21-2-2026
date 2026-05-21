@@ -44,12 +44,12 @@ public class DiscountDAO {
 
     }
 
-    public static Discount getBrandDiscount(int brandid) {
+    public static Discount getBrandDiscount(long brandid) {
         Discount discount = null;
         String query = "select * from discount where entity_type = 'brand' and entity_id = ?";
         try (Connection con = (Connection) DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query);) {
-            ps.setInt(1, brandid);
+            ps.setLong(1, brandid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                  discount = Discount.builder()
@@ -72,12 +72,12 @@ public class DiscountDAO {
         return discount;
     }
 
-    public static Discount getCategoryDiscount(int categoryid) {
+    public static Discount getCategoryDiscount(long categoryid) {
         Discount discount = null;
         String query = "select * from discount where entity_type = 'category' and  entity_id = ?";
         try (Connection con = (Connection) DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query);) {
-            ps.setInt(1, categoryid);
+            ps.setLong(1, categoryid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                  discount = Discount.builder()
@@ -185,5 +185,38 @@ public class DiscountDAO {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Discount findActiveDiscount(String product, long productId) {
+        String sql = "SELECT * FROM discount " +
+                                  "WHERE entity_type = ? AND entity_id = ? " +
+                                  "AND NOW() BETWEEN start_at AND end_at " +
+                                 "ORDER BY priority DESC LIMIT 1";
+        try (Connection con = (Connection) DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, product);
+            ps.setLong(2, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Discount discount = Discount.builder()
+                        .name(rs.getString("name"))
+                        .valueType(DiscountValueType.valueOf(rs.getString("value_type").toUpperCase()))
+                        .value(rs.getBigDecimal("value"))
+                        .entityType(DiscountEntityType.valueOf(rs.getString("entity_type").toUpperCase()))
+                        .entityId(rs.getLong("entity_id"))
+                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
+                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .createAt(LocalDateTime.now())
+                        .build();
+                return  discount;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+
     }
 }

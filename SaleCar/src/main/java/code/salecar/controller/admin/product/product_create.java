@@ -57,7 +57,6 @@ public class product_create extends HttpServlet {
         String categoryIdParam = request.getParameter("categoryId");
         String brandIdParam = request.getParameter("brandId");
         String statusParam = request.getParameter("status");
-        String discountPercentParam = request.getParameter("discountPercent");
 
         String ratioParam = request.getParameter("ratio");
         String sizeParam = request.getParameter("size");
@@ -159,7 +158,6 @@ public class product_create extends HttpServlet {
             doGet(request, response);
             return;
         }
-
         //validation status
         if (statusParam == null || statusParam.trim().isEmpty()) {
             request.setAttribute("error", "Trạng thái không được để trống");
@@ -172,12 +170,26 @@ public class product_create extends HttpServlet {
             return;
         }
 
-
-
+        double price = new Double(priceParams[0]);
+        double discountPercent = 0;
+        if (discountValueParam != null && !discountValueParam.trim().isEmpty()) {
+            try {
+                discountPercent = Double.parseDouble(discountValueParam);
+            } catch (NumberFormatException e) {
+                discountPercent = 0;
+            }
+        }
+        double finalPrice = price;
+        if (discountPercent > 0) {
+            finalPrice = price * (100 - discountPercent) / 100;
+        }
 
         // Tạo product object
         Product product = Product.builder()
                 .name(nameParam)
+                .price(price)
+                .finalPrice(finalPrice)
+                .discountPercent(discountPercent)
                 .brandId(brandId)
                 .categoryId(categoryId)
                 .description(descriptionParam)
@@ -201,18 +213,27 @@ public class product_create extends HttpServlet {
 
         if (productId > 0) {
             //Lưu ảnh cho sản phầm
+            ImageService imageService = new ImageService(); // Khởi tạo 1 lần duy nhất ngoài vòng lặp
+            boolean isFirst = true; // Biến đánh dấu ảnh đầu tiên làm ảnh chính
             try {
                 Collection<Part> parts = request.getParts();
                 for (Part part : parts) {
                     if ("galleryImages".equals(part.getName()) && part.getSize() > 0) {
+                        // Lưu file vật lý
                         String relativePath = storageService.saveProductImage(productId, part, "gallery");
-                        ProductImage image = ProductImage.builder().productId(productId).imageUrl(relativePath).isPrimary(false).build();
-                        ImageService imageService = new ImageService();
+
+                        // Lưu thông tin vào Database
+                        ProductImage image = ProductImage.builder()
+                                .productId(productId)
+                                .imageUrl(relativePath)
+                                .isPrimary(isFirst) // Tấm đầu tiên là true, các tấm sau là false
+                                .build();
                         imageService.createProductImage(image);
+                        isFirst = false; // Sau tấm đầu tiên, các tấm còn lại gán false
                     }
                 }
             } catch (Exception e) {
-                throw new ServletException(e);
+                e.printStackTrace();
             }
 
             // Tạo discount if provided
@@ -256,7 +277,7 @@ public class product_create extends HttpServlet {
                 }
             }
             // Success, redirect to product list
-            response.sendRedirect(request.getContextPath() + "/admin/products/detal?id="+productId);
+            response.sendRedirect(request.getContextPath() + "/admin/products/detail?id=" + productId);
         } else {
             request.setAttribute("error", "Không thể tạo sản phẩm");
             doGet(request, response);
