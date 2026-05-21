@@ -1,206 +1,385 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Xác nhận - LUXCAR</title>
+  <title>Xác nhận OTP - Đổi mật khẩu | LUXCAR</title>
   <%@ include file="/common/header-for-login-ex.jsp" %>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
+    :root {
+      --black: #0a0a0a;
+      --gold: #D4AF37;
+      --dark-gold: #B8960C;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      background-color: #000000;
+      background: var(--black);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     }
 
-    .verify-container {
-      background-color: #ffffff;
-      width: 100%;
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 40px 35px;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      max-width: 1280px;
+      width: 92%;
+      margin: 40px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      min-height: 580px;
     }
 
-    h1 {
-      color: #000000;
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 26px;
-      font-weight: 600;
+    /* LEFT PANEL */
+    .split-left {
+      background: var(--black);
+      padding: 52px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .split-left::before {
+      content: '';
+      position: absolute;
+      top: -140px; right: -100px;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.07);
+      pointer-events: none;
+    }
+    .split-left::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.04);
+      pointer-events: none;
     }
 
-    .subtitle {
-      color: #333333;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 14px;
-      border-bottom: 2px solid #000000;
-      padding-bottom: 15px;
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      color: #000000;
-      margin-bottom: 8px;
-      font-weight: 500;
-      text-transform: uppercase;
-      font-size: 14px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #000000;
-      background-color: #ffffff;
-      color: #000000;
-      font-size: 18px;
-      text-align: center;
-      letter-spacing: 5px;
-      border-radius: 4px;
-      outline: none;
-    }
-
-    input[type="text"]:focus {
-      background-color: #f5f5f5;
-    }
-
-    .btn-verify {
-      width: 100%;
-      padding: 14px;
-      background-color: #000000;
-      color: #ffffff;
-      border: 2px solid #000000;
-      font-size: 16px;
-      font-weight: 600;
-      text-transform: uppercase;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-verify:hover {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .btn-secondary {
-      width: 100%;
-      padding: 12px;
-      background-color: #ffffff;
-      color: #000000;
-      border: 2px solid #000000;
-      font-size: 14px;
-      font-weight: 600;
-      text-transform: uppercase;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
+    .left-brand a {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      font-family: 'Arial Black', Impact, sans-serif;
+      color: #fff;
       text-decoration: none;
       display: inline-block;
-      text-align: center;
-      margin-top: 15px;
+      margin-bottom: 44px;
+      transition: opacity .2s;
+    }
+    .left-brand a:hover { opacity: .85; }
+    .left-brand .highlight { color: var(--gold); }
+
+    .left-title { margin-bottom: 40px; }
+    .left-title h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+      letter-spacing: -.5px;
+    }
+    .left-title .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: rgba(212,175,55,0.12);
+      border: 1px solid rgba(212,175,55,0.35);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 500;
     }
 
-    .btn-secondary:hover {
-      background-color: #000000;
-      color: #ffffff;
+    .feature-list { list-style: none; }
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feat-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(212,175,55,0.12);
+      border: 1px solid rgba(212,175,55,0.25);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-icon i { font-size: 17px; color: var(--gold); }
+    .feat-text strong { display: block; color: #fff; font-size: 14px; font-weight: 600; }
+    .feat-text span { font-size: 12px; color: rgba(255,255,255,.45); }
+
+    /* RIGHT PANEL */
+    .split-right {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .form-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 52px 44px;
+    }
+
+    .form-header { text-align: center; margin-bottom: 32px; }
+    .form-header h1 {
+      font-size: 26px; font-weight: 800;
+      color: var(--black); letter-spacing: 1.5px;
+    }
+    .form-header .subtitle {
+      font-size: 13px; color: #888; margin-top: 6px;
+    }
+    .form-header .sep {
+      width: 40px; height: 3px;
+      background: var(--gold); border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    /* Steps indicator (cho đổi mật khẩu có thể không cần, nhưng giữ đồng bộ) */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 28px;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .step-circle {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .step.active .step-circle { background: var(--black); color: #fff; }
+    .step.inactive .step-circle {
+      background: #f0f0f0; color: #aaa;
+      border: 1.5px solid #e0e0e0;
+    }
+    .step-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    .step.active .step-label { color: var(--black); }
+    .step.inactive .step-label { color: #bbb; }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #e8e8e8;
+      margin: 0 8px;
+      margin-bottom: 18px;
+      max-width: 50px;
     }
 
     .info-box {
-      background-color: #f5f5f5;
+      background: #fafcfd;
+      border: 1px solid #eef2f6;
+      border-radius: 16px;
       padding: 20px;
-      margin-bottom: 25px;
-      border: 2px solid #000000;
+      margin-bottom: 28px;
       text-align: center;
-      border-radius: 4px;
     }
-
-    .info-box p {
-      margin: 5px 0;
-      color: #333333;
-    }
-
+    .info-box p { margin: 8px 0; color: #1e293b; font-size: 14px; }
+    .info-box strong { color: var(--gold); }
     .code-display {
-      font-size: 24px;
-      font-weight: bold;
-      letter-spacing: 5px;
-      color: #000000;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--black);
+      background: #fff8e8;
+      padding: 12px;
+      border-radius: 12px;
       margin: 15px 0;
-      padding: 10px;
-      background-color: #ffffff;
-      border: 2px dashed #000000;
-      border-radius: 4px;
+      border: 1px dashed var(--gold);
     }
 
-    .car-icon {
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: #333; margin-bottom: 6px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e0e0e0;
+      background: #fff;
+      color: #111;
+      font-size: 18px;
       text-align: center;
-      margin-bottom: 15px;
-      font-size: 48px;
-      color: #000000;
+      letter-spacing: 4px;
+      border-radius: 10px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+    }
+    .error-message {
+      display: block; font-size: 11px;
+      color: #e67e22; margin-top: 5px; font-weight: 500;
+    }
+    .alert-gold {
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      background: #fffaf0;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #b8860b;
+    }
+    .btn-verify {
+      width: 100%; padding: 14px;
+      background: var(--black);
+      color: #fff; border: none;
+      font-size: 15px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      border-radius: 12px; cursor: pointer;
+      transition: background .2s, transform .1s;
+      margin-top: 8px;
+    }
+    .btn-verify:hover { background: var(--gold); }
+    .btn-verify:active { transform: scale(.99); }
+
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      color: var(--black);
+      border: 1.5px solid #e0e0e0;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-top: 15px;
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: #fffaf0;
     }
 
     .timer {
       font-size: 12px;
-      color: #666666;
+      color: #888;
       text-align: center;
-      margin: 15px 0;
+      margin: 16px 0 8px;
     }
-
     .back-link {
-      display: block;
       text-align: center;
-      margin-top: 15px;
-      color: #666666;
-      text-decoration: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
       font-size: 13px;
+      color: #666;
+    }
+    .back-link a {
+      color: var(--black); font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 1px;
+    }
+    .back-link a:hover { color: var(--gold); }
+
+    .footer-text {
+      text-align: center; font-size: 11px;
+      color: #bbb; margin-top: 20px;
     }
 
-    .back-link:hover {
-      color: #000000;
+    @media (max-width: 900px) {
+      .split-layout { grid-template-columns: 1fr; }
+      .split-left { display: none; }
+      .split-right { align-items: flex-start; }
+      .form-box { padding: 40px 28px; }
     }
   </style>
 </head>
 <body>
-<div class="verify-container">
-  <div class="car-icon">✉️</div>
-  <h1>XÁC NHẬN</h1>
-  <div class="subtitle">NHẬP MÃ XÁC NHẬN</div>
 
-  <div class="info-box">
-    <p><strong>Tài khoản:</strong> ${user.fullname}</p>
-    <p><strong>Email:</strong> ${user.email}</p>
-    <div class="code-display">123456</div>
-    <p style="font-size: 12px;">(Mã xác nhận mẫu: 123456)</p>
-  </div>
-
-  <form method="post" action="${pageContext.request.contextPath}/OTPforChangePassword">
-    <div class="form-group">
-      <label for="code">Mã xác nhận (6 số)</label>
-      <input type="text" id="code" name="otp" maxlength="6"
-             placeholder="------">
-      <c:if test="${not empty OTPError}">
-            <span class="error-message" style="color: red;">
-                <i class="bi bi-x-circle"></i> ${OTPError}
-            </span>
-      </c:if>
+<div class="split-layout">
+  <!-- LEFT PANEL -->
+  <div class="split-left">
+    <div class="left-brand">
+      <a href="${pageContext.request.contextPath}/home">LUX<span class="highlight">CAR</span></a>
     </div>
-
-    <button type="submit" class="btn-verify">XÁC NHẬN</button>
-  </form>
-
-  <div class="timer">
-    Mã có hiệu lực trong 5 phút
+    <div class="left-title">
+      <h1>Xác nhận thay đổi mật khẩu</h1>
+      <div class="badge"><i class="bi bi-shield-check"></i> Bảo mật hai lớp</div>
+    </div>
+    <ul class="feature-list">
+      <li><div class="feat-icon"><i class="bi bi-envelope-paper-fill"></i></div><div class="feat-text"><strong>Mã OTP qua Email</strong><span>Chúng tôi đã gửi mã 6 số đến email của bạn</span></div></li>
+      <li><div class="feat-icon"><i class="bi bi-clock-history"></i></div><div class="feat-text"><strong>Hiệu lực 5 phút</strong><span>Nhập mã trước khi hết hạn</span></div></li>
+      <li><div class="feat-icon"><i class="bi bi-shield-lock-fill"></i></div><div class="feat-text"><strong>Mã dùng một lần</strong><span>Đảm bảo an toàn tuyệt đối</span></div></li>
+    </ul>
   </div>
 
-  <a href="/OTPforChangePassword" class="btn-secondary">GỬI LẠI MÃ</a>
-  <a href="/changePassword" class="back-link">Quay lại</a>
+  <!-- RIGHT PANEL: FORM OTP -->
+  <div class="split-right">
+    <div class="form-box">
+      <div class="form-header">
+        <h1>NHẬP MÃ OTP</h1>
+        <div class="subtitle">Xác nhận để tiếp tục đổi mật khẩu</div>
+        <div class="sep"></div>
+      </div>
+
+      <!-- Steps: B1 Xác thực OTP là bước chính (có thể tuỳ chỉnh) -->
+      <div class="steps">
+        <div class="step active"><div class="step-circle">1</div><div class="step-label">Xác thực OTP</div></div>
+        <div class="step-line"></div>
+        <div class="step inactive"><div class="step-circle">2</div><div class="step-label">Mật khẩu mới</div></div>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Tài khoản:</strong> ${user.fullname}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <div class="code-display">123456</div>
+        <p style="font-size: 12px;">(Mã xác nhận mẫu: 123456)</p>
+      </div>
+
+      <c:if test="${not empty OTPError}">
+        <div class="alert-gold"><i class="bi bi-exclamation-triangle-fill"></i> ${OTPError}</div>
+      </c:if>
+
+      <form method="post" action="${pageContext.request.contextPath}/OTPforChangePassword">
+        <div class="form-group">
+          <label for="code">Mã xác nhận (6 số)</label>
+          <input type="text" id="code" name="otp" maxlength="6" placeholder="••••••" autocomplete="off">
+        </div>
+        <button type="submit" class="btn-verify">XÁC NHẬN →</button>
+      </form>
+
+      <div class="timer"><i class="bi bi-clock"></i> Mã có hiệu lực trong 5 phút</div>
+
+      <a href="${pageContext.request.contextPath}/OTPforChangePassword" class="btn-secondary">GỬI LẠI MÃ</a>
+
+      <div class="back-link">
+        <a href="${pageContext.request.contextPath}/changePassword">← Quay lại</a>
+      </div>
+      <div class="footer-text">© 2024 LUXCAR · Mô hình xe cao cấp</div>
+    </div>
+  </div>
 </div>
+
 <%@ include file="/common/footer.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
