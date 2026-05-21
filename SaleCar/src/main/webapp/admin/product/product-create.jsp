@@ -479,12 +479,6 @@
                             <td><input type="text" class="form-control form-control-sm" name="origin"
                                        placeholder="Ví dụ: Trung Quốc"></td>
                         </tr>
-                        <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeKey[]"
-                                       value="Màu sắc"
-                                       readonly></td>
-                            <td><input type="text" class="form-control form-control-sm" name="attributeValue[]"></td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -852,6 +846,5 @@
         }
     });
 </script>
-<
 </body>
 </html>

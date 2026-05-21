@@ -264,24 +264,31 @@ public class ProductDAO {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("final_price"),
-                        rs.getDouble("discount_percent"),
-                        rs.getTimestamp("discount_updated_at").toLocalDateTime(),
-                        rs.getInt("brand_id"),
-                        rs.getInt("category_id"),
-                        rs.getString("description"),
-                        rs.getString("ratio"),
-                        rs.getString("size"),
-                        rs.getString("material"),
-                        rs.getString("origin"),
-                        Status.fromCode(rs.getInt("status")),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
-                        rs.getTimestamp("updated_at").toLocalDateTime()
-                );
+                p =  Product.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .size(rs.getString("size"))
+                        .material(rs.getString("material"))
+                        .origin(rs.getString("origin"))
+                        .description(rs.getString("description"))
+                        .status(Status.fromCode(rs.getInt("status")))
+                        .build();
+
+                Timestamp tsc = rs.getTimestamp("created_at");
+                LocalDateTime createdAt = (tsc != null) ? tsc.toLocalDateTime() : LocalDateTime.now();
+                Timestamp tsu = rs.getTimestamp("updated_at");
+                LocalDateTime updatedAt = (tsu != null) ? tsu.toLocalDateTime() : LocalDateTime.now();
+                Timestamp tsd = rs.getTimestamp("discount_updated_at");
+                LocalDateTime discountAt = (tsd != null) ? tsd.toLocalDateTime() : LocalDateTime.now();
+                p.setCreatedAt(createdAt);
+                p.setUpdatedAt(updatedAt);
+                p.setDiscountUpdatedAt(discountAt);
 
             }
         } catch (Exception e) {
@@ -692,7 +699,7 @@ public class ProductDAO {
     }
 
     //Thêm sản phẩm mới vào cơ sở dữ liệu và trả về ID của sản phẩm vừa được thêm
-    public int insertProduct(ProductDetailDTO product) {
+    public long insertProduct(ProductDetailDTO product) {
 
         String query =
                 "INSERT INTO product " +
@@ -730,8 +737,8 @@ public class ProductDAO {
 
             ps.setNull(5, java.sql.Types.TIMESTAMP);
 
-            ps.setLong(6, product.getBrand().getBrandId());
-            ps.setLong(7, product.getCategory().getCategoryId());
+            ps.setLong(6, product.getProduct().getBrandId());
+            ps.setLong(7, product.getProduct().getCategoryId());
 
             ps.setString(8, product.getProduct().getDescription());
             ps.setString(9, product.getProduct().getRatio());

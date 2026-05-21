@@ -33,6 +33,7 @@ public class ProductService {
 
         // 1. Lấy entity Product
         Product product = productDAO.getProductByID(id);
+        long productId = product.getId();
 
         // 2. Lấy Brand và tạo BrandInfo
         Brand brand = bs.getBrandByID(product.getBrandId());
@@ -46,32 +47,29 @@ public class ProductService {
                 ? CategoryInfo.builder().id(category.getId()).name(category.getName()).build()
                 : null;
 
-        // 4. Lấy danh sách ảnh (chỉ URL)
-//        List<String> images = productImageRepository.findByProductId(productId)
-//                .stream()
-//                .map(ProductImage::getImageUrl)
-//                .collect(Collectors.toList());
+//         4. Lấy danh sách ảnh (chỉ URL)
+        List<String> images = is.getImageProduct(productId);
 
-        // 5. Lấy thông tin tồn kho và đã bán
+//         5. Lấy thông tin tồn kho và đã bán
 //        Inventory inventory = inventoryRepository.findByProductId(productId);
 //        ProductSalesInfo salesInfo = new ProductSalesInfo(
 //                inventory != null ? inventory.getQuantity() : 0,
 //                inventory != null ? inventory.getSoldQuantity() : 0
 //        );
 
-        // 6. Lấy discount đang active (nếu có)
-//        Discount discount = ds.findActiveByProductId(productId);
-//        DiscountInfo discountInfo = null;
-//        if (discount != null) {
-//            discountInfo = DiscountInfo.builder()
-//                    .discountId(discount.getId())
-//                    .name(discount.getName())
-//                    .valueType(discount.getValueType())
-//                    .value(discount.getValue())
-//                    .startAt(discount.getStartAt())
-//                    .endAt(discount.getEndAt())
-//                    .build();
-//        }
+//         6. Lấy discount đang active (nếu có)
+        Discount discount = ds.findActiveByProductId(productId);
+        DiscountInfo discountInfo = null;
+        if (discount != null) {
+            discountInfo = DiscountInfo.builder()
+                    .discountId(discount.getId())
+                    .name(discount.getName())
+                    .discountType(discount.getValueType())
+                    .value(discount.getValue())
+                    .startAt(discount.getStartAt())
+                    .endAt(discount.getEndAt())
+                    .build();
+        }
 
         // 7. Lấy danh sách review và map sang ReviewSummary
         List<Review> reviews = rs.getReviewsByID(product.getId());
@@ -93,9 +91,9 @@ public class ProductService {
                 .product(product)
                 .brand(brandInfo)
                 .category(categoryInfo)
-//                .images(images)
+                .images(images)
 //                .salesInfo(salesInfo)
-//                .activeDiscount(discountInfo)
+                .activeDiscount(discountInfo)
                 .reviews(reviewSummaries)
                 .ratingDist(ratingDist)
                 .build();
@@ -358,15 +356,37 @@ public class ProductService {
         productDAO.updateBasicInfo(product);
     }
 
-    // Tạo sản phẩm mới
-    public int createProduct(ProductDetailDTO product) {
-//        int id = productDAO.insertProduct(product);
-//        for (ProductVariants variant : product..getVariants()) {
-//            variant.setProductId(id);
-//            productDAO.insertVariant(variant);
-//        }
-//        return id;
+    /* Tạo sản phẩm mới
+    1. Gán giá: Lấy giá của màu sắc/phiên bản đầu tiên gán vào sản phẩm chính (Đây là cách làm đúng để hiển thị giá "Từ..." trên trang danh sách).
+    2. Lưu sản phẩm chính: Gọi insertProduct để tạo bản ghi trong bảng product và lấy về productId.
+    3. Lưu biến thể: Dùng vòng lặp for để gán productId vào từng biến thể và lưu vào bảng product_variants.
+    4. Tải ảnh & Khuyến mãi: Sau khi Service trả về productId, Controller (product_create.java) sẽ tiếp tục lưu ảnh vào bảng product_images và tạo khuyến mãi nếu có.
+     */
+    public long createProduct(ProductDetailDTO productDTO) {
+        Product p = productDTO.getProduct();
 
-        return 0;
+        // 1. Lấy giá từ biến thể đầu tiên gán cho sản phẩm chính để hiển thị
+        if (productDTO.getVariants() != null && !productDTO.getVariants().isEmpty()) {
+            double basePrice = productDTO.getVariants().get(0).getPrice().doubleValue();
+            p.setPrice(basePrice);
+
+            // Tính toán Final Price dựa trên Discount Percent
+            double discount = p.getDiscountPercent();
+            double finalPrice = basePrice * (100 - discount) / 100;
+            p.setFinalPrice(finalPrice);
+        }
+
+        // 2. Lưu thông tin sản phẩm chính
+        long productId = productDAO.insertProduct(productDTO);
+
+        // 3. Nếu lưu sản phẩm thành công, lưu tiếp các biến thể
+        if (productId > 0) {
+            for (ProductVariants variant : productDTO.getVariants()) {
+                variant.setProductId(productId);
+                productDAO.insertVariant(variant);
+            }
+        }
+
+        return productId;
     }
 }

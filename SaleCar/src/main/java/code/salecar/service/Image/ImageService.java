@@ -13,6 +13,7 @@ public class ImageService {
     }
 
     public List<String> getImageProduct(long id) {
+
         return imageDAO.getImageProduct(id);
     }
 
