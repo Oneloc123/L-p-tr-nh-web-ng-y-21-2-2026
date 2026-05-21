@@ -49,21 +49,18 @@ public class OTPforForgotPassword extends HttpServlet {
         HttpSession session = request.getSession();
         if(session.getAttribute("otp").toString().equals(otp)||otp.equals("111111")){
             User user = (User)session.getAttribute("userTemp");
-            String password = session.getAttribute("confirmPassword").toString();
-            UserService us = new UserService();
-            user.setPassword(password);
-            us.UpdateProfile(user);
-            session.removeAttribute("resetPasswordState");
-            session.removeAttribute("resetPasswordState");
+//            String password = session.getAttribute("confirmPassword").toString();
+//            UserService us = new UserService();
+//            user.setPassword(password);
+//            us.UpdateProfile(user);
+//            session.removeAttribute("resetPasswordState");
             session.removeAttribute("otp");
             session.removeAttribute("id");
-            session.removeAttribute("userTemp");
-            session.setAttribute("user",user);
-            response.sendRedirect("/home");
+            response.sendRedirect("/resetPassword");
 
-            //alert
-            request.getSession().setAttribute("toastMessage", "Đặt lại mật khẩu thành công");
-            request.getSession().setAttribute("toastType", "success");
+//            //alert
+//            request.getSession().setAttribute("toastMessage", "Đặt lại mật khẩu thành công");
+//            request.getSession().setAttribute("toastType", "success");
 
             return;
         }

@@ -8,7 +8,9 @@
     <style>
         :root {
             --black: #0a0a0a;
-            --red: #e60000;
+            --gold: #D4AF37;
+            --dark-gold: #B8960C;
+            --light-gold: #f5e2b0;
             --white: #ffffff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,7 +37,7 @@
             min-height: 620px;
         }
 
-        /* ── LEFT PANEL ── */
+        /* ── LEFT PANEL (màu đen + vàng) ── */
         .split-left {
             background: var(--black);
             padding: 52px 48px;
@@ -51,7 +53,7 @@
             top: -140px; right: -100px;
             width: 420px; height: 420px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.07);
+            background: rgba(212,175,55,0.07);
             pointer-events: none;
         }
         .split-left::after {
@@ -60,7 +62,7 @@
             bottom: -100px; left: -80px;
             width: 300px; height: 300px;
             border-radius: 50%;
-            background: rgba(230,0,0,0.04);
+            background: rgba(212,175,55,0.04);
             pointer-events: none;
         }
 
@@ -76,7 +78,7 @@
             transition: opacity .2s;
         }
         .left-brand a:hover { opacity: .85; }
-        .left-brand .highlight { color: var(--red); }
+        .left-brand .highlight { color: var(--gold); }
 
         .left-title { margin-bottom: 40px; }
         .left-title h1 {
@@ -93,9 +95,9 @@
             margin-top: 16px;
             padding: 8px 16px;
             border-radius: 40px;
-            background: rgba(230,0,0,0.12);
-            border: 1px solid rgba(230,0,0,0.25);
-            color: #ff4444;
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.35);
+            color: var(--gold);
             font-size: 13px;
             font-weight: 500;
         }
@@ -112,19 +114,19 @@
         .feat-icon {
             width: 40px; height: 40px;
             border-radius: 10px;
-            background: rgba(230,0,0,0.10);
-            border: 1px solid rgba(230,0,0,0.15);
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.25);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .feat-icon i { font-size: 17px; color: var(--red); }
+        .feat-icon i { font-size: 17px; color: var(--gold); }
         .feat-text strong {
             display: block; color: #fff;
             font-size: 14px; font-weight: 600;
         }
         .feat-text span { font-size: 12px; color: rgba(255,255,255,.45); }
 
-        /* ── RIGHT PANEL ── */
+        /* ── RIGHT PANEL (trắng + vàng) ── */
         .split-right {
             background: #fff;
             display: flex;
@@ -147,7 +149,7 @@
         }
         .form-header .sep {
             width: 40px; height: 3px;
-            background: var(--red); border-radius: 2px;
+            background: var(--gold); border-radius: 2px;
             margin: 12px auto 0;
         }
 
@@ -172,8 +174,8 @@
         }
         input::placeholder { color: #bbb; }
         input:focus {
-            border-color: var(--red);
-            box-shadow: 0 0 0 3px rgba(230,0,0,0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
         }
         .password-wrapper { position: relative; }
         .password-wrapper input { padding-right: 44px; }
@@ -183,11 +185,11 @@
             cursor: pointer; color: #aaa; font-size: 17px;
             transition: color .2s;
         }
-        .toggle-password:hover { color: #333; }
+        .toggle-password:hover { color: var(--gold); }
 
         .error-message {
             display: block; font-size: 11px;
-            color: var(--red); margin-top: 5px; font-weight: 500;
+            color: var(--gold); margin-top: 5px; font-weight: 500;
         }
         small.form-text {
             display: block;
@@ -215,7 +217,7 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
-        .user-avatar i { color: #fff; font-size: 16px; }
+        .user-avatar i { color: var(--gold); font-size: 16px; }
         .user-info-text strong {
             display: block;
             font-size: 13px;
@@ -234,14 +236,14 @@
             gap: 8px;
             padding: 10px 12px;
             background: #f8f8f8;
-            border-left: 3px solid var(--black);
+            border-left: 3px solid var(--gold);
             border-radius: 0 8px 8px 0;
             margin-bottom: 22px;
             font-size: 12px;
             color: #555;
             line-height: 1.5;
         }
-        .password-hint i { font-size: 14px; color: var(--black); margin-top: 1px; flex-shrink: 0; }
+        .password-hint i { font-size: 14px; color: var(--gold); margin-top: 1px; flex-shrink: 0; }
 
         .btn-submit {
             width: 100%; padding: 14px;
@@ -252,7 +254,7 @@
             border-radius: 12px; cursor: pointer;
             transition: background .2s, transform .1s;
         }
-        .btn-submit:hover { background: var(--red); }
+        .btn-submit:hover { background: var(--gold); }
         .btn-submit:active { transform: scale(.99); }
 
         .back-link {
@@ -266,10 +268,10 @@
         .back-link a {
             color: var(--black); font-weight: 700;
             text-decoration: none;
-            border-bottom: 2px solid var(--red);
+            border-bottom: 2px solid var(--gold);
             padding-bottom: 1px;
         }
-        .back-link a:hover { color: var(--red); }
+        .back-link a:hover { color: var(--gold); }
 
         .footer-text {
             text-align: center; font-size: 11px;
@@ -288,7 +290,7 @@
 
 <div class="split-layout">
 
-    <!-- ── CỘT TRÁI ── -->
+    <!-- ── CỘT TRÁI (vàng) ── -->
     <div class="split-left">
         <div class="left-brand">
             <a href="${pageContext.request.contextPath}/home">LUX<span class="highlight">CAR</span></a>
