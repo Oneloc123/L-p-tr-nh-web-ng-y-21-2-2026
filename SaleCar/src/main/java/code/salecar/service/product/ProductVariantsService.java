@@ -5,9 +5,12 @@ import code.salecar.dao.ImportReceiptDAO;
 import code.salecar.dao.InventoryDAO;
 import code.salecar.dao.ProductVariantsDAO;
 import code.salecar.model.User;
+import code.salecar.model.product.entity.ActivityLog;
 import code.salecar.model.product.entity.Product;
 import code.salecar.model.product.entity.ProductVariants;
+import code.salecar.service.file.ActivityLogFileService;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProductVariantsService {
@@ -31,11 +34,13 @@ public class ProductVariantsService {
 
     public void createImportReceipt(ProductVariants variant, User user) {
         int irId = ird.createImportReceipt(user);
+
         createImportReceiptItem(irId,variant);
     }
 
     public void createImportReceiptItem(int improtId,ProductVariants variant) {
         ird.createImportReceiptItem(improtId,variant);
+
         iv.update(variant);
 
     }

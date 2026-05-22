@@ -12,6 +12,7 @@ import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
 import code.salecar.model.brand.Brand;
 import code.salecar.service.Image.ImageService;
+import code.salecar.service.file.ActivityLogFileService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class ProductService {
     ImageService is = new ImageService();
     DiscountService discountService = new DiscountService();
     ProductVariantsService pvs = new ProductVariantsService();
-
+    ActivityLogFileService ls = new ActivityLogFileService();
     // Lấy chi tiết sản phẩm theo ID
     public ProductDetailDTO getProductByID(long id) {
 
@@ -90,7 +91,8 @@ public class ProductService {
         // 9. Lấy product vảiant
         List<ProductVariants> variants = pvs.getVariantById(productId);
 
-
+        //10. Log
+        List<ActivityLog> activityLog = ls.readLogs(productId);
 
         // 10. Dùng Builder để tạo ProductDetailDTO
         return ProductDetailDTO.builder()
@@ -103,6 +105,7 @@ public class ProductService {
                 .reviews(reviewSummaries)
                 .ratingDist(ratingDist)
                 .variants(variants)
+                .activityLogs(activityLog)
                 .build();
 
     }

@@ -807,6 +807,59 @@
 
             </c:choose>
         </div>
+
+        <!-- ========== SECTION 8: SALES STATISTICS ========== -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-section">
+                    <h5><i class="bi bi-graph-up me-2"></i>Thống kê bán hàng</h5>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+<%--                                                        <div class="display-6 fw-bold text-primary">${totalOrders != null ? totalOrders : 0}</div>--%>
+                            <div class="small text-muted">Tổng đơn hàng</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="display-6 fw-bold text-success">
+                                <%--                                <fmt:formatNumber value="${totalRevenue != null ? totalRevenue : 0}" type="currency" currencySymbol="₫"/>--%>
+                            </div>
+                            <div class="small text-muted">Doanh thu</div>
+                        </div>
+                        <div class="col-md-4">
+                            <%--                            <div class="display-6 fw-bold text-info">${product.viewCount != null ? product.viewCount : 0}</div>--%>
+                            <div class="small text-muted">Lượt xem</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-section">
+                    <h5><i class="bi bi-journal-code me-2"></i>Lịch sử hoạt động</h5>
+                    <div class="activity-log">
+                        <c:choose>
+
+                        <c:when test="${not empty product.activityLogs}">
+                            <c:forEach items="${product.activityLogs}" var="log">
+                                <div class="log-item">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>${log.action}</strong>
+                                        <small class="text-muted"><fmt:formatDate value="${log.timestamp}"
+                                                                                  pattern="dd/MM/yyyy HH:mm"/></small>
+                                    </div>
+                                    <div class="small text-muted">Người thực hiện: ${log.user}</div>
+                                    <div class="small">${log.details}</div>
+                                </div>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-muted text-center py-3">Chưa có hoạt động nào</div>
+                        </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ========== SECTION 6: BRAND & RELATED PRODUCTS ========== -->
         <div class="row">
             <div class="col-md-6">
@@ -946,53 +999,7 @@
             </div>
         </div>
 
-        <!-- ========== SECTION 8: SALES STATISTICS ========== -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="info-section">
-                    <h5><i class="bi bi-graph-up me-2"></i>Thống kê bán hàng</h5>
-                    <div class="row text-center">
-                        <div class="col-md-4">
-                            <%--                            <div class="display-6 fw-bold text-primary">${totalOrders != null ? totalOrders : 0}</div>--%>
-                            <div class="small text-muted">Tổng đơn hàng</div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="display-6 fw-bold text-success">
-                                <%--                                <fmt:formatNumber value="${totalRevenue != null ? totalRevenue : 0}" type="currency" currencySymbol="₫"/>--%>
-                            </div>
-                            <div class="small text-muted">Doanh thu</div>
-                        </div>
-                        <div class="col-md-4">
-                            <%--                            <div class="display-6 fw-bold text-info">${product.viewCount != null ? product.viewCount : 0}</div>--%>
-                            <div class="small text-muted">Lượt xem</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="info-section">
-                    <h5><i class="bi bi-journal-code me-2"></i>Lịch sử hoạt động</h5>
-                    <div class="activity-log">
-                        <%--                        <c:if test="${not empty product.activityLogs}">--%>
-                        <%--                            <c:forEach items="${product.activityLogs}" var="log">--%>
-                        <%--                                <div class="log-item">--%>
-                        <%--                                    <div class="d-flex justify-content-between">--%>
-                        <%--                                        <strong>${log.action}</strong>--%>
-                        <%--                                        <small class="text-muted"><fmt:formatDate value="${log.timestamp}" pattern="dd/MM/yyyy HH:mm"/></small>--%>
-                        <%--                                    </div>--%>
-                        <%--                                    <div class="small text-muted">Người thực hiện: ${log.user}</div>--%>
-                        <%--                                    <div class="small">${log.details}</div>--%>
-                        <%--                                </div>--%>
-                        <%--                            </c:forEach>--%>
-                        <%--                        </c:if>--%>
-                        <%--                        <c:otherwise>--%>
-                        <%--                            <div class="text-muted text-center py-3">Chưa có hoạt động nào</div>--%>
-                        <%--                        </c:otherwise>--%>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- ========== SECTION 9: DELETE PRODUCT ========== -->
         <%--        <div class="info-section border-danger">--%>

@@ -20,6 +20,8 @@ public class ProductDetailDTO {
     private final List<ReviewSummary> reviews;
     private final ProductRatingDistribution ratingDist;
     private final List<ProductVariants> variants;
+    private List<ActivityLog> activityLogs;
+
 
     private ProductDetailDTO(Builder builder) {
         this.product = builder.product;
@@ -31,6 +33,7 @@ public class ProductDetailDTO {
         this.reviews = builder.reviews;
         this.ratingDist = builder.ratingDist;
         this.variants = builder.variants;
+        this.activityLogs = builder.activityLogs;
     }
 
     // Getters
@@ -91,7 +94,12 @@ public class ProductDetailDTO {
             variant.setFinalPrice(new BigDecimal(dn));
         }
     }
-
+    public List<ActivityLog> getActivityLogs() {
+        return activityLogs;
+    }
+    public void setActivityLogs(List<ActivityLog> activityLogs) {
+        this.activityLogs = activityLogs;
+    }
 
     //Lỗi
     public String getSku() { return product != null ? "WWW" : ""; }
@@ -112,6 +120,7 @@ public class ProductDetailDTO {
         private List<ReviewSummary> reviews;
         private ProductRatingDistribution ratingDist;
         private List<ProductVariants> variants;
+        private List<ActivityLog> activityLogs;
 
         public Builder product(Product product) { this.product = product; return this; }
         public Builder brand(BrandInfo brand) { this.brand = brand; return this; }
@@ -122,6 +131,7 @@ public class ProductDetailDTO {
         public Builder reviews(List<ReviewSummary> reviews) { this.reviews = reviews; return this; }
         public Builder ratingDist(ProductRatingDistribution ratingDist) { this.ratingDist = ratingDist; return this; }
         public Builder variants(List<ProductVariants> variants) { this.variants = variants; return this; }
+        public Builder activityLogs(List<ActivityLog> activityLogs) { this.activityLogs = activityLogs; return this; }
 
         public ProductDetailDTO build() {
             return new ProductDetailDTO(this);

@@ -1,8 +1,10 @@
 package code.salecar.controller.admin.product.api;
 
 import code.salecar.model.User;
+import code.salecar.model.product.entity.ActivityLog;
 import code.salecar.model.product.entity.ProductSalesInfo;
 import code.salecar.model.product.entity.ProductVariants;
+import code.salecar.service.file.ActivityLogFileService;
 import code.salecar.service.product.InventoryService;
 import code.salecar.service.product.ProductVariantsService;
 import jakarta.servlet.*;
@@ -10,10 +12,12 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet("/admin/variants/*")
 public class UpdateProductInventoryServlet extends HttpServlet {
     ProductVariantsService pvs = new ProductVariantsService();
+    ActivityLogFileService ls = new ActivityLogFileService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,11 +40,17 @@ public class UpdateProductInventoryServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-
+        ActivityLog log =null;
         switch (type) {
             case "add":
                 current += quantity;
                 variant.setQuantity(current);
+                log = ActivityLog.builder().action("Nhập Hàng").timestamp(new Date()).user(user.getFullname()).details(type+": +"+quantity).build();
+                System.out.println(log.getAction());
+                System.out.println(log.getTimestamp());
+                System.out.println(log.getUser());
+                System.out.println(log.getDetails());
+                ls.writeLog(variant.getProductId(), log);
                 pvs.createImportReceipt(variant,user);
                 break;
             case "subtract":
@@ -50,6 +60,8 @@ public class UpdateProductInventoryServlet extends HttpServlet {
                 }
                 current -= quantity;
                 variant.setQuantity(current);
+                log = ActivityLog.builder().action("Xuất hàng").timestamp(new Date()).user(user.getFullname()).details(type+": -"+quantity).build();
+                ls.writeLog(variant.getProductId(), log);
                 pvs.createExportReceipt(variant,user);
                 break;
         }
