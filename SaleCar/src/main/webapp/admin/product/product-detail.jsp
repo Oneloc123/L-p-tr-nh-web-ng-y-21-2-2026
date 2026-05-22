@@ -418,16 +418,16 @@
                             <div class="text-muted text-center w-100">Chưa có ảnh</div>
                         </c:if>
                     </div>
-                    <div class="mt-3 text-center">
-                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/upload-image"
-                              method="post" enctype="multipart/form-data" class="d-inline">
-                            <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">
-                            <button type="button" class="admin-btn-outline btn-sm"
-                                    onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')">
-                                <i class="bi bi-upload"></i> Upload ảnh
-                            </button>
-                        </form>
-                    </div>
+<%--                    <div class="mt-3 text-center">--%>
+<%--                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/upload-image"--%>
+<%--                              method="post" enctype="multipart/form-data" class="d-inline">--%>
+<%--                            <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">--%>
+<%--                            <button type="button" class="admin-btn-outline btn-sm"--%>
+<%--                                    onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')">--%>
+<%--                                <i class="bi bi-upload"></i> Upload ảnh--%>
+<%--                            </button>--%>
+<%--                        </form>--%>
+<%--                    </div>--%>
                 </div>
             </div>
 
@@ -515,12 +515,6 @@
                                 </div>
                             </div>
                         </c:if>
-                    </div>
-                    <div class="mt-3">
-                        <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/edit-description"
-                           class="admin-btn-outline btn-sm">
-                            <i class="bi bi-pencil"></i> Chỉnh sửa mô tả
-                        </a>
                     </div>
                 </div>
 
@@ -745,10 +739,6 @@
                                                 <select name="type"
                                                         class="form-select">
 
-                                                    <option value="set">
-                                                        Đặt mới
-                                                    </option>
-
                                                     <option value="add">
                                                         Cộng thêm
                                                     </option>
@@ -780,33 +770,23 @@
                                 </div>
 
                                 <!-- ACTIONS -->
-                                <div class="d-flex gap-2 mt-4 flex-wrap">
-
-                                    <a href="${pageContext.request.contextPath}/admin/variants/edit?id=${variant.id}"
-                                       class="admin-btn-outline btn-sm text-decoration-none">
-
-                                        <i class="bi bi-pencil-square"></i>
-                                        Chỉnh sửa
-
-                                    </a>
-
-                                    <a href="${pageContext.request.contextPath}/admin/variants/${variant.id}/price-history"
-                                       class="admin-btn-outline btn-sm text-decoration-none">
-
-                                        <i class="bi bi-clock-history"></i>
-                                        Lịch sử giá
-
-                                    </a>
-
-                                    <button type="button"
-                                            class="admin-btn-outline btn-sm">
-
-                                        <i class="bi bi-images"></i>
-                                        Quản lý ảnh
-
-                                    </button>
-
-                                </div>
+<%--                                <div class="d-flex gap-2 mt-4 flex-wrap">--%>
+<%--                                    <a href="${pageContext.request.contextPath}/admin/variants/edit?id=${variant.id}"--%>
+<%--                                       class="admin-btn-outline btn-sm text-decoration-none">--%>
+<%--                                        <i class="bi bi-pencil-square"></i>--%>
+<%--                                        Chỉnh sửa--%>
+<%--                                    </a>--%>
+<%--                                    <a href="${pageContext.request.contextPath}/admin/variants/${variant.id}/price-history"--%>
+<%--                                       class="admin-btn-outline btn-sm text-decoration-none">--%>
+<%--                                        <i class="bi bi-clock-history"></i>--%>
+<%--                                        Lịch sử giá--%>
+<%--                                    </a>--%>
+<%--                                    <button type="button"--%>
+<%--                                            class="admin-btn-outline btn-sm">--%>
+<%--                                        <i class="bi bi-images"></i>--%>
+<%--                                        Quản lý ảnh--%>
+<%--                                    </button>--%>
+<%--                                </div>--%>
 
                             </div>
                             <c:if test="${not empty sessionScope.error}">

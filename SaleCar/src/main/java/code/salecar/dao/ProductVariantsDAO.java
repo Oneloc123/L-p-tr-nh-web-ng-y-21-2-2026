@@ -54,10 +54,8 @@ public class ProductVariantsDAO {
                         .variantName(rs.getString("name"))
                         .price(rs.getBigDecimal("price"))
                         .sku(rs.getString("sku"))
-                        .quantity(rs.getInt("quantity"))
                         .build();
                 return pv;
-
             }
 
         } catch (SQLException e) {

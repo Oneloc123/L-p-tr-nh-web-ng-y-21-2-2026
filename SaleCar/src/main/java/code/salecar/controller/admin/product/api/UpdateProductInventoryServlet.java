@@ -1,5 +1,6 @@
 package code.salecar.controller.admin.product.api;
 
+import code.salecar.model.User;
 import code.salecar.model.product.entity.ProductSalesInfo;
 import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.service.product.InventoryService;
@@ -31,21 +32,16 @@ public class UpdateProductInventoryServlet extends HttpServlet {
         String type = request.getParameter("type");
 
         ProductVariants variant = pvs.getVariantByVariantId(variantId);
-        System.out.println(variant.getQuantity());
         int current = variant.getQuantity();
 
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         switch (type) {
-            case "set":
-                if (quantity < 0) {
-                    response.sendRedirect(request.getContextPath()
-                            + "/admin/products/detail?id="
-                            + variant.getProductId());
-                    return;
-                }
-                current = quantity;
-                break;
             case "add":
                 current += quantity;
+                variant.setQuantity(current);
+                pvs.createImportReceipt(variant,user);
                 break;
             case "subtract":
                 if (quantity > current) {request.getSession().setAttribute("error","Không thể trừ vượt quá tồn kho");
@@ -53,11 +49,12 @@ public class UpdateProductInventoryServlet extends HttpServlet {
                     return;
                 }
                 current -= quantity;
+                variant.setQuantity(current);
+                pvs.createExportReceipt(variant,user);
                 break;
         }
 
-        variant.setQuantity(current);
-        pvs.update(variant);
+
 
         response.sendRedirect(request.getContextPath() + "/admin/products/detail?id=" + variant.getProductId());
 

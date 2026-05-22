@@ -52,11 +52,11 @@ public class ProductService {
         List<String> images = is.getImageProduct(productId);
 
 //         5. Lấy thông tin tồn kho và đã bán
-        ProductSalesInfo inventory = InventoryService.findByProductId(productId);
-        ProductSalesInfo salesInfo = new ProductSalesInfo(
-                inventory != null ? inventory.getQuantity() : 0,
-                inventory != null ? inventory.getSoldQuantity() : 0
-        );
+//        ProductSalesInfo inventory = InventoryService.findByProductId(productId);
+//        ProductSalesInfo salesInfo = new ProductSalesInfo(
+//                inventory != null ? inventory.getQuantity() : 0,
+//                inventory != null ? inventory.getSoldQuantity() : 0
+//        );
 
 //         6. Lấy discount đang active (nếu có)
         Discount discount = ds.findActiveByProductId(productId);
