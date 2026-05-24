@@ -88,17 +88,57 @@ public class ProductVariantsDAO {
 
     public boolean update(ProductVariants variant) {
 
-        String sql = " UPDATE product_variants SET  name = ?, price = ?, sku = ?, quantity =? WHERE id = ? ";
+        String sql = " UPDATE product_variants SET  name = ?, price = ?, sku = ? WHERE id = ? ";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, variant.getVariantName());
             ps.setBigDecimal(2, variant.getPrice());
             ps.setString(3, variant.getSku());
-            ps.setInt(4, variant.getQuantity());
-            ps.setLong(5, variant.getId());
+            ps.setLong(4, variant.getId());
 
             return ps.executeUpdate() > 0;
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Thêm variant mới
+     */
+    public long insertVariant(ProductVariants variant) {
+        String sql = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setLong(1, variant.getProductId());
+            ps.setString(2, variant.getVariantName());
+            ps.setBigDecimal(3, variant.getPrice());
+            ps.setString(4, variant.getSku());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+            return -1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Xoá variant theo ID
+     */
+    public void deleteVariant(long variantId) {
+        // Xoá inventory trước
+        String deleteInventory = "DELETE FROM inventory WHERE variant_id = ?";
+        String deleteVariant = "DELETE FROM product_variants WHERE id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps1 = con.prepareStatement(deleteInventory);
+             PreparedStatement ps2 = con.prepareStatement(deleteVariant)) {
+            ps1.setLong(1, variantId);
+            ps1.executeUpdate();
+            ps2.setLong(1, variantId);
+            ps2.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

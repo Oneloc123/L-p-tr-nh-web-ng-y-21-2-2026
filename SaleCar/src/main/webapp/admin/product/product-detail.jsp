@@ -824,6 +824,25 @@
             </div>
 
             <div class="col-md-6">
+                <style>
+                    .log-action-badge {
+                        display: inline-block;
+                        padding: 2px 10px;
+                        border-radius: 12px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        white-space: nowrap;
+                    }
+                    .log-action-create { background: #dbeafe; color: #1d4ed8; }
+                    .log-action-update { background: #e0f2fe; color: #0369a1; }
+                    .log-action-delete { background: #fee2e2; color: #dc2626; }
+                    .log-action-upload { background: #d1fae5; color: #059669; }
+                    .log-action-image  { background: #fef3c7; color: #b45309; }
+                    .log-action-inventory { background: #ede9fe; color: #6d28d9; }
+                    .log-action-variant { background: #fce7f3; color: #be185d; }
+                    .log-action-default { background: #f1f5f9; color: #475569; }
+                </style>
+
                 <div class="info-section">
                     <h5><i class="bi bi-journal-code me-2"></i>Lịch sử hoạt động</h5>
                     <div class="activity-log">
@@ -832,13 +851,21 @@
                         <c:when test="${not empty product.activityLogs}">
                             <c:forEach items="${product.activityLogs}" var="log">
                                 <div class="log-item">
-                                    <div class="d-flex justify-content-between">
-                                        <strong>${log.action}</strong>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="log-action-badge log-action-${fn:contains(log.action, 'Tạo') ? 'create' : fn:contains(log.action, 'Sửa') || fn:contains(log.action, 'Cập nhật') ? 'update' : fn:contains(log.action, 'Xoá') || fn:contains(log.action, 'xoá') ? 'delete' : fn:contains(log.action, 'Tải') || fn:contains(log.action, 'Đặt') ? 'image' : fn:contains(log.action, 'Nhập') || fn:contains(log.action, 'Xuất') ? 'inventory' : fn:contains(log.action, 'biến thể') || fn:contains(log.action, 'variant') ? 'variant' : 'default'}">
+                                            ${log.action}
+                                        </span>
                                         <small class="text-muted"><fmt:formatDate value="${log.timestamp}"
                                                                                   pattern="dd/MM/yyyy HH:mm"/></small>
                                     </div>
-                                    <div class="small text-muted">Người thực hiện: ${log.user}</div>
-                                    <div class="small">${log.details}</div>
+                                    <div class="ms-1">
+                                        <small class="text-muted">
+                                            <i class="bi bi-person-circle"></i> ${log.user}
+                                        </small>
+                                        <c:if test="${not empty log.details}">
+                                            <div class="small text-secondary mt-1">${log.details}</div>
+                                        </c:if>
+                                    </div>
                                 </div>
                             </c:forEach>
                         </c:when>

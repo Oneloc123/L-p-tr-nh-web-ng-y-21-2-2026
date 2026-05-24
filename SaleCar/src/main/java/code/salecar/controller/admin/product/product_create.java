@@ -12,6 +12,8 @@ import code.salecar.model.product.entity.ProductImage;
 import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.service.Image.ImageService;
 import code.salecar.service.file.FileStorageService;
+import code.salecar.model.User;
+import code.salecar.service.file.ActivityLogger;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.DiscountService;
@@ -40,6 +42,7 @@ public class product_create extends HttpServlet {
     private final BrandService brandService = new BrandService();
     private final FileStorageService storageService = new FileStorageService();
     private final ProductService productService = new ProductService();
+    private final ActivityLogger activityLogger = new ActivityLogger();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -277,6 +280,11 @@ public class product_create extends HttpServlet {
                     System.err.println("Error creating discount: " + e.getMessage());
                 }
             }
+            // Log activity
+            User user = (User) request.getSession().getAttribute("user");
+            String userName = (user != null) ? user.getFullname() : "Admin";
+            activityLogger.logProductCreated(productId, nameParam, userName);
+
             // Success, redirect to product detail with notification
             NotificationUtil.setSuccess(request.getSession(), "Tạo sản phẩm thành công!");
             response.sendRedirect(request.getContextPath() + "/admin/products/detail?id=" + productId);

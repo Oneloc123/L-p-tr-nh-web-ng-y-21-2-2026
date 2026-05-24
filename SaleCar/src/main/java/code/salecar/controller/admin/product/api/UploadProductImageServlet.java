@@ -1,8 +1,10 @@
 package code.salecar.controller.admin.product.api;
 
+import code.salecar.model.User;
 import code.salecar.model.product.entity.ProductImage;
 import code.salecar.service.Image.ImageService;
 import code.salecar.service.file.FileStorageService;
+import code.salecar.service.file.ActivityLogger;
 import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -21,6 +23,7 @@ public class UploadProductImageServlet extends HttpServlet {
 
     private final FileStorageService storageService = new FileStorageService();
     private final ImageService imageService = new ImageService();
+    private final ActivityLogger activityLogger = new ActivityLogger();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -92,6 +95,11 @@ public class UploadProductImageServlet extends HttpServlet {
             }
 
             if (hasUploaded) {
+                // Log activity
+                HttpSession session = request.getSession();
+                User user = (User) session.getAttribute("user");
+                String userName = (user != null) ? user.getFullname() : "Admin";
+                activityLogger.logImageAction(productId, userName, "Tải lên", "Đã upload hình ảnh cho sản phẩm");
                 NotificationUtil.setSuccess(request.getSession(), "Tải ảnh lên thành công!");
             } else {
                 NotificationUtil.setWarning(request.getSession(), "Không có ảnh nào được chọn.");
