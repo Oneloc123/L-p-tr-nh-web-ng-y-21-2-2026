@@ -787,4 +787,54 @@ public class ProductDAO {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Xóa sản phẩm và các bản ghi liên quan.
+     * Xóa theo thứ tự: inventory, product_variants, product_images, reviews, discounts, product
+     */
+    public boolean deleteProduct(long productId) {
+        String[] deleteQueries = {
+                "DELETE FROM inventory WHERE product_id = ?",
+                "DELETE FROM product_variants WHERE product_id = ?",
+                "DELETE FROM product_images WHERE product_id = ?",
+                "DELETE FROM reviews WHERE product_id = ?",
+                "DELETE FROM discount WHERE entity_type = 'PRODUCT' AND entity_id = ?",
+                "DELETE FROM product WHERE id = ?"
+        };
+
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            for (String sql : deleteQueries) {
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setLong(1, productId);
+                    ps.executeUpdate();
+                }
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (Exception e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            throw new RuntimeException("Error deleting product with id: " + productId, e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 }

@@ -2,6 +2,7 @@ package code.salecar.controller.admin.product.api;
 
 import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.ProductService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -79,6 +80,7 @@ public class UpdateProductBasicServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
             session.setAttribute("errors", error);
+            NotificationUtil.setError(session, "Vui lòng kiểm tra lại thông tin");
 
             response.sendRedirect(request.getContextPath()
                     + "/admin/products/edit?id=" + productIdStr);

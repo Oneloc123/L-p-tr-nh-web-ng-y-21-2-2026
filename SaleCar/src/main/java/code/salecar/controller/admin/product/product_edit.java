@@ -6,6 +6,7 @@ import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -39,7 +40,7 @@ public class product_edit extends HttpServlet {
             return;
         }
 
-        // Bắt lỗi bên update basic info
+        // Lấy errors từ session (nếu có từ UpdateProductBasicServlet)
         HttpSession session = request.getSession();
         Map<String, String> errors = (Map<String, String>) session.getAttribute("errors");
 

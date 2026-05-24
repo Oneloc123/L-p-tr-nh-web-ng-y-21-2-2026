@@ -238,6 +238,147 @@
             height: 1rem;
             border-width: 0.15em;
         }
+
+        /* ========== IMAGE GALLERY STYLES ========== */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .image-card {
+            background: #f8fafc;
+            border: 1px solid #e9edf2;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .image-card:hover {
+            border-color: #2c7da0;
+            box-shadow: 0 4px 12px rgba(44, 125, 160, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .image-card.main-image {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+        }
+
+        .image-card-img-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 75%;
+            overflow: hidden;
+            background: #e9edf2;
+        }
+
+        .image-card-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-card-img:hover {
+            transform: scale(1.08);
+        }
+
+        .main-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+            z-index: 2;
+        }
+
+        .main-badge i {
+            font-size: 0.6rem;
+        }
+
+        .image-card-actions {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            padding: 6px 8px;
+            background: #fff;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            padding: 0;
+        }
+
+        .btn-set-main {
+            color: #f59e0b;
+        }
+        .btn-set-main:hover {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .btn-delete {
+            color: #ef4444;
+        }
+        .btn-delete:hover {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        /* Upload preview */
+        .preview-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .preview-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #filePreview {
+            max-height: 90px;
+            overflow-y: auto;
+        }
+
+        /* Image preview modal */
+        #imagePreviewModal .modal-content {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        #imagePreviewModal .modal-header {
+            padding: 8px 12px;
+        }
     </style>
 </head>
 <body>
@@ -272,42 +413,85 @@
         <!-- Unsaved changes warning will be managed by JS -->
         <form id="globalFormWatcher"></form>
 
-        <!-- 3. IMAGE GALLERY with upload, delete, set main -->
+        <!-- 3. IMAGE GALLERY with upload, delete, set main, preview -->
         <div class="info-section" id="imageSection">
             <h5><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/product/upload-image" method="post" enctype="multipart/form-data">
+
+            <!-- Upload form -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/products/upload-image" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="${product.productId}">
                         <div class="input-group">
-                            <input type="file" class="form-control" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
-                            <button class="admin-btn-primary" type="submit">Tải ảnh lên</button>
+                            <input type="file" class="form-control" id="imageFileInput" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
+                            <button class="admin-btn-primary" type="submit" id="uploadBtn">
+                                <i class="bi bi-cloud-upload"></i> Tải ảnh lên
+                            </button>
                         </div>
                         <small class="text-muted">Hỗ trợ JPG, PNG, WEBP, tối đa 5MB/ảnh</small>
+                        <!-- Preview area for newly selected files -->
+                        <div id="filePreview" class="d-flex flex-wrap gap-2 mt-2"></div>
                     </form>
                 </div>
+            </div>
+
+            <!-- Image grid -->
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="d-flex flex-wrap gap-3">
-                        <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
-                            <div class="position-relative" style="width: 100px;">
-                                <img src="${imgUrl != null && not empty imgUrl
-        ? pageContext.request.contextPath.concat('/uploads/').concat(imgUrl)
-        : pageContext.request.contextPath.concat('/assets/img/default-product.png')}" class="gallery-thumb w-100 h-auto" style="height: 80px;">
-                                <div class="mt-1 d-flex gap-1 justify-content-center">
-                                    <form action="${pageContext.request.contextPath}/admin/product/set-main-image" method="post">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Đặt làm ảnh chính"><i class="bi bi-star-fill"></i></button>
-                                    </form>
-                                    <form action="${pageContext.request.contextPath}/admin/product/delete-image" method="post" onsubmit="return confirm('Xóa ảnh này?')">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                    </form>
-                                </div>
+                    <c:choose>
+                        <c:when test="${not empty product.images}">
+                            <div class="image-grid">
+                                <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
+                                    <c:set var="imgSrc" value="${pageContext.request.contextPath}/uploads/${imgUrl}"/>
+                                    <div class="image-card ${status.first ? 'main-image' : ''}">
+                                        <div class="image-card-img-wrapper">
+                                            <img src="${imgSrc}" alt="Ảnh ${status.count}" class="image-card-img" onclick="previewImage('${imgSrc}')">
+                                            <c:if test="${status.first}">
+                                                <span class="main-badge"><i class="bi bi-star-fill"></i> Chính</span>
+                                            </c:if>
+                                        </div>
+                                        <div class="image-card-actions">
+                                            <c:if test="${not status.first}">
+                                                <form action="${pageContext.request.contextPath}/admin/products/set-main-image" method="post" class="d-inline">
+                                                    <input type="hidden" name="productId" value="${product.productId}">
+                                                    <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                                    <button type="submit" class="btn-action btn-set-main" title="Đặt làm ảnh chính">
+                                                        <i class="bi bi-star"></i>
+                                                    </button>
+                                                </form>
+                                            </c:if>
+                                            <form action="${pageContext.request.contextPath}/admin/products/delete-image" method="post" class="d-inline delete-image-form">
+                                                <input type="hidden" name="productId" value="${product.productId}">
+                                                <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                                <button type="button" class="btn-action btn-delete" title="Xóa ảnh" onclick="confirmDeleteImage(this)">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </c:forEach>
                             </div>
-                        </c:forEach>
-                        <c:if test="${empty product.images}"><div class="text-muted">Chưa có ảnh</div></c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-center py-5 text-muted">
+                                <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                <p class="mt-2">Chưa có ảnh nào. Hãy tải ảnh lên để hiển thị.</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Preview Modal -->
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header border-0">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-0">
+                        <img id="previewModalImage" src="" alt="Preview" class="img-fluid" style="max-height: 80vh;">
                     </div>
                 </div>
             </div>
@@ -617,9 +801,20 @@
 
     // Global reset: reload page to original state
     document.getElementById('globalResetBtn').addEventListener('click', () => {
-        if(confirm('Đặt lại tất cả thay đổi chưa lưu? Trang sẽ tải lại.')) {
-            window.location.reload();
-        }
+        Swal.fire({
+            title: 'Đặt lại thay đổi?',
+            text: 'Đặt lại tất cả thay đổi chưa lưu. Trang sẽ tải lại.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6c757d',
+            cancelButtonColor: '#2c7da0',
+            confirmButtonText: 'Đặt lại',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                window.location.reload();
+            }
+        });
     });
 
     // Global save: iterate all forms and submit sequentially (simple trigger)
@@ -632,17 +827,38 @@
                 break;
             }
         }
-        if(allValid && confirm('Lưu tất cả thay đổi?')) {
-            for(let form of allForms) {
-                if(form.id && form.id !== 'globalFormWatcher') {
-                    await fetch(form.action, {
-                        method: form.method,
-                        body: new FormData(form)
-                    });
+        if(allValid) {
+            const result = await Swal.fire({
+                title: 'Xác nhận',
+                text: 'Lưu tất cả thay đổi?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2c7da0',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Lưu',
+                cancelButtonText: 'Hủy'
+            });
+            if(result.isConfirmed) {
+                for(let form of allForms) {
+                    if(form.id && form.id !== 'globalFormWatcher') {
+                        await fetch(form.action, {
+                            method: form.method,
+                            body: new FormData(form)
+                        });
+                    }
                 }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đã lưu tất cả thay đổi',
+                    text: 'Trang sẽ tải lại',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    window.location.reload();
+                });
             }
-            alert('Đã lưu tất cả thay đổi. Trang sẽ tải lại.');
-            window.location.reload();
         }
     });
 
@@ -653,8 +869,101 @@
         if(deleteConfirmInput.value === 'DELETE') {
             document.getElementById('deleteProductForm').submit();
         } else {
-            alert('Vui lòng gõ DELETE để xác nhận');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Xác nhận thất bại',
+                text: 'Vui lòng gõ DELETE để xác nhận',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
+    });
+
+    // ===== IMAGE GALLERY: File preview before upload =====
+    const imageFileInput = document.getElementById('imageFileInput');
+    const filePreview = document.getElementById('filePreview');
+
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', function() {
+            filePreview.innerHTML = '';
+            const files = this.files;
+            if (files.length === 0) return;
+
+            for (let i = 0; i < Math.min(files.length, 10); i++) {
+                const file = files[i];
+                const ext = file.name.split('.').pop().toLowerCase();
+                const allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+                if (!allowed.includes(ext)) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-danger';
+                    badge.textContent = file.name + ' (không hỗ trợ)';
+                    filePreview.appendChild(badge);
+                    continue;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning text-dark';
+                    badge.textContent = file.name + ' (>5MB)';
+                    filePreview.appendChild(badge);
+                    continue;
+                }
+
+                const reader = new FileReader();
+                const imgWrapper = document.createElement('div');
+                imgWrapper.className = 'preview-thumb';
+                imgWrapper.title = file.name;
+
+                reader.onload = function(e) {
+                    imgWrapper.innerHTML = '<img src="' + e.target.result + '" class="preview-thumb-img">';
+                };
+                reader.readAsDataURL(file);
+                filePreview.appendChild(imgWrapper);
+            }
+
+            if (files.length > 10) {
+                const more = document.createElement('span');
+                more.className = 'badge bg-secondary';
+                more.textContent = '+' + (files.length - 10) + ' ảnh nữa';
+                filePreview.appendChild(more);
+            }
+        });
+    }
+
+    // ===== IMAGE GALLERY: Preview modal =====
+    function previewImage(src) {
+        const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        document.getElementById('previewModalImage').src = src;
+        modal.show();
+    }
+
+    // ===== IMAGE GALLERY: SweetAlert2 delete confirm =====
+    function confirmDeleteImage(btn) {
+        const form = btn.closest('form');
+        Swal.fire({
+            title: 'Xóa ảnh?',
+            text: 'Ảnh sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+
+    // ===== IMAGE GALLERY: Show processing state on upload button =====
+    document.getElementById('uploadImageForm')?.addEventListener('submit', function() {
+        const btn = document.getElementById('uploadBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang tải...';
     });
 
     // SKU uniqueness client hint (simple)
@@ -715,7 +1024,15 @@
         let final = finalPrice === '' ? 0 : parseFloat(finalPrice);
 
         if (final > 0 && final >= price) {
-            alert('Giá khuyến mãi phải nhỏ hơn giá gốc (hoặc để trống).');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Giá không hợp lệ',
+                text: 'Giá khuyến mãi phải nhỏ hơn giá gốc (hoặc để trống).',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
             return false;
         }
 
@@ -724,7 +1041,15 @@
             const start = form.querySelector('input[name="saleStartDate"]').value;
             const end = form.querySelector('input[name="saleEndDate"]').value;
             if (start && end && new Date(start) >= new Date(end)) {
-                alert('Ngày bắt đầu phải trước ngày kết thúc.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Ngày không hợp lệ',
+                    text: 'Ngày bắt đầu phải trước ngày kết thúc.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
                 return false;
             }
         }

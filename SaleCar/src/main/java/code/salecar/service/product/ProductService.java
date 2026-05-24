@@ -370,6 +370,15 @@ public class ProductService {
         productDAO.updateBasicInfo(product);
     }
 
+    /**
+     * Xóa sản phẩm theo ID
+     * @return true nếu xóa thành công
+     */
+    public boolean deleteProduct(long productId) {
+        productDAO.deleteProduct(productId);
+        return true;
+    }
+
     /* Tạo sản phẩm mới
     1. Gán giá: Lấy giá của màu sắc/phiên bản đầu tiên gán vào sản phẩm chính (Đây là cách làm đúng để hiển thị giá "Từ..." trên trang danh sách).
     2. Lưu sản phẩm chính: Gọi insertProduct để tạo bản ghi trong bảng product và lấy về productId.

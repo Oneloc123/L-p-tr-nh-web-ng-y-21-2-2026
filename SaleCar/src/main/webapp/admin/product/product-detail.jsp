@@ -788,16 +788,7 @@
 <%--                                    </button>--%>
 <%--                                </div>--%>
 
-                            </div>
-                            <c:if test="${not empty sessionScope.error}">
-
-                                <div class="alert alert-danger">
-                                        ${sessionScope.error}
-                                </div>
-
-                                <c:remove var="error" scope="session"/>
-
-                            </c:if>
+                            </div>            <!-- Error notification is now handled by flash notification in sidebar.jsp -->
 
                         </c:forEach>
 
@@ -1112,7 +1103,15 @@
     // Copy to clipboard function
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Đã sao chép: ' + text);
+            Swal.fire({
+                icon: 'success',
+                title: 'Đã sao chép',
+                text: text,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
         });
     }
 
@@ -1146,16 +1145,38 @@
 
     // Hide review
     function hideReview(reviewId) {
-        if (confirm('Bạn có chắc chắn muốn ẩn review này?')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/hide';
-        }
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Bạn có chắc chắn muốn ẩn review này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2c7da0',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ẩn',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/hide';
+            }
+        });
     }
 
     // Report spam
     function reportSpam(reviewId) {
-        if (confirm('Báo cáo review này là spam?')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/spam';
-        }
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Báo cáo review này là spam?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Báo cáo',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/spam';
+            }
+        });
     }
 </script>
 </body>

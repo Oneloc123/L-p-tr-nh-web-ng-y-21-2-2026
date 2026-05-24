@@ -16,6 +16,7 @@ import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.DiscountService;
 import code.salecar.service.product.ProductService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -96,36 +97,36 @@ public class product_create extends HttpServlet {
 
         // Validation for variants
         if (variantNameParams == null || variantNameParams.length == 0) {
-            request.setAttribute("error", "Phải có ít nhất một biến thể");
+            NotificationUtil.setError(request.getSession(), "Phải có ít nhất một biến thể");
             doGet(request, response);
             return;
         }
         if (skuParams == null || skuParams.length != variantNameParams.length) {
-            request.setAttribute("error", "Số lượng SKU phải khớp với số biến thể");
+            NotificationUtil.setError(request.getSession(), "Số lượng SKU phải khớp với số biến thể");
             doGet(request, response);
             return;
         }
         if (priceParams == null || priceParams.length != variantNameParams.length) {
-            request.setAttribute("error", "Số lượng giá biến thể phải khớp với số biến thể");
+            NotificationUtil.setError(request.getSession(), "Số lượng giá biến thể phải khớp với số biến thể");
             doGet(request, response);
             return;
         }
 
         for (int i = 0; i < variantNameParams.length; i++) {
             if (variantNameParams[i] == null || variantNameParams[i].trim().isEmpty()) {
-                request.setAttribute("error", "Tên biến thể không được để trống");
+                NotificationUtil.setError(request.getSession(), "Tên biến thể không được để trống");
                 doGet(request, response);
                 return;
             }
             if (skuParams[i] == null || skuParams[i].trim().isEmpty()) {
-                request.setAttribute("error", "SKU không được để trống");
+                NotificationUtil.setError(request.getSession(), "SKU không được để trống");
                 doGet(request, response);
                 return;
             }
             try {
                 Double.parseDouble(priceParams[i]);
             } catch (NumberFormatException e) {
-                request.setAttribute("error", "Giá biến thể không hợp lệ");
+                NotificationUtil.setError(request.getSession(), "Giá biến thể không hợp lệ");
                 doGet(request, response);
                 return;
             }
@@ -134,7 +135,7 @@ public class product_create extends HttpServlet {
 
         //validation name
         if (nameParam == null || nameParam.trim().isEmpty()) {
-            request.setAttribute("error", "Tên sản phẩm không được để trống");
+            NotificationUtil.setError(request.getSession(), "Tên sản phẩm không được để trống");
             doGet(request, response);
             return;
         }
@@ -144,7 +145,7 @@ public class product_create extends HttpServlet {
         try {
             categoryId = Integer.parseInt(categoryIdParam);
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Danh mục không hợp lệ");
+            NotificationUtil.setError(request.getSession(), "Danh mục không hợp lệ");
             doGet(request, response);
             return;
         }
@@ -154,18 +155,18 @@ public class product_create extends HttpServlet {
         try {
             brandId = Integer.parseInt(brandIdParam);
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Thương hiệu không hợp lệ");
+            NotificationUtil.setError(request.getSession(), "Thương hiệu không hợp lệ");
             doGet(request, response);
             return;
         }
         //validation status
         if (statusParam == null || statusParam.trim().isEmpty()) {
-            request.setAttribute("error", "Trạng thái không được để trống");
+            NotificationUtil.setError(request.getSession(), "Trạng thái không được để trống");
             doGet(request, response);
             return;
         }
         if (!statusParam.matches("^(active|inactive|hidden|draft)$")) {
-            request.setAttribute("error", "Trạng thái không hợp lệ");
+            NotificationUtil.setError(request.getSession(), "Trạng thái không hợp lệ");
             doGet(request, response);
             return;
         }
@@ -276,10 +277,11 @@ public class product_create extends HttpServlet {
                     System.err.println("Error creating discount: " + e.getMessage());
                 }
             }
-            // Success, redirect to product list
+            // Success, redirect to product detail with notification
+            NotificationUtil.setSuccess(request.getSession(), "Tạo sản phẩm thành công!");
             response.sendRedirect(request.getContextPath() + "/admin/products/detail?id=" + productId);
         } else {
-            request.setAttribute("error", "Không thể tạo sản phẩm");
+            NotificationUtil.setError(request.getSession(), "Không thể tạo sản phẩm");
             doGet(request, response);
         }
     }

@@ -203,8 +203,9 @@
         </ul>
     </nav>
 </aside>
-<!-- Toast Container -->
-<div class="toast-container"></div>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     // ========== TINYMCE INIT ==========
     tinymce.init({
@@ -216,23 +217,21 @@
         skin: 'oxide',
         content_css: 'default'
     });
-
-    // ========== UTILITY FUNCTIONS ==========
-    function showToast(message, type = 'danger') {
-        const container = document.querySelector('.toast-container');
-        const toastEl = document.createElement('div');
-        toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
-        toastEl.setAttribute('role', 'alert');
-        toastEl.setAttribute('aria-live', 'assertive');
-        toastEl.setAttribute('aria-atomic', 'true');
-        toastEl.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">${message}</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>`;
-        container.appendChild(toastEl);
-        const bsToast = new bootstrap.Toast(toastEl);
-        bsToast.show();
-        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-    }
 </script>
+
+<!-- ========== FLASH NOTIFICATION ========== -->
+<c:if test="${not empty sessionScope.notification}">
+<script>
+    Swal.fire({
+        icon: '${sessionScope.notification.type}',
+        title: '${sessionScope.notification.type == "success" ? "Thành công" : sessionScope.notification.type == "error" ? "Thất bại" : "Cảnh báo"}',
+        text: '${sessionScope.notification.message}',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+    });
+</script>
+<c:remove var="notification" scope="session"/>
+</c:if>
