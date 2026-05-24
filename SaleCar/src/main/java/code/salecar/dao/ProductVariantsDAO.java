@@ -41,6 +41,26 @@ public class ProductVariantsDAO {
         return list;
     }
 
+    public int getQuantityById(long productId) {
+        String sql = "select * from inventory where product_id = ?";
+        int quantity = 0;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setLong(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int cache = rs.getInt("quantity");
+                quantity += cache;
+            }
+            return quantity;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public ProductVariants getVariantByVariantId(long variantId) {
         String sql = "select * from product_variants where id = ?";
         try (Connection con = DBConnection.getConnection();

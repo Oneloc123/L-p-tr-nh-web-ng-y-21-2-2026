@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -273,21 +272,58 @@
         <!-- Unsaved changes warning will be managed by JS -->
         <form id="globalFormWatcher"></form>
 
+        <!-- 3. IMAGE GALLERY with upload, delete, set main -->
+        <div class="info-section" id="imageSection">
+            <h5><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/product/upload-image" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="productId" value="${product.productId}">
+                        <div class="input-group">
+                            <input type="file" class="form-control" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
+                            <button class="admin-btn-primary" type="submit">Tải ảnh lên</button>
+                        </div>
+                        <small class="text-muted">Hỗ trợ JPG, PNG, WEBP, tối đa 5MB/ảnh</small>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <div class="d-flex flex-wrap gap-3">
+                        <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
+                            <div class="position-relative" style="width: 100px;">
+                                <img src="${imgUrl != null && not empty imgUrl
+        ? pageContext.request.contextPath.concat('/uploads/').concat(imgUrl)
+        : pageContext.request.contextPath.concat('/assets/img/default-product.png')}" class="gallery-thumb w-100 h-auto" style="height: 80px;">
+                                <div class="mt-1 d-flex gap-1 justify-content-center">
+                                    <form action="${pageContext.request.contextPath}/admin/product/set-main-image" method="post">
+                                        <input type="hidden" name="productId" value="${product.productId}">
+                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Đặt làm ảnh chính"><i class="bi bi-star-fill"></i></button>
+                                    </form>
+                                    <form action="${pageContext.request.contextPath}/admin/product/delete-image" method="post" onsubmit="return confirm('Xóa ảnh này?')">
+                                        <input type="hidden" name="productId" value="${product.productId}">
+                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </c:forEach>
+                        <c:if test="${empty product.images}"><div class="text-muted">Chưa có ảnh</div></c:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 1. BASIC INFORMATION SECTION -->
         <div class="info-section" id="basicInfoSection">
-            <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
             <form id="basicInfoForm" action="${pageContext.request.contextPath}/admin/product/update-basic-info" method="post">
                 <input type="hidden" name="productId" value="${product.productId}">
+
+                <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" value="${product.productName}" placeholder="${product.productName}" required minlength="3" maxlength="255">
                         <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div><div id="nameError" class="text-danger"></div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">SKU <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control sku-input" name="sku" value="${product.sku}" required pattern="[A-Za-z0-9-]+" placeholder="Chức năng đang phát triển">
-                        <div class="invalid-feedback">SKU chỉ gồm chữ, số và dấu gạch ngang, phải duy nhất</div><div id="skuError" class="text-danger"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Danh mục</label>
@@ -319,126 +355,10 @@
                         <div id="statusError" class="text-danger"></div>
                     </div>
                 </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="basicInfoForm"><i class="bi bi-save"></i> Lưu thông tin</button>
-                </div>
-            </form>
-        </div>
 
-        <!-- 2. PRICE & DISCOUNT SECTION -->
-        <div class="info-section" id="priceSection">
-            <h5><i class="bi bi-tag me-2"></i>Giá & khuyến mãi</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
+                <hr>
 
-            <form id="priceForm" action="${pageContext.request.contextPath}/admin/product/update-price" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="row">
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Giá gốc (VND)</label>
-                        <fmt:formatNumber value="${product.price}" pattern="0" var="priceValue"/>
-
-                        <input
-                                type="number"
-                                step="1000"
-                                class="form-control"
-                                name="price"
-                                value="${priceValue}"
-                                placeholder="${formattedPrice}"
-                                required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Giá khuyến mãi (VND)</label>
-                        <fmt:formatNumber value="${product.finalPrice}" pattern="0" var="priceValue"/>
-
-                        <input
-                                type="number"
-                                step="1000"
-                                class="form-control"
-                                name="finalPrice"
-                                value="${priceValue}"
-                                placeholder="${formattedPrice}"
-                                required>
-                        <small class="text-muted">Phải nhỏ hơn giá gốc</small>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">% giảm</label>
-                        <input type="number" step="0.01" class="form-control" name="discountPercent" value="${product.discountPercent}" readonly disabled>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ngày bắt đầu khuyến mãi</label>
-                        <input type="datetime-local" class="form-control" name="saleStartDate" value="${saleStartDateValue}">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ngày kết thúc khuyến mãi</label>
-                        <input type="datetime-local" class="form-control" name="saleEndDate" value="${saleEndDateValue}">
-                    </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="priceForm"><i class="bi bi-save"></i> Cập nhật giá</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 3. IMAGE GALLERY with upload, delete, set main -->
-        <div class="info-section" id="imageSection">
-            <h5><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/product/upload-image" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="productId" value="${product.productId}">
-                        <div class="input-group">
-                            <input type="file" class="form-control" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
-                            <button class="admin-btn-primary" type="submit">Tải ảnh lên</button>
-                        </div>
-                        <small class="text-muted">Hỗ trợ JPG, PNG, WEBP, tối đa 5MB/ảnh</small>
-                    </form>
-                </div>
-                <div class="col-md-12">
-                    <div class="d-flex flex-wrap gap-3">
-                        <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
-                            <div class="position-relative" style="width: 100px;">
-                                <img src="${imgUrl}" class="gallery-thumb w-100 h-auto" style="height: 80px;">
-                                <div class="mt-1 d-flex gap-1 justify-content-center">
-                                    <form action="${pageContext.request.contextPath}/admin/product/set-main-image" method="post">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Đặt làm ảnh chính"><i class="bi bi-star-fill"></i></button>
-                                    </form>
-                                    <form action="${pageContext.request.contextPath}/admin/product/delete-image" method="post" onsubmit="return confirm('Xóa ảnh này?')">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </c:forEach>
-                        <c:if test="${empty product.images}"><div class="text-muted">Chưa có ảnh</div></c:if>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. PRODUCT DESCRIPTION (WYSIWYG) -->
-        <div class="info-section">
-            <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
-            <form id="descForm" action="${pageContext.request.contextPath}/admin/product/update-description" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="mb-3">
-                    <label class="form-label">Mô tả chi tiết</label>
-                    <textarea id="tinyDescription" name="description">${product.description}</textarea>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="descForm"><i class="bi bi-save"></i> Lưu mô tả</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 5. ATTRIBUTES SECTION (Scale, Material, Origin, etc.) -->
-        <div class="info-section">
-            <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm (Model Car)</h5>
-            <form id="attributeForm" action="${pageContext.request.contextPath}/admin/product/update-attributes" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
+                <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm (Model Car)</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Tỷ lệ (Scale)</label>
@@ -457,85 +377,144 @@
                         <input type="text" class="form-control" name="origin" value="${product.origin}">
                     </div>
                 </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="attributeForm"><i class="bi bi-save"></i> Lưu thuộc tính</button>
+
+                <hr>
+
+
+                <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả chi tiết</label>
+                    <textarea id="tinyDescription" name="description">${product.description}</textarea>
                 </div>
+
+                <div class="mt-3 d-flex justify-content-end">
+                    <button type="submit" class="admin-btn-primary save-btn" data-form="basicInfoForm"><i class="bi bi-save"></i> Lưu thông tin</button>
+                </div>
+
             </form>
         </div>
 
-        <!-- 6. INVENTORY MANAGEMENT -->
-        <div class="info-section">
-            <h5><i class="bi bi-boxes me-2"></i>Quản lý kho</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
 
-            <form id="inventoryForm" action="${pageContext.request.contextPath}/admin/product/update-inventory" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Số lượng tồn kho</label>
-                        <input type="number" class="form-control" name="quantity" value="${product.quantity}" min="0" required>
-                        <c:if test="${product.quantity < 5 && product.quantity > 0}"><span class="badge bg-warning">Cảnh báo: tồn kho thấp</span></c:if>
+        <!-- 2. VARIANTS PRICE SECTION (no AJAX) -->
+        <div class="info-section" id="variantsPriceSection">
+            <h5><i class="bi bi-diagram-3 me-2"></i>Giá theo biến thể (Variants)</h5>
+            <c:choose>
+                <c:when test="${empty product.variants}">
+                    <div class="alert alert-info">Sản phẩm này chưa có biến thể nào.</div>
+                </c:when>
+                <c:otherwise>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Biến thể</th>
+                                <th width="25%">Giá gốc (VND)</th>
+<%--                                <th width="25%">Giá khuyến mãi (VND)</th>--%>
+<%--                                <th width="20%">Ngày KM (bắt đầu - kết thúc)</th>--%>
+                                <th width="15%">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="variant" items="${product.variants}" varStatus="vs">
+                                <form method="post" action="${pageContext.request.contextPath}/admin/product/update-variant-price"
+                                      onsubmit="return validateVariantPrice(this)">
+                                    <input type="hidden" name="variantId" value="${variant.id}">
+                                    <input type="hidden" name="productId" value="${variant.productId}">
+                                    <tr>
+                                        <td>
+                                            <strong>${variant.variantName}</strong>
+                                            <c:if test="${not empty variant.sku}"><br><small class="text-muted">SKU: ${variant.sku}</small></c:if>
+                                        </td>
+                                        <td>
+                                            <input type="number" step="1000" class="form-control form-control-sm"
+                                                   name="price" value="${variant.price}" required>
+                                        </td>
+<%--                                        <td>--%>
+<%--                                            <input type="number" step="1000" class="form-control form-control-sm"--%>
+<%--                                                   name="finalPrice" value="${variant.finalPrice}">--%>
+<%--                                            <small class="text-muted">Để trống = không KM</small>--%>
+<%--                                        </td>--%>
+<%--                                        <td>--%>
+<%--                                            <div class="row g-1">--%>
+<%--                                                <div class="col">--%>
+<%--                                                    <input type="datetime-local" class="form-control form-control-sm"--%>
+<%--                                                           name="saleStartDate" value="${variant.saleStartDate}">--%>
+<%--                                                </div>--%>
+<%--                                                <div class="col">--%>
+<%--                                                    <input type="datetime-local" class="form-control form-control-sm"--%>
+<%--                                                           name="saleEndDate" value="${variant.saleEndDate}">--%>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
+<%--                                        </td>--%>
+                                        <td class="text-center">
+                                            <button type="submit" class="btn btn-sm admin-btn-primary w-100">
+                                                <i class="bi bi-save"></i> Cập nhật
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </c:forEach>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Mã kho / Warehouse</label>
-                        <input type="text" class="form-control" name="warehouseCode" value="${warehouseCode}">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Ngưỡng cảnh báo</label>
-                        <input type="number" class="form-control" name="stockWarningLevel" value="${stockWarningLevel != null ? stockWarningLevel : 5}">
-                    </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="inventoryForm"><i class="bi bi-save"></i> Cập nhật kho</button>
-                </div>
-            </form>
+                </c:otherwise>
+            </c:choose>
         </div>
+<%--        <div class="info-section" id="priceSection">--%>
+<%--            <h5><i class="bi bi-tag me-2"></i>Giá & khuyến mãi</h5>--%>
 
-        <!-- 7. TAGS & PROMOTION -->
-        <div class="info-section">
-            <h5><i class="bi bi-tags me-2"></i>Tags / Khuyến mãi đặc biệt</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
+<%--            <form id="priceForm" action="${pageContext.request.contextPath}/admin/product/update-price" method="post">--%>
+<%--                <input type="hidden" name="productId" value="${product.productId}">--%>
+<%--                <div class="row">--%>
 
-            <form id="tagsForm" action="${pageContext.request.contextPath}/admin/product/update-tags" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="mb-3">
-                    <label class="form-label">Tags (cách nhau bằng dấu phẩy)</label>
-                    <input type="text" class="form-control" name="tags" value="${tagString}" placeholder="VD: mới, hot, best-seller">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Chương trình khuyến mãi đặc biệt</label>
-                    <select class="form-select" name="promotionId">
-                        <option value="">-- Không áp dụng --</option>
-                        <c:forEach items="${promotionList}" var="promo">
-                            <option value="${promo.id}" ${selectedPromoId == promo.id ? 'selected' : ''}>${promo.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="tagsForm"><i class="bi bi-save"></i> Lưu tags</button>
-                </div>
-            </form>
-        </div>
+<%--                    <div class="col-md-4 mb-3">--%>
+<%--                        <label class="form-label">Giá gốc (VND)</label>--%>
+<%--                        <fmt:formatNumber value="${product.price}" pattern="0" var="priceValue"/>--%>
 
-        <!-- 8. PRODUCT URL / SEO -->
-        <div class="info-section">
-            <h5><i class="bi bi-link-45deg me-2"></i>SEO & URL</h5>
-            <form id="seoForm" action="${pageContext.request.contextPath}/admin/product/update-seo" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="mb-3">
-                    <label class="form-label">Đường dẫn tĩnh (Slug)</label>
-                    <input type="text" class="form-control" name="slug" value="${productSlug}" placeholder="ten-san-pham-dep">
-                    <small class="text-muted">Để trống hệ thống tự sinh</small>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Liên kết thương hiệu (Brand Link)</label>
-                    <input type="url" class="form-control" name="brandLink" value="${product.brandLink}">
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="seoForm"><i class="bi bi-save"></i> Cập nhật URL</button>
-                </div>
-            </form>
-        </div>
+<%--                        <input--%>
+<%--                                type="number"--%>
+<%--                                step="1000"--%>
+<%--                                class="form-control"--%>
+<%--                                name="price"--%>
+<%--                                value="${priceValue}"--%>
+<%--                                placeholder="${formattedPrice}"--%>
+<%--                                required>--%>
+<%--                    </div>--%>
+<%--                    <div class="col-md-4 mb-3">--%>
+<%--                        <label class="form-label">Giá khuyến mãi (VND)</label>--%>
+<%--                        <fmt:formatNumber value="${product.finalPrice}" pattern="0" var="priceValue"/>--%>
+
+<%--                        <input--%>
+<%--                                type="number"--%>
+<%--                                step="1000"--%>
+<%--                                class="form-control"--%>
+<%--                                name="finalPrice"--%>
+<%--                                value="${priceValue}"--%>
+<%--                                placeholder="${formattedPrice}"--%>
+<%--                                required>--%>
+<%--                        <small class="text-muted">Phải nhỏ hơn giá gốc</small>--%>
+<%--                    </div>--%>
+<%--                    <div class="col-md-4 mb-3">--%>
+<%--                        <label class="form-label">% giảm</label>--%>
+<%--                        <input type="number" step="0.01" class="form-control" name="discountPercent" value="${product.discountPercent}" readonly disabled>--%>
+<%--                    </div>--%>
+<%--                    <div class="col-md-6 mb-3">--%>
+<%--                        <label class="form-label">Ngày bắt đầu khuyến mãi</label>--%>
+<%--                        <input type="datetime-local" class="form-control" name="saleStartDate" value="${saleStartDateValue}">--%>
+<%--                    </div>--%>
+<%--                    <div class="col-md-6 mb-3">--%>
+<%--                        <label class="form-label">Ngày kết thúc khuyến mãi</label>--%>
+<%--                        <input type="datetime-local" class="form-control" name="saleEndDate" value="${saleEndDateValue}">--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                <div class="mt-3 d-flex justify-content-end">--%>
+<%--                    <button type="submit" class="admin-btn-primary save-btn" data-form="priceForm"><i class="bi bi-save"></i> Cập nhật giá</button>--%>
+<%--                </div>--%>
+<%--            </form>--%>
+<%--        </div>--%>
+
+
+
 
         <!-- 9. EDIT HISTORY & INFO -->
         <div class="info-section">
@@ -555,26 +534,6 @@
                     </table>
                 </div>
             </c:if>
-        </div>
-
-        <!-- 10. DANGER ZONE: DUPLICATE & DELETE -->
-        <div class="info-section border-danger">
-            <h5 class="text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Vùng nguy hiểm</h5>
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <div class="fw-bold">Nhân bản sản phẩm</div>
-                    <div class="small text-muted">Tạo bản sao với tên mới</div>
-                    <form action="${pageContext.request.contextPath}/admin/product/duplicate" method="post">
-                        <input type="hidden" name="productId" value="${product.productId}">
-                        <button type="submit" class="admin-btn-outline mt-1"><i class="bi bi-files"></i> Duplicate</button>
-                    </form>
-                </div>
-                <div>
-                    <div class="fw-bold">Xóa sản phẩm vĩnh viễn</div>
-                    <div class="small text-muted">Hành động không thể hoàn tác</div>
-                    <button type="button" class="admin-btn-danger mt-1" data-bs-toggle="modal" data-bs-target="#deleteProductModal"><i class="bi bi-trash3"></i> Xóa sản phẩm</button>
-                </div>
-            </div>
         </div>
 
         <!-- Sticky Save Bar -->
@@ -749,19 +708,27 @@
 
 
     // Price validation
-    const priceForm = document.getElementById('priceForm');
-    if(priceForm) {
-        const basePrice = priceForm.querySelector('input[name="price"]');
-        const salePrice = priceForm.querySelector('input[name="finalPrice"]');
-        function validatePrice() {
-            if(parseFloat(salePrice.value) >= parseFloat(basePrice.value) && salePrice.value !== '') {
-                salePrice.setCustomValidity('Giá khuyến mãi phải nhỏ hơn giá gốc');
-            } else {
-                salePrice.setCustomValidity('');
+    // Validation cho variant price (không dùng AJAX, chỉ kiểm tra client)
+    function validateVariantPrice(form) {
+        const price = parseFloat(form.querySelector('input[name="price"]').value);
+        const finalPrice = form.querySelector('input[name="finalPrice"]').value;
+        let final = finalPrice === '' ? 0 : parseFloat(finalPrice);
+
+        if (final > 0 && final >= price) {
+            alert('Giá khuyến mãi phải nhỏ hơn giá gốc (hoặc để trống).');
+            return false;
+        }
+
+        // Kiểm tra ngày KM nếu có giá KM
+        if (final > 0) {
+            const start = form.querySelector('input[name="saleStartDate"]').value;
+            const end = form.querySelector('input[name="saleEndDate"]').value;
+            if (start && end && new Date(start) >= new Date(end)) {
+                alert('Ngày bắt đầu phải trước ngày kết thúc.');
+                return false;
             }
         }
-        basePrice.addEventListener('input', validatePrice);
-        salePrice.addEventListener('input', validatePrice);
+        return true;
     }
 
 
