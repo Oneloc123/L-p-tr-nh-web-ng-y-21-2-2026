@@ -7,6 +7,7 @@ import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.service.file.ActivityLogFileService;
 import code.salecar.service.product.InventoryService;
 import code.salecar.service.product.ProductVariantsService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -54,7 +55,8 @@ public class UpdateProductInventoryServlet extends HttpServlet {
                 pvs.createImportReceipt(variant,user);
                 break;
             case "subtract":
-                if (quantity > current) {request.getSession().setAttribute("error","Không thể trừ vượt quá tồn kho");
+                if (quantity > current) {
+                    NotificationUtil.setError(request.getSession(), "Không thể trừ vượt quá tồn kho");
                     response.sendRedirect(request.getContextPath()+ "/admin/products/detail?id="+ variant.getProductId());
                     return;
                 }
@@ -68,6 +70,12 @@ public class UpdateProductInventoryServlet extends HttpServlet {
 
 
 
+        // Success notification based on action type
+        if ("add".equals(type)) {
+            NotificationUtil.setSuccess(request.getSession(), "Nhập kho thành công!");
+        } else if ("subtract".equals(type)) {
+            NotificationUtil.setSuccess(request.getSession(), "Xuất kho thành công!");
+        }
         response.sendRedirect(request.getContextPath() + "/admin/products/detail?id=" + variant.getProductId());
 
 

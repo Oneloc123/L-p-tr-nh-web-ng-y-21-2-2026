@@ -518,57 +518,51 @@
             </div>
         </form>
     </main>
-</div>
-
-<!-- Toast Container -->
-<div class="toast-container"></div>
-
-<!-- Loading Spinner -->
-<div class="spinner-overlay" id="loadingSpinner">
-    <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
+</div>    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // ========== TINYMCE INIT ==========
-    tinymce.init({
-        selector: '#description',
-        height: 300,
-        menubar: false,
-        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-        toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | removeformat | help',
-        skin: 'oxide',
-        content_css: 'default'
-    });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ========== TINYMCE INIT ==========
+        tinymce.init({
+            selector: '#description',
+            height: 300,
+            menubar: false,
+            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+            toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | removeformat | help',
+            skin: 'oxide',
+            content_css: 'default'
+        });
 
-    // ========== UTILITY FUNCTIONS ==========
-    function showToast(message, type = 'danger') {
-        const container = document.querySelector('.toast-container');
-        const toastEl = document.createElement('div');
-        toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
-        toastEl.setAttribute('role', 'alert');
-        toastEl.setAttribute('aria-live', 'assertive');
-        toastEl.setAttribute('aria-atomic', 'true');
-        toastEl.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">${message}</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>`;
-        container.appendChild(toastEl);
-        const bsToast = new bootstrap.Toast(toastEl);
-        bsToast.show();
-        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-    }
+        // ========== UTILITY FUNCTIONS ==========
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
 
-    function showLoading() {
-        document.getElementById('loadingSpinner').style.display = 'flex';
-    }
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
 
-    function hideLoading() {
-        document.getElementById('loadingSpinner').style.display = 'none';
-    }
+        // ========== SHOW TOAST VIA SWEETALERT2 ==========
+        function showToast(message, type = 'error') {
+            const iconMap = {
+                'danger': 'error',
+                'warning': 'warning',
+                'success': 'success'
+            };
+            Swal.fire({
+                icon: iconMap[type] || 'error',
+                text: message,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
 
     // ========== VARIANTS DYNAMIC ROWS ==========
     const variantsTbody = document.getElementById('variantsTbody');

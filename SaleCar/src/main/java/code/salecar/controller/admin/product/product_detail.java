@@ -33,7 +33,7 @@ public class product_detail extends HttpServlet {
 
         ProductDetailDTO productDetail = productService.getProductByID(id);
         request.setAttribute("product", productDetail);
-        request.getRequestDispatcher(request.getContextPath() + "/admin/product/product-detail.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/product/product-detail.jsp").forward(request, response);
 
     }
 
