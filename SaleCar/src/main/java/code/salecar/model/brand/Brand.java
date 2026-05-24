@@ -1,7 +1,10 @@
 package code.salecar.model.brand;
 
 import code.salecar.model.enumeration.Status;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Brand {
     private long id;
@@ -85,6 +88,9 @@ public class Brand {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+    public Date getCreatedAtDate() {
+        return Timestamp.valueOf(createdAt);
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -92,6 +98,9 @@ public class Brand {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+    public Date getUpdatedAtDate() {
+        return Timestamp.valueOf(updatedAt);
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {

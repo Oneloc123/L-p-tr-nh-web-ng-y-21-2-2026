@@ -1,5 +1,6 @@
 package code.salecar.service.product;
 
+import code.salecar.dao.ProductVariantsDAO;
 import code.salecar.model.Image;
 import code.salecar.model.brand.BrandInfo;
 import code.salecar.model.category.Category;
@@ -30,6 +31,7 @@ public class ProductService {
     DiscountService discountService = new DiscountService();
     ProductVariantsService pvs = new ProductVariantsService();
     ActivityLogFileService ls = new ActivityLogFileService();
+    ProductVariantsDAO  pvDAO = new ProductVariantsDAO();
     // Lấy chi tiết sản phẩm theo ID
     public ProductDetailDTO getProductByID(long id) {
 
@@ -344,7 +346,7 @@ public class ProductService {
             productItemDTO.setCategoryName(categoryName != null ? categoryName : "");
 
             List<String> image = is.getImageProduct(productItemDTO.getId());
-            image.add(is.getImage(Image.entityType.brand, productItemDTO.getBrandId()));
+            image.add(is.getImage(Image.entityType.product, productItemDTO.getId()));
             productItemDTO.setImage(image.get(0));
 
             List<Review> reviews = rs.getReviewsByID(productItemDTO.getId());
@@ -353,6 +355,8 @@ public class ProductService {
             } else {
                 productItemDTO.setAvgRating(0);
             }
+
+            productItemDTO.setQuantity(pvDAO.getQuantityById(productItemDTO.getId()));
         }
     }
 

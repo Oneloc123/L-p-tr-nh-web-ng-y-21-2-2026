@@ -2,6 +2,7 @@ package code.salecar.model.category;
 
 import code.salecar.model.enumeration.Status;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -81,6 +82,7 @@ public class Category {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+    public Date  getCreatedAtDate() {return Timestamp.valueOf(getCreatedAt());}
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -89,6 +91,7 @@ public class Category {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+public Date  getUpdatedAtDate() {return Timestamp.valueOf(getUpdatedAt());}
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;

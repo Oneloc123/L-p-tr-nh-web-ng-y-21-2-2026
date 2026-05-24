@@ -26,6 +26,7 @@ public class ProductItemDTO implements Serializable {
     private int reviewCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int quantity;
 
     // 1. Constructor mặc định
     public ProductItemDTO() {
@@ -173,6 +174,13 @@ public class ProductItemDTO implements Serializable {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     // 5. Builder pattern
     public static Builder builder() {
         return new Builder();
