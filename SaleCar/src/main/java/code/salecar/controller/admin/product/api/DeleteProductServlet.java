@@ -1,6 +1,8 @@
 package code.salecar.controller.admin.product.api;
 
 import code.salecar.model.product.dto.ProductDetailDTO;
+import code.salecar.model.User;
+import code.salecar.service.file.ActivityLogger;
 import code.salecar.service.product.ProductService;
 import code.salecar.util.NotificationUtil;
 import jakarta.servlet.*;
@@ -12,6 +14,7 @@ import java.io.IOException;
 @WebServlet(name = "DeleteProductServlet", value = "/admin/products/delete")
 public class DeleteProductServlet extends HttpServlet {
     ProductService productService = new ProductService();
+    ActivityLogger activityLogger = new ActivityLogger();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,6 +36,11 @@ public class DeleteProductServlet extends HttpServlet {
             boolean deleted = productService.deleteProduct(id);
 
             if (deleted) {
+                // Log activity
+                HttpSession session = request.getSession();
+                User user = (User) session.getAttribute("user");
+                String userName = (user != null) ? user.getFullname() : "Admin";
+                activityLogger.logProductDeleted(id, "Product #" + id, userName);
                 NotificationUtil.setSuccess(request.getSession(), "Xóa sản phẩm thành công!");
             } else {
                 NotificationUtil.setError(request.getSession(), "Không thể xóa sản phẩm");

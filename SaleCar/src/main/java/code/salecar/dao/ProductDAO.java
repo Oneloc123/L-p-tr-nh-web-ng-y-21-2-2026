@@ -698,6 +698,37 @@ public class ProductDAO {
 
     }
 
+    /**
+     * Cập nhật toàn bộ thông tin sản phẩm (bao gồm thuộc tính, mô tả)
+     */
+    public void updateProductDetail(long productId, String name, int categoryId, int brandId,
+                                     int status, String ratio, String size,
+                                     String material, String origin, String description) {
+        String query = "UPDATE product SET name = ?, category_id = ?, brand_id = ?, status = ?, " +
+                "ratio = ?, size = ?, material = ?, origin = ?, description = ?, " +
+                "updated_at = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setInt(2, categoryId);
+            ps.setInt(3, brandId);
+            ps.setInt(4, status);
+            ps.setString(5, ratio);
+            ps.setString(6, size);
+            ps.setString(7, material);
+            ps.setString(8, origin);
+            ps.setString(9, description);
+            ps.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
+            ps.setLong(11, productId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //Thêm sản phẩm mới vào cơ sở dữ liệu và trả về ID của sản phẩm vừa được thêm
     public long insertProduct(ProductDetailDTO product) {
 
@@ -782,6 +813,20 @@ public class ProductDAO {
             ps.setString(2, variant.getVariantName());
             ps.setBigDecimal(3, variant.getPrice());
             ps.setString(4, variant.getSku());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Xoá variant theo ID
+     */
+    public void deleteVariant(long variantId) {
+        String sql = "DELETE FROM product_variants WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, variantId);
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);

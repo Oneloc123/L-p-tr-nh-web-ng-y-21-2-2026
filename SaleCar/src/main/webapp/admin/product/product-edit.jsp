@@ -410,9 +410,6 @@
             </div>
         </header>
 
-        <!-- Unsaved changes warning will be managed by JS -->
-        <form id="globalFormWatcher"></form>
-
         <!-- 3. IMAGE GALLERY with upload, delete, set main, preview -->
         <div class="info-section" id="imageSection">
             <h5><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
@@ -497,52 +494,53 @@
             </div>
         </div>
 
-        <!-- 1. BASIC INFORMATION SECTION -->
-        <div class="info-section" id="basicInfoSection">
-            <form id="basicInfoForm" action="${pageContext.request.contextPath}/admin/product/update-basic-info" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
+        <!-- 1. MAIN PRODUCT EDIT FORM (basic info + attributes + description + variants) -->
+        <form id="productEditForm" action="${pageContext.request.contextPath}/admin/products/edit" method="post">
+            <input type="hidden" name="productId" value="${product.productId}">
 
+            <!-- Basic Info -->
+            <div class="info-section" id="basicInfoSection">
                 <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" value="${product.productName}" placeholder="${product.productName}" required minlength="3" maxlength="255">
-                        <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div><div id="nameError" class="text-danger"></div>
+                        <input type="text" class="form-control ${not empty errors.name ? 'is-invalid' : ''}" name="name" value="${product.productName}" required minlength="3" maxlength="255">
+                        <div class="invalid-feedback">${errors.name != null ? errors.name : 'Tên phải từ 3-255 ký tự'}</div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Danh mục</label>
-                        <select class="form-select" name="categoryId">
+                        <select class="form-select ${not empty errors.categoryId ? 'is-invalid' : ''}" name="categoryId">
                             <option value="">-- Chọn danh mục --</option>
-                           <c:forEach var="cat" items="${categoryList}">
+                            <c:forEach var="cat" items="${categoryList}">
                                 <option value="${cat.id}" ${product.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
                             </c:forEach>
                         </select>
-                        <div id="categoryIdError" class="text-danger"></div>
+                        <div class="invalid-feedback">${errors.categoryId != null ? errors.categoryId : ''}</div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Thương hiệu</label>
-                        <select class="form-select" name="brandId">
+                        <select class="form-select ${not empty errors.brandId ? 'is-invalid' : ''}" name="brandId">
                             <option value="">-- Chọn thương hiệu --</option>
                             <c:forEach var="brand" items="${brandList}">
                                 <option value="${brand.id}" ${product.brandId == brand.id ? 'selected' : ''}>${brand.name}</option>
                             </c:forEach>
                         </select>
-                        <div id="brandIdError" class="text-danger"></div>
+                        <div class="invalid-feedback">${errors.brandId != null ? errors.brandId : ''}</div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Trạng thái</label>
                         <select class="form-select" name="status">
-                            <option value="1" ${product.status.code == 1? 'selected' : ''}>Hoạt động (Active)</option>
+                            <option value="1" ${product.status.code == 1 ? 'selected' : ''}>Hoạt động (Active)</option>
                             <option value="0" ${product.status.code == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
                         </select>
                         <small class="text-muted">Inactive: sản phẩm tạm ẩn trên shop</small>
-                        <div id="statusError" class="text-danger"></div>
                     </div>
                 </div>
+            </div>
 
-                <hr>
-
-                <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm (Model Car)</h5>
+            <!-- Attributes -->
+            <div class="info-section" id="attributesSection">
+                <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Tỷ lệ (Scale)</label>
@@ -561,141 +559,82 @@
                         <input type="text" class="form-control" name="origin" value="${product.origin}">
                     </div>
                 </div>
+            </div>
 
-                <hr>
-
-
+            <!-- Description -->
+            <div class="info-section" id="descriptionSection">
                 <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
                 <div class="mb-3">
-                    <label class="form-label">Mô tả chi tiết</label>
                     <textarea id="tinyDescription" name="description">${product.description}</textarea>
                 </div>
+            </div>
 
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="basicInfoForm"><i class="bi bi-save"></i> Lưu thông tin</button>
-                </div>
-
-            </form>
-        </div>
-
-
-        <!-- 2. VARIANTS PRICE SECTION (no AJAX) -->
-        <div class="info-section" id="variantsPriceSection">
-            <h5><i class="bi bi-diagram-3 me-2"></i>Giá theo biến thể (Variants)</h5>
-            <c:choose>
-                <c:when test="${empty product.variants}">
-                    <div class="alert alert-info">Sản phẩm này chưa có biến thể nào.</div>
-                </c:when>
-                <c:otherwise>
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-light">
+            <!-- Variants -->
+            <div class="info-section" id="variantsSection">
+                <h5><i class="bi bi-diagram-3 me-2"></i>Biến thể (Variants)</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle" id="variantsTable">
+                        <thead class="table-light">
                             <tr>
-                                <th>Biến thể</th>
-                                <th width="25%">Giá gốc (VND)</th>
-<%--                                <th width="25%">Giá khuyến mãi (VND)</th>--%>
-<%--                                <th width="20%">Ngày KM (bắt đầu - kết thúc)</th>--%>
-                                <th width="15%">Thao tác</th>
+                                <th style="min-width:160px;">Tên biến thể <span class="text-danger">*</span></th>
+                                <th style="min-width:120px;">SKU</th>
+                                <th style="min-width:140px;">Giá (VND) <span class="text-danger">*</span></th>
+                                <th style="width:80px;">Tồn kho</th>
+                                <th style="width:60px;"></th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody id="variantsBody">
                             <c:forEach var="variant" items="${product.variants}" varStatus="vs">
-                                <form method="post" action="${pageContext.request.contextPath}/admin/product/update-variant-price"
-                                      onsubmit="return validateVariantPrice(this)">
-                                    <input type="hidden" name="variantId" value="${variant.id}">
-                                    <input type="hidden" name="productId" value="${variant.productId}">
-                                    <tr>
-                                        <td>
-                                            <strong>${variant.variantName}</strong>
-                                            <c:if test="${not empty variant.sku}"><br><small class="text-muted">SKU: ${variant.sku}</small></c:if>
-                                        </td>
-                                        <td>
-                                            <input type="number" step="1000" class="form-control form-control-sm"
-                                                   name="price" value="${variant.price}" required>
-                                        </td>
-<%--                                        <td>--%>
-<%--                                            <input type="number" step="1000" class="form-control form-control-sm"--%>
-<%--                                                   name="finalPrice" value="${variant.finalPrice}">--%>
-<%--                                            <small class="text-muted">Để trống = không KM</small>--%>
-<%--                                        </td>--%>
-<%--                                        <td>--%>
-<%--                                            <div class="row g-1">--%>
-<%--                                                <div class="col">--%>
-<%--                                                    <input type="datetime-local" class="form-control form-control-sm"--%>
-<%--                                                           name="saleStartDate" value="${variant.saleStartDate}">--%>
-<%--                                                </div>--%>
-<%--                                                <div class="col">--%>
-<%--                                                    <input type="datetime-local" class="form-control form-control-sm"--%>
-<%--                                                           name="saleEndDate" value="${variant.saleEndDate}">--%>
-<%--                                                </div>--%>
-<%--                                            </div>--%>
-<%--                                        </td>--%>
-                                        <td class="text-center">
-                                            <button type="submit" class="btn btn-sm admin-btn-primary w-100">
-                                                <i class="bi bi-save"></i> Cập nhật
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </form>
+                            <tr class="variant-row">
+                                <td>
+                                    <input type="hidden" name="variantId[]" value="${variant.id}">
+                                    <input type="text" class="form-control form-control-sm" name="variantName[]"
+                                           value="${variant.variantName}" required placeholder="VD: Đỏ, Xanh">
+                                    <c:set var="vk" value="variant_${vs.index}"/>
+                                    <c:if test="${not empty errors[vk]}">
+                                        <div class="text-danger small">${errors[vk]}</div>
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="variantSku[]"
+                                           value="${variant.sku}" placeholder="Mã SKU">
+                                </td>
+                                <td>
+                                    <input type="number" step="1000" class="form-control form-control-sm variant-price"
+                                           name="variantPrice[]" value="${variant.price}" required min="1">
+                                    <c:set var="pvk" value="variantPrice_${vs.index}"/>
+                                    <c:if test="${not empty errors[pvk]}">
+                                        <div class="text-danger small">${errors[pvk]}</div>
+                                    </c:if>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info">${variant.quantity}</span>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </td>
+                            </tr>
                             </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-<%--        <div class="info-section" id="priceSection">--%>
-<%--            <h5><i class="bi bi-tag me-2"></i>Giá & khuyến mãi</h5>--%>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" id="addVariantBtn" class="admin-btn-outline mt-2">
+                    <i class="bi bi-plus-circle"></i> Thêm biến thể
+                </button>
+            </div>
 
-<%--            <form id="priceForm" action="${pageContext.request.contextPath}/admin/product/update-price" method="post">--%>
-<%--                <input type="hidden" name="productId" value="${product.productId}">--%>
-<%--                <div class="row">--%>
-
-<%--                    <div class="col-md-4 mb-3">--%>
-<%--                        <label class="form-label">Giá gốc (VND)</label>--%>
-<%--                        <fmt:formatNumber value="${product.price}" pattern="0" var="priceValue"/>--%>
-
-<%--                        <input--%>
-<%--                                type="number"--%>
-<%--                                step="1000"--%>
-<%--                                class="form-control"--%>
-<%--                                name="price"--%>
-<%--                                value="${priceValue}"--%>
-<%--                                placeholder="${formattedPrice}"--%>
-<%--                                required>--%>
-<%--                    </div>--%>
-<%--                    <div class="col-md-4 mb-3">--%>
-<%--                        <label class="form-label">Giá khuyến mãi (VND)</label>--%>
-<%--                        <fmt:formatNumber value="${product.finalPrice}" pattern="0" var="priceValue"/>--%>
-
-<%--                        <input--%>
-<%--                                type="number"--%>
-<%--                                step="1000"--%>
-<%--                                class="form-control"--%>
-<%--                                name="finalPrice"--%>
-<%--                                value="${priceValue}"--%>
-<%--                                placeholder="${formattedPrice}"--%>
-<%--                                required>--%>
-<%--                        <small class="text-muted">Phải nhỏ hơn giá gốc</small>--%>
-<%--                    </div>--%>
-<%--                    <div class="col-md-4 mb-3">--%>
-<%--                        <label class="form-label">% giảm</label>--%>
-<%--                        <input type="number" step="0.01" class="form-control" name="discountPercent" value="${product.discountPercent}" readonly disabled>--%>
-<%--                    </div>--%>
-<%--                    <div class="col-md-6 mb-3">--%>
-<%--                        <label class="form-label">Ngày bắt đầu khuyến mãi</label>--%>
-<%--                        <input type="datetime-local" class="form-control" name="saleStartDate" value="${saleStartDateValue}">--%>
-<%--                    </div>--%>
-<%--                    <div class="col-md-6 mb-3">--%>
-<%--                        <label class="form-label">Ngày kết thúc khuyến mãi</label>--%>
-<%--                        <input type="datetime-local" class="form-control" name="saleEndDate" value="${saleEndDateValue}">--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                <div class="mt-3 d-flex justify-content-end">--%>
-<%--                    <button type="submit" class="admin-btn-primary save-btn" data-form="priceForm"><i class="bi bi-save"></i> Cập nhật giá</button>--%>
-<%--                </div>--%>
-<%--            </form>--%>
-<%--        </div>--%>
+            <!-- Submit -->
+            <div class="mt-3 d-flex justify-content-end gap-2">
+                <button type="submit" class="admin-btn-primary save-btn" id="mainSaveBtn">
+                    <i class="bi bi-save"></i> Lưu thông tin
+                </button>
+                <button type="reset" class="admin-btn-outline">
+                    <i class="bi bi-arrow-repeat"></i> Đặt lại
+                </button>
+            </div>
+        </form>
 
 
 
@@ -740,7 +679,7 @@
                 <p>Xóa sản phẩm <strong>${product.productName}</strong> (ID: ${product.productId})</p>
                 <p>Vui lòng gõ <strong class="text-danger">DELETE</strong> để xác nhận:</p>
                 <input type="text" id="deleteConfirmText" class="form-control" placeholder="DELETE">
-                <form id="deleteProductForm" action="${pageContext.request.contextPath}/admin/product/delete" method="post">
+                <form id="deleteProductForm" action="${pageContext.request.contextPath}/admin/products/delete" method="post">
                     <input type="hidden" name="productId" value="${product.productId}">
                 </form>
             </div>
@@ -764,16 +703,15 @@
         content_style: 'body { font-family:Inter, sans-serif; }'
     });
 
-    // Unsaved changes tracking
+    // ===== Unsaved changes tracking =====
     let formChanged = false;
-    const allForms = document.querySelectorAll('form');
-    const inputs = document.querySelectorAll('input, select, textarea:not(#tinyDescription)');
+    const editForm = document.getElementById('productEditForm');
+    const formInputs = editForm ? editForm.querySelectorAll('input, select') : [];
     function markChanged() { formChanged = true; }
-    inputs.forEach(el => el.addEventListener('change', markChanged));
+    formInputs.forEach(el => el.addEventListener('change', markChanged));
+
     // TinyMCE change detection
-    if(tinymce.get('tinyDescription')) {
-        tinymce.get('tinyDescription').on('change', markChanged);
-    }
+    tinymce.get('tinyDescription')?.on('change', markChanged);
 
     window.addEventListener('beforeunload', function (e) {
         if (formChanged) {
@@ -783,24 +721,104 @@
         }
     });
 
-    // Handle each form submit separately, clear changed flag after save
-    document.querySelectorAll('.save-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const formId = this.getAttribute('data-form');
-            if(formId) {
-                const form = document.getElementById(formId);
-                if(form && form.checkValidity()) {
-                    formChanged = false;
-                } else if(form) {
-                    form.reportValidity();
-                    e.preventDefault();
-                }
+    // Sync TinyMCE content before form submit
+    editForm?.addEventListener('submit', function(e) {
+        // Push TinyMCE content into the textarea
+        if (tinymce.get('tinyDescription')) {
+            tinymce.get('tinyDescription').save();
+        }
+        // Validate variant rows
+        const variantRows = document.querySelectorAll('#variantsBody .variant-row');
+        let variantValid = true;
+        variantRows.forEach(row => {
+            const nameInput = row.querySelector('[name="variantName[]"]');
+            const priceInput = row.querySelector('[name="variantPrice[]"]');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('is-invalid');
+                variantValid = false;
+            } else {
+                nameInput.classList.remove('is-invalid');
+            }
+            if (!priceInput.value || parseFloat(priceInput.value) <= 0) {
+                priceInput.classList.add('is-invalid');
+                variantValid = false;
+            } else {
+                priceInput.classList.remove('is-invalid');
             }
         });
+        if (!variantValid) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Vui lòng kiểm tra lại',
+                text: 'Có lỗi ở phần biến thể. Vui lòng điền đầy đủ thông tin.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        formChanged = false;
     });
 
-    // Global reset: reload page to original state
-    document.getElementById('globalResetBtn').addEventListener('click', () => {
+    // ===== Variant rows: add / remove =====
+    const variantsBody = document.getElementById('variantsBody');
+
+    // Remove variant row
+    variantsBody?.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-variant-btn');
+        if (!removeBtn) return;
+        const row = removeBtn.closest('tr');
+        if (row && row.parentNode === variantsBody) {
+            Swal.fire({
+                title: 'Xoá biến thể?',
+                text: 'Biến thể này sẽ bị xoá khỏi sản phẩm.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Xoá',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    row.remove();
+                    formChanged = true;
+                }
+            });
+        }
+    });
+
+    // Add new variant row
+    document.getElementById('addVariantBtn')?.addEventListener('click', function() {
+        const row = document.createElement('tr');
+        row.className = 'variant-row';
+        row.innerHTML = `
+            <td>
+                <input type="hidden" name="variantId[]" value="0">
+                <input type="text" class="form-control form-control-sm" name="variantName[]" required placeholder="VD: Đỏ, Xanh">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="variantSku[]" placeholder="Mã SKU">
+            </td>
+            <td>
+                <input type="number" step="1000" class="form-control form-control-sm variant-price" name="variantPrice[]" required min="1" placeholder="VD: 500000">
+            </td>
+            <td class="text-center text-muted small">
+                <span class="badge bg-secondary">Mới</span>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </td>
+        `;
+        variantsBody.appendChild(row);
+        formChanged = true;
+    });
+
+    // ===== Sticky Save (submit main form) =====
+    document.getElementById('globalResetBtn')?.addEventListener('click', () => {
         Swal.fire({
             title: 'Đặt lại thay đổi?',
             text: 'Đặt lại tất cả thay đổi chưa lưu. Trang sẽ tải lại.',
@@ -817,48 +835,29 @@
         });
     });
 
-    // Global save: iterate all forms and submit sequentially (simple trigger)
-    document.getElementById('globalSaveBtn').addEventListener('click', async () => {
-        let allValid = true;
-        for(let form of allForms) {
-            if(form.id && !form.checkValidity()) {
-                form.reportValidity();
-                allValid = false;
-                break;
-            }
+    document.getElementById('globalSaveBtn')?.addEventListener('click', async () => {
+        if (!editForm) return;
+        // Sync TinyMCE
+        if (tinymce.get('tinyDescription')) {
+            tinymce.get('tinyDescription').save();
         }
-        if(allValid) {
-            const result = await Swal.fire({
-                title: 'Xác nhận',
-                text: 'Lưu tất cả thay đổi?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#2c7da0',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Lưu',
-                cancelButtonText: 'Hủy'
-            });
-            if(result.isConfirmed) {
-                for(let form of allForms) {
-                    if(form.id && form.id !== 'globalFormWatcher') {
-                        await fetch(form.action, {
-                            method: form.method,
-                            body: new FormData(form)
-                        });
-                    }
-                }
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Đã lưu tất cả thay đổi',
-                    text: 'Trang sẽ tải lại',
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    window.location.reload();
-                });
-            }
+        if (!editForm.checkValidity()) {
+            editForm.reportValidity();
+            return;
+        }
+        const result = await Swal.fire({
+            title: 'Xác nhận lưu',
+            text: 'Lưu tất cả thay đổi?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2c7da0',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Lưu',
+            cancelButtonText: 'Hủy'
+        });
+        if(result.isConfirmed) {
+            formChanged = false;
+            editForm.submit();
         }
     });
 
@@ -965,97 +964,6 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang tải...';
     });
-
-    // SKU uniqueness client hint (simple)
-    const skuInput = document.querySelector('.sku-input');
-    if(skuInput) {
-        skuInput.addEventListener('blur', function() {
-            let sku = this.value;
-            if(sku) {
-                fetch('${pageContext.request.contextPath}/admin/product/check-sku?sku='+encodeURIComponent(sku)+'&productId=${product.productId}')
-                    .then(res => res.json())
-                    .then(data => {
-                        if(data.exists) {
-                            skuInput.setCustomValidity('SKU đã tồn tại');
-                            skuInput.classList.add('is-invalid');
-                        } else {
-                            skuInput.setCustomValidity('');
-                            skuInput.classList.remove('is-invalid');
-                        }
-                    });
-            }
-        });
-    }
-
-    // base info
-    const errors = {
-        name: "${errors.name}",
-        sku: "${errors.sku}",
-        categoryId: "${errors.categoryId}",
-        brandId: "${errors.brandId}",
-        status: "${errors.status}"
-    };
-
-    for (const key in errors) {
-
-        const message = errors[key];
-
-        if (message && message !== "null" && message !== "") {
-
-            const errorElementId = key + "Error";
-
-            const element = document.getElementById(errorElementId);
-
-            if (element) {
-                element.innerText = message;
-            }
-
-        }
-    }
-
-
-
-
-    // Price validation
-    // Validation cho variant price (không dùng AJAX, chỉ kiểm tra client)
-    function validateVariantPrice(form) {
-        const price = parseFloat(form.querySelector('input[name="price"]').value);
-        const finalPrice = form.querySelector('input[name="finalPrice"]').value;
-        let final = finalPrice === '' ? 0 : parseFloat(finalPrice);
-
-        if (final > 0 && final >= price) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Giá không hợp lệ',
-                text: 'Giá khuyến mãi phải nhỏ hơn giá gốc (hoặc để trống).',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            return false;
-        }
-
-        // Kiểm tra ngày KM nếu có giá KM
-        if (final > 0) {
-            const start = form.querySelector('input[name="saleStartDate"]').value;
-            const end = form.querySelector('input[name="saleEndDate"]').value;
-            if (start && end && new Date(start) >= new Date(end)) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Ngày không hợp lệ',
-                    text: 'Ngày bắt đầu phải trước ngày kết thúc.',
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                return false;
-            }
-        }
-        return true;
-    }
-
 
 </script>
 </body>

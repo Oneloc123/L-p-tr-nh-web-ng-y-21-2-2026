@@ -371,6 +371,50 @@ public class ProductService {
     }
 
     /**
+     * Cập nhật toàn bộ thông tin sản phẩm (thông tin cơ bản + thuộc tính + mô tả)
+     */
+    public void updateProductDetails(long productId, String name, int categoryId, int brandId,
+                                      int status, String ratio, String size,
+                                      String material, String origin, String description) {
+        productDAO.updateProductDetail(productId, name, categoryId, brandId,
+                status, ratio, size, material, origin, description);
+    }
+
+    /**
+     * Cập nhật thông tin biến thể
+     */
+    public void updateVariantInfo(long variantId, String name, String sku, BigDecimal price) {
+        ProductVariants v = new ProductVariants();
+        v.setId(variantId);
+        v.setVariantName(name);
+        v.setSku(sku);
+        v.setPrice(price);
+        pvDAO.update(v);
+    }
+
+    /**
+     * Thêm biến thể mới
+     */
+    public long addVariant(long productId, String name, String sku, BigDecimal price) {
+        ProductVariants v = ProductVariants.builder()
+                .productId(productId)
+                .variantName(name)
+                .sku(sku)
+                .price(price)
+                .quantity(0)
+                .reservedQuantity(0)
+                .build();
+        return pvDAO.insertVariant(v);
+    }
+
+    /**
+     * Xoá biến thể
+     */
+    public void removeVariant(long variantId) {
+        pvDAO.deleteVariant(variantId);
+    }
+
+    /**
      * Xóa sản phẩm theo ID
      * @return true nếu xóa thành công
      */
