@@ -62,6 +62,7 @@ public class OrderDAO {
                    int orderId = rs.getInt(1);
                    order.setId(orderId);
 
+
                    for(CartItem item : cart.getItems()){
                        String sql1 = "insert into order_item (order_id, product_id, quantity, price, total_price) values (?, ?, ?, ?, ?)";
                        PreparedStatement pstmtItem = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
