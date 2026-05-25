@@ -2,6 +2,7 @@ package code.salecar.dao;
 
 import code.salecar.model.User;
 import code.salecar.config.DBConnection;
+import code.salecar.service.user.UserService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

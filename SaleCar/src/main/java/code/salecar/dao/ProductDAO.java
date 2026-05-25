@@ -698,6 +698,37 @@ public class ProductDAO {
 
     }
 
+    /**
+     * Cập nhật toàn bộ thông tin sản phẩm (bao gồm thuộc tính, mô tả)
+     */
+    public void updateProductDetail(long productId, String name, int categoryId, int brandId,
+                                     int status, String ratio, String size,
+                                     String material, String origin, String description) {
+        String query = "UPDATE product SET name = ?, category_id = ?, brand_id = ?, status = ?, " +
+                "ratio = ?, size = ?, material = ?, origin = ?, description = ?, " +
+                "updated_at = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setInt(2, categoryId);
+            ps.setInt(3, brandId);
+            ps.setInt(4, status);
+            ps.setString(5, ratio);
+            ps.setString(6, size);
+            ps.setString(7, material);
+            ps.setString(8, origin);
+            ps.setString(9, description);
+            ps.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
+            ps.setLong(11, productId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //Thêm sản phẩm mới vào cơ sở dữ liệu và trả về ID của sản phẩm vừa được thêm
     public long insertProduct(ProductDetailDTO product) {
 
@@ -785,6 +816,70 @@ public class ProductDAO {
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Xoá variant theo ID
+     */
+    public void deleteVariant(long variantId) {
+        String sql = "DELETE FROM product_variants WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, variantId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Xóa sản phẩm và các bản ghi liên quan.
+     * Xóa theo thứ tự: inventory, product_variants, product_images, reviews, discounts, product
+     */
+    public boolean deleteProduct(long productId) {
+        String[] deleteQueries = {
+                "DELETE FROM inventory WHERE product_id = ?",
+                "DELETE FROM product_variants WHERE product_id = ?",
+                "DELETE FROM product_images WHERE product_id = ?",
+                "DELETE FROM reviews WHERE product_id = ?",
+                "DELETE FROM discount WHERE entity_type = 'PRODUCT' AND entity_id = ?",
+                "DELETE FROM product WHERE id = ?"
+        };
+
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            for (String sql : deleteQueries) {
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setLong(1, productId);
+                    ps.executeUpdate();
+                }
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (Exception e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            throw new RuntimeException("Error deleting product with id: " + productId, e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }

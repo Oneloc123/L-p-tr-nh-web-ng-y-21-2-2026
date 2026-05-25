@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -239,6 +238,147 @@
             height: 1rem;
             border-width: 0.15em;
         }
+
+        /* ========== IMAGE GALLERY STYLES ========== */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .image-card {
+            background: #f8fafc;
+            border: 1px solid #e9edf2;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .image-card:hover {
+            border-color: #2c7da0;
+            box-shadow: 0 4px 12px rgba(44, 125, 160, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .image-card.main-image {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+        }
+
+        .image-card-img-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 75%;
+            overflow: hidden;
+            background: #e9edf2;
+        }
+
+        .image-card-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-card-img:hover {
+            transform: scale(1.08);
+        }
+
+        .main-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+            z-index: 2;
+        }
+
+        .main-badge i {
+            font-size: 0.6rem;
+        }
+
+        .image-card-actions {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            padding: 6px 8px;
+            background: #fff;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            padding: 0;
+        }
+
+        .btn-set-main {
+            color: #f59e0b;
+        }
+        .btn-set-main:hover {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .btn-delete {
+            color: #ef4444;
+        }
+        .btn-delete:hover {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        /* Upload preview */
+        .preview-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .preview-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #filePreview {
+            max-height: 90px;
+            overflow-y: auto;
+        }
+
+        /* Image preview modal */
+        #imagePreviewModal .modal-content {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        #imagePreviewModal .modal-header {
+            padding: 8px 12px;
+        }
     </style>
 </head>
 <body>
@@ -270,175 +410,137 @@
             </div>
         </header>
 
-        <!-- Unsaved changes warning will be managed by JS -->
-        <form id="globalFormWatcher"></form>
-
-        <!-- 1. BASIC INFORMATION SECTION -->
-        <div class="info-section" id="basicInfoSection">
-            <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
-            <form id="basicInfoForm" action="${pageContext.request.contextPath}/admin/product/update-basic-info" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" value="${product.productName}" placeholder="${product.productName}" required minlength="3" maxlength="255">
-                        <div class="invalid-feedback">Tên phải từ 3-255 ký tự</div><div id="nameError" class="text-danger"></div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">SKU <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control sku-input" name="sku" value="${product.sku}" required pattern="[A-Za-z0-9-]+" placeholder="Chức năng đang phát triển">
-                        <div class="invalid-feedback">SKU chỉ gồm chữ, số và dấu gạch ngang, phải duy nhất</div><div id="skuError" class="text-danger"></div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Danh mục</label>
-                        <select class="form-select" name="categoryId">
-                            <option value="">-- Chọn danh mục --</option>
-                           <c:forEach var="cat" items="${categoryList}">
-                                <option value="${cat.id}" ${product.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
-                            </c:forEach>
-                        </select>
-                        <div id="categoryIdError" class="text-danger"></div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Thương hiệu</label>
-                        <select class="form-select" name="brandId">
-                            <option value="">-- Chọn thương hiệu --</option>
-                            <c:forEach var="brand" items="${brandList}">
-                                <option value="${brand.id}" ${product.brandId == brand.id ? 'selected' : ''}>${brand.name}</option>
-                            </c:forEach>
-                        </select>
-                        <div id="brandIdError" class="text-danger"></div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">Trạng thái</label>
-                        <select class="form-select" name="status">
-                            <option value="1" ${product.status.code == 1? 'selected' : ''}>Hoạt động (Active)</option>
-                            <option value="0" ${product.status.code == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
-                        </select>
-                        <small class="text-muted">Inactive: sản phẩm tạm ẩn trên shop</small>
-                        <div id="statusError" class="text-danger"></div>
-                    </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="basicInfoForm"><i class="bi bi-save"></i> Lưu thông tin</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 2. PRICE & DISCOUNT SECTION -->
-        <div class="info-section" id="priceSection">
-            <h5><i class="bi bi-tag me-2"></i>Giá & khuyến mãi</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
-
-            <form id="priceForm" action="${pageContext.request.contextPath}/admin/product/update-price" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="row">
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Giá gốc (VND)</label>
-                        <fmt:formatNumber value="${product.price}" pattern="0" var="priceValue"/>
-
-                        <input
-                                type="number"
-                                step="1000"
-                                class="form-control"
-                                name="price"
-                                value="${priceValue}"
-                                placeholder="${formattedPrice}"
-                                required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Giá khuyến mãi (VND)</label>
-                        <fmt:formatNumber value="${product.finalPrice}" pattern="0" var="priceValue"/>
-
-                        <input
-                                type="number"
-                                step="1000"
-                                class="form-control"
-                                name="finalPrice"
-                                value="${priceValue}"
-                                placeholder="${formattedPrice}"
-                                required>
-                        <small class="text-muted">Phải nhỏ hơn giá gốc</small>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">% giảm</label>
-                        <input type="number" step="0.01" class="form-control" name="discountPercent" value="${product.discountPercent}" readonly disabled>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ngày bắt đầu khuyến mãi</label>
-                        <input type="datetime-local" class="form-control" name="saleStartDate" value="${saleStartDateValue}">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ngày kết thúc khuyến mãi</label>
-                        <input type="datetime-local" class="form-control" name="saleEndDate" value="${saleEndDateValue}">
-                    </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="priceForm"><i class="bi bi-save"></i> Cập nhật giá</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 3. IMAGE GALLERY with upload, delete, set main -->
+        <!-- 3. IMAGE GALLERY with upload, delete, set main, preview -->
         <div class="info-section" id="imageSection">
             <h5><i class="bi bi-images me-2"></i>Thư viện ảnh</h5>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/product/upload-image" method="post" enctype="multipart/form-data">
+
+            <!-- Upload form -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <form id="uploadImageForm" action="${pageContext.request.contextPath}/admin/products/upload-image" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="${product.productId}">
                         <div class="input-group">
-                            <input type="file" class="form-control" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
-                            <button class="admin-btn-primary" type="submit">Tải ảnh lên</button>
+                            <input type="file" class="form-control" id="imageFileInput" name="imageFile" accept="image/jpeg,image/png,image/webp" multiple>
+                            <button class="admin-btn-primary" type="submit" id="uploadBtn">
+                                <i class="bi bi-cloud-upload"></i> Tải ảnh lên
+                            </button>
                         </div>
                         <small class="text-muted">Hỗ trợ JPG, PNG, WEBP, tối đa 5MB/ảnh</small>
+                        <!-- Preview area for newly selected files -->
+                        <div id="filePreview" class="d-flex flex-wrap gap-2 mt-2"></div>
                     </form>
                 </div>
+            </div>
+
+            <!-- Image grid -->
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="d-flex flex-wrap gap-3">
-                        <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
-                            <div class="position-relative" style="width: 100px;">
-                                <img src="${imgUrl}" class="gallery-thumb w-100 h-auto" style="height: 80px;">
-                                <div class="mt-1 d-flex gap-1 justify-content-center">
-                                    <form action="${pageContext.request.contextPath}/admin/product/set-main-image" method="post">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Đặt làm ảnh chính"><i class="bi bi-star-fill"></i></button>
-                                    </form>
-                                    <form action="${pageContext.request.contextPath}/admin/product/delete-image" method="post" onsubmit="return confirm('Xóa ảnh này?')">
-                                        <input type="hidden" name="productId" value="${product.productId}">
-                                        <input type="hidden" name="imageUrl" value="${imgUrl}">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                    </form>
-                                </div>
+                    <c:choose>
+                        <c:when test="${not empty product.images}">
+                            <div class="image-grid">
+                                <c:forEach items="${product.images}" var="imgUrl" varStatus="status">
+                                    <c:set var="imgSrc" value="${pageContext.request.contextPath}/uploads/${imgUrl}"/>
+                                    <div class="image-card ${status.first ? 'main-image' : ''}">
+                                        <div class="image-card-img-wrapper">
+                                            <img src="${imgSrc}" alt="Ảnh ${status.count}" class="image-card-img" onclick="previewImage('${imgSrc}')">
+                                            <c:if test="${status.first}">
+                                                <span class="main-badge"><i class="bi bi-star-fill"></i> Chính</span>
+                                            </c:if>
+                                        </div>
+                                        <div class="image-card-actions">
+                                            <c:if test="${not status.first}">
+                                                <form action="${pageContext.request.contextPath}/admin/products/set-main-image" method="post" class="d-inline">
+                                                    <input type="hidden" name="productId" value="${product.productId}">
+                                                    <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                                    <button type="submit" class="btn-action btn-set-main" title="Đặt làm ảnh chính">
+                                                        <i class="bi bi-star"></i>
+                                                    </button>
+                                                </form>
+                                            </c:if>
+                                            <form action="${pageContext.request.contextPath}/admin/products/delete-image" method="post" class="d-inline delete-image-form">
+                                                <input type="hidden" name="productId" value="${product.productId}">
+                                                <input type="hidden" name="imageUrl" value="${imgUrl}">
+                                                <button type="button" class="btn-action btn-delete" title="Xóa ảnh" onclick="confirmDeleteImage(this)">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </c:forEach>
                             </div>
-                        </c:forEach>
-                        <c:if test="${empty product.images}"><div class="text-muted">Chưa có ảnh</div></c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-center py-5 text-muted">
+                                <i class="bi bi-image" style="font-size: 3rem;"></i>
+                                <p class="mt-2">Chưa có ảnh nào. Hãy tải ảnh lên để hiển thị.</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Preview Modal -->
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header border-0">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-0">
+                        <img id="previewModalImage" src="" alt="Preview" class="img-fluid" style="max-height: 80vh;">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 4. PRODUCT DESCRIPTION (WYSIWYG) -->
-        <div class="info-section">
-            <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
-            <form id="descForm" action="${pageContext.request.contextPath}/admin/product/update-description" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="mb-3">
-                    <label class="form-label">Mô tả chi tiết</label>
-                    <textarea id="tinyDescription" name="description">${product.description}</textarea>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="descForm"><i class="bi bi-save"></i> Lưu mô tả</button>
-                </div>
-            </form>
-        </div>
+        <!-- 1. MAIN PRODUCT EDIT FORM (basic info + attributes + description + variants) -->
+        <form id="productEditForm" action="${pageContext.request.contextPath}/admin/products/edit" method="post">
+            <input type="hidden" name="productId" value="${product.productId}">
 
-        <!-- 5. ATTRIBUTES SECTION (Scale, Material, Origin, etc.) -->
-        <div class="info-section">
-            <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm (Model Car)</h5>
-            <form id="attributeForm" action="${pageContext.request.contextPath}/admin/product/update-attributes" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
+            <!-- Basic Info -->
+            <div class="info-section" id="basicInfoSection">
+                <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Tên sản phẩm <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control ${not empty errors.name ? 'is-invalid' : ''}" name="name" value="${product.productName}" required minlength="3" maxlength="255">
+                        <div class="invalid-feedback">${errors.name != null ? errors.name : 'Tên phải từ 3-255 ký tự'}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Danh mục</label>
+                        <select class="form-select ${not empty errors.categoryId ? 'is-invalid' : ''}" name="categoryId">
+                            <option value="">-- Chọn danh mục --</option>
+                            <c:forEach var="cat" items="${categoryList}">
+                                <option value="${cat.id}" ${product.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
+                            </c:forEach>
+                        </select>
+                        <div class="invalid-feedback">${errors.categoryId != null ? errors.categoryId : ''}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Thương hiệu</label>
+                        <select class="form-select ${not empty errors.brandId ? 'is-invalid' : ''}" name="brandId">
+                            <option value="">-- Chọn thương hiệu --</option>
+                            <c:forEach var="brand" items="${brandList}">
+                                <option value="${brand.id}" ${product.brandId == brand.id ? 'selected' : ''}>${brand.name}</option>
+                            </c:forEach>
+                        </select>
+                        <div class="invalid-feedback">${errors.brandId != null ? errors.brandId : ''}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Trạng thái</label>
+                        <select class="form-select" name="status">
+                            <option value="1" ${product.status.code == 1 ? 'selected' : ''}>Hoạt động (Active)</option>
+                            <option value="0" ${product.status.code == 0 ? 'selected' : ''}>Không hoạt động (Inactive)</option>
+                        </select>
+                        <small class="text-muted">Inactive: sản phẩm tạm ẩn trên shop</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attributes -->
+            <div class="info-section" id="attributesSection">
+                <h5><i class="bi bi-sliders2 me-2"></i>Thuộc tính sản phẩm</h5>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Tỷ lệ (Scale)</label>
@@ -457,85 +559,85 @@
                         <input type="text" class="form-control" name="origin" value="${product.origin}">
                     </div>
                 </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="attributeForm"><i class="bi bi-save"></i> Lưu thuộc tính</button>
-                </div>
-            </form>
-        </div>
+            </div>
 
-        <!-- 6. INVENTORY MANAGEMENT -->
-        <div class="info-section">
-            <h5><i class="bi bi-boxes me-2"></i>Quản lý kho</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
-
-            <form id="inventoryForm" action="${pageContext.request.contextPath}/admin/product/update-inventory" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Số lượng tồn kho</label>
-                        <input type="number" class="form-control" name="quantity" value="${product.quantity}" min="0" required>
-                        <c:if test="${product.quantity < 5 && product.quantity > 0}"><span class="badge bg-warning">Cảnh báo: tồn kho thấp</span></c:if>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Mã kho / Warehouse</label>
-                        <input type="text" class="form-control" name="warehouseCode" value="${warehouseCode}">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">Ngưỡng cảnh báo</label>
-                        <input type="number" class="form-control" name="stockWarningLevel" value="${stockWarningLevel != null ? stockWarningLevel : 5}">
-                    </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="inventoryForm"><i class="bi bi-save"></i> Cập nhật kho</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 7. TAGS & PROMOTION -->
-        <div class="info-section">
-            <h5><i class="bi bi-tags me-2"></i>Tags / Khuyến mãi đặc biệt</h5>
-            <h5 class="text-danger">chức năng đang phát triển</h5>
-
-            <form id="tagsForm" action="${pageContext.request.contextPath}/admin/product/update-tags" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
+            <!-- Description -->
+            <div class="info-section" id="descriptionSection">
+                <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
                 <div class="mb-3">
-                    <label class="form-label">Tags (cách nhau bằng dấu phẩy)</label>
-                    <input type="text" class="form-control" name="tags" value="${tagString}" placeholder="VD: mới, hot, best-seller">
+                    <textarea id="tinyDescription" name="description">${product.description}</textarea>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Chương trình khuyến mãi đặc biệt</label>
-                    <select class="form-select" name="promotionId">
-                        <option value="">-- Không áp dụng --</option>
-                        <c:forEach items="${promotionList}" var="promo">
-                            <option value="${promo.id}" ${selectedPromoId == promo.id ? 'selected' : ''}>${promo.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="tagsForm"><i class="bi bi-save"></i> Lưu tags</button>
-                </div>
-            </form>
-        </div>
+            </div>
 
-        <!-- 8. PRODUCT URL / SEO -->
-        <div class="info-section">
-            <h5><i class="bi bi-link-45deg me-2"></i>SEO & URL</h5>
-            <form id="seoForm" action="${pageContext.request.contextPath}/admin/product/update-seo" method="post">
-                <input type="hidden" name="productId" value="${product.productId}">
-                <div class="mb-3">
-                    <label class="form-label">Đường dẫn tĩnh (Slug)</label>
-                    <input type="text" class="form-control" name="slug" value="${productSlug}" placeholder="ten-san-pham-dep">
-                    <small class="text-muted">Để trống hệ thống tự sinh</small>
+            <!-- Variants -->
+            <div class="info-section" id="variantsSection">
+                <h5><i class="bi bi-diagram-3 me-2"></i>Biến thể (Variants)</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle" id="variantsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="min-width:160px;">Tên biến thể <span class="text-danger">*</span></th>
+                                <th style="min-width:120px;">SKU</th>
+                                <th style="min-width:140px;">Giá (VND) <span class="text-danger">*</span></th>
+                                <th style="width:80px;">Tồn kho</th>
+                                <th style="width:60px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="variantsBody">
+                            <c:forEach var="variant" items="${product.variants}" varStatus="vs">
+                            <tr class="variant-row">
+                                <td>
+                                    <input type="hidden" name="variantId[]" value="${variant.id}">
+                                    <input type="text" class="form-control form-control-sm" name="variantName[]"
+                                           value="${variant.variantName}" required placeholder="VD: Đỏ, Xanh">
+                                    <c:set var="vk" value="variant_${vs.index}"/>
+                                    <c:if test="${not empty errors[vk]}">
+                                        <div class="text-danger small">${errors[vk]}</div>
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="variantSku[]"
+                                           value="${variant.sku}" placeholder="Mã SKU">
+                                </td>
+                                <td>
+                                    <input type="number" step="1000" class="form-control form-control-sm variant-price"
+                                           name="variantPrice[]" value="${variant.price}" required min="1">
+                                    <c:set var="pvk" value="variantPrice_${vs.index}"/>
+                                    <c:if test="${not empty errors[pvk]}">
+                                        <div class="text-danger small">${errors[pvk]}</div>
+                                    </c:if>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info">${variant.quantity}</span>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Liên kết thương hiệu (Brand Link)</label>
-                    <input type="url" class="form-control" name="brandLink" value="${product.brandLink}">
-                </div>
-                <div class="mt-3 d-flex justify-content-end">
-                    <button type="submit" class="admin-btn-primary save-btn" data-form="seoForm"><i class="bi bi-save"></i> Cập nhật URL</button>
-                </div>
-            </form>
-        </div>
+                <button type="button" id="addVariantBtn" class="admin-btn-outline mt-2">
+                    <i class="bi bi-plus-circle"></i> Thêm biến thể
+                </button>
+            </div>
+
+            <!-- Submit -->
+            <div class="mt-3 d-flex justify-content-end gap-2">
+                <button type="submit" class="admin-btn-primary save-btn" id="mainSaveBtn">
+                    <i class="bi bi-save"></i> Lưu thông tin
+                </button>
+                <button type="reset" class="admin-btn-outline">
+                    <i class="bi bi-arrow-repeat"></i> Đặt lại
+                </button>
+            </div>
+        </form>
+
+
+
 
         <!-- 9. EDIT HISTORY & INFO -->
         <div class="info-section">
@@ -555,26 +657,6 @@
                     </table>
                 </div>
             </c:if>
-        </div>
-
-        <!-- 10. DANGER ZONE: DUPLICATE & DELETE -->
-        <div class="info-section border-danger">
-            <h5 class="text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Vùng nguy hiểm</h5>
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <div class="fw-bold">Nhân bản sản phẩm</div>
-                    <div class="small text-muted">Tạo bản sao với tên mới</div>
-                    <form action="${pageContext.request.contextPath}/admin/product/duplicate" method="post">
-                        <input type="hidden" name="productId" value="${product.productId}">
-                        <button type="submit" class="admin-btn-outline mt-1"><i class="bi bi-files"></i> Duplicate</button>
-                    </form>
-                </div>
-                <div>
-                    <div class="fw-bold">Xóa sản phẩm vĩnh viễn</div>
-                    <div class="small text-muted">Hành động không thể hoàn tác</div>
-                    <button type="button" class="admin-btn-danger mt-1" data-bs-toggle="modal" data-bs-target="#deleteProductModal"><i class="bi bi-trash3"></i> Xóa sản phẩm</button>
-                </div>
-            </div>
         </div>
 
         <!-- Sticky Save Bar -->
@@ -597,7 +679,7 @@
                 <p>Xóa sản phẩm <strong>${product.productName}</strong> (ID: ${product.productId})</p>
                 <p>Vui lòng gõ <strong class="text-danger">DELETE</strong> để xác nhận:</p>
                 <input type="text" id="deleteConfirmText" class="form-control" placeholder="DELETE">
-                <form id="deleteProductForm" action="${pageContext.request.contextPath}/admin/product/delete" method="post">
+                <form id="deleteProductForm" action="${pageContext.request.contextPath}/admin/products/delete" method="post">
                     <input type="hidden" name="productId" value="${product.productId}">
                 </form>
             </div>
@@ -621,16 +703,15 @@
         content_style: 'body { font-family:Inter, sans-serif; }'
     });
 
-    // Unsaved changes tracking
+    // ===== Unsaved changes tracking =====
     let formChanged = false;
-    const allForms = document.querySelectorAll('form');
-    const inputs = document.querySelectorAll('input, select, textarea:not(#tinyDescription)');
+    const editForm = document.getElementById('productEditForm');
+    const formInputs = editForm ? editForm.querySelectorAll('input, select') : [];
     function markChanged() { formChanged = true; }
-    inputs.forEach(el => el.addEventListener('change', markChanged));
+    formInputs.forEach(el => el.addEventListener('change', markChanged));
+
     // TinyMCE change detection
-    if(tinymce.get('tinyDescription')) {
-        tinymce.get('tinyDescription').on('change', markChanged);
-    }
+    tinymce.get('tinyDescription')?.on('change', markChanged);
 
     window.addEventListener('beforeunload', function (e) {
         if (formChanged) {
@@ -640,50 +721,143 @@
         }
     });
 
-    // Handle each form submit separately, clear changed flag after save
-    document.querySelectorAll('.save-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const formId = this.getAttribute('data-form');
-            if(formId) {
-                const form = document.getElementById(formId);
-                if(form && form.checkValidity()) {
-                    formChanged = false;
-                } else if(form) {
-                    form.reportValidity();
-                    e.preventDefault();
+    // Sync TinyMCE content before form submit
+    editForm?.addEventListener('submit', function(e) {
+        // Push TinyMCE content into the textarea
+        if (tinymce.get('tinyDescription')) {
+            tinymce.get('tinyDescription').save();
+        }
+        // Validate variant rows
+        const variantRows = document.querySelectorAll('#variantsBody .variant-row');
+        let variantValid = true;
+        variantRows.forEach(row => {
+            const nameInput = row.querySelector('[name="variantName[]"]');
+            const priceInput = row.querySelector('[name="variantPrice[]"]');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('is-invalid');
+                variantValid = false;
+            } else {
+                nameInput.classList.remove('is-invalid');
+            }
+            if (!priceInput.value || parseFloat(priceInput.value) <= 0) {
+                priceInput.classList.add('is-invalid');
+                variantValid = false;
+            } else {
+                priceInput.classList.remove('is-invalid');
+            }
+        });
+        if (!variantValid) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Vui lòng kiểm tra lại',
+                text: 'Có lỗi ở phần biến thể. Vui lòng điền đầy đủ thông tin.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+        formChanged = false;
+    });
+
+    // ===== Variant rows: add / remove =====
+    const variantsBody = document.getElementById('variantsBody');
+
+    // Remove variant row
+    variantsBody?.addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-variant-btn');
+        if (!removeBtn) return;
+        const row = removeBtn.closest('tr');
+        if (row && row.parentNode === variantsBody) {
+            Swal.fire({
+                title: 'Xoá biến thể?',
+                text: 'Biến thể này sẽ bị xoá khỏi sản phẩm.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Xoá',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    row.remove();
+                    formChanged = true;
                 }
+            });
+        }
+    });
+
+    // Add new variant row
+    document.getElementById('addVariantBtn')?.addEventListener('click', function() {
+        const row = document.createElement('tr');
+        row.className = 'variant-row';
+        row.innerHTML = `
+            <td>
+                <input type="hidden" name="variantId[]" value="0">
+                <input type="text" class="form-control form-control-sm" name="variantName[]" required placeholder="VD: Đỏ, Xanh">
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="variantSku[]" placeholder="Mã SKU">
+            </td>
+            <td>
+                <input type="number" step="1000" class="form-control form-control-sm variant-price" name="variantPrice[]" required min="1" placeholder="VD: 500000">
+            </td>
+            <td class="text-center text-muted small">
+                <span class="badge bg-secondary">Mới</span>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </td>
+        `;
+        variantsBody.appendChild(row);
+        formChanged = true;
+    });
+
+    // ===== Sticky Save (submit main form) =====
+    document.getElementById('globalResetBtn')?.addEventListener('click', () => {
+        Swal.fire({
+            title: 'Đặt lại thay đổi?',
+            text: 'Đặt lại tất cả thay đổi chưa lưu. Trang sẽ tải lại.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6c757d',
+            cancelButtonColor: '#2c7da0',
+            confirmButtonText: 'Đặt lại',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                window.location.reload();
             }
         });
     });
 
-    // Global reset: reload page to original state
-    document.getElementById('globalResetBtn').addEventListener('click', () => {
-        if(confirm('Đặt lại tất cả thay đổi chưa lưu? Trang sẽ tải lại.')) {
-            window.location.reload();
+    document.getElementById('globalSaveBtn')?.addEventListener('click', async () => {
+        if (!editForm) return;
+        // Sync TinyMCE
+        if (tinymce.get('tinyDescription')) {
+            tinymce.get('tinyDescription').save();
         }
-    });
-
-    // Global save: iterate all forms and submit sequentially (simple trigger)
-    document.getElementById('globalSaveBtn').addEventListener('click', async () => {
-        let allValid = true;
-        for(let form of allForms) {
-            if(form.id && !form.checkValidity()) {
-                form.reportValidity();
-                allValid = false;
-                break;
-            }
+        if (!editForm.checkValidity()) {
+            editForm.reportValidity();
+            return;
         }
-        if(allValid && confirm('Lưu tất cả thay đổi?')) {
-            for(let form of allForms) {
-                if(form.id && form.id !== 'globalFormWatcher') {
-                    await fetch(form.action, {
-                        method: form.method,
-                        body: new FormData(form)
-                    });
-                }
-            }
-            alert('Đã lưu tất cả thay đổi. Trang sẽ tải lại.');
-            window.location.reload();
+        const result = await Swal.fire({
+            title: 'Xác nhận lưu',
+            text: 'Lưu tất cả thay đổi?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2c7da0',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Lưu',
+            cancelButtonText: 'Hủy'
+        });
+        if(result.isConfirmed) {
+            formChanged = false;
+            editForm.submit();
         }
     });
 
@@ -694,76 +868,102 @@
         if(deleteConfirmInput.value === 'DELETE') {
             document.getElementById('deleteProductForm').submit();
         } else {
-            alert('Vui lòng gõ DELETE để xác nhận');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Xác nhận thất bại',
+                text: 'Vui lòng gõ DELETE để xác nhận',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     });
 
-    // SKU uniqueness client hint (simple)
-    const skuInput = document.querySelector('.sku-input');
-    if(skuInput) {
-        skuInput.addEventListener('blur', function() {
-            let sku = this.value;
-            if(sku) {
-                fetch('${pageContext.request.contextPath}/admin/product/check-sku?sku='+encodeURIComponent(sku)+'&productId=${product.productId}')
-                    .then(res => res.json())
-                    .then(data => {
-                        if(data.exists) {
-                            skuInput.setCustomValidity('SKU đã tồn tại');
-                            skuInput.classList.add('is-invalid');
-                        } else {
-                            skuInput.setCustomValidity('');
-                            skuInput.classList.remove('is-invalid');
-                        }
-                    });
+    // ===== IMAGE GALLERY: File preview before upload =====
+    const imageFileInput = document.getElementById('imageFileInput');
+    const filePreview = document.getElementById('filePreview');
+
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', function() {
+            filePreview.innerHTML = '';
+            const files = this.files;
+            if (files.length === 0) return;
+
+            for (let i = 0; i < Math.min(files.length, 10); i++) {
+                const file = files[i];
+                const ext = file.name.split('.').pop().toLowerCase();
+                const allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+                if (!allowed.includes(ext)) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-danger';
+                    badge.textContent = file.name + ' (không hỗ trợ)';
+                    filePreview.appendChild(badge);
+                    continue;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning text-dark';
+                    badge.textContent = file.name + ' (>5MB)';
+                    filePreview.appendChild(badge);
+                    continue;
+                }
+
+                const reader = new FileReader();
+                const imgWrapper = document.createElement('div');
+                imgWrapper.className = 'preview-thumb';
+                imgWrapper.title = file.name;
+
+                reader.onload = function(e) {
+                    imgWrapper.innerHTML = '<img src="' + e.target.result + '" class="preview-thumb-img">';
+                };
+                reader.readAsDataURL(file);
+                filePreview.appendChild(imgWrapper);
+            }
+
+            if (files.length > 10) {
+                const more = document.createElement('span');
+                more.className = 'badge bg-secondary';
+                more.textContent = '+' + (files.length - 10) + ' ảnh nữa';
+                filePreview.appendChild(more);
             }
         });
     }
 
-    // base info
-    const errors = {
-        name: "${errors.name}",
-        sku: "${errors.sku}",
-        categoryId: "${errors.categoryId}",
-        brandId: "${errors.brandId}",
-        status: "${errors.status}"
-    };
-
-    for (const key in errors) {
-
-        const message = errors[key];
-
-        if (message && message !== "null" && message !== "") {
-
-            const errorElementId = key + "Error";
-
-            const element = document.getElementById(errorElementId);
-
-            if (element) {
-                element.innerText = message;
-            }
-
-        }
+    // ===== IMAGE GALLERY: Preview modal =====
+    function previewImage(src) {
+        const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        document.getElementById('previewModalImage').src = src;
+        modal.show();
     }
 
-
-
-
-    // Price validation
-    const priceForm = document.getElementById('priceForm');
-    if(priceForm) {
-        const basePrice = priceForm.querySelector('input[name="price"]');
-        const salePrice = priceForm.querySelector('input[name="finalPrice"]');
-        function validatePrice() {
-            if(parseFloat(salePrice.value) >= parseFloat(basePrice.value) && salePrice.value !== '') {
-                salePrice.setCustomValidity('Giá khuyến mãi phải nhỏ hơn giá gốc');
-            } else {
-                salePrice.setCustomValidity('');
+    // ===== IMAGE GALLERY: SweetAlert2 delete confirm =====
+    function confirmDeleteImage(btn) {
+        const form = btn.closest('form');
+        Swal.fire({
+            title: 'Xóa ảnh?',
+            text: 'Ảnh sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
             }
-        }
-        basePrice.addEventListener('input', validatePrice);
-        salePrice.addEventListener('input', validatePrice);
+        });
     }
 
+    // ===== IMAGE GALLERY: Show processing state on upload button =====
+    document.getElementById('uploadImageForm')?.addEventListener('submit', function() {
+        const btn = document.getElementById('uploadBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang tải...';
+    });
 
 </script>
 </body>

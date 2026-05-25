@@ -631,7 +631,7 @@
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${brand.status == 'active'}">
+                                                <c:when test="${brand.status.code == 1}">
                                                     <span class="badge bg-success badge-status">Active</span>
                                                 </c:when>
                                                 <c:otherwise>
@@ -651,10 +651,10 @@
                                             </form>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${brand.createdAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${brand.createdAtDate}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${brand.updatedAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${brand.updatedAtDate}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
                                             <a href="/admin/brands/edit?id=${brand.id}"

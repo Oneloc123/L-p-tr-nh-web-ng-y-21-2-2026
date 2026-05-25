@@ -1,12 +1,15 @@
 package code.salecar.controller.admin.product;
 
+import code.salecar.model.User;
 import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.service.product.ProductService;
+import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/admin/products/detail")
 public class product_detail extends HttpServlet {
@@ -33,7 +36,7 @@ public class product_detail extends HttpServlet {
 
         ProductDetailDTO productDetail = productService.getProductByID(id);
         request.setAttribute("product", productDetail);
-        request.getRequestDispatcher(request.getContextPath() + "/admin/product/product-detail.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/product/product-detail.jsp").forward(request, response);
 
     }
 

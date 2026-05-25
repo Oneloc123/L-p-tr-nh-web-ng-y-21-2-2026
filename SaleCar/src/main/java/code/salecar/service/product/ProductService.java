@@ -1,5 +1,6 @@
 package code.salecar.service.product;
 
+import code.salecar.dao.ProductVariantsDAO;
 import code.salecar.model.Image;
 import code.salecar.model.brand.BrandInfo;
 import code.salecar.model.category.Category;
@@ -12,6 +13,7 @@ import code.salecar.model.product.filter.ProductFilter;
 import code.salecar.dao.ProductDAO;
 import code.salecar.model.brand.Brand;
 import code.salecar.service.Image.ImageService;
+import code.salecar.service.file.ActivityLogFileService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +29,9 @@ public class ProductService {
     CategoryService cs = new CategoryService();
     ImageService is = new ImageService();
     DiscountService discountService = new DiscountService();
-
+    ProductVariantsService pvs = new ProductVariantsService();
+    ActivityLogFileService ls = new ActivityLogFileService();
+    ProductVariantsDAO  pvDAO = new ProductVariantsDAO();
     // Lấy chi tiết sản phẩm theo ID
     public ProductDetailDTO getProductByID(long id) {
 
@@ -51,7 +55,7 @@ public class ProductService {
         List<String> images = is.getImageProduct(productId);
 
 //         5. Lấy thông tin tồn kho và đã bán
-//        Inventory inventory = inventoryRepository.findByProductId(productId);
+//        ProductSalesInfo inventory = InventoryService.findByProductId(productId);
 //        ProductSalesInfo salesInfo = new ProductSalesInfo(
 //                inventory != null ? inventory.getQuantity() : 0,
 //                inventory != null ? inventory.getSoldQuantity() : 0
@@ -72,7 +76,7 @@ public class ProductService {
         }
 
         // 7. Lấy danh sách review và map sang ReviewSummary
-        List<Review> reviews = rs.getReviewsByID(product.getId());
+        List<Review> reviews = rs.getReviewsByID(productId);
         List<ReviewSummary> reviewSummaries = reviews.stream()
                 .map(r -> new ReviewSummary(
                         r.getRating(),
@@ -86,7 +90,13 @@ public class ProductService {
         // 8. Tính phân bố rating (từ danh sách review)
         ProductRatingDistribution ratingDist = calculateRatingDistribution(reviews);
 
-        // 9. Dùng Builder để tạo ProductDetailDTO
+        // 9. Lấy product vảiant
+        List<ProductVariants> variants = pvs.getVariantById(productId);
+
+        //10. Log
+        List<ActivityLog> activityLog = ls.readLogs(productId);
+
+        // 10. Dùng Builder để tạo ProductDetailDTO
         return ProductDetailDTO.builder()
                 .product(product)
                 .brand(brandInfo)
@@ -96,6 +106,8 @@ public class ProductService {
                 .activeDiscount(discountInfo)
                 .reviews(reviewSummaries)
                 .ratingDist(ratingDist)
+                .variants(variants)
+                .activityLogs(activityLog)
                 .build();
 
     }
@@ -334,7 +346,7 @@ public class ProductService {
             productItemDTO.setCategoryName(categoryName != null ? categoryName : "");
 
             List<String> image = is.getImageProduct(productItemDTO.getId());
-            image.add(is.getImage(Image.entityType.brand, productItemDTO.getBrandId()));
+            image.add(is.getImage(Image.entityType.product, productItemDTO.getId()));
             productItemDTO.setImage(image.get(0));
 
             List<Review> reviews = rs.getReviewsByID(productItemDTO.getId());
@@ -343,6 +355,8 @@ public class ProductService {
             } else {
                 productItemDTO.setAvgRating(0);
             }
+
+            productItemDTO.setQuantity(pvDAO.getQuantityById(productItemDTO.getId()));
         }
     }
 
@@ -354,6 +368,59 @@ public class ProductService {
     //
     public void updateBasicInfo(ProductDetailDTO product) {
         productDAO.updateBasicInfo(product);
+    }
+
+    /**
+     * Cập nhật toàn bộ thông tin sản phẩm (thông tin cơ bản + thuộc tính + mô tả)
+     */
+    public void updateProductDetails(long productId, String name, int categoryId, int brandId,
+                                      int status, String ratio, String size,
+                                      String material, String origin, String description) {
+        productDAO.updateProductDetail(productId, name, categoryId, brandId,
+                status, ratio, size, material, origin, description);
+    }
+
+    /**
+     * Cập nhật thông tin biến thể
+     */
+    public void updateVariantInfo(long variantId, String name, String sku, BigDecimal price) {
+        ProductVariants v = new ProductVariants();
+        v.setId(variantId);
+        v.setVariantName(name);
+        v.setSku(sku);
+        v.setPrice(price);
+        pvDAO.update(v);
+    }
+
+    /**
+     * Thêm biến thể mới
+     */
+    public long addVariant(long productId, String name, String sku, BigDecimal price) {
+        ProductVariants v = ProductVariants.builder()
+                .productId(productId)
+                .variantName(name)
+                .sku(sku)
+                .price(price)
+                .quantity(0)
+                .reservedQuantity(0)
+                .build();
+        return pvDAO.insertVariant(v);
+    }
+
+    /**
+     * Xoá biến thể
+     */
+    public void removeVariant(long variantId) {
+        pvDAO.deleteVariant(variantId);
+    }
+
+    /**
+     * Xóa sản phẩm theo ID
+     * @return true nếu xóa thành công
+     */
+    public boolean deleteProduct(long productId) {
+        productDAO.deleteProduct(productId);
+        return true;
     }
 
     /* Tạo sản phẩm mới

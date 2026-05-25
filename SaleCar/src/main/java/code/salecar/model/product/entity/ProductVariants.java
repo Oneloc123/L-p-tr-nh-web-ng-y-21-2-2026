@@ -12,6 +12,9 @@ public class ProductVariants implements Serializable {
     private String variantName;
     private String sku;
     private BigDecimal price;
+    private int quantity;
+    private int reservedQuantity;
+    private BigDecimal finalPrice;
 
     public ProductVariants() {
     }
@@ -22,6 +25,8 @@ public class ProductVariants implements Serializable {
         this.variantName = variantName;
         this.sku = sku;
         this.price = price;
+        this.quantity = quantity;
+        this.reservedQuantity = reservedQuantity;
 
     }
     private ProductVariants(Builder builder) {
@@ -30,9 +35,17 @@ public class ProductVariants implements Serializable {
         this.variantName = builder.variantName;
         this.sku = builder.sku;
         this.price = builder.price;
+        this.quantity = builder.quantity;
+        this.reservedQuantity = builder.reservedQuantity;
 
     }
 
+    public BigDecimal getFinalPrice() {
+        return finalPrice;
+    }
+    public void setFinalPrice(BigDecimal finalPrice) {
+        this.finalPrice = finalPrice;
+    }
     public long getId() {
         return id;
     }
@@ -63,6 +76,10 @@ public class ProductVariants implements Serializable {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+    public int getQuantity() { return this.quantity;}
+    public int getReservedQuantity() {        return reservedQuantity;}
+    public void setQuantity(int quantity) {        this.quantity = quantity;}
+    public void setReservedQuantity(int reservedQuantity) {        this.reservedQuantity = reservedQuantity;}
 
 
     // 5. Builder pattern

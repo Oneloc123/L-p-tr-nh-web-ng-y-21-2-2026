@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -184,7 +185,7 @@
             color: #1e293b;
         }
 
-        /* SIDEBAR STYLE - Soft Gray */
+        /* ========== SIDEBAR STYLES ========== */
         .sidebar {
             width: 280px;
             background-color: #ffffff;
@@ -210,8 +211,6 @@
         .logo i {
             background: none;
             color: #2c7da0;
-            -webkit-background-clip: unset;
-            background-clip: unset;
         }
 
         .sidebar nav ul {
@@ -483,15 +482,13 @@
             }
         }
 
-
-
     </style>
 </head>
 
 <body>
 <div class="d-flex">
-    
-    <%@ include file="sidebar/sidebar.jsp"%>
+
+    <%@ include file="/admin/sidebar/sidebar.jsp"%>
 
     <!-- Main -->
     <main class="main-content">
