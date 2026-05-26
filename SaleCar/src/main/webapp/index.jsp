@@ -589,7 +589,7 @@
         <div class="brands-wrapper">
             <c:forEach var="br" items="${brands}">
                 <div class="brand-item" onclick="location.href='/products?brand=${br.name}'">
-                    <img src="${br.image}"
+                    <img src="${pageContext.request.contextPath}${br.logo}"
                          alt="${br.name}" class="brand-logo">
                     <p class="brand-name">${br.name}</p>
                 </div>
