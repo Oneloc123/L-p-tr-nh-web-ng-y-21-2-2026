@@ -265,7 +265,7 @@
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 4000,
+        timer: 3000,
         timerProgressBar: true
     });
 </script>

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/admin/brands/bulk-action")
 public class brand_bulk_action extends HttpServlet {
@@ -29,9 +30,9 @@ public class brand_bulk_action extends HttpServlet {
         String[] idsParam = request.getParameterValues("ids");
         List<Integer> ids = idsParam == null ? new ArrayList<>()
                 : Arrays.stream(idsParam)
-                .filter(s -> s != null && !s.isBlank())
+                .filter(s -> s != null && !s.isEmpty())
                 .map(Integer::parseInt)
-                .toList();
+                .collect(Collectors.toList());
         if (ids == null || ids.isEmpty()) {
             NotificationUtil.setError(request.getSession(), "Vui lòng chọn ít nhất một thương hiệu");
             response.sendRedirect(request.getContextPath() + "/admin/brands");
