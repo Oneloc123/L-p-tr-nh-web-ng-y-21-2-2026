@@ -510,7 +510,6 @@
                                 <th>ID</th>
                                 <th>Hình ảnh</th>
                                 <th>Tên sản phẩm</th>
-                                <th>id</th>
                                 <th>Giá gốc</th>
                                 <th>Giá KM</th>
                                 <th>Giảm giá</th>
@@ -526,19 +525,21 @@
                                 <tr>
                                     <td><input type="checkbox" class="product-checkbox" value="${product.id}"></td>
                                     <td>${product.id}</td>
-                                    <td><img src="${product.image != null ? product.image : '/assets/img/default-product.png'}" class="product-thumb" alt="${product.name}"></td>
+                                    <td><img src="${product.image != null && not empty product.image
+        ? pageContext.request.contextPath.concat('/uploads/').concat(product.image)
+        : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
+                                               class="product-thumb" alt="${product.name}"></td>
                                     <td class="fw-semibold">${product.name}</td>
-                                    <td><code>${product.id}</code></td>
                                     <td><fmt:formatNumber value="${product.price}" type="currency" /></td>
                                     <td class="text-primary fw-bold"><fmt:formatNumber value="${product.finalPrice}" type="currency" /></td>
                                     <td class="text-danger fw-bold">${product.discountPercent}%</td>
                                     <td>${product.categoryName}</td>
                                     <td>
-<%--                                            <span class="admin-badge-stock--%>
-<%--                                                ${product.quantity > 50 ? 'admin-badge-stock-high' :--%>
-<%--                                                  (product.quantity >= 10 ? 'admin-badge-stock-medium' : 'admin-badge-stock-low')}">--%>
-<%--                                                    ${product.quantity}--%>
-<%--                                            </span>--%>1
+                                            <span class="admin-badge-stock
+                                                ${product.quantity > 50 ? 'admin-badge-stock-high' :
+                                                  (product.quantity >= 10 ? 'admin-badge-stock-medium' : 'admin-badge-stock-low')}">
+                                                    ${product.quantity}
+                                            </span>
                                     </td>
                                     <td>
                                             <span class="admin-badge-status
@@ -555,17 +556,17 @@
                                         <a href="/admin/products/edit?id=${product.id}" class="admin-action-btn admin-action-edit text-decoration-none">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form action="/admin/products/delete" method="post" style="display: inline-block;"
-                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                            <input type="hidden" name="id" value="${product.id}">
-                                            <button type="submit" class="admin-action-btn admin-action-delete border-0">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                        <a href="/admin/products/duplicate?id=${product.id}" class="admin-action-btn admin-action-edit text-decoration-none"
-                                           onclick="return confirm('Bạn có muốn nhân bản sản phẩm này?');">
-                                            <i class="bi bi-files"></i>
-                                        </a>
+<%--                                        <form action="/admin/products/delete" method="post" style="display: inline-block;"--%>
+<%--                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">--%>
+<%--                                            <input type="hidden" name="id" value="${product.id}">--%>
+<%--                                            <button type="submit" class="admin-action-btn admin-action-delete border-0">--%>
+<%--                                                <i class="bi bi-trash"></i>--%>
+<%--                                            </button>--%>
+<%--                                        </form>--%>
+<%--                                        <a href="/admin/products/duplicate?id=${product.id}" class="admin-action-btn admin-action-edit text-decoration-none"--%>
+<%--                                           onclick="return confirm('Bạn có muốn nhân bản sản phẩm này?');">--%>
+<%--                                            <i class="bi bi-files"></i>--%>
+<%--                                        </a>--%>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -649,6 +650,67 @@
             }
         });
     });
+
+    // ========== CONFIRM DELETE WITH SWEETALERT2 ==========
+    function confirmDelete(productId, productName) {
+        Swal.fire({
+            title: 'Xác nhận xóa',
+            text: 'Bạn có chắc chắn muốn xóa sản phẩm "' + productName + '"?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '${pageContext.request.contextPath}/admin/products/delete';
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = productId;
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+
+    // ========== CONFIRM BULK ACTION ==========
+    function confirmBulkAction(action) {
+        const checked = document.querySelectorAll('.product-checkbox:checked');
+        if (checked.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chưa chọn sản phẩm',
+                text: 'Vui lòng chọn ít nhất một sản phẩm',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return false;
+        }
+
+        const actionText = action === 'delete' ? 'xóa' : 'chuyển trạng thái';
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Bạn có chắc chắn muốn ' + actionText + ' ' + checked.length + ' sản phẩm đã chọn?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('bulkActionForm').submit();
+            }
+        });
+        return false;
+    }
 </script>
 </body>
 </html>

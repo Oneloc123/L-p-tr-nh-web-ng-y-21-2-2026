@@ -409,23 +409,25 @@
                     </div>
                     <div class="gallery-preview d-flex gap-2 flex-wrap justify-content-center">
                         <c:forEach items="${product.images}" var="img" varStatus="status">
-                             <img src="${pageContext.request.contextPath}/uploads/${img}" class="gallery-thumb ${status.index == 0 ? 'active' : ''}"
-                                  onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')" alt="Thumb ${status.index + 1}">
+                            <img src="${pageContext.request.contextPath}/uploads/${img}"
+                                 class="gallery-thumb ${status.index == 0 ? 'active' : ''}"
+                                 onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')"
+                                 alt="Thumb ${status.index + 1}">
                         </c:forEach>
                         <c:if test="${empty product.images}">
                             <div class="text-muted text-center w-100">Chưa có ảnh</div>
                         </c:if>
                     </div>
-                    <div class="mt-3 text-center">
-                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/upload-image"
-                              method="post" enctype="multipart/form-data" class="d-inline">
-                            <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">
-                            <button type="button" class="admin-btn-outline btn-sm"
-                                    onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')">
-                                <i class="bi bi-upload"></i> Upload ảnh
-                            </button>
-                        </form>
-                    </div>
+<%--                    <div class="mt-3 text-center">--%>
+<%--                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/upload-image"--%>
+<%--                              method="post" enctype="multipart/form-data" class="d-inline">--%>
+<%--                            <input type="file" name="image" accept="image/*" class="d-none" id="uploadImageInput">--%>
+<%--                            <button type="button" class="admin-btn-outline btn-sm"--%>
+<%--                                    onclick="changeMainImage('${pageContext.request.contextPath}/uploads/${img}')">--%>
+<%--                                <i class="bi bi-upload"></i> Upload ảnh--%>
+<%--                            </button>--%>
+<%--                        </form>--%>
+<%--                    </div>--%>
                 </div>
             </div>
 
@@ -440,16 +442,6 @@
                                 #${product.productId}
                                 <i class="bi bi-copy ms-2" style="cursor: pointer;"
                                    onclick="copyToClipboard('${product.productId}')" data-tooltip="Copy ID"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-label">SKU</div>
-                            <div class="info-value">
-                                <%--                                ${product.sku != null ? product.sku : 'N/A'}--%>
-                                <%--                                <c:if test="${product.sku != null}">--%>
-                                <%--                                    <i class="bi bi-copy ms-2" style="cursor: pointer;"--%>
-                                <%--                                       onclick="copyToClipboard('${product.sku}')" data-tooltip="Copy SKU"></i>--%>
-                                <%--                                </c:if>--%>
                             </div>
                         </div>
                         <div class="col-md-6 mt-2">
@@ -484,150 +476,405 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- ========== SECTION 3: PRICE & DISCOUNT ========== -->
+                <!-- ========== SECTION 5: DESCRIPTION ========== -->
                 <div class="info-section">
-                    <h5><i class="bi bi-tag me-2"></i>Giá & Khuyến mãi</h5>
+                    <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-label">Giá gốc</div>
-                            <div class="price-original">
-                                <fmt:formatNumber value="${product.price}" type="currency"/>
-                            </div>
+                        <div class="col-md-12">
+                            <div class="info-label">Mô tả chi tiết</div>
+                            <div class="info-value mt-2">${product.description != null ? product.description : 'Chưa có mô tả'}</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-label">Giá sau giảm</div>
-                            <div class="price-current">
-                                <fmt:formatNumber value="${product.finalPrice}" type="currency"/>
+                        <c:if test="${product.ratio != null || product.size != null || product.material != null || product.origin != null}">
+                            <div class="col-md-12 mt-3">
+                                <div class="info-label">Thông số kỹ thuật</div>
+                                <div class="row mt-2">
+                                    <c:if test="${product.ratio != null}">
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Tỷ lệ:</small>
+                                            <div>${product.ratio}</div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${product.size != null}">
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Kích thước:</small>
+                                            <div>${product.size}</div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${product.material != null}">
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Chất liệu:</small>
+                                            <div>${product.material}</div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${product.origin != null}">
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Xuất xứ:</small>
+                                            <div>${product.origin}</div>
+                                        </div>
+                                    </c:if>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 mt-2">
-                            <div class="info-label">Giảm giá</div>
-                            <div class="info-value">
-                                <span class="badge bg-danger">-${product.discountPercent}%</span>
-                                <c:if test="${product.activeDiscount != null}">
-                                    <small class="text-muted ms-2">
-                                        (Áp dụng đến: <fmt:formatDate value="${product.activeDiscount.endAtDate}"
-                                                                      pattern="dd/MM/yyyy"/>)
-                                    </small>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/edit-price"
-                           class="admin-btn-outline btn-sm">
-                            <i class="bi bi-pencil"></i> Chỉnh sửa giá
-                        </a>
-                        <button type="button" class="admin-btn-outline btn-sm ms-2" data-bs-toggle="modal"
-                                data-bs-target="#priceHistoryModal">
-                            <i class="bi bi-clock-history"></i> Lịch sử giá
-                        </button>
+                        </c:if>
                     </div>
                 </div>
 
-                <!-- ========== SECTION 4: INVENTORY ========== -->
-                <div class="info-section">
-                    <h5><i class="bi bi-boxes me-2"></i>Quản lý tồn kho</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="info-label">Số lượng tồn kho</div>
-                            <div class="info-value fw-bold">
-                                ${product.quantity}
-                                <c:if test="${product.quantity <= 10 && product.quantity > 0}">
-                                    <span class="badge badge-low-stock ms-2">Cảnh báo tồn kho thấp</span>
-                                </c:if>
-                                <c:if test="${product.quantity <= 0}">
-                                    <span class="badge badge-inactive ms-2">Hết hàng</span>
-                                </c:if>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-label">Đã bán</div>
-                            <div class="info-value">${product.soldQuantity != null ? product.soldQuantity : 0}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-label">Trạng thái</div>
-                            <div class="info-value">
-                                <c:choose>
-                                    <c:when test="${product.quantity > 0}">
-                                        <span class="badge badge-active">Còn hàng</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="badge badge-inactive">Hết hàng</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <form action="${pageContext.request.contextPath}/admin/products/${product.productId}/update-inventory"
-                              method="post" class="row g-2">
-                            <div class="col-auto">
-                                <input type="number" name="quantity" class="form-control form-control-sm"
-                                       placeholder="Số lượng" required style="width: 120px;">
-                            </div>
-                            <div class="col-auto">
-                                <select name="type" class="form-select form-select-sm" style="width: 100px;">
-                                    <option value="set">Đặt mới</option>
-                                    <option value="add">Thêm</option>
-                                    <option value="subtract">Bớt</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="admin-btn-primary btn-sm">Cập nhật</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- ========== SECTION 5: DESCRIPTION ========== -->
+
+        <!-- ========== SECTION 3: PRODUCT VARIANTS ========== -->
         <div class="info-section">
-            <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="info-label">Mô tả chi tiết</div>
-                    <div class="info-value mt-2">${product.description != null ? product.description : 'Chưa có mô tả'}</div>
-                </div>
-                <c:if test="${product.ratio != null || product.size != null || product.material != null || product.origin != null}">
-                    <div class="col-md-12 mt-3">
-                        <div class="info-label">Thông số kỹ thuật</div>
-                        <div class="row mt-2">
-                            <c:if test="${product.ratio != null}">
-                                <div class="col-md-3">
-                                    <small class="text-muted">Tỷ lệ:</small>
-                                    <div>${product.ratio}</div>
-                                </div>
-                            </c:if>
-                            <c:if test="${product.size != null}">
-                                <div class="col-md-3">
-                                    <small class="text-muted">Kích thước:</small>
-                                    <div>${product.size}</div>
-                                </div>
-                            </c:if>
-                            <c:if test="${product.material != null}">
-                                <div class="col-md-3">
-                                    <small class="text-muted">Chất liệu:</small>
-                                    <div>${product.material}</div>
-                                </div>
-                            </c:if>
-                            <c:if test="${product.origin != null}">
-                                <div class="col-md-3">
-                                    <small class="text-muted">Xuất xứ:</small>
-                                    <div>${product.origin}</div>
-                                </div>
-                            </c:if>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="m-0">
+                    <i class="bi bi-diagram-3 me-2"></i>
+                    Biến thể sản phẩm
+                </h5>
+
+                <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/variants/create"
+                   class="admin-btn-primary btn-sm text-decoration-none">
+                    <i class="bi bi-plus-circle"></i>
+                    Thêm biến thể
+                </a>
+            </div>
+
+            <c:choose>
+
+                <%-- ================= EMPTY VARIANT ================= --%>
+                <c:when test="${empty product.variants}">
+                    <div class="text-center py-5">
+                        <i class="bi bi-box display-4 text-muted"></i>
+
+                        <div class="mt-3 fw-bold">
+                            Chưa có biến thể nào
+                        </div>
+
+                        <div class="text-muted small">
+                            Hãy tạo biến thể đầu tiên cho sản phẩm này
                         </div>
                     </div>
-                </c:if>
+                </c:when>
+
+                <%-- ================= VARIANT LIST ================= --%>
+                <c:otherwise>
+
+                    <div class="d-flex flex-column gap-4">
+
+                        <c:forEach var="variant" items="${product.variants}" varStatus="loop">
+
+                            <div class="border rounded-4 p-4 bg-light-subtle">
+
+                                <!-- VARIANT HEADER -->
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2">
+
+                                            <h5 class="fw-bold mb-0">
+                                                    ${variant.variantName}
+                                            </h5>
+
+                                            <c:choose>
+
+                                                <c:when test="${variant.quantity > 0}">
+                                            <span class="admin-badge badge-active">
+                                                Còn hàng
+                                            </span>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                            <span class="admin-badge badge-inactive">
+                                                Hết hàng
+                                            </span>
+                                                </c:otherwise>
+
+                                            </c:choose>
+
+                                        </div>
+
+                                        <div class="small text-muted mt-1">
+                                            Variant #${variant.id}
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+
+                                        <div class="small text-muted">
+                                            SKU
+                                        </div>
+
+                                        <div class="fw-semibold">
+                                                ${variant.sku}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- PRICE SECTION -->
+                                <div class="row g-4">
+
+                                    <!-- ORIGINAL PRICE -->
+                                    <div class="col-lg-3 col-md-6">
+
+                                        <div class="info-label">
+                                            Giá gốc
+                                        </div>
+
+                                        <div class="fs-5 fw-semibold text-secondary">
+                                            <fmt:formatNumber value="${variant.price}"
+                                                              type="currency"
+                                                              currencySymbol="₫"/>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- FINAL PRICE -->
+                                    <div class="col-lg-3 col-md-6">
+
+                                        <div class="info-label">
+                                            Giá bán
+                                        </div>
+
+                                                                                            <div class="price-current">
+                                                                                                <fmt:formatNumber value="${variant.finalPrice}"
+                                                                                                                  type="currency"
+                                                                                                                  currencySymbol="₫"/>
+                                                                                            </div>
+
+                                    </div>
+
+                                    <!-- DISCOUNT -->
+                                    <div class="col-lg-3 col-md-6">
+
+                                        <div class="info-label">
+                                            Giảm giá
+                                        </div>
+
+                                        <c:choose>
+
+                                            <c:when test="${product.discountPercent > 0}">
+                                        <span class="badge bg-danger fs-6">
+                                            -${product.discountPercent}%
+                                        </span>
+                                            </c:when>
+
+                                            <c:otherwise>
+                                        <span class="text-muted">
+                                            Không giảm giá
+                                        </span>
+                                            </c:otherwise>
+
+                                        </c:choose>
+
+                                    </div>
+
+                                    <!-- SOLD -->
+                                    <div class="col-lg-3 col-md-6">
+
+                                        <div class="info-label">
+                                            Đã bán
+                                        </div>
+
+                                        <div class="fs-5 fw-semibold">
+                                                ${variant.reservedQuantity != null ? variant.reservedQuantity : 0}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <hr class="my-4">
+
+                                <!-- INVENTORY -->
+                                <div class="row g-4 align-items-end">
+
+                                    <!-- STOCK -->
+                                    <div class="col-lg-3 col-md-6">
+
+                                        <div class="info-label">
+                                            Tồn kho
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                                            <div class="fs-4 fw-bold">
+                                                    ${variant.quantity}
+                                            </div>
+
+                                            <c:if test="${variant.quantity <= 10 && variant.quantity > 0}">
+                                        <span class="badge bg-warning text-dark">
+                                            Tồn kho thấp
+                                        </span>
+                                            </c:if>
+
+                                            <c:if test="${variant.quantity <= 0}">
+                                        <span class="badge bg-danger">
+                                            Hết hàng
+                                        </span>
+                                            </c:if>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- UPDATE INVENTORY -->
+                                    <div class="col-lg-9">
+
+                                        <form action="${pageContext.request.contextPath}/admin/variants/${variant.id}/update-inventory"
+                                              method="post"
+                                              class="row g-2 justify-content-end">
+                                            <div class="col-md-3">
+
+                                                <input type="number"
+                                                       name="quantity"
+                                                       class="form-control"
+                                                       placeholder="Số lượng"
+                                                       min="1"
+                                                       required>
+
+                                            </div>
+
+                                            <div class="col-md-3">
+
+                                                <select name="type"
+                                                        class="form-select">
+
+                                                    <option value="add">
+                                                        Cộng thêm
+                                                    </option>
+
+                                                    <option value="subtract">
+                                                        Trừ bớt
+                                                    </option>
+
+                                                </select>
+
+                                            </div>
+
+                                            <div class="col-md-3">
+
+                                                <button type="submit"
+                                                        class="admin-btn-primary w-100">
+
+                                                    <i class="bi bi-box-arrow-in-down"></i>
+                                                    Cập nhật kho
+
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- ACTIONS -->
+<%--                                <div class="d-flex gap-2 mt-4 flex-wrap">--%>
+<%--                                    <a href="${pageContext.request.contextPath}/admin/variants/edit?id=${variant.id}"--%>
+<%--                                       class="admin-btn-outline btn-sm text-decoration-none">--%>
+<%--                                        <i class="bi bi-pencil-square"></i>--%>
+<%--                                        Chỉnh sửa--%>
+<%--                                    </a>--%>
+<%--                                    <a href="${pageContext.request.contextPath}/admin/variants/${variant.id}/price-history"--%>
+<%--                                       class="admin-btn-outline btn-sm text-decoration-none">--%>
+<%--                                        <i class="bi bi-clock-history"></i>--%>
+<%--                                        Lịch sử giá--%>
+<%--                                    </a>--%>
+<%--                                    <button type="button"--%>
+<%--                                            class="admin-btn-outline btn-sm">--%>
+<%--                                        <i class="bi bi-images"></i>--%>
+<%--                                        Quản lý ảnh--%>
+<%--                                    </button>--%>
+<%--                                </div>--%>
+
+                            </div>            <!-- Error notification is now handled by flash notification in sidebar.jsp -->
+
+                        </c:forEach>
+
+                    </div>
+
+                </c:otherwise>
+
+            </c:choose>
+        </div>
+
+        <!-- ========== SECTION 8: SALES STATISTICS ========== -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-section">
+                    <h5><i class="bi bi-graph-up me-2"></i>Thống kê bán hàng</h5>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+<%--                                                        <div class="display-6 fw-bold text-primary">${totalOrders != null ? totalOrders : 0}</div>--%>
+                            <div class="small text-muted">Tổng đơn hàng</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="display-6 fw-bold text-success">
+                                <%--                                <fmt:formatNumber value="${totalRevenue != null ? totalRevenue : 0}" type="currency" currencySymbol="₫"/>--%>
+                            </div>
+                            <div class="small text-muted">Doanh thu</div>
+                        </div>
+                        <div class="col-md-4">
+                            <%--                            <div class="display-6 fw-bold text-info">${product.viewCount != null ? product.viewCount : 0}</div>--%>
+                            <div class="small text-muted">Lượt xem</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mt-3">
-                <a href="${pageContext.request.contextPath}/admin/products/${product.productId}/edit-description"
-                   class="admin-btn-outline btn-sm">
-                    <i class="bi bi-pencil"></i> Chỉnh sửa mô tả
-                </a>
+
+            <div class="col-md-6">
+                <style>
+                    .log-action-badge {
+                        display: inline-block;
+                        padding: 2px 10px;
+                        border-radius: 12px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        white-space: nowrap;
+                    }
+                    .log-action-create { background: #dbeafe; color: #1d4ed8; }
+                    .log-action-update { background: #e0f2fe; color: #0369a1; }
+                    .log-action-delete { background: #fee2e2; color: #dc2626; }
+                    .log-action-upload { background: #d1fae5; color: #059669; }
+                    .log-action-image  { background: #fef3c7; color: #b45309; }
+                    .log-action-inventory { background: #ede9fe; color: #6d28d9; }
+                    .log-action-variant { background: #fce7f3; color: #be185d; }
+                    .log-action-default { background: #f1f5f9; color: #475569; }
+                </style>
+
+                <div class="info-section">
+                    <h5><i class="bi bi-journal-code me-2"></i>Lịch sử hoạt động</h5>
+                    <div class="activity-log">
+                        <c:choose>
+
+                        <c:when test="${not empty product.activityLogs}">
+                            <c:forEach items="${product.activityLogs}" var="log">
+                                <div class="log-item">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="log-action-badge log-action-${fn:contains(log.action, 'Tạo') ? 'create' : fn:contains(log.action, 'Sửa') || fn:contains(log.action, 'Cập nhật') ? 'update' : fn:contains(log.action, 'Xoá') || fn:contains(log.action, 'xoá') ? 'delete' : fn:contains(log.action, 'Tải') || fn:contains(log.action, 'Đặt') ? 'image' : fn:contains(log.action, 'Nhập') || fn:contains(log.action, 'Xuất') ? 'inventory' : fn:contains(log.action, 'biến thể') || fn:contains(log.action, 'variant') ? 'variant' : 'default'}">
+                                            ${log.action}
+                                        </span>
+                                        <small class="text-muted"><fmt:formatDate value="${log.timestamp}"
+                                                                                  pattern="dd/MM/yyyy HH:mm"/></small>
+                                    </div>
+                                    <div class="ms-1">
+                                        <small class="text-muted">
+                                            <i class="bi bi-person-circle"></i> ${log.user}
+                                        </small>
+                                        <c:if test="${not empty log.details}">
+                                            <div class="small text-secondary mt-1">${log.details}</div>
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-muted text-center py-3">Chưa có hoạt động nào</div>
+                        </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -770,70 +1017,24 @@
             </div>
         </div>
 
-        <!-- ========== SECTION 8: SALES STATISTICS ========== -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="info-section">
-                    <h5><i class="bi bi-graph-up me-2"></i>Thống kê bán hàng</h5>
-                    <div class="row text-center">
-                        <div class="col-md-4">
-                            <%--                            <div class="display-6 fw-bold text-primary">${totalOrders != null ? totalOrders : 0}</div>--%>
-                            <div class="small text-muted">Tổng đơn hàng</div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="display-6 fw-bold text-success">
-                                <%--                                <fmt:formatNumber value="${totalRevenue != null ? totalRevenue : 0}" type="currency" currencySymbol="₫"/>--%>
-                            </div>
-                            <div class="small text-muted">Doanh thu</div>
-                        </div>
-                        <div class="col-md-4">
-                            <%--                            <div class="display-6 fw-bold text-info">${product.viewCount != null ? product.viewCount : 0}</div>--%>
-                            <div class="small text-muted">Lượt xem</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="info-section">
-                    <h5><i class="bi bi-journal-code me-2"></i>Lịch sử hoạt động</h5>
-                    <div class="activity-log">
-                        <%--                        <c:if test="${not empty product.activityLogs}">--%>
-                        <%--                            <c:forEach items="${product.activityLogs}" var="log">--%>
-                        <%--                                <div class="log-item">--%>
-                        <%--                                    <div class="d-flex justify-content-between">--%>
-                        <%--                                        <strong>${log.action}</strong>--%>
-                        <%--                                        <small class="text-muted"><fmt:formatDate value="${log.timestamp}" pattern="dd/MM/yyyy HH:mm"/></small>--%>
-                        <%--                                    </div>--%>
-                        <%--                                    <div class="small text-muted">Người thực hiện: ${log.user}</div>--%>
-                        <%--                                    <div class="small">${log.details}</div>--%>
-                        <%--                                </div>--%>
-                        <%--                            </c:forEach>--%>
-                        <%--                        </c:if>--%>
-                        <%--                        <c:otherwise>--%>
-                        <%--                            <div class="text-muted text-center py-3">Chưa có hoạt động nào</div>--%>
-                        <%--                        </c:otherwise>--%>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- ========== SECTION 9: DELETE PRODUCT ========== -->
-        <div class="info-section border-danger">
-            <h5 class="text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Vùng nguy hiểm</h5>
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="fw-bold">Xóa sản phẩm</div>
-                    <div class="small text-muted">Hành động này không thể hoàn tác. Sản phẩm sẽ bị xóa vĩnh viễn.</div>
-                    <c:if test="${hasOrders}">
-                        <div class="small text-danger mt-1">⚠️ Cảnh báo: Sản phẩm đã có đơn hàng!</div>
-                    </c:if>
-                </div>
-                <button type="button" class="admin-btn-danger" onclick="confirmDelete()">
-                    <i class="bi bi-trash"></i> Xóa sản phẩm
-                </button>
-            </div>
-        </div>
+        <%--        <div class="info-section border-danger">--%>
+        <%--            <h5 class="text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Vùng nguy hiểm</h5>--%>
+        <%--            <div class="d-flex justify-content-between align-items-center">--%>
+        <%--                <div>--%>
+        <%--                    <div class="fw-bold">Xóa sản phẩm</div>--%>
+        <%--                    <div class="small text-muted">Hành động này không thể hoàn tác. Sản phẩm sẽ bị xóa vĩnh viễn.</div>--%>
+        <%--                    <c:if test="${hasOrders}">--%>
+        <%--                        <div class="small text-danger mt-1">⚠️ Cảnh báo: Sản phẩm đã có đơn hàng!</div>--%>
+        <%--                    </c:if>--%>
+        <%--                </div>--%>
+        <%--                <button type="button" class="admin-btn-danger" onclick="confirmDelete()">--%>
+        <%--                    <i class="bi bi-trash"></i> Xóa sản phẩm--%>
+        <%--                </button>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
     </main>
 </div>
 
@@ -929,7 +1130,15 @@
     // Copy to clipboard function
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Đã sao chép: ' + text);
+            Swal.fire({
+                icon: 'success',
+                title: 'Đã sao chép',
+                text: text,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
         });
     }
 
@@ -963,16 +1172,38 @@
 
     // Hide review
     function hideReview(reviewId) {
-        if (confirm('Bạn có chắc chắn muốn ẩn review này?')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/hide';
-        }
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Bạn có chắc chắn muốn ẩn review này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2c7da0',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ẩn',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/hide';
+            }
+        });
     }
 
     // Report spam
     function reportSpam(reviewId) {
-        if (confirm('Báo cáo review này là spam?')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/spam';
-        }
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Báo cáo review này là spam?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Báo cáo',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '${pageContext.request.contextPath}/admin/reviews/' + reviewId + '/spam';
+            }
+        });
     }
 </script>
 </body>

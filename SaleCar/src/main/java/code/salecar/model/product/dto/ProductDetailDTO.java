@@ -5,6 +5,7 @@ import code.salecar.model.category.CategoryInfo;
 import code.salecar.model.enumeration.Status;
 import code.salecar.model.product.entity.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,8 @@ public class ProductDetailDTO {
     private final List<ReviewSummary> reviews;
     private final ProductRatingDistribution ratingDist;
     private final List<ProductVariants> variants;
+    private List<ActivityLog> activityLogs;
+
 
     private ProductDetailDTO(Builder builder) {
         this.product = builder.product;
@@ -30,6 +33,7 @@ public class ProductDetailDTO {
         this.reviews = builder.reviews;
         this.ratingDist = builder.ratingDist;
         this.variants = builder.variants;
+        this.activityLogs = builder.activityLogs;
     }
 
     // Getters
@@ -64,7 +68,8 @@ public class ProductDetailDTO {
         double price = product.getPrice();
         double discountPercent = product.getDiscountPercent();
         return price * (100 - discountPercent) / 100;
-    }    public double getDiscountPercent(){return product != null ? product.getDiscountPercent() : 0;}
+    }
+    public double getDiscountPercent(){return product != null ? product.getDiscountPercent() : 0;}
     public double getPrice(){return product != null ? product.getPrice() : 0;}
     public String getSize() { return product != null ? product.getSize() : ""; }
     public String getMaterial() { return product != null ? product.getMaterial() : ""; }
@@ -78,7 +83,24 @@ public class ProductDetailDTO {
     public Status getStatus() { return product != null ? product.getStatus() : Status.INACTIVE; }
     public String getBrandLogo() { return brand != null ? brand.getLogo() : ""; }
     public String getBrandLink() { return brand != null ? brand.getLink() : ""; }
-    public List<ProductVariants> getVariants() {return variants;}
+    public List<ProductVariants> getVariants() {
+        calcFinalPrice();
+        return variants;}
+    public void calcFinalPrice(){
+        for(ProductVariants variant: variants){
+            BigDecimal price = variant.getPrice();
+            double discountPercent = getDiscountPercent();
+            double dn = price.doubleValue() * (100 - discountPercent) /100;
+            variant.setFinalPrice(new BigDecimal(dn));
+        }
+    }
+    public List<ActivityLog> getActivityLogs() {
+        return activityLogs;
+    }
+    public void setActivityLogs(List<ActivityLog> activityLogs) {
+        this.activityLogs = activityLogs;
+    }
+
     //Lỗi
     public String getSku() { return product != null ? "WWW" : ""; }
     public String getVariantName() { return variants != null ? variants.get(0).getVariantName() : ""; }
@@ -98,6 +120,7 @@ public class ProductDetailDTO {
         private List<ReviewSummary> reviews;
         private ProductRatingDistribution ratingDist;
         private List<ProductVariants> variants;
+        private List<ActivityLog> activityLogs;
 
         public Builder product(Product product) { this.product = product; return this; }
         public Builder brand(BrandInfo brand) { this.brand = brand; return this; }
@@ -108,6 +131,7 @@ public class ProductDetailDTO {
         public Builder reviews(List<ReviewSummary> reviews) { this.reviews = reviews; return this; }
         public Builder ratingDist(ProductRatingDistribution ratingDist) { this.ratingDist = ratingDist; return this; }
         public Builder variants(List<ProductVariants> variants) { this.variants = variants; return this; }
+        public Builder activityLogs(List<ActivityLog> activityLogs) { this.activityLogs = activityLogs; return this; }
 
         public ProductDetailDTO build() {
             return new ProductDetailDTO(this);

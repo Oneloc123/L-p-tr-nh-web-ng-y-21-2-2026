@@ -427,6 +427,7 @@
                         <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
                         <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Inactive</option>
 <%--                        <option value="hidden" ${param.status == 'hidden' ? 'selected' : ''}>Hidden</option>--%>
+
                     </select>
                 </div>
                 <!-- Submit search -->
@@ -540,15 +541,16 @@
                                         </td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${category.status == 'active'}">
+                                                <c:when test="${category.status.code == 1}">
                                                     <span class="badge bg-success badge-status">Active</span>
                                                 </c:when>
-                                                <c:when test="${category.status == 'inactive'}">
+                                                <c:when test="${category.status.code == 0}">
                                                     <span class="badge bg-secondary badge-status">Inactive</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="badge bg-dark badge-status">Hidden</span>
                                                 </c:otherwise>
+
                                             </c:choose>
                                             <!-- Quick toggle form -->
                                             <form action="/admin/categories/toggle-status" method="post"
@@ -561,10 +563,10 @@
                                             </form>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${category.createdAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${category.createdAtDate}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
-                                            <fmt:formatDate value="${category.updatedAt}" pattern="dd/MM/yyyy"/>
+                                            <fmt:formatDate value="${category.updatedAtDate}" pattern="dd/MM/yyyy"/>
                                         </td>
                                         <td>
 <%--                                            <a href="/admin/categories/${category.id}"--%>
