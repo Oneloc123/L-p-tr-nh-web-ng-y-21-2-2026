@@ -309,6 +309,59 @@ public class OrderDAO {
 //        }
 //        return new ArrayList<>();
 //    }
+
+    public List<Order> getOrdByKeyWord(String keyword) {
+        List<Order> list = new ArrayList<>();
+        String query = "select * from order where order_status like ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, "%" + keyword + "%");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt("id"));
+                o.setUserId(rs.getInt("user_id"));
+                o.setOrderDate(rs.getTimestamp("order_date"));
+                o.setTotalAmount(rs.getDouble("total_price"));
+                o.setShippingAddress(rs.getString("address"));
+                o.setPaymentMethod(rs.getString("payment_method"));
+                o.setOrderStatus(rs.getString("order_status"));
+
+                list.add(o);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
+    }
+
+    public List<Order> filterOrd(String status) {
+        List<Order> list = new ArrayList<>();
+        String query = "select * from order where order_status like ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, "%" + status + "%");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt("id"));
+                o.setUserId(rs.getInt("user_id"));
+                o.setOrderDate(rs.getTimestamp("order_date"));
+                o.setTotalAmount(rs.getDouble("total_price"));
+                o.setShippingAddress(rs.getString("address"));
+                o.setPaymentMethod(rs.getString("payment_method"));
+                o.setOrderStatus(rs.getString("order_status"));
+
+                list.add(o);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
+    }
+
     }
 
 

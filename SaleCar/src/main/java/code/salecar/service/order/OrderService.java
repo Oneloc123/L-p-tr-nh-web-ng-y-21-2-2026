@@ -55,4 +55,19 @@ public class OrderService {
         List<Order> result = ordDAO.getOrdersByUserId(userId);
         return result;
     }
+
+    public  List<Order> getOrdByKeyWord(String Key){
+        List<Order> orderList = ordDAO.getOrdByKeyWord(Key);
+        for (Order ord : orderList){
+            ord.setItems(ordDAO.getOrderItemsByOrderId(ord.getId()));
+        }
+        return orderList;
+    }
+
+    public List<Order> filterOrder(String status) {
+
+
+            return ordDAO.filterOrd(status);
+
+    }
 }
