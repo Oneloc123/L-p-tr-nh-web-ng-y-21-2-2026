@@ -488,13 +488,22 @@ public class ProductDAO {
         }
 
         if (filter.getStatus() != -1) {
-            query.append(" and pr.status like ? ");
-            params.add("%" + filter.getStatus() + "%");
+            query.append(" and pr.status = ? ");
+            params.add(filter.getStatus());
         }
 
         if (filter.getStock() != null && !filter.getStock().isEmpty()) {
-            query.append(" and pr.stock like ? ");
-            params.add("%" + filter.getStock() + "%");
+            switch (filter.getStock()) {
+                case "high":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) > 50 ");
+                    break;
+                case "medium":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) BETWEEN 10 AND 50 ");
+                    break;
+                case "low":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) < 10 ");
+                    break;
+            }
         }
 
 
@@ -608,13 +617,22 @@ public class ProductDAO {
         }
 
         if (filter.getStatus() != -1) {
-            query.append(" and pr.status like ? ");
-            params.add("%" + filter.getStatus() + "%");
+            query.append(" and pr.status = ? ");
+            params.add(filter.getStatus());
         }
 
         if (filter.getStock() != null && !filter.getStock().isEmpty()) {
-            query.append(" and pr.stock like ? ");
-            params.add("%" + filter.getStock() + "%");
+            switch (filter.getStock()) {
+                case "high":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) > 50 ");
+                    break;
+                case "medium":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) BETWEEN 10 AND 50 ");
+                    break;
+                case "low":
+                    query.append(" and (SELECT COALESCE(SUM(inv.quantity), 0) FROM inventory inv WHERE inv.product_id = pr.id) < 10 ");
+                    break;
+            }
         }
 
 
