@@ -903,7 +903,7 @@
                     <h5><i class="bi bi-building me-2"></i>Thông tin thương hiệu</h5>
                     <div class="d-flex align-items-center gap-3">
                         <c:if test="${product.brandLogo != null}">
-                            <img src="${product.brandLogo}" style="width: 60px; height: 60px; object-fit: contain;"
+                            <img src="${pageContext.request.contextPath}${product.brandLogo}" style="width: 60px; height: 60px; object-fit: contain;"
                                  alt="Brand Logo">
                         </c:if>
                         <div>
