@@ -559,7 +559,7 @@
                                     <td class="avatar-cell">
                                         <c:choose>
                                             <c:when test="${not empty u.imgURL}">
-                                                <img src="${pageContext.request.contextPath}/${u.imgURL}"
+                                                <img src="${u.imgURL}"
                                                      class="profile-avatar" alt="Avatar">
                                             </c:when>
                                             <c:otherwise>
@@ -613,7 +613,7 @@
                                 <div class="current-avatar">
                                     <c:choose>
                                         <c:when test="${not empty u.imgURL}">
-                                            <img src="${pageContext.request.contextPath}/${u.imgURL}" alt="Avatar">
+                                            <img src="${u.imgURL}" alt="Avatar">
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">

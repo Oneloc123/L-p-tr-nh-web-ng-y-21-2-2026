@@ -5,6 +5,7 @@ import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
+import code.salecar.util.UploadUserImageUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -32,7 +33,16 @@ public class AddUser extends HttpServlet {
         String phone = request.getParameter("phonenumber");
         String role = request.getParameter("role");
         String statusStr = request.getParameter("status");
-        String imgURL = uploads(request);
+
+        String imgURL = null;
+        try {
+            imgURL = UploadUserImageUtil.uploadImage(request, "avatar", "avatar");
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("fullnameError", e.getMessage());
+            request.setAttribute("openAddUserModal", "true");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request, response);
+            return;
+        }
 
         String name = request.getParameter("name");
         String street = request.getParameter("street");
@@ -74,10 +84,7 @@ public class AddUser extends HttpServlet {
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
             return;
         }
-
-
         UserService us = new UserService();
-
         User user = us.getUserByUsername(username);
         if(user!=null){
             request.setAttribute("usernameError","tên đăng nhập đã tồn tại");
@@ -85,7 +92,6 @@ public class AddUser extends HttpServlet {
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
             return;
         }
-
         AddressService as = new AddressService();
         Address add = new Address();
         add.setName(name);
@@ -93,7 +99,6 @@ public class AddUser extends HttpServlet {
         add.setCommune(commune);
         add.setProvince(province);
         add.setType("main");
-
         boolean status = true;
         if(statusStr.equals("false")){
             status = false;
@@ -120,25 +125,5 @@ public class AddUser extends HttpServlet {
         request.getSession().setAttribute("toastType", "success");
 
         response.sendRedirect("/userAdmin");
-    }
-    private String uploads(HttpServletRequest request) throws ServletException, IOException {
-        Part filePart = request.getPart("avatar");
-        if (filePart == null || filePart.getSize() == 0) {
-            return null;
-        }
-        String fileName = filePart.getSubmittedFileName();
-        String lowerName = fileName.toLowerCase();
-        if (!(lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg") || lowerName.endsWith(".png"))) {
-            return null;
-        }
-        String uploadPath = getServletContext().getRealPath("/uploads/avatar");
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-        String newFileName = System.currentTimeMillis() + "_" + fileName;
-        filePart.write(uploadPath + File.separator + newFileName);
-        String avatarUrl = "uploads/avatar/" + newFileName;
-        return avatarUrl;
     }
 }

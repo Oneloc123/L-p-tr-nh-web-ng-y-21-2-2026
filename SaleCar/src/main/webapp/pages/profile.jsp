@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Thông tin cá nhân - LUXCAR</title>
     <%@ include file="/common/header.jsp" %>
-    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
@@ -72,26 +71,15 @@
             display: inline-block;
         }
 
+        /* --- CẬP NHẬT CSS AVATAR CHO CHUẨN ĐẸP --- */
         .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-        }
-
-        .default-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid #ffffff;
-            background-color: #000000;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 4px solid #ffffff; /* Thêm viền trắng nổi bật trên nền cover */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Tạo hiệu ứng đổ bóng */
+            background-color: #f8f9fa;
         }
 
         .edit-avatar-btn {
@@ -110,6 +98,7 @@
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
+            z-index: 2;
         }
 
         .edit-avatar-btn:hover {
@@ -448,9 +437,7 @@
     </style>
 </head>
 <body>
-<%-- Include header --%>
 <div class="profile-wrapper">
-    <!-- Sidebar Menu -->
     <div class="sidebar-menu">
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
@@ -487,23 +474,6 @@
                 <span>Sản phẩm yêu thích</span>
             </a>
 
-<%--            <div class="menu-divider"></div>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>
-<%--                <i class="fas fa-map-marker-alt"></i>--%>
-<%--                <span>Sổ địa chỉ</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
-<%--                <i class="fas fa-bell"></i>--%>
-<%--                <span>Thông báo</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/settings" class="menu-item">--%>
-<%--                <i class="fas fa-cog"></i>--%>
-<%--                <span>Cài đặt</span>--%>
-<%--            </a>--%>
-
             <div class="menu-divider"></div>
 
             <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
@@ -513,7 +483,6 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="content-header">
             <h1>Thông tin cá nhân</h1>
@@ -526,26 +495,33 @@
             </nav>
         </div>
 
-        <!-- Profile Card -->
         <div class="profile-card">
             <div class="profile-cover"></div>
 
             <div class="profile-header">
                 <div class="avatar-section">
+
                     <div class="avatar-wrapper">
+                        <c:set var="defaultImg" value="${pageContext.request.contextPath}/assets/img/default-product.png" />
+
                         <c:choose>
                             <c:when test="${not empty user.imgURL}">
-                                <img src="${pageContext.request.contextPath}/${user.imgURL}" class="profile-avatar" alt="Avatar">
+                                <c:set var="finalAvatar" value="${user.imgURL}" />
+                            </c:when>
+                            <c:when test="${not empty sessionScope.user.imgURL}">
+                                <c:set var="finalAvatar" value="${sessionScope.user.imgURL}" />
                             </c:when>
                             <c:otherwise>
-                                <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" class="profile-avatar" alt="Avatar">
+                                <c:set var="finalAvatar" value="${defaultImg}" />
                             </c:otherwise>
                         </c:choose>
+
+                        <img src="${finalAvatar}" class="profile-avatar" alt="Avatar" />
+
                         <a href="${pageContext.request.contextPath}/avatarEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
                     </div>
-
                     <div class="profile-title">
                         <h2>${user.getFullname()}</h2>
                         <span class="role-badge">${user.getRole()}</span>
@@ -557,7 +533,6 @@
                 </div>
             </div>
 
-            <!-- User Information from USER table - Enhanced -->
             <div class="info-section">
                 <h3 class="section-title">
                     <i class="fas fa-user-circle"></i>
@@ -661,7 +636,6 @@
                     </div>
                 </div>
 
-                <!-- Description Section - Enhanced -->
                 <div class="description-section">
                     <div class="info-label">
                         <i class="fas fa-align-left"></i>
@@ -673,7 +647,6 @@
                 </div>
             </div>
 
-            <!-- Address Information from ADDRESS table - Enhanced -->
             <div class="info-section">
                 <h3 class="section-title">
                     <i class="fas fa-map-marker-alt"></i>
@@ -739,7 +712,6 @@
     </div>
 </div>
 <%@ include file="/common/footer.jsp" %>
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
