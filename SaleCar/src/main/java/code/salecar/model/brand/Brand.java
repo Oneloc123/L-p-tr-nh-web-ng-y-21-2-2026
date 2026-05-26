@@ -10,7 +10,7 @@ public class Brand {
     private long id;
     private String name;
     private String description;
-    private String image;
+    private String logo;
     private String linkBrand;
     private Status status;
     private LocalDateTime createdAt;
@@ -19,11 +19,11 @@ public class Brand {
     private int productCount;
 
 
-    public Brand(long id, String name, String description, String image, String linkBrand, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Brand(long id, String name, String description, String logo, String linkBrand, Status status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.image = image;
+        this.logo = logo;
         this.linkBrand = linkBrand;
         this.status = status;
         this.createdAt = createdAt;
@@ -57,12 +57,12 @@ public class Brand {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getLinkBrand() {

@@ -604,8 +604,8 @@
                                         <td class="fw-semibold">${brand.id}</td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${not empty brand.image}">
-                                                    <img src="${brand.image}"
+                                                <c:when test="${not empty brand.logo}">
+                                                    <img src="${pageContext.request.contextPath}${brand.logo}"
                                                          alt="${brand.name} logo"
                                                          class="brand-logo-preview"
                                                          data-bs-toggle="tooltip"

@@ -39,7 +39,7 @@ public class SetMainImageServlet extends HttpServlet {
         try {
             imageService.setMainImage(productId, imageUrl);
 
-            // Log activity
+            /** Ghi log hoạt động */
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             String userName = (user != null) ? user.getFullname() : "Admin";

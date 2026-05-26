@@ -427,9 +427,8 @@
                     <div class="col-md-4">
                         <label for="status" class="form-label">Status</label>
                         <select class="admin-select" id="status" name="status">
-                            <option value="active" ${category.status == 'active' ? 'selected' : ''}>Active</option>
-                            <option value="inactive" ${category.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-                            <option value="hidden" ${category.status == 'hidden' ? 'selected' : ''}>Hidden</option>
+                            <option value="active" ${category.status.name() == 'ACTIVE' ? 'selected' : ''}>Active</option>
+                            <option value="inactive" ${category.status.name() == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
                         </select>
                         <c:if test="${not empty errors.status}">
                             <div class="text-danger">${errors.status}</div>
@@ -440,7 +439,7 @@
                     <div class="col-md-4">
                         <label class="form-label">Created Date</label>
                         <input type="text" class="admin-input readonly-highlight"
-                               value="<fmt:formatDate value="${category.createdAt}" pattern="dd/MM/yyyy"/>"
+                               value="<fmt:formatDate value="${category.createdAtDate}" pattern="dd/MM/yyyy"/>"
                                readonly>
                     </div>
 
@@ -448,7 +447,7 @@
                     <div class="col-md-4">
                         <label class="form-label">Last Updated</label>
                         <input type="text" class="admin-input readonly-highlight"
-                               value="<fmt:formatDate value="${category.updatedAt}" pattern="dd/MM/yyyy"/>"
+                               value="<fmt:formatDate value="${category.updatedAtDate}" pattern="dd/MM/yyyy"/>"
                                readonly>
                     </div>
 

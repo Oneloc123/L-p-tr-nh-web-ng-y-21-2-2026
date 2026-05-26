@@ -2,6 +2,7 @@ package code.salecar.controller.admin.category;
 
 import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.CategoryService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,47 +19,59 @@ public class category_bulk_action extends HttpServlet {
     CategoryService categoryService = new CategoryService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy action
         String action = request.getParameter("action");
-        if (action.isEmpty() || action == null) {
-            response.sendRedirect("admin/categories");
+        if (action == null || action.isEmpty()) {
+            NotificationUtil.setError(request.getSession(), "Thiếu hành động");
+            response.sendRedirect("/admin/categories");
+            return;
         }
 
-        //Lấy danh sách ids
         String[] idsParam = request.getParameterValues("ids");
         List<Integer> ids = idsParam == null ? new ArrayList<>()
                 : Arrays.stream(idsParam)
                 .filter(s -> s != null && !s.isBlank())
                 .map(Integer::parseInt)
                 .toList();
-        if (ids == null || ids.size() == 0) {
+        if (ids == null || ids.isEmpty()) {
+            NotificationUtil.setError(request.getSession(), "Vui lòng chọn ít nhất một danh mục");
             response.sendRedirect(request.getContextPath() + "/admin/categories");
             return;
         }
 
         try {
-            if (action.equals("active")) {
+            int successCount = 0;
+            if ("active".equals(action)) {
                 for (int id : ids) {
-                    categoryService.toggleStatus(id, Status.ACTIVE);
+                    if (categoryService.toggleStatus(id, Status.ACTIVE)) {
+                        successCount++;
+                    }
                 }
-            }else if (action.equals("inactive")) {
+            } else if ("inactive".equals(action)) {
                 for (int id : ids) {
-                    categoryService.toggleStatus(id,Status.INACTIVE);
+                    if (categoryService.toggleStatus(id, Status.INACTIVE)) {
+                        successCount++;
+                    }
                 }
             }
 
-        }catch (Exception ex){
-            ex.printStackTrace();
+            if (successCount > 0) {
+                NotificationUtil.setSuccess(request.getSession(),
+                        "Đã chuyển trạng thái " + successCount + "/" + ids.size() + " danh mục thành công!");
+            } else {
+                NotificationUtil.setError(request.getSession(), "Không thể chuyển trạng thái danh mục");
+            }
+        } catch (Exception ex) {
+            NotificationUtil.setError(request.getSession(), "Lỗi khi xử lý: " + ex.getMessage());
         }
 
-
-        String redirectUrl =  request.getParameter("redirectUrl");
+        String redirectUrl = request.getParameter("redirectUrl");
         if (redirectUrl != null && !redirectUrl.isEmpty()) {
             response.sendRedirect(redirectUrl);
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/categories");
         }
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }

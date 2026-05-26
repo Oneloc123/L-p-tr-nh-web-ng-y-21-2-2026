@@ -1,6 +1,7 @@
 package code.salecar.controller.admin.category;
 
 import code.salecar.service.product.CategoryService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,21 +19,30 @@ public class toggle_status_category extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-        String  idParam = request.getParameter("id");
-        if (idParam != null  && !idParam.isEmpty()) {
-            int id = Integer.parseInt(idParam.trim());
-            categoryService.toggleStatus(id);
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam != null && !idParam.isEmpty()) {
+                int id = Integer.parseInt(idParam.trim());
+                boolean toggled = categoryService.toggleStatus(id);
+                if (toggled) {
+                    NotificationUtil.setSuccess(request.getSession(), "Chuyển đổi trạng thái danh mục thành công!");
+                } else {
+                    NotificationUtil.setError(request.getSession(), "Không thể chuyển đổi trạng thái danh mục");
+                }
+            } else {
+                NotificationUtil.setError(request.getSession(), "Thiếu ID danh mục");
+            }
+        } catch (NumberFormatException e) {
+            NotificationUtil.setError(request.getSession(), "ID danh mục không hợp lệ");
+        } catch (Exception e) {
+            NotificationUtil.setError(request.getSession(), "Lỗi khi chuyển đổi trạng thái: " + e.getMessage());
         }
 
-
-        String redirectUrl =  request.getParameter("redirectUrl");
+        String redirectUrl = request.getParameter("redirectUrl");
         if (redirectUrl != null && !redirectUrl.isEmpty()) {
             response.sendRedirect(redirectUrl);
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/categories");
         }
-
     }
 }
