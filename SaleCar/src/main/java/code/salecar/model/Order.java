@@ -6,15 +6,12 @@ import java.util.List;
 public class Order{
     private int id;
     private int userId;
-
-
     private Date orderDate;
     private double totalAmount;
     private String shippingAddress;
     private String phone;
     private String paymentMethod;
     private String orderStatus;
-
     private List<OrderItem> items;
 
     public int getId() {

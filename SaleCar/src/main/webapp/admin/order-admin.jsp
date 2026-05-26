@@ -292,28 +292,40 @@
                 <button class="btn btn-pill"><i class="bi bi-download me-1"></i> Xuất dữ liệu</button>
             </div>
 
-            <form action="order-admin" method="GET" class="row g-3 mb-4 align-items-center">
-                <div class="col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-end-0" style="border-radius: 50px 0 0 50px; border-color: #cbd5e1; padding-left: 20px;">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" name="search" class="form-control search-input border-start-0 ps-0" style="border-radius: 0 50px 50px 0 !important;" placeholder="Tìm kiếm mã đơn...">
-                    </div>
-                </div>
 
-                <div class="col-md-4">
-                    <select name="status" class="form-select custom-select">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="PENDING">Chờ xử lý</option>
-                        <option value="CONFIRMED">Đã xác nhận</option>
-                        <option value="DELIVERED">Đã giao</option>
-                        <option value="CANCELLED">Đã hủy</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-pill w-100"><i class="bi bi-funnel me-1"></i> Lọc dữ liệu</button>
-                </div>
+
+                <section class="filters mt-2 mb-4">
+                   <!-- FORM TÌM KIẾM VÀ LỌC DỮ LIỆU -->
+                   <form action="${pageContext.request.contextPath}/order-admin" method="GET" class="row g-3 mb-4 align-items-center">
+
+                   <!-- Ô tìm kiếm theo Mã -->
+                      <div class="col-md-5">
+                        <div class="input-group">
+                           <span class="input-group-text bg-transparent border-end-0" style="border-radius: 50px 0 0 50px; border-color: #cbd5e1; padding-left: 20px;">
+                              <i class="bi bi-search text-muted"></i>
+                           </span>
+                           <input type="text" name="search" value="${currentSearch}" class="form-control search-input border-start-0 ps-0" style="border-radius: 0 50px 50px 0 !important;" placeholder="Tìm kiếm mã đơn...">
+                        </div>
+                      </div>
+
+                      <!-- Dropdown status -->
+                      <div class="col-md-4">
+                        <select name="status" class="form-select custom-select">
+                           <option value="" ${empty currentStatus ? 'selected' : ''}>Tất cả trạng thái</option>
+                           <option value="PENDING" ${currentStatus == 'PENDING' ? 'selected' : ''}>Chờ xử lý</option>
+                           <option value="CONFIRMED" ${currentStatus == 'CONFIRMED' ? 'selected' : ''}>Đã xác nhận</option>
+                           <option value="DELIVERED" ${currentStatus == 'DELIVERED' ? 'selected' : ''}>Đã giao</option>
+                           <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
+                        </select>
+                      </div>
+
+
+                       <div class="col-md-3">
+                          <button type="submit" class="btn btn-pill w-100"><i class="bi bi-funnel me-1"></i> Lọc dữ liệu</button>
+                       </div>
+
+                   </form>
+                </section>
             </form>
 
             <c:choose>
@@ -344,6 +356,7 @@
 
                                         <td>
                                             <div class="fw-semibold" style="color: #334155;">${ord.userId}</div>
+                                            <div class="fw-semibold">${customerNameMap[ord.userId]}</div>
                                             <small class="text-muted">UID: ${ord.userId}</small>
                                         </td>
 
@@ -355,7 +368,14 @@
                                             </div>
                                         </td>
 
-                                        <td>${ord.items}</td>
+                                        <td>
+                                           <c:forEach var="item" items="${ord.items}">
+                                              <div<i class="bi bi-box-seam text-muted me-1"></i>
+                                              <span class="fw-semibold text-dark">${item.product.name}</span>
+                                              <span class="text-danger fw-bold ms-1">x${item.quantity}</span>
+                                              </div>
+                                           </c:forEach>
+                                        </td>
 
                                         <td class="col-nowrap fw-bold text-danger">
                                             <fmt:formatNumber value="${ord.totalAmount}" type="number" groupingUsed="true"/> ₫
@@ -438,6 +458,11 @@
                                         <input type="text" class="form-control" value="${ord.orderDate}" readonly>
                                     </div>
                                     <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small">Tên khách hàng</label>
+                                        <input type="text" class="form-control fw-semibold" value="${customerNameMap[ord.userId]}" readonly>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
                                         <label class="form-label text-muted small">Trạng thái</label>
                                         <input type="text" class="form-control text-primary fw-bold" value="${ord.orderStatus}" readonly>
                                     </div>
@@ -470,17 +495,44 @@
                                 <h3 class="form-section-title">
                                     <i class="bi bi-box-seam"></i> Chi tiết Sản phẩm
                                 </h3>
-                                <div class="row">
+
+                                  <div class="row">
                                     <div class="col-12 mb-3">
-                                        <label class="form-label text-muted small">Tên sản phẩm</label>
-                                        <c:forEach items="${ord.items}" var="i">
-                                           <div class="d-flex justify-content-between align-items-center border-bottom py-2">${i.product.name}</div>
-                                        </c:forEach>
+                                       <%-- Vòng lặp in từng sản phẩm có kèm ảnh --%>
+                                       <c:forEach items="${ord.items}" var="item">
+                                          <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+
+                                              <%-- Phần bên trái: Ảnh + Tên + Số lượng --%>
+                                              <div class="d-flex align-items-center gap-3">
+                                                  <%-- Khối hình ảnh giống order-detail.jsp --%>
+                                                  <div style="width: 65px; height: 65px; background: #f8f9fa; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                     <img src="https://placehold.co/100?text=LUXCAR" alt="${item.product.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                  </div>
+
+                                                  <%-- Thông tin tên xe --%>
+                                                  <div>
+                                                     <div class="fw-bold" style="color: #1e293b; font-size: 15px;">${item.product.name}</div>
+                                                        <div class="text-muted small mt-1">
+                                                           Mã SP: LUX-${item.productId} | <span class="text-danger fw-bold">Số lượng: x${item.quantity}</span>
+                                                        </div>
+                                                     </div>
+                                                  </div>
+
+                                                  <%-- Phần bên phải: Đơn giá --%>
+                                                  <div class="fw-bold" style="color: #475569; font-size: 14px;">
+                                                      <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> ₫
+                                                  </div>
+
+                                          </div>
+                                       </c:forEach>
                                     </div>
+
                                     <div class="col-12 mt-2 text-end">
-                                        <h4 class="text-danger fw-bold m-0">Tổng tiền: <fmt:formatNumber value="${ord.totalAmount}" type="number" groupingUsed="true"/> ₫</h4>
-                                    </div>
+                                        <h4 class="text-danger fw-bold m-0" style="font-size: 18px;">
+                                           Tổng tiền: <fmt:formatNumber value="${ord.totalAmount}" type="number" groupingUsed="true"/> ₫
+                                        </h4>
                                 </div>
+                              </div>
                             </div>
 
                             <div class="form-actions">

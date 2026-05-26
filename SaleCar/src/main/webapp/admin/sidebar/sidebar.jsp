@@ -159,7 +159,7 @@
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/orderAdmin"
+                <a href="${pageContext.request.contextPath}/order-admin"
                    class="${fn:contains(pageContext.request.requestURI, 'orders') || fn:contains(pageContext.request.requestURI, 'order') ? 'active' : ''}">
                     <i class="bi bi-cart"></i><span> Đơn hàng</span>
                 </a>
