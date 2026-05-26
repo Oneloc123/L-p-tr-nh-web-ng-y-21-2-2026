@@ -161,6 +161,21 @@ public class BannerDAO {
         }
     }
 
+    public List<Banner> getActiveBanners() {
+        List<Banner> banners = new ArrayList<>();
+        String sql = BASE_SELECT + " WHERE status = 1 ORDER BY display_order ASC, id ASC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                banners.add(mapBanner(rs));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return banners;
+    }
+
     public boolean toggleStatus(long id) {
         String sql = "UPDATE banner SET status = CASE WHEN status = 1 THEN 0 ELSE 1 END, updated_at = ? WHERE id = ?";
         try (Connection con = DBConnection.getConnection();

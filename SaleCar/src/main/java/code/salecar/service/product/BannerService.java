@@ -41,6 +41,10 @@ public class BannerService {
         return bannerDAO.deleteBanner(id);
     }
 
+    public List<Banner> getActiveBanners() {
+        return bannerDAO.getActiveBanners();
+    }
+
     public boolean toggleStatus(long id) {
         return bannerDAO.toggleStatus(id);
     }
