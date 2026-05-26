@@ -1,6 +1,7 @@
 package code.salecar.controller.admin.banner;
 
 import code.salecar.service.product.BannerService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,10 +20,17 @@ public class banner_toggle_status extends HttpServlet {
         if (idParam != null && !idParam.isEmpty()) {
             try {
                 long id = Long.parseLong(idParam.trim());
-                bannerService.toggleStatus(id);
+                boolean toggled = bannerService.toggleStatus(id);
+                if (toggled) {
+                    NotificationUtil.setSuccess(request.getSession(), "Chuyển đổi trạng thái banner thành công");
+                } else {
+                    NotificationUtil.setError(request.getSession(), "Chuyển đổi trạng thái banner thất bại");
+                }
             } catch (NumberFormatException e) {
-                // ignore
+                NotificationUtil.setError(request.getSession(), "ID banner không hợp lệ");
             }
+        } else {
+            NotificationUtil.setError(request.getSession(), "Thiếu ID banner");
         }
 
         String redirectUrl = request.getParameter("redirectUrl");
