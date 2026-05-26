@@ -32,7 +32,7 @@ public class products extends HttpServlet {
         /* =========================
            PAGINATION
         ========================= */
-        int limit = 9;
+        int limit = 12;
         int page = 1;
 
         String param = request.getParameter("page");
