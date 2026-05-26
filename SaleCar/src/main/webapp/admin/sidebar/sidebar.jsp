@@ -120,6 +120,43 @@
         }
     }
 
+    .sidebar {
+        flex: 0 0 280px;
+        width: 280px;
+        min-width: 280px;
+        max-width: 280px;
+
+        background-color: #ffffff;
+        border-right: 1px solid #e9edf2;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        padding: 2rem 1.2rem;
+        transition: all 0.3s;
+    }
+    .main-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .sidebar * {
+        transform: none !important;
+        zoom: 1 !important;
+    }
+
+    .sidebar nav ul li a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    .sidebar nav ul li a i {
+        font-size: 1.3rem;
+        min-width: 24px;
+    }
+
 </style>
 
 <aside class="sidebar">

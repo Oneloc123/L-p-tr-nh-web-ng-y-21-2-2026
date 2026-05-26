@@ -23,9 +23,7 @@ public class BannerDAO {
         SORTABLE_FIELDS.put("created_at", "created_at");
     }
 
-    /**
-     * Build WHERE clause and populate params for search & status filter.
-     */
+    /** Xây dựng mệnh đề WHERE và thêm tham số cho tìm kiếm & lọc trạng thái */
     private void appendWhereClause(StringBuilder sql, List<Object> params, String search, int statusFilter) {
         sql.append(" WHERE 1=1");
         if (search != null && !search.trim().isEmpty()) {
@@ -47,12 +45,12 @@ public class BannerDAO {
         StringBuilder sql = new StringBuilder(BASE_SELECT);
         appendWhereClause(sql, params, search, statusFilter);
 
-        // Sort — whitelist to prevent SQL injection
+        /** Sắp xếp — whitelist để ngăn chặn SQL injection */
         String field = (sortField != null) ? SORTABLE_FIELDS.getOrDefault(sortField, "id") : "id";
         String order = "asc".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
         sql.append(" ORDER BY ").append(field).append(" ").append(order);
 
-        // Pagination
+        /** Phân trang */
         int offset = (page - 1) * limit;
         sql.append(" LIMIT ? OFFSET ?");
         params.add(limit);

@@ -6,22 +6,19 @@ import jakarta.servlet.http.Part;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**
- * Shared utility for banner image upload and validation.
- * Uses upload.base-dir from application.properties (modelcar-storage/banners).
- * Files are served via UploadFileServlet at /uploads/banners/*.
+/** Tiện ích dùng chung cho upload và xác thực ảnh banner.
+ * Sử dụng upload.base-dir từ application.properties (modelcar-storage/banners).
+ * File được phục vụ qua UploadFileServlet tại /uploads/banners/*.
  */
 public class BannerUploadUtil {
 
     private static final String BANNER_SUBDIR = "banners";
     private static final String ALLOWED_EXT = "jpg|jpeg|png|webp";
 
-    /**
-     * Upload banner image part to the banners directory under upload.base-dir.
-     *
-     * @return image URL (context path + /uploads/banners/filename) on success,
-     *         currentImageUrl if no file uploaded (keeps existing),
-     *         null if validation fails (caller should return early).
+    /** Upload ảnh banner vào thư mục banners dưới upload.base-dir.
+     * @return URL ảnh (context path + /uploads/banners/filename) nếu thành công,
+     *         currentImageUrl nếu không có file nào được upload (giữ ảnh cũ),
+     *         null nếu xác thực thất bại.
      */
     public static String uploadImage(Part filePart, String contextPath, String currentImageUrl) {
         if (filePart == null || filePart.getSize() <= 0) {
@@ -47,16 +44,14 @@ public class BannerUploadUtil {
             java.nio.file.Path filePath = uploadPath.resolve(newFileName);
             filePart.write(filePath.toString());
 
-            // Return URL path served by UploadFileServlet (/uploads/*)
+            /** Trả về đường dẫn URL được phục vụ bởi UploadFileServlet (/uploads/*) */
             return contextPath + "/uploads/" + BANNER_SUBDIR + "/" + newFileName;
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload banner image", e);
         }
     }
 
-    /**
-     * Delete a banner image file from disk given its URL.
-     */
+    /** Xoá file ảnh banner khỏi đĩa dựa vào URL */
     public static void deleteImageFile(String imageUrl) {
         if (imageUrl == null || imageUrl.trim().isEmpty()) {
             return;
@@ -65,7 +60,7 @@ public class BannerUploadUtil {
             String baseDir = AppConfig.get("upload.base-dir");
             if (baseDir == null || baseDir.isEmpty()) return;
 
-            // Extract relative path from URL: /context/uploads/banners/filename -> banners/filename
+            /** Trích xuất đường dẫn tương đối từ URL: /context/uploads/banners/filename -> banners/filename */
             String urlPath = imageUrl;
             int uploadsIdx = urlPath.indexOf("/uploads/");
             if (uploadsIdx >= 0) {
@@ -75,14 +70,12 @@ public class BannerUploadUtil {
             java.nio.file.Path filePath = Paths.get(baseDir, urlPath);
             Files.deleteIfExists(filePath);
         } catch (Exception e) {
-            // Log but don't throw — file deletion failure shouldn't block DB operation
+            /** Ghi log nhưng không ném ngoại lệ — lỗi xoá file không nên chặn thao tác DB */
             System.err.println("Warning: Could not delete banner image file: " + e.getMessage());
         }
     }
 
-    /**
-     * Validate redirect URL: must be null/empty, or start with http://, https://, or /.
-     */
+    /** Xác thực URL chuyển hướng: phải là null/rỗng, hoặc bắt đầu bằng http://, https://, hoặc / */
     public static boolean isValidLink(String link) {
         return link == null || link.trim().isEmpty()
                 || link.trim().startsWith("http://")
@@ -90,9 +83,7 @@ public class BannerUploadUtil {
                 || link.trim().startsWith("/");
     }
 
-    /**
-     * Safely parse an integer parameter with a default fallback.
-     */
+    /** Phân tích an toàn tham số integer với giá trị mặc định */
     public static int parseIntSafe(String value, int defaultValue) {
         if (value == null || value.trim().isEmpty()) return defaultValue;
         try {
@@ -102,9 +93,7 @@ public class BannerUploadUtil {
         }
     }
 
-    /**
-     * Safely parse a long parameter with a default fallback.
-     */
+    /** Phân tích an toàn tham số long với giá trị mặc định */
     public static long parseLongSafe(String value, long defaultValue) {
         if (value == null || value.trim().isEmpty()) return defaultValue;
         try {

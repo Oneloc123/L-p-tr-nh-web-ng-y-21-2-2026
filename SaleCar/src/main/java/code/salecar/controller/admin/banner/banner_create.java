@@ -38,14 +38,14 @@ public class banner_create extends HttpServlet {
         String statusParam = request.getParameter("status");
         String orderParam = request.getParameter("displayOrder");
 
-        // Validate title
+        /** Kiểm tra tiêu đề */
         if (title == null || title.trim().isEmpty()) {
             NotificationUtil.setError(request.getSession(), "Tiêu đề banner không được để trống");
             response.sendRedirect(request.getContextPath() + "/admin/banners/create");
             return;
         }
 
-        // Validate link
+        /** Kiểm tra link */
         if (!BannerUploadUtil.isValidLink(redirectUrl)) {
             NotificationUtil.setError(request.getSession(), "Link điều hướng không hợp lệ. Phải bắt đầu bằng http://, https:// hoặc /");
             response.sendRedirect(request.getContextPath() + "/admin/banners/create");
@@ -54,7 +54,7 @@ public class banner_create extends HttpServlet {
 
         int displayOrder = BannerUploadUtil.parseIntSafe(orderParam, 0);
 
-        // Handle image upload
+        /** Xử lý upload ảnh */
         try {
             Part filePart = request.getPart("image");
             String imageUrl = BannerUploadUtil.uploadImage(filePart, request.getContextPath(), "");

@@ -23,12 +23,12 @@ public class banner_delete extends HttpServlet {
             try {
                 long id = Long.parseLong(idParam.trim());
 
-                // Get banner before deleting to retrieve image URL for file deletion
+                /** Lấy banner trước khi xoá để lấy URL ảnh phục vụ xoá file */
                 Banner banner = bannerService.getBannerById(id);
 
                 boolean deleted = bannerService.deleteBanner(id);
                 if (deleted) {
-                    // Delete associated image file if exists
+                    /** Xoá file ảnh liên quan nếu tồn tại */
                     if (banner != null) {
                         BannerUploadUtil.deleteImageFile(banner.getImageUrl());
                     }

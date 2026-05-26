@@ -103,9 +103,7 @@ public class ProductVariantsDAO {
         }
     }
 
-    /**
-     * Thêm variant mới
-     */
+    /** Thêm biến thể mới */
     public long insertVariant(ProductVariants variant) {
         String sql = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
         try (Connection con = DBConnection.getConnection();
@@ -125,9 +123,7 @@ public class ProductVariantsDAO {
         }
     }
 
-    /**
-     * Xoá variant theo ID
-     */
+    /** Xoá biến thể theo ID */
     public void deleteVariant(long variantId) {
         // Xoá inventory trước
         String deleteInventory = "DELETE FROM inventory WHERE variant_id = ?";

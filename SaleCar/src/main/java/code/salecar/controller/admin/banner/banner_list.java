@@ -49,7 +49,7 @@ public class banner_list extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("pageSize", limit);
 
-        // Current URL for redirect
+        /** URL hiện tại để chuyển hướng */
         String currentUrl = request.getRequestURI();
         String queryString = request.getQueryString();
         if (queryString != null) {

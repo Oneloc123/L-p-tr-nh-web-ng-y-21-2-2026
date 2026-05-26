@@ -1,9 +1,7 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<fmt:setLocale value="vi_VN"/>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -11,8 +9,6 @@
     <title>Chỉnh sửa sản phẩm: ${product.productName} | LUXCAR Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Include TinyMCE for rich description editor -->
-    <script src="https://cdn.tiny.cloud/1/YOUR_API_KEY/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         /* ========== GLOBAL STYLES (consistent with product-detail.jsp) ========== */
         * {
@@ -27,9 +23,11 @@
             color: #1e293b;
         }
 
-        /* ========== SIDEBAR STYLES ========== */
+        /* ========== SIDEBAR STYLES - FIXED TO MATCH product-list.jsp ========== */
         .sidebar {
-            width: 280px;
+            width: 280px !important;
+            min-width: 280px !important;
+            flex-shrink: 0 !important;
             background-color: #ffffff;
             border-right: 1px solid #e9edf2;
             height: 100vh;
@@ -88,6 +86,24 @@
             color: #2c7da0;
             box-shadow: 0 2px 4px rgba(44, 125, 160, 0.08);
             border-left: 2px solid #2c7da0;
+        }
+
+        /* Responsive cho sidebar (giống product-list) */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px !important;
+                min-width: 80px !important;
+                padding: 1rem 0.5rem;
+            }
+            .sidebar .logo span {
+                display: none;
+            }
+            .sidebar nav ul li a span {
+                display: none;
+            }
+            .sidebar nav ul li a i {
+                font-size: 1.5rem;
+            }
         }
 
         /* ========== MAIN CONTENT ========== */
@@ -217,19 +233,6 @@
             background-color: #fff9e0;
             border-radius: 6px;
             padding: 2px 4px;
-        }
-
-        .sticky-save {
-            position: sticky;
-            bottom: 20px;
-            background: white;
-            padding: 12px 24px;
-            border-radius: 60px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            z-index: 100;
-            text-align: center;
-            width: fit-content;
-            margin: 0 auto;
         }
 
         /* loading spinner */
@@ -379,15 +382,383 @@
         #imagePreviewModal .modal-header {
             padding: 8px 12px;
         }
+
+        /* ========== DESCRIPTION SECTION ========== */
+        .description-wrapper {
+            background: #fafcff;
+            border: 1px solid #e9edf2;
+            border-radius: 16px;
+            padding: 1.25rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .description-wrapper:focus-within {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.06);
+        }
+
+        .description-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .description-header .desc-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .description-header .desc-label i {
+            color: #2c7da0;
+            font-size: 1rem;
+        }
+
+        .description-header .desc-hint {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .description-header .desc-hint i {
+            font-size: 0.85rem;
+        }
+
+        /* Description textarea */
+        .desc-textarea {
+            border-radius: 12px !important;
+            border: 1.5px solid #e2e8f0 !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 0.9rem !important;
+            line-height: 1.6 !important;
+            transition: all 0.2s ease !important;
+            background: #fff !important;
+            resize: vertical;
+            min-height: 120px;
+            width: 100%;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .desc-textarea:focus {
+            border-color: #2c7da0 !important;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1) !important;
+            outline: none !important;
+        }
+
+        .desc-textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        /* ========== VARIANTS TABLE ========== */
+        .variants-table-wrap {
+            border: 1px solid #e9edf2;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .variants-table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .variants-table thead th {
+            background: #f8fafc;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            font-weight: 600;
+            padding: 0.9rem 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .variants-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .variants-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .variants-table tbody tr.variant-new-row {
+            animation: fadeSlideIn 0.3s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .variants-table tbody td {
+            padding: 0.6rem 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .variants-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Variant form controls */
+        .variant-input {
+            border-radius: 10px !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            transition: all 0.2s ease !important;
+            background: #fff;
+        }
+
+        .variant-input:focus {
+            border-color: #2c7da0 !important;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1) !important;
+        }
+
+        .variant-input::placeholder {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+        }
+
+        .variant-quantity-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            color: #0369a1;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 20px;
+            border: 1px solid rgba(44, 125, 160, 0.15);
+        }
+
+        .variant-new-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+            color: #15803d;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-radius: 12px;
+            border: 1px solid rgba(21, 128, 61, 0.15);
+        }
+
+        .variant-new-badge i {
+            font-size: 0.65rem;
+        }
+
+        /* Remove variant button */
+        .remove-variant-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px !important;
+            border: 1px solid #fee2e2 !important;
+            background: #fff !important;
+            color: #ef4444 !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .remove-variant-btn:hover {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #dc2626 !important;
+            transform: scale(1.05);
+        }
+
+        .remove-variant-btn i {
+            font-size: 0.75rem;
+        }
+
+        /* Add variant button */
+        #addVariantBtn {
+            border-radius: 12px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        #addVariantBtn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(44, 125, 160, 0.12);
+        }
+
+        /* ========== STICKY SAVE BAR ========== */
+        .sticky-save {
+            position: sticky;
+            bottom: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 14px 28px;
+            border-radius: 60px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(233, 237, 242, 0.8);
+            z-index: 100;
+            width: fit-content;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .sticky-save:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ========== SECTION CARD ENHANCEMENTS ========== */
+        .info-section {
+            transition: all 0.3s ease;
+        }
+
+        .info-section:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .info-section h5 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: #1e293b;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section h5 i {
+            color: #2c7da0;
+            font-size: 1.1rem;
+        }
+
+        /* ========== FORM CONTROL ENHANCEMENTS ========== */
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+            background: #fff;
+        }
+
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+        }
+
+        .form-label.fw-semibold {
+            font-size: 0.85rem;
+            color: #334155;
+            margin-bottom: 0.4rem;
+        }
+
+        /* ========== BREADCRUMB ========== */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-item a {
+            color: #64748b;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #2c7da0;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c7da0;
+            font-weight: 500;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-radius: 20px 20px 0 0;
+            padding: 1rem 1.5rem;
+        }
+
+        .modal-header.bg-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e9edf2;
+            padding: 1rem 1.5rem;
+        }
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item a {
+            color: #5a6e7c;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c7da0;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
 <div class="d-flex">
     <%@ include file="/admin/sidebar/sidebar.jsp" %>
+
     <main class="main-content">
         <!-- Header -->
         <header class="admin-header d-flex justify-content-between align-items-center">
             <div>
+
+                <h3 class="fw-bold m-0 mt-2">
+                    <i class="bi bi-pencil-square me-2" style="color:#2c7da0;"></i>
+                    Chỉnh sửa sản phẩm
+                </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/dashboard" class="text-decoration-none">Dashboard</a></li>
@@ -395,10 +766,6 @@
                         <li class="breadcrumb-item active">Chỉnh sửa: ${product.productName}</li>
                     </ol>
                 </nav>
-                <h3 class="fw-bold m-0 mt-2">
-                    <i class="bi bi-pencil-square me-2" style="color:#2c7da0;"></i>
-                    Chỉnh sửa sản phẩm
-                </h3>
             </div>
             <div class="d-flex gap-2">
                 <a href="${pageContext.request.contextPath}/product-detail?id=${product.productId}" target="_blank" class="admin-btn-outline">
@@ -564,64 +931,79 @@
             <!-- Description -->
             <div class="info-section" id="descriptionSection">
                 <h5><i class="bi bi-file-text me-2"></i>Mô tả sản phẩm</h5>
-                <div class="mb-3">
-                    <textarea id="tinyDescription" name="description">${product.description}</textarea>
+                <div class="description-wrapper">
+                    <div class="description-header">
+                        <span class="desc-label">
+                            <i class="bi bi-pencil-square"></i>
+                            Nội dung mô tả
+                        </span>
+                        <span class="desc-hint">
+                            <i class="bi bi-info-circle"></i>
+                            Nội dung hiển thị ở trang chi tiết sản phẩm
+                        </span>
+                    </div>
+                    <textarea class="desc-textarea" id="productDescription" name="description" rows="6" placeholder="Nhập mô tả sản phẩm...">${product.description}</textarea>
                 </div>
             </div>
 
             <!-- Variants -->
             <div class="info-section" id="variantsSection">
                 <h5><i class="bi bi-diagram-3 me-2"></i>Biến thể (Variants)</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle" id="variantsTable">
-                        <thead class="table-light">
+                <div class="variants-table-wrap">
+                    <div class="table-responsive" style="margin: 0;">
+                        <table class="table variants-table align-middle" id="variantsTable">
+                            <thead>
                             <tr>
-                                <th style="min-width:160px;">Tên biến thể <span class="text-danger">*</span></th>
-                                <th style="min-width:120px;">SKU</th>
-                                <th style="min-width:140px;">Giá (VND) <span class="text-danger">*</span></th>
-                                <th style="width:80px;">Tồn kho</th>
-                                <th style="width:60px;"></th>
+                                <th style="width:28%;">Tên biến thể <span class="text-danger">*</span></th>
+                                <th style="width:18%;">SKU</th>
+                                <th style="width:22%;">Giá (VND) <span class="text-danger">*</span></th>
+                                <th style="width:12%;">Tồn kho</th>
+                                <th style="width:8%;"></th>
                             </tr>
-                        </thead>
-                        <tbody id="variantsBody">
+                            </thead>
+                            <tbody id="variantsBody">
                             <c:forEach var="variant" items="${product.variants}" varStatus="vs">
-                            <tr class="variant-row">
-                                <td>
-                                    <input type="hidden" name="variantId[]" value="${variant.id}">
-                                    <input type="text" class="form-control form-control-sm" name="variantName[]"
-                                           value="${variant.variantName}" required placeholder="VD: Đỏ, Xanh">
-                                    <c:set var="vk" value="variant_${vs.index}"/>
-                                    <c:if test="${not empty errors[vk]}">
-                                        <div class="text-danger small">${errors[vk]}</div>
-                                    </c:if>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm" name="variantSku[]"
-                                           value="${variant.sku}" placeholder="Mã SKU">
-                                </td>
-                                <td>
-                                    <input type="number" step="1000" class="form-control form-control-sm variant-price"
-                                           name="variantPrice[]" value="${variant.price}" required min="1">
-                                    <c:set var="pvk" value="variantPrice_${vs.index}"/>
-                                    <c:if test="${not empty errors[pvk]}">
-                                        <div class="text-danger small">${errors[pvk]}</div>
-                                    </c:if>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-info">${variant.quantity}</span>
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
-                                        <i class="bi bi-x-lg"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                <tr class="variant-row">
+                                    <td>
+                                        <input type="hidden" name="variantId[]" value="${variant.id}">
+                                        <input type="text" class="form-control variant-input" name="variantName[]"
+                                               value="${variant.variantName}" required placeholder="VD: Đỏ, Xanh">
+                                        <c:set var="vk" value="variant_${vs.index}"/>
+                                        <c:if test="${not empty errors[vk]}">
+                                            <div class="text-danger small mt-1">${errors[vk]}</div>
+                                        </c:if>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control variant-input" name="variantSku[]"
+                                               value="${variant.sku}" placeholder="Mã SKU">
+                                    </td>
+                                    <td>
+                                        <input type="number" step="1000" class="form-control variant-input variant-price"
+                                               name="variantPrice[]" value="${variant.price}" required min="1" placeholder="VD: 500000">
+                                        <c:set var="pvk" value="variantPrice_${vs.index}"/>
+                                        <c:if test="${not empty errors[pvk]}">
+                                            <div class="text-danger small mt-1">${errors[pvk]}</div>
+                                        </c:if>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="variant-quantity-badge">
+                                            <i class="bi bi-box-seam me-1" style="font-size:0.7rem;"></i>
+                                            ${variant.quantity}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="remove-variant-btn" title="Xoá biến thể">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             </c:forEach>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <button type="button" id="addVariantBtn" class="admin-btn-outline mt-2">
-                    <i class="bi bi-plus-circle"></i> Thêm biến thể
+                <button type="button" id="addVariantBtn" class="admin-btn-primary mt-3">
+                    <i class="bi bi-plus-circle"></i> Thêm biến thể mới
                 </button>
             </div>
 
@@ -651,7 +1033,11 @@
                         <thead><tr><th>Thời gian</th><th>Giá cũ</th><th>Giá mới</th><th>Người thay đổi</th></tr></thead>
                         <tbody>
                         <c:forEach items="${priceHistoryList}" var="hist">
-                            <tr><td><fmt:formatDate value="${hist.changedAt}" pattern="dd/MM/yyyy HH:mm"/></td><td><fmt:formatNumber value="${hist.oldPrice}" type="currency"/></td><td><fmt:formatNumber value="${hist.newPrice}" type="currency"/></td><td>${hist.changedBy}</td></tr>
+                            <tr><td><fmt:formatDate value="${hist.changedAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                <td><fmt:formatNumber value="${hist.oldPrice}" type="currency"/></td>
+                                <td><fmt:formatNumber value="${hist.newPrice}" type="currency"/></td>
+                                <td>${hist.changedBy}</td>
+                            </tr>
                         </c:forEach>
                         </tbody>
                     </table>
@@ -693,25 +1079,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Initialize TinyMCE
-    tinymce.init({
-        selector: '#tinyDescription',
-        height: 300,
-        menubar: false,
-        plugins: 'advlist autolink lists link image charmap preview anchor',
-        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link',
-        content_style: 'body { font-family:Inter, sans-serif; }'
-    });
-
     // ===== Unsaved changes tracking =====
     let formChanged = false;
     const editForm = document.getElementById('productEditForm');
-    const formInputs = editForm ? editForm.querySelectorAll('input, select') : [];
+    const formInputs = editForm ? editForm.querySelectorAll('input, select, textarea') : [];
     function markChanged() { formChanged = true; }
     formInputs.forEach(el => el.addEventListener('change', markChanged));
-
-    // TinyMCE change detection
-    tinymce.get('tinyDescription')?.on('change', markChanged);
+    formInputs.forEach(el => el.addEventListener('input', markChanged));
 
     window.addEventListener('beforeunload', function (e) {
         if (formChanged) {
@@ -721,12 +1095,8 @@
         }
     });
 
-    // Sync TinyMCE content before form submit
+    // Validate variant rows on submit
     editForm?.addEventListener('submit', function(e) {
-        // Push TinyMCE content into the textarea
-        if (tinymce.get('tinyDescription')) {
-            tinymce.get('tinyDescription').save();
-        }
         // Validate variant rows
         const variantRows = document.querySelectorAll('#variantsBody .variant-row');
         let variantValid = true;
@@ -792,24 +1162,27 @@
     // Add new variant row
     document.getElementById('addVariantBtn')?.addEventListener('click', function() {
         const row = document.createElement('tr');
-        row.className = 'variant-row';
+        row.className = 'variant-row variant-new-row';
         row.innerHTML = `
             <td>
                 <input type="hidden" name="variantId[]" value="0">
-                <input type="text" class="form-control form-control-sm" name="variantName[]" required placeholder="VD: Đỏ, Xanh">
+                <input type="text" class="form-control variant-input" name="variantName[]" required placeholder="VD: Đỏ, Xanh">
             </td>
             <td>
-                <input type="text" class="form-control form-control-sm" name="variantSku[]" placeholder="Mã SKU">
+                <input type="text" class="form-control variant-input" name="variantSku[]" placeholder="Mã SKU">
             </td>
             <td>
-                <input type="number" step="1000" class="form-control form-control-sm variant-price" name="variantPrice[]" required min="1" placeholder="VD: 500000">
-            </td>
-            <td class="text-center text-muted small">
-                <span class="badge bg-secondary">Mới</span>
+                <input type="number" step="1000" class="form-control variant-input variant-price" name="variantPrice[]" required min="1" placeholder="VD: 500000">
             </td>
             <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger remove-variant-btn" title="Xoá biến thể">
-                    <i class="bi bi-x-lg"></i>
+                <span class="variant-new-badge">
+                    <i class="bi bi-plus-lg"></i>
+                    Mới
+                </span>
+            </td>
+            <td class="text-center">
+                <button type="button" class="remove-variant-btn" title="Xoá biến thể">
+                    <i class="bi bi-trash3"></i>
                 </button>
             </td>
         `;
@@ -837,10 +1210,6 @@
 
     document.getElementById('globalSaveBtn')?.addEventListener('click', async () => {
         if (!editForm) return;
-        // Sync TinyMCE
-        if (tinymce.get('tinyDescription')) {
-            tinymce.get('tinyDescription').save();
-        }
         if (!editForm.checkValidity()) {
             editForm.reportValidity();
             return;

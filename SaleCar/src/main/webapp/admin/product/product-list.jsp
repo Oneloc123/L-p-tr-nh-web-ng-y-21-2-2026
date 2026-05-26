@@ -346,7 +346,10 @@
             pointer-events: none;
             cursor: not-allowed;
         }
-
+        .search-btn {
+            white-space: nowrap;
+            height: 100%;
+        }
         /* ========== RESPONSIVE ========== */
         @media (max-width: 992px) {
             .sidebar {
@@ -366,6 +369,23 @@
                 font-size: 1.5rem;
             }
         }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item a {
+            color: #5a6e7c;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c7da0;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -375,7 +395,15 @@
 
     <main class="main-content">
         <header class="admin-header d-flex justify-content-between align-items-center">
-            <h3 class="fw-bold m-0"><i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i> Quản lý sản phẩm</h3>
+            <div>
+                <h3 class="fw-bold m-0"><i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i> Quản lý sản phẩm</h3>
+                <nav aria-label="breadcrumb" class="mt-1">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Products</li>
+                    </ol>
+                </nav>
+            </div>
             <div>
                 <form action="/admin/products/export" method="get" style="display: inline-block;">
                     <input type="hidden" name="keyword" value="${param.keyword}">
@@ -395,18 +423,26 @@
                     <i class="bi bi-plus-lg"></i> Thêm sản phẩm
                 </a>
             </div>
+
         </header>
 
         <!-- Search & Filter Form -->
         <form action="/admin/products" method="get" id="filterForm">
             <!-- Search Bar -->
+            <!-- Search Bar -->
             <div class="mb-4">
-                <div class="input-group">
-                    <input type="text" class="admin-input" id="searchKeyword" name="keyword"
-                           placeholder="🔍 Tìm kiếm theo tên sản phẩm, SKU, danh mục..."
-                           value="${param.keyword}">
-                    <button type="submit" class="admin-btn-outline">
-                        <i class="bi bi-search"></i> Tìm
+                <div class="d-flex gap-2">
+                    <div class="flex-grow-1">
+                        <input type="text"
+                               class="admin-input"
+                               id="searchKeyword"
+                               name="keyword"
+                               placeholder="🔍 Tìm kiếm theo tên sản phẩm, SKU, danh mục..."
+                               value="${param.keyword}">
+                    </div>
+
+                    <button type="submit" class="admin-btn-primary px-4">
+                        <i class="bi bi-search"></i> Tìm kiếm
                     </button>
                 </div>
             </div>

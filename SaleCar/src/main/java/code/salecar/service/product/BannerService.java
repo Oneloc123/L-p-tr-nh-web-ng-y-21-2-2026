@@ -9,9 +9,7 @@ import java.util.List;
 public class BannerService {
     private final BannerDAO bannerDAO = new BannerDAO();
 
-    /**
-     * Parse status filter param: "active" -> 1, "inactive" -> 0, else -1 (all).
-     */
+    /** Phân tích tham số lọc trạng thái: "active" -> 1, "inactive" -> 0, còn lại -1 (tất cả) */
     private int parseStatusParam(String statusParam) {
         if (statusParam == null || statusParam.isEmpty()) return -1;
         if ("active".equalsIgnoreCase(statusParam)) return 1;

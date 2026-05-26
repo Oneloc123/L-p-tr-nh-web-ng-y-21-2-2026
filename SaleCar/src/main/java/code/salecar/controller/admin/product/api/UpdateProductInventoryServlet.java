@@ -70,7 +70,7 @@ public class UpdateProductInventoryServlet extends HttpServlet {
 
 
 
-        // Success notification based on action type
+        /** Thông báo thành công dựa trên loại hành động */
         if ("add".equals(type)) {
             NotificationUtil.setSuccess(request.getSession(), "Nhập kho thành công!");
         } else if ("subtract".equals(type)) {

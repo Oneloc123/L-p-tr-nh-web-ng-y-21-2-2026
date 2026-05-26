@@ -146,13 +146,13 @@ public class CategoryDAO {
 
         StringBuilder query = new StringBuilder(sql);
 
-        // filter name
+        /** Lọc theo tên */
         if (categoryFilter.getName() != null && !categoryFilter.getName().isEmpty()) {
             query.append(" AND ct.name LIKE ? ");
             params.add("%" + categoryFilter.getName() + "%");
         }
 
-        // filter status
+        /** Lọc theo trạng thái */
         if (categoryFilter.getStatus() != -1) {
             query.append(" AND ct.status = ? ");
             params.add(categoryFilter.getStatus());
@@ -160,10 +160,10 @@ public class CategoryDAO {
 
         }
 
-        // GROUP BY
+        /** GROUP BY */
         query.append(" GROUP BY ct.id, ct.name, ct.icon, ct.description, ct.status, ct.created_at, ct.updated_at ");
 
-        // sort (giữ kiểu đơn giản)
+        /** Sắp xếp */
         if (categoryFilter.getSort() != null && !categoryFilter.getSort().isEmpty()) {
 
             String sortField = "ct.id";
@@ -184,7 +184,7 @@ public class CategoryDAO {
             query.append(" ORDER BY ").append(sortField).append(" ").append(sortOrder);
         }
 
-        // pagination
+        /** Phân trang */
         int offset = (categoryFilter.getPage() - 1) * categoryFilter.getLimit();
         query.append(" LIMIT ? OFFSET ? ");
         params.add(categoryFilter.getLimit());

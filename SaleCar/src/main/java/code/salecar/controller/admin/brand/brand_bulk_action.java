@@ -2,7 +2,7 @@ package code.salecar.controller.admin.brand;
 
 import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.BrandService;
-import code.salecar.service.product.CategoryService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,47 +19,59 @@ public class brand_bulk_action extends HttpServlet {
     BrandService brandService = new BrandService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy action
         String action = request.getParameter("action");
-        if (action.isEmpty() || action == null) {
-            response.sendRedirect("admin/brands");
+        if (action == null || action.isEmpty()) {
+            NotificationUtil.setError(request.getSession(), "Thiếu hành động");
+            response.sendRedirect("/admin/brands");
+            return;
         }
 
-        //Lấy danh sách ids
         String[] idsParam = request.getParameterValues("ids");
         List<Integer> ids = idsParam == null ? new ArrayList<>()
                 : Arrays.stream(idsParam)
                 .filter(s -> s != null && !s.isBlank())
                 .map(Integer::parseInt)
                 .toList();
-        if (ids == null || ids.size() == 0) {
+        if (ids == null || ids.isEmpty()) {
+            NotificationUtil.setError(request.getSession(), "Vui lòng chọn ít nhất một thương hiệu");
             response.sendRedirect(request.getContextPath() + "/admin/brands");
             return;
         }
 
         try {
-            if (action.equals("active")) {
+            int successCount = 0;
+            if ("active".equals(action)) {
                 for (int id : ids) {
-                    brandService.toggleStatus(id, Status.ACTIVE);
+                    if (brandService.toggleStatus(id, Status.ACTIVE)) {
+                        successCount++;
+                    }
                 }
-            }else if (action.equals("inactive")) {
+            } else if ("inactive".equals(action)) {
                 for (int id : ids) {
-                    brandService.toggleStatus(id,Status.INACTIVE);
+                    if (brandService.toggleStatus(id, Status.INACTIVE)) {
+                        successCount++;
+                    }
                 }
             }
 
-        }catch (Exception ex){
-            ex.printStackTrace();
+            if (successCount > 0) {
+                NotificationUtil.setSuccess(request.getSession(),
+                        "Đã chuyển trạng thái " + successCount + "/" + ids.size() + " thương hiệu thành công!");
+            } else {
+                NotificationUtil.setError(request.getSession(), "Không thể chuyển trạng thái thương hiệu");
+            }
+        } catch (Exception ex) {
+            NotificationUtil.setError(request.getSession(), "Lỗi khi xử lý: " + ex.getMessage());
         }
 
-
-        String redirectUrl =  request.getParameter("redirectUrl");
+        String redirectUrl = request.getParameter("redirectUrl");
         if (redirectUrl != null && !redirectUrl.isEmpty()) {
             response.sendRedirect(redirectUrl);
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/brands");
         }
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
