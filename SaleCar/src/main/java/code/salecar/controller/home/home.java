@@ -3,6 +3,7 @@ package code.salecar.controller.home;
 import code.salecar.model.brand.Brand;
 import code.salecar.model.category.Category;
 import code.salecar.model.product.dto.ProductItemDTO;
+import code.salecar.model.product.entity.Banner;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
 import code.salecar.service.home.HomeService;
@@ -45,8 +46,8 @@ public class home extends HttpServlet {
         List<Category> categories = hs.getCategory();
         request.setAttribute("categories",categories);
 
-
-
+        List<Banner> banners = hs.getActiveBanners();
+        request.setAttribute("banners", banners);
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
 
