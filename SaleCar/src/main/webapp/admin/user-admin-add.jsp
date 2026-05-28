@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Người dùng | LUXCAR</title>
+    <title>Admin - Tạo mới Người dùng | LUXCAR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -420,64 +420,10 @@
             border: 0.5px solid #f0c0c0;
         }
 
-        .modal-content {
-            background-color: #ffffff;
-            border: 1px solid #e9edf2;
-            border-radius: 28px;
-            color: #1e293b;
-        }
-
-        .modal-header {
-            border-bottom-color: #eef2f6;
-        }
-
-        .modal-footer {
-            border-top-color: #eef2f6;
-        }
-
-        .btn-close {
-            filter: none;
-        }
-
-        .text-muted {
-            color: #7c8b9c !important;
-        }
-
-        .alert-warning {
-            background-color: #fff8e8;
-            border-color: #ffe0b2;
-            color: #c9772e;
-        }
-
-        .alert-info {
-            background-color: #eef2ff;
-            border-color: #cbdff2;
-            color: #2c5f8a;
-        }
-
-        .btn-success {
-            background-color: #2e7d5e;
-            border: none;
-        }
-
-        .btn-success:hover {
-            background-color: #236b4f;
-        }
-
-        .btn-secondary {
-            background-color: #e2e8f0;
-            border: none;
-            color: #475569;
-        }
-
-        .btn-secondary:hover {
-            background-color: #cbd5e1;
-            color: #1e293b;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            border: none;
+        .error-message {
+            font-size: 13px;
+            display: block;
+            margin-top: 5px;
         }
 
         @media (max-width: 992px) {
@@ -514,31 +460,23 @@
             <div class="card shadow-sm">
                 <div class="card-body p-0">
                     <div class="form-card">
-                        <form action="/addUser" method="post" enctype="multipart/form-data">
+                        <form id="userForm" action="/addUser" method="post" enctype="multipart/form-data">
 
                             <!-- Avatar Upload Section -->
                             <div class="avatar-upload-section">
                                 <div class="current-avatar">
-                                            <img id="avatarPreview" src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
+                                    <img id="avatarPreview" src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
                                 </div>
-
                                 <div class="upload-btn-wrapper">
                                     <label for="avatarInput" class="btn-upload">
                                         <i class="fas fa-camera"></i> Chọn ảnh đại diện
                                     </label>
-                                    <input type="file"
-                                           id="avatarInput"
-                                           name="avatar"
-                                           accept="image/jpeg,image/png,image/gif,image/jpg"
-                                           style="display: none;">
+                                    <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png,image/gif,image/jpg" style="display: none;">
                                     <small class="text-muted d-block mt-2">Hỗ trợ: JPG, PNG, GIF. Tối đa 5MB</small>
                                     <c:if test="${not empty avatarError}">
-                                        <span class="error-message" style="color: red;">
-                                            <i class="bi bi-x-circle"></i> ${avatarError}
-                                        </span>
+                                        <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${avatarError}</span>
                                     </c:if>
                                 </div>
-
                                 <div id="uploadPreview" class="mt-2" style="display: none;">
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle"></i> Đã chọn: <span id="fileName"></span>
@@ -553,156 +491,81 @@
                                 </h3>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tên đăng nhập</label>
-                                        <input type="text" class="form-control" name="username" value="${param.username}" required>
+                                        <label class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="username" value="${paramUsername}" required>
                                         <c:if test="${not empty usernameError}">
-                                            <span class="error-message" style="color: red;">
-                                                <i class="bi bi-x-circle"></i> ${usernameError}
-                                            </span>
+                                            <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${usernameError}</span>
                                         </c:if>
-                                        <small class="form-text text-muted">
-                                            Tên đăng nhập từ 4–20 ký tự, chỉ gồm chữ cái và số, không chứa khoảng trắng
-                                        </small>
+                                        <small class="form-text text-muted">Tên đăng nhập từ 4–20 ký tự, chỉ gồm chữ cái và số, không chứa khoảng trắng</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">mật khẩu</label>
-                                        <input type="text" class="form-control" name="password" value="${param.password}" required>
+                                        <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="password" value="${paramPassword}" required>
                                         <c:if test="${not empty passwordError}">
-                                            <span class="error-message" style="color: red;">
-                                                <i class="bi bi-x-circle"></i> ${passwordError}
-                                            </span>
+                                            <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${passwordError}</span>
                                         </c:if>
-                                        <small class="form-text text-muted">
-                                            mật khẩu từ 4–20 ký tự, gồm chữ cái, số, kí tự đặc biêt, chữ viết hoa, không chứa khoảng trắng
-                                        </small>
+                                        <small class="form-text text-muted">Mật khẩu từ 4–20 ký tự, gồm chữ cái, số, kí tự đặc biệt, chữ viết hoa, không chứa khoảng trắng</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="fullname" value="${param.fullname}" required>
+                                        <input type="text" class="form-control" name="fullname" value="${paramFullname}" required>
                                         <c:if test="${not empty fullnameError}">
-                                            <span class="error-message" style="color: red;">
-                                                <i class="bi bi-x-circle"></i> ${fullnameError}
-                                            </span>
+                                            <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${fullnameError}</span>
                                         </c:if>
-                                        <small class="form-text text-muted">
-                                            Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
-                                        </small>
+                                        <small class="form-text text-muted">Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" name="email" value="${param.email}" required>
+                                        <input type="email" class="form-control" name="email" value="${paramEmail}" required>
                                         <c:if test="${not empty emailError}">
-                                            <span class="error-message" style="color: red;">
-                                                <i class="bi bi-x-circle"></i> ${emailError}
-                                            </span>
+                                            <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${emailError}</span>
                                         </c:if>
-                                        <small class="form-text text-muted">
-                                            Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
-                                        </small>
+                                        <small class="form-text text-muted">Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" name="phoneNumber" value="${param.phoneNumber}">
+                                        <input type="text" class="form-control" name="phoneNumber" value="${paramPhoneNumber}">
                                         <c:if test="${not empty phonenumberError}">
-                                            <span class="error-message" style="color: red;">
-                                                <i class="bi bi-x-circle"></i> ${phonenumberError}
-                                            </span>
+                                            <span class="error-message text-danger"><i class="bi bi-x-circle"></i> ${phonenumberError}</span>
                                         </c:if>
-                                        <small class="form-text text-muted">
-                                            Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
-                                        </small>
+                                        <small class="form-text text-muted">Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84</small>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Vai trò</label>
                                         <select class="form-select" name="role">
-                                            <option value="user">ROLE_USER</option>
-                                            <option value="admin">ROLE_ADMIN</option>
+                                            <option value="user" ${paramRole == 'user' ? 'selected' : ''}>ROLE_USER</option>
+                                            <option value="admin" ${paramRole == 'admin' ? 'selected' : ''}>ROLE_ADMIN</option>
                                         </select>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label class="form-label">Mô tả</label>
-                                        <textarea class="form-control" name="description">${param.description}</textarea>
+                                        <textarea class="form-control" name="description">${paramDescription}</textarea>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Trạng thái</label>
                                         <div class="status-options">
                                             <label class="status-option">
-                                                <input type="radio" name="status" value="true" >
+                                                <input type="radio" name="status" value="true" ${paramStatus == 'true' ? 'checked' : ''}>
                                                 <span class="status-badge status-active">Hoạt động</span>
                                             </label>
                                             <label class="status-option">
-                                                <input type="radio" name="status" value="false" >
+                                                <input type="radio" name="status" value="false" ${paramStatus == 'false' ? 'checked' : ''}>
                                                 <span class="status-badge status-inactive">Không hoạt động</span>
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Address ID</label>
-                                        <select class="form-select" name="addressId">
-                                            <option value="0">Chọn địa chỉ chính</option>
-                                            <c:forEach var="a" items="${listAddressTemp}">
-                                                <option value="${a.id}" ${a.type == 'main' ? 'selected' : ''}>
-                                                        ${a.id} - ${a.name} - ${a.type == 'main' ? 'Địa chỉ chính' : 'Địa chỉ phụ'}
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Address Information Section -->
+                            <!-- Address Information Section (dynamic by JS) -->
                             <div class="form-section">
                                 <h3 class="form-section-title">
                                     <i class="fas fa-map-marker-alt"></i> Thông tin địa chỉ (ADDRESS)
                                 </h3>
-
-                                <c:choose>
-                                    <c:when test="${not empty listAddressTemp}">
-                                        <c:forEach var="a" items="${listAddressTemp}" varStatus="status">
-                                            <div class="address-box">
-                                                <div class="address-box-header">
-                                                    <h4>
-                                                        <c:choose>
-                                                            <c:when test="${a.type == 'main'}">
-                                                                🏠 Địa chỉ chính: ${a.name} (ID: ${a.id})
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                📍 Địa chỉ phụ: ${a.name} (ID: ${a.id})
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </h4>
-                                                    <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#deleteAddressModal_${a.id}">
-                                                        <i class="fas fa-trash-alt"></i> Xóa địa chỉ
-                                                    </button>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-md-4 mb-3">
-                                                        <label class="form-label">Số nhà, tên đường</label>
-                                                        <input type="text" class="form-control" name="street${a.id}" value="${a.street}">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label class="form-label">Xã/Phường</label>
-                                                        <input type="text" class="form-control" name="commune${a.id}" value="${a.commune}">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <label class="form-label">Tỉnh/Thành phố</label>
-                                                        <input type="text" class="form-control" name="province${a.id}" value="${a.province}">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div class="address-box">
-                                            <div class="address-box-header">
-                                                <h4>📭 Chưa có địa chỉ nào</h4>
-                                            </div>
-                                            <p class="text-muted">Hãy thêm địa chỉ mới bằng nút bên dưới.</p>
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
-
+                                <c:if test="${not empty addressError}">
+                                    <div class="alert alert-danger">${addressError}</div>
+                                </c:if>
+                                <div id="addressListContainer"></div>
                                 <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                                     <i class="fas fa-plus-circle"></i> Thêm địa chỉ mới
                                 </button>
@@ -725,40 +588,7 @@
     </main>
 </div>
 
-<c:forEach var="a" items="${listAddress}">
-    <div class="modal fade" id="deleteAddressModal_${a.id}" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-exclamation-triangle text-danger"></i> Xác nhận xóa địa chỉ
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Bạn có chắc chắn muốn xóa địa chỉ này không?</p>
-                    <p class="text-danger mb-0"><strong>${a.name}</strong></p>
-                    <p class="text-muted small">${a.street}, ${a.commune}, ${a.province}</p>
-                    <c:if test="${a.type == 'main'}">
-                        <div class="alert alert-warning mt-2">
-                            <i class="fas fa-exclamation-circle"></i> Lưu ý: Đây là địa chỉ chính. Sau khi xóa, bạn cần chọn địa chỉ chính mới.
-                        </div>
-                    </c:if>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Hủy
-                    </button>
-                    <a href="/addAdressAdmin?id=${a.id}&userId=${user.id}" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i> Xóa vĩnh viễn
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</c:forEach>
-
-<!-- Modal thêm địa chỉ -->
+<!-- Modal thêm địa chỉ với API tỉnh/huyện/xã -->
 <div class="modal fade" id="addAddressModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -768,54 +598,58 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="${pageContext.request.contextPath}/addAdressAdmin" method="post">
-                <div class="modal-body">
-                    <input type="hidden" name="id" value="${user.id}">
-
-                    <div class="mb-3">
-                        <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" placeholder="Ví dụ: Nhà riêng, Văn phòng, Công ty..." required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Loại địa chỉ</label>
-                        <select class="form-select" name="type">
-                            <option value="normal">Địa chỉ phụ</option>
-                            <option value="main">Địa chỉ chính</option>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="addressName" placeholder="Ví dụ: Nhà riêng, Công ty...">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Loại địa chỉ</label>
+                    <select class="form-select" id="addressType">
+                        <option value="normal">Địa chỉ phụ</option>
+                        <option value="main" selected>Địa chỉ chính</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Tỉnh/Thành phố</label>
+                        <select class="form-select" id="provinceSelect">
+                            <option value="">-- Chọn tỉnh/thành --</option>
                         </select>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Số nhà, tên đường</label>
-                            <input type="text" class="form-control" name="street" placeholder="Số nhà, tên đường">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Xã/Phường</label>
-                            <input type="text" class="form-control" name="commune" placeholder="Xã/Phường">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Tỉnh/Thành phố</label>
-                            <input type="text" class="form-control" name="province" placeholder="Tỉnh/Thành phố">
-                        </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Quận/Huyện</label>
+                        <select class="form-select" id="districtSelect" disabled>
+                            <option value="">-- Chọn quận/huyện --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Xã/Phường</label>
+                        <select class="form-select" id="wardSelect" disabled>
+                            <option value="">-- Chọn xã/phường --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Số nhà, tên đường</label>
+                        <input type="text" class="form-control" id="street" placeholder="Số nhà, tên đường">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Hủy
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save"></i> Thêm địa chỉ
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Hủy
+                </button>
+                <button type="button" class="btn btn-success" id="confirmAddAddressBtn">
+                    <i class="fas fa-save"></i> Thêm địa chỉ
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Preview avatar before upload
+    // ======================== 1. Avatar preview ========================
     document.getElementById('avatarInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -828,6 +662,194 @@
             reader.readAsDataURL(file);
         }
     });
+
+    // ======================== 2. API lấy địa chỉ (tỉnh/huyện/xã) ========================
+    const apiUrl = 'https://provinces.open-api.vn/api/';
+
+    // Load tỉnh/thành
+    fetch(apiUrl + 'p/')
+        .then(res => res.json())
+        .then(data => {
+            const provinceSelect = document.getElementById('provinceSelect');
+            provinceSelect.innerHTML = '<option value="">-- Chọn tỉnh/thành --</option>';
+            data.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province.code;
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
+            });
+        });
+
+    document.getElementById('provinceSelect').addEventListener('change', function() {
+        const provinceCode = this.value;
+        const districtSelect = document.getElementById('districtSelect');
+        const wardSelect = document.getElementById('wardSelect');
+        if (!provinceCode) {
+            districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+            districtSelect.disabled = true;
+            wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+            wardSelect.disabled = true;
+            return;
+        }
+        fetch(apiUrl + `p/${provinceCode}?depth=2`)
+            .then(res => res.json())
+            .then(data => {
+                districtSelect.disabled = false;
+                districtSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+                data.districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.code;
+                    option.textContent = district.name;
+                    districtSelect.appendChild(option);
+                });
+                wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+                wardSelect.disabled = true;
+            });
+    });
+
+    document.getElementById('districtSelect').addEventListener('change', function() {
+        const districtCode = this.value;
+        const wardSelect = document.getElementById('wardSelect');
+        if (!districtCode) {
+            wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+            wardSelect.disabled = true;
+            return;
+        }
+        fetch(apiUrl + `d/${districtCode}?depth=2`)
+            .then(res => res.json())
+            .then(data => {
+                wardSelect.disabled = false;
+                wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+                data.wards.forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward.code;
+                    option.textContent = ward.name;
+                    wardSelect.appendChild(option);
+                });
+            });
+    });
+
+    // ======================== 3. Quản lý danh sách địa chỉ tạm ========================
+    let tempAddresses = [];
+
+    // Lấy dữ liệu từ server nếu có (khi forward lại do lỗi)
+    <c:if test="${not empty tempAddressesJson}">
+    tempAddresses = JSON.parse('${tempAddressesJson}');
+    </c:if>
+
+    // Hàm escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Render danh sách địa chỉ
+    function renderAddresses() {
+        const container = document.getElementById('addressListContainer');
+        if (!container) return;
+        if (tempAddresses.length === 0) {
+            container.innerHTML = `
+                <div class="address-box">
+                    <div class="address-box-header"><h4>📭 Chưa có địa chỉ nào</h4></div>
+                    <p class="text-muted">Hãy thêm địa chỉ mới bằng nút bên dưới.</p>
+                </div>`;
+            return;
+        }
+        let html = '';
+        tempAddresses.forEach((addr, idx) => {
+            html += `
+                <div class="address-box" data-addr-index="\${idx}">
+                    <div class="address-box-header">
+                        <h4>\${addr.type === 'main' ? '🏠 Địa chỉ chính' : '📍 Địa chỉ phụ'}: \${escapeHtml(addr.name)}</h4>
+                        <button type="button" class="btn-remove-address" onclick="removeAddress(\${idx})">
+                            <i class="fas fa-trash-alt"></i> Xóa địa chỉ
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Số nhà, tên đường</label>
+                            <input type="text" class="form-control" name="addresses[\${idx}].street" value="\${escapeHtml(addr.street)}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Xã/Phường</label>
+                            <input type="text" class="form-control" name="addresses[\${idx}].commune" value="\${escapeHtml(addr.commune)}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Tỉnh/Thành phố</label>
+                            <input type="text" class="form-control" name="addresses[\${idx}].province" value="\${escapeHtml(addr.province)}">
+                        </div>
+                        <input type="hidden" name="addresses[\${idx}].name" value="\${escapeHtml(addr.name)}">
+                        <input type="hidden" name="addresses[\${idx}].type" value="\${addr.type}">
+                    </div>
+                </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    window.removeAddress = function(index) {
+        tempAddresses.splice(index, 1);
+        renderAddresses();
+    };
+
+    // Xử lý thêm địa chỉ từ modal
+    document.getElementById('confirmAddAddressBtn').addEventListener('click', function() {
+        const name = document.getElementById('addressName').value.trim();
+        if (!name) {
+            alert('Vui lòng nhập tên địa chỉ');
+            return;
+        }
+        const type = document.getElementById('addressType').value;
+        const provinceSelect = document.getElementById('provinceSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const wardSelect = document.getElementById('wardSelect');
+        const street = document.getElementById('street').value.trim();
+
+        const provinceText = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
+        const districtText = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+        const wardText = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+
+        const newAddress = {
+            name: name,
+            type: type,
+            street: street,
+            commune: wardText,
+            province: provinceText,
+            fullAddress: `${street ? street + ', ' : ''}${wardText ? wardText + ', ' : ''}${districtText ? districtText + ', ' : ''}${provinceText}`
+        };
+        tempAddresses.push(newAddress);
+        renderAddresses();
+
+        // Reset form và đóng modal
+        document.getElementById('addressName').value = '';
+        document.getElementById('street').value = '';
+        document.getElementById('provinceSelect').value = '';
+        document.getElementById('districtSelect').innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+        document.getElementById('districtSelect').disabled = true;
+        document.getElementById('wardSelect').innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+        document.getElementById('wardSelect').disabled = true;
+        bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+    });
+
+    // Khi submit form chính, gắn danh sách địa chỉ dưới dạng JSON vào một hidden field
+    const mainForm = document.getElementById('userForm');
+    mainForm.addEventListener('submit', function(e) {
+        // Xóa tất cả các hidden field cũ nếu có (tránh trùng lặp)
+        const oldHidden = document.querySelector('input[name="addressesJson"]');
+        if (oldHidden) oldHidden.remove();
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'addressesJson';
+        hiddenField.value = JSON.stringify(tempAddresses);
+        mainForm.appendChild(hiddenField);
+    });
+
+    // Render khi trang load
+    renderAddresses();
 </script>
 </body>
 </html>
