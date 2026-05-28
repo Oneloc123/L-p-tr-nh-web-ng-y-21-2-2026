@@ -61,7 +61,7 @@ public class UploadProductImageServlet extends HttpServlet {
                     String fileName = part.getSubmittedFileName();
                     if (fileName == null || fileName.trim().isEmpty()) continue;
 
-                    // Validate file extension
+                    /** Kiểm tra định dạng file */
                     String ext = getFileExtension(fileName).toLowerCase();
                     if (!isAllowedExtension(ext)) {
                         NotificationUtil.setError(request.getSession(),
@@ -70,7 +70,7 @@ public class UploadProductImageServlet extends HttpServlet {
                         return;
                     }
 
-                    // Validate file size (max 5MB per file)
+                    /** Kiểm tra kích thước file (tối đa 5MB mỗi file) */
                     if (part.getSize() > 5 * 1024 * 1024) {
                         NotificationUtil.setError(request.getSession(),
                                 "File " + fileName + " vượt quá 5MB.");

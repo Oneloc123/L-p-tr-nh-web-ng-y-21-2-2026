@@ -38,7 +38,6 @@ public class UploadFileServlet
 
         // full path thật trên disk
         Path filePath = Paths.get(baseDir, requestedFile);
-        System.out.println(filePath);
 
         // check tồn tại
         if (!Files.exists(filePath)) {

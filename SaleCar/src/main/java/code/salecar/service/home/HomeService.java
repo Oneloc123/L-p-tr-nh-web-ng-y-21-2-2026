@@ -5,6 +5,8 @@ import code.salecar.model.category.Category;
 import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.Discount;
 import code.salecar.model.product.entity.Product;
+import code.salecar.model.product.entity.Banner;
+import code.salecar.service.product.BannerService;
 import code.salecar.service.product.BrandService;
 import code.salecar.service.product.CategoryService;
 import code.salecar.service.product.ProductService;
@@ -17,6 +19,7 @@ public class HomeService {
     ProductService productService = new ProductService();
     BrandService brandService = new BrandService();
     CategoryService categoryService = new CategoryService();
+    BannerService bannerService = new BannerService();
 
 
 
@@ -54,5 +57,9 @@ public class HomeService {
     public List<Category> getCategory() {
         List<Category> categories = categoryService.getCategory();
         return categories.subList(0,4);
+    }
+
+    public List<Banner> getActiveBanners() {
+        return bannerService.getActiveBanners();
     }
 }

@@ -16,12 +16,14 @@ public class brand_list extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        search=""
-//        &status= "active" or "inactive"
-//        &sort="product_count" or "id" or "name" or "status" or "crateAt"
-//        &order="asc" or "desc"
-//        &page=1
-//        &limit=100
+/** Tham số URL mẫu:
+ *   search=""
+ *   &status="active" hoặc "inactive"
+ *   &sort="product_count" hoặc "id" hoặc "name" hoặc "status" hoặc "createdAt"
+ *   &order="asc" hoặc "desc"
+ *   &page=1
+ *   &limit=100
+ */
 
         int limit = 10;
         int page = 1;

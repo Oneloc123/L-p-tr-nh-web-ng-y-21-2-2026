@@ -52,7 +52,7 @@ public class DeleteImageServlet extends HttpServlet {
             // Xóa khỏi database trước
             imageService.deleteProductImage(productId, imageUrl);
 
-            // Log activity
+            /** Ghi log hoạt động */
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             String userName = (user != null) ? user.getFullname() : "Admin";

@@ -73,7 +73,7 @@ public class product_create extends HttpServlet {
         String[] skuParams = request.getParameterValues("sku[]");
         String[] priceParams = request.getParameterValues("price[]");
 
-        // Discount parameters
+        /** Tham số khuyến mãi */
         String discountNameParam = request.getParameter("discountName");
         String discountValueTypeParam = request.getParameter("discountValueType");
         String discountValueParam = request.getParameter("discountPercent");
@@ -81,7 +81,7 @@ public class product_create extends HttpServlet {
         String discountEndDateParam = request.getParameter("discountEndDate");
 
 
-        // Print all variables
+        /** In tất cả biến */
 //        System.out.println("====== ALL PARAMETERS ======");
 //        System.out.println("nameParam: " + nameParam);
 //        System.out.println("categoryIdParam: " + categoryIdParam);
@@ -98,7 +98,7 @@ public class product_create extends HttpServlet {
 //        System.out.println("discountPercentParam: " + discountPercentParam);
 //        System.out.println("=============================");
 
-        // Validation for variants
+        /** Kiểm tra biến thể */
         if (variantNameParams == null || variantNameParams.length == 0) {
             NotificationUtil.setError(request.getSession(), "Phải có ít nhất một biến thể");
             doGet(request, response);
@@ -204,7 +204,7 @@ public class product_create extends HttpServlet {
                 .status(Status.fromString(statusParam))
                 .build();
 
-        // Create list of ProductVariants
+        /** Tạo danh sách biến thể */
         List<ProductVariants> variants = new ArrayList<>();
         for (int i = 0; i < variantNameParams.length; i++) {
             ProductVariants variant = ProductVariants.builder().variantName(variantNameParams[i]).sku(skuParams[i]).price(new BigDecimal(priceParams[i])).build();
@@ -212,6 +212,7 @@ public class product_create extends HttpServlet {
         }
 
         // Create product using service
+
         ProductDetailDTO productDetail = ProductDetailDTO.builder().product(product).variants(variants).build();
         long productId = productService.createProduct(productDetail);
 

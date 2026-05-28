@@ -80,7 +80,7 @@ public class product_edit extends HttpServlet {
         String origin = request.getParameter("origin");
         String description = request.getParameter("description");
 
-        // Parse variant arrays
+        /** Phân tích mảng biến thể */
         String[] variantIds = request.getParameterValues("variantId[]");
         String[] variantNames = request.getParameterValues("variantName[]");
         String[] variantSkus = request.getParameterValues("variantSku[]");
@@ -123,7 +123,7 @@ public class product_edit extends HttpServlet {
             errors.put("status", "Trạng thái không hợp lệ");
         }
 
-        // Validate variants
+        /** Kiểm tra biến thể */
         Set<String> variantNameSet = new HashSet<>();
         if (variantIds != null) {
             for (int i = 0; i < variantIds.length; i++) {

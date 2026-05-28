@@ -3,6 +3,7 @@ package code.salecar.controller.admin.category;
 import code.salecar.model.category.Category;
 import code.salecar.model.enumeration.Status;
 import code.salecar.service.product.CategoryService;
+import code.salecar.util.NotificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,20 +19,20 @@ public class category_create extends HttpServlet {
     private CategoryService categoryService = new CategoryService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get form parameters
+        /** Lấy tham số từ form */
         String name = request.getParameter("name");
         String icon = request.getParameter("icon");
         String description = request.getParameter("description");
         String statusStr = request.getParameter("status");
 
-        // Create category object
+        /** Tạo đối tượng danh mục */
         Category category = new Category();
         category.setName(name);
         category.setIcon(icon);
         category.setDescription(description);
         category.setStatus(statusStr != null ? Status.INACTIVE : Status.ACTIVE);
 
-        // Validate input
+        /** Kiểm tra dữ liệu đầu vào */
         Map<String, String> errors = new HashMap<>();
         if (name == null || name.trim().isEmpty()) {
             errors.put("name", "Category name is required");
@@ -49,7 +50,7 @@ public class category_create extends HttpServlet {
             errors.put("description", "Description must be less than 500 characters");
         }
 
-        // Check for duplicate name if no other errors
+        /** Kiểm tra tên bị trùng nếu không có lỗi khác */
         if (errors.isEmpty() && name != null && !name.trim().isEmpty()) {
             try {
                 Map<String, String> validationErrors = categoryService.validateCategory(category);
@@ -61,7 +62,7 @@ public class category_create extends HttpServlet {
             }
         }
 
-        // If validation errors, return to form
+        /** Nếu có lỗi xác thực, quay lại form */
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
             request.setAttribute("category", category);
@@ -69,21 +70,19 @@ public class category_create extends HttpServlet {
             return;
         }
 
-        // Try to create category
+        /** Thử tạo danh mục */
         try {
             boolean success = categoryService.createCategory(category);
             if (success) {
-                request.setAttribute("successMessage", "Category created successfully!");
-                response.sendRedirect(request.getContextPath() + "/admin/categories?success=create");
+                NotificationUtil.setSuccess(request.getSession(), "Tạo danh mục thành công!");
+                response.sendRedirect(request.getContextPath() + "/admin/categories");
             } else {
-                request.setAttribute("errorMessage", "Failed to create category. Please try again.");
-                request.setAttribute("category", category);
-                request.getRequestDispatcher("/admin/category/category-create.jsp").forward(request, response);
+                NotificationUtil.setError(request.getSession(), "Không thể tạo danh mục");
+                response.sendRedirect(request.getContextPath() + "/admin/categories");
             }
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Error creating category: " + e.getMessage());
-            request.setAttribute("category", category);
-            request.getRequestDispatcher("/admin/category/category-create.jsp").forward(request, response);
+            NotificationUtil.setError(request.getSession(), "Lỗi khi tạo danh mục: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/admin/categories");
         }
     }
 

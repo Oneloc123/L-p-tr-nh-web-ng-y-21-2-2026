@@ -50,7 +50,7 @@ public class UpdateProductBasicServlet extends HttpServlet {
             error.put("status", "Sản phẩm phải được chọn trạng thái hoạt động");
         }
 
-        // Parse integer
+        /** Phân tích số nguyên */
         Integer id = null;
         try {
             id = Integer.parseInt(productIdStr);

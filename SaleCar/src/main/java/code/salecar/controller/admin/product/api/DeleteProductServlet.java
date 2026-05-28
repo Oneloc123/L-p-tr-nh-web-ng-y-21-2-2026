@@ -36,7 +36,7 @@ public class DeleteProductServlet extends HttpServlet {
             boolean deleted = productService.deleteProduct(id);
 
             if (deleted) {
-                // Log activity
+                /** Ghi log hoạt động */
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
                 String userName = (user != null) ? user.getFullname() : "Admin";

@@ -59,7 +59,7 @@ public class CategoryService {
     public boolean toggleStatus(int id) {
         Category category = categoryDAO.getCategoryById(id);
         if (category != null) {
-            // toggle
+            /** Chuyển đổi trạng thái */
             Status newStatus = category.getIntStatus() == 1 ? Status.INACTIVE : Status.ACTIVE;
             category.setStatus(newStatus);
             return categoryDAO.updateCategory(category);
@@ -69,7 +69,7 @@ public class CategoryService {
     public boolean toggleStatus(int id, Status status) {
         Category category = categoryDAO.getCategoryById(id);
         if (category != null) {
-            // toggle
+            /** Chuyển đổi trạng thái */
             category.setStatus(status);
             return categoryDAO.updateCategory(category);
         }
@@ -79,26 +79,26 @@ public class CategoryService {
     public Map<String, String> validateCategory(Category category) {
         Map<String, String> errors = new HashMap<>();
 
-        // Validate name
+        /** Kiểm tra tên */
         if (category.getName() == null || category.getName().trim().isEmpty()) {
-            errors.put("name", "Category name is required");
+            errors.put("name", "Tên danh mục không được để trống");
         } else if (category.getName().length() > 100) {
-            errors.put("name", "Category name must be less than 100 characters");
+            errors.put("name", "Tên danh mục không được vượt quá 100 ký tự");
         }
 
-        // Validate icon
+        /** Kiểm tra icon */
         if (category.getIcon() == null || category.getIcon().trim().isEmpty()) {
-            errors.put("icon", "Icon is required");
+            errors.put("icon", "Icon không được để trống");
         } else if (category.getIcon().length() > 50) {
-            errors.put("icon", "Icon must be less than 50 characters");
+            errors.put("icon", "Icon không được vượt quá 50 ký tự");
         }
 
-        // Validate description
+        /** Kiểm tra mô tả */
         if (category.getDescription() != null && category.getDescription().length() > 500) {
-            errors.put("description", "Description must be less than 500 characters");
+            errors.put("description", "Mô tả không được vượt quá 500 ký tự");
         }
 
-        // Check for duplicate name
+        /** Kiểm tra tên bị trùng */
         if (category.getName() != null && !category.getName().trim().isEmpty()) {
             List<String> existingNames = categoryDAO.getCategoryName();
             for (String name : existingNames) {
