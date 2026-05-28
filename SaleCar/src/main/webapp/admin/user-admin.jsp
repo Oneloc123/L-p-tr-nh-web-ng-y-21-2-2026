@@ -496,9 +496,9 @@
             <h3 class="fw-bold m-0"><i class="bi bi-people-fill me-2" style="color:#2c7da0;"></i> Quản lý người dùng
             </h3>
             <div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <a class="btn btn-primary" href="/addUser">
                     <i class="bi bi-plus-lg"></i> Thêm người dùng
-                </button>
+                </a>
             </div>
         </header>
 
@@ -777,156 +777,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- MODAL THÊM NGƯỜI DÙNG -->
-<div class="modal fade" id="addUserModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill text-primary me-2"></i> Thêm người dùng
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/addUser" method="post" enctype="multipart/form-data">
-                    <div class="row g-3">
-                        <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text"
-                                                                                                      class="form-control"
-                                                                                                      name="username"
-                                                                                                      value="${param.username}"required>
-                            <c:if test="${not empty usernameError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${usernameError}
-                                </span>
-                            </c:if>
-                            <small class="form-text text-muted">
-                                Tên đăng nhập từ 4–20 ký tự, chỉ gồm chữ cái và số, không chứa khoảng trắng
-                            </small>
-                        </div>
-
-                        <div class="col-md-6"><label class="form-label">Mật khẩu *</label><input type="password"
-                                                                                                 class="form-control"
-                                                                                                 name="password"
-                                                                                                 value="${param.password}"
-                                                                                                 required>
-                            <c:if test="${not empty passwordError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${passwordError}
-                                </span>
-                            </c:if>
-                            <small class="form-text text-muted">
-                                Mật khẩu tối thiểu 6 ký tự, nên bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt để tăng bảo mật
-                            </small>
-                        </div>
-                        <div class="col-md-6"><label class="form-label">Họ tên</label><input type="text"
-                                                                                             class="form-control"
-                                                                                             name="fullname"
-                                                                                             value="${param.fullname}">
-                            <c:if test="${not empty fullnameError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${fullnameError}
-                                </span>
-                            </c:if>
-                            <small class="form-text text-muted">
-                                Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)
-                            </small>
-                        </div>
-
-                        <div class="col-md-6"><label class="form-label">Email</label><input type="email"
-                                                                                            class="form-control"
-                                                                                            name="email"
-                                                                                            value="${param.email}">
-                            <c:if test="${not empty emailError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${emailError}
-                                </span>
-                            </c:if>
-                            <small class="form-text text-muted">
-                                Nhập email hợp lệ (VD: tenban@gmail.com), dùng để nhận thông báo và khôi phục mật khẩu
-                            </small>
-                        </div>
-                        <div class="col-md-6"><label class="form-label">Description</label><input type="text"
-                                                                                                  class="form-control"
-                                                                                                  name="description"
-                                                                                                  value="${param.description}"></div>
-                        <div class="col-md-6"><label class="form-label">Số điện thoại</label><input type="text"
-                                                                                                    class="form-control"
-                                                                                                    name="phonenumber"
-                                                                                                    value="${param.phonenumber}">
-                            <c:if test="${not empty phonenumberError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${phonenumberError}
-                                </span>
-                            </c:if>
-                            <small class="form-text text-muted">
-                                Số điện thoại gồm 10–11 số, bắt đầu bằng 0 hoặc +84 (VD: 0912345678 hoặc +84912345678)
-                            </small>
-                        </div>
-                        <div class="col-md-6"><label class="form-label">Vai trò</label><select class="form-select"
-                                                                                               name="role">
-                            <option value="user">user</option>
-                            <option value="admin">admin</option>
-                        </select></div>
-                        <div class="col-md-6"><label class="form-label">Trạng thái</label><select class="form-select"
-                                                                                                  name="status">
-                            <option value="true">Hoạt động</option>
-                            <option value="false">Đã khóa</option>
-                        </select></div>
-                        <div class="col-12">
-                            <div class="border rounded p-3 mt-3">
-                                <h6 class="mb-3">Thông tin địa chỉ tam thời</h6>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name"
-                                               placeholder="ví dụ: địa chỉ nhà, công ty..." required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Số nhà, tên đường</label>
-                                        <input type="text" class="form-control" name="street">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Xã/Phường</label>
-                                        <input type="text" class="form-control" name="commune">
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Tỉnh/Thành phố</label>
-                                        <input type="text" class="form-control" name="province">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label> <input type="file"
-                                                                                                         class="form-control" id="imageUpload" accept="image/jpeg,image/png,image/gif,image/jpg" name="avatar">
-                            <c:if test="${not empty avatarError}">
-                                <span class="error-message" style="color: red;">
-                                    <i class="bi bi-x-circle"></i> ${avatarError}
-                                </span>
-                            </c:if>
-                        </div>
-                    </div>
-                    <div class="modal-footer mt-4 px-0 pb-0 border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        <button class="btn btn-primary" type="submit">Thêm mới</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
-    window.onload = function() {
-        var openModal = '<%= request.getAttribute("openAddUserModal") != null ? request.getAttribute("openAddUserModal") : "false" %>';
-        if (openModal === "true") {
-            var myModal = new bootstrap.Modal(document.getElementById('addUserModal'));
-            myModal.show();
-        }
-    };
+
 </script>
 
 </body>

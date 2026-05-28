@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.util.List;
 
 @WebServlet(name = "AddUser", value = "/addUser")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 2 * 1024 * 1024,
@@ -25,7 +26,19 @@ import java.sql.Date;
 public class AddUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if(session==null||session.getAttribute("user")==null){
+            response.sendRedirect("/login");
+        }else{
+            UserService us = new UserService();
+            User userCheck = (User)session.getAttribute("user");
+            if(!userCheck.getRole().equals("admin")){
+                response.sendRedirect("/login");
+                return;
+            }
 
+            request.getRequestDispatcher("/admin/user-admin-add.jsp").forward(request,response);
+        }
     }
 
     @Override
@@ -39,39 +52,7 @@ public class AddUser extends HttpServlet {
         String role = request.getParameter("role");
         String statusStr = request.getParameter("status");
 
-        String link = "";
-        try {
-            Part filePart = request.getPart("avatar");
-            if (filePart != null && filePart.getSize() > 0) {
-                String submittedFileName = filePart.getSubmittedFileName();
-                if (submittedFileName != null && !submittedFileName.trim().isEmpty()) {
-                    String fileName = Paths.get(submittedFileName).getFileName().toString();
-                    String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
-                    if (!ext.matches("jpg|jpeg|png|webp")) {
-                        NotificationUtil.setError(request.getSession(), "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
-                        response.sendRedirect("/admin/user-admin-edit.jsp");
-                        return;
-                    }
-
-                    String newFileName = FileUtil.generateFileName(fileName);
-                    String baseDir = AppConfig.get("upload.base-dir");
-                    if (baseDir == null || baseDir.isEmpty()) {
-                        throw new RuntimeException("upload.base-dir not configured in application.properties");
-                    }
-
-                    java.nio.file.Path uploadPath = Paths.get(baseDir, "users");
-                    Files.createDirectories(uploadPath);
-                    java.nio.file.Path filePath = uploadPath.resolve(newFileName);
-                    filePart.write(filePath.toString());
-
-                    link = "/uploads/users/" + newFileName;
-                }
-            }
-        } catch (ServletException e) {
-            System.err.println("Warning: Could not process logo upload: " + e.getMessage());
-            return;
-        }
 
         String name = request.getParameter("name");
         String street = request.getParameter("street");
@@ -113,6 +94,41 @@ public class AddUser extends HttpServlet {
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
             return;
         }
+
+        String link = "";
+        try {
+            Part filePart = request.getPart("avatar");
+            if (filePart != null && filePart.getSize() > 0) {
+                String submittedFileName = filePart.getSubmittedFileName();
+                if (submittedFileName != null && !submittedFileName.trim().isEmpty()) {
+                    String fileName = Paths.get(submittedFileName).getFileName().toString();
+                    String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+
+                    if (!ext.matches("jpg|jpeg|png|webp")) {
+                        NotificationUtil.setError(request.getSession(), "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
+                        response.sendRedirect("/admin/user-admin-edit.jsp");
+                        return;
+                    }
+
+                    String newFileName = FileUtil.generateFileName(fileName);
+                    String baseDir = AppConfig.get("upload.base-dir");
+                    if (baseDir == null || baseDir.isEmpty()) {
+                        throw new RuntimeException("upload.base-dir not configured in application.properties");
+                    }
+
+                    java.nio.file.Path uploadPath = Paths.get(baseDir, "users");
+                    Files.createDirectories(uploadPath);
+                    java.nio.file.Path filePath = uploadPath.resolve(newFileName);
+                    filePart.write(filePath.toString());
+
+                    link = "/uploads/users/" + newFileName;
+                }
+            }
+        } catch (ServletException e) {
+            System.err.println("Warning: Could not process logo upload: " + e.getMessage());
+            return;
+        }
+
         UserService us = new UserService();
         User user = us.getUserByUsername(username);
         if(user!=null){
@@ -121,6 +137,7 @@ public class AddUser extends HttpServlet {
             request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
             return;
         }
+
         AddressService as = new AddressService();
         Address add = new Address();
         add.setName(name);
