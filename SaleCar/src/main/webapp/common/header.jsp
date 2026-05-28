@@ -110,9 +110,7 @@
                             <!-- Logged In User -->
                             <div class="auth-dropdown">
                                 <div class="user-avatar">
-                                    <img src="${sessionScope.user.imgURL != null && not empty sessionScope.user.imgURL
-                                                ? sessionScope.user.imgURL
-                                                : pageContext.request.contextPath.concat('/assets/img/default-product.png')}"
+                                    <img src="${pageContext.request.contextPath}${sessionScope.user.imgURL}"
                                          alt="Avatar"
                                          style="width: 100%; height: 100%; object-fit: cover;" />
                                 </div>

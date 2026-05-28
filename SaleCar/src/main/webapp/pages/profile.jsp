@@ -502,23 +502,10 @@
                 <div class="avatar-section">
 
                     <div class="avatar-wrapper">
-                        <c:set var="defaultImg" value="${pageContext.request.contextPath}/assets/img/default-product.png" />
 
-                        <c:choose>
-                            <c:when test="${not empty user.imgURL}">
-                                <c:set var="finalAvatar" value="${user.imgURL}" />
-                            </c:when>
-                            <c:when test="${not empty sessionScope.user.imgURL}">
-                                <c:set var="finalAvatar" value="${sessionScope.user.imgURL}" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:set var="finalAvatar" value="${defaultImg}" />
-                            </c:otherwise>
-                        </c:choose>
+                        <img src="${pageContext.request.contextPath}${sessionScope.user.imgURL}" class="profile-avatar" alt="Avatar" />
 
-                        <img src="${finalAvatar}" class="profile-avatar" alt="Avatar" />
-
-                        <a href="${pageContext.request.contextPath}/avatarEdit" class="edit-avatar-btn">
+                        <a href="${pageContext.request.contextPath}/profileEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
                     </div>

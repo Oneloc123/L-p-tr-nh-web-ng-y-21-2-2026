@@ -1,10 +1,13 @@
 package code.salecar.controller.admin.user;
 
+import code.salecar.config.AppConfig;
 import code.salecar.model.Address;
 import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
+import code.salecar.util.FileUtil;
+import code.salecar.util.NotificationUtil;
 import code.salecar.util.UploadUserImageUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -12,6 +15,8 @@ import jakarta.servlet.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 
 @WebServlet(name = "AddUser", value = "/addUser")
@@ -34,13 +39,37 @@ public class AddUser extends HttpServlet {
         String role = request.getParameter("role");
         String statusStr = request.getParameter("status");
 
-        String imgURL = null;
+        String link = "";
         try {
-            imgURL = UploadUserImageUtil.uploadImage(request, "avatar", "avatar");
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("fullnameError", e.getMessage());
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request, response);
+            Part filePart = request.getPart("avatar");
+            if (filePart != null && filePart.getSize() > 0) {
+                String submittedFileName = filePart.getSubmittedFileName();
+                if (submittedFileName != null && !submittedFileName.trim().isEmpty()) {
+                    String fileName = Paths.get(submittedFileName).getFileName().toString();
+                    String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+
+                    if (!ext.matches("jpg|jpeg|png|webp")) {
+                        NotificationUtil.setError(request.getSession(), "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
+                        response.sendRedirect("/admin/user-admin-edit.jsp");
+                        return;
+                    }
+
+                    String newFileName = FileUtil.generateFileName(fileName);
+                    String baseDir = AppConfig.get("upload.base-dir");
+                    if (baseDir == null || baseDir.isEmpty()) {
+                        throw new RuntimeException("upload.base-dir not configured in application.properties");
+                    }
+
+                    java.nio.file.Path uploadPath = Paths.get(baseDir, "users");
+                    Files.createDirectories(uploadPath);
+                    java.nio.file.Path filePath = uploadPath.resolve(newFileName);
+                    filePart.write(filePath.toString());
+
+                    link = "/uploads/users/" + newFileName;
+                }
+            }
+        } catch (ServletException e) {
+            System.err.println("Warning: Could not process logo upload: " + e.getMessage());
             return;
         }
 
@@ -112,7 +141,7 @@ public class AddUser extends HttpServlet {
         u.setPhonenumber(phone);
         u.setRole(role);
         u.setStatus(status);
-        u.setImgURL(imgURL);
+        u.setImgURL(link);
         u.setCreatedat(new Date(System.currentTimeMillis()));
         u.setUpdatedat(new Date(System.currentTimeMillis()));
         us.register(u);

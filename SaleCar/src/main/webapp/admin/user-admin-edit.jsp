@@ -521,7 +521,7 @@
                                 <div class="current-avatar">
                                     <c:choose>
                                         <c:when test="${not empty user.imgURL}">
-                                            <img id="avatarPreview" src="${user.imgURL}" alt="Avatar">
+                                            <img id="avatarPreview" src="${pageContext.request.contextPath}${user.imgURL}" alt="Avatar">
                                         </c:when>
                                         <c:otherwise>
                                             <img id="avatarPreview" src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">

@@ -559,7 +559,7 @@
                                     <td class="avatar-cell">
                                         <c:choose>
                                             <c:when test="${not empty u.imgURL}">
-                                                <img src="${u.imgURL}"
+                                                <img src="${pageContext.request.contextPath}${u.imgURL}"
                                                      class="profile-avatar" alt="Avatar">
                                             </c:when>
                                             <c:otherwise>
@@ -613,7 +613,7 @@
                                 <div class="current-avatar">
                                     <c:choose>
                                         <c:when test="${not empty u.imgURL}">
-                                            <img src="${u.imgURL}" alt="Avatar">
+                                            <img src="${pageContext.request.contextPath}${sessionScope.user.imgURL}" alt="Avatar">
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
@@ -793,8 +793,7 @@
                         <div class="col-md-6"><label class="form-label">Tên đăng nhập *</label><input type="text"
                                                                                                       class="form-control"
                                                                                                       name="username"
-                                                                                                      value="${param.username}"
-                                                                                                      required>
+                                                                                                      value="${param.username}"required>
                             <c:if test="${not empty usernameError}">
                                 <span class="error-message" style="color: red;">
                                     <i class="bi bi-x-circle"></i> ${usernameError}
@@ -903,7 +902,7 @@
                             </div>
                         </div>
                         <div class="col-md-12"><label class="form-label">Ảnh đại diện URL</label> <input type="file"
-                                                                                                         class="form-control" id="imageUpload" accept="image/*" name="avatar">
+                                                                                                         class="form-control" id="imageUpload" accept="image/jpeg,image/png,image/gif,image/jpg" name="avatar">
                             <c:if test="${not empty avatarError}">
                                 <span class="error-message" style="color: red;">
                                     <i class="bi bi-x-circle"></i> ${avatarError}
