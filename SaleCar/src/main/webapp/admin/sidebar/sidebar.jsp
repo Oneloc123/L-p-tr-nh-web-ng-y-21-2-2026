@@ -28,6 +28,47 @@
     }
 
     /* SIDEBAR STYLE - Soft Gray */
+    .logo i {
+        color: var(--admin-primary);
+    }
+
+    .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar nav ul li {
+        margin-bottom: 5px;
+    }
+
+    .sidebar nav ul li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        border-radius: 50px;
+        color: #64748b;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .sidebar nav ul li a i {
+        font-size: 1.2rem;
+    }
+
+    .sidebar nav ul li a:hover {
+        background-color: #f8fafc;
+        color: var(--admin-primary);
+    }
+
+    .sidebar nav ul li a.active {
+        background-color: #eff6ff;
+        color: var(--admin-primary);
+    }
+
     .sidebar {
         width: 280px;
         background-color: #ffffff;

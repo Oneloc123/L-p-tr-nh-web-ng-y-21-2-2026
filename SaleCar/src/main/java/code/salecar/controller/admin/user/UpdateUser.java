@@ -1,16 +1,22 @@
 package code.salecar.controller.admin.user;
 
+import code.salecar.config.AppConfig;
 import code.salecar.model.Address;
 import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
 import code.salecar.service.user.UserService;
+import code.salecar.util.FileUtil;
+import code.salecar.util.NotificationUtil;
+import code.salecar.util.UploadUserImageUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.List;
 
@@ -85,7 +91,39 @@ public class UpdateUser extends HttpServlet {
         }
         int addressId = Integer.parseInt(request.getParameter("addressId"));
 
-        String imgURL = uploads(request);
+        String link = "";
+        try {
+            Part filePart = request.getPart("avatar");
+            if (filePart != null && filePart.getSize() > 0) {
+                String submittedFileName = filePart.getSubmittedFileName();
+                if (submittedFileName != null && !submittedFileName.trim().isEmpty()) {
+                    String fileName = Paths.get(submittedFileName).getFileName().toString();
+                    String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+
+                    if (!ext.matches("jpg|jpeg|png|webp")) {
+                        NotificationUtil.setError(request.getSession(), "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
+                        response.sendRedirect("/admin/user-admin-edit.jsp");
+                        return;
+                    }
+
+                    String newFileName = FileUtil.generateFileName(fileName);
+                    String baseDir = AppConfig.get("upload.base-dir");
+                    if (baseDir == null || baseDir.isEmpty()) {
+                        throw new RuntimeException("upload.base-dir not configured in application.properties");
+                    }
+
+                    java.nio.file.Path uploadPath = Paths.get(baseDir, "users");
+                    Files.createDirectories(uploadPath);
+                    java.nio.file.Path filePath = uploadPath.resolve(newFileName);
+                    filePart.write(filePath.toString());
+
+                    link = "/uploads/users/" + newFileName;
+                }
+            }
+        } catch (ServletException e) {
+            System.err.println("Warning: Could not process logo upload: " + e.getMessage());
+            return;
+        }
 
         HttpSession session = request.getSession();
         UserService us = new UserService();
@@ -93,7 +131,7 @@ public class UpdateUser extends HttpServlet {
         user.setUsername(username);
         user.setFullname(fullname);
         user.setEmail(email);
-        user.setImgURL(imgURL);
+        user.setImgURL(link);
         user.setPhonenumber(phoneNumber);
         user.setDescription(description);
         user.setStatus(status);
@@ -125,25 +163,5 @@ public class UpdateUser extends HttpServlet {
         request.getSession().setAttribute("toastType", "success");
 
         response.sendRedirect("/userAdmin");
-    }
-    private String uploads(HttpServletRequest request) throws ServletException, IOException {
-        Part filePart = request.getPart("avatar");
-        if (filePart == null || filePart.getSize() == 0) {
-            return null;
-        }
-        String fileName = filePart.getSubmittedFileName();
-        String lowerName = fileName.toLowerCase();
-        if (!(lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg") || lowerName.endsWith(".png"))) {
-            return null;
-        }
-        String uploadPath = getServletContext().getRealPath("/uploads/avatar");
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-        String newFileName = System.currentTimeMillis() + "_" + fileName;
-        filePart.write(uploadPath + File.separator + newFileName);
-        String avatarUrl = "uploads/avatar/" + newFileName;
-        return avatarUrl;
     }
 }
