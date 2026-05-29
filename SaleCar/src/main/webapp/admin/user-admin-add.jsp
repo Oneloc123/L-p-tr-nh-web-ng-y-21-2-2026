@@ -557,19 +557,7 @@
                                 </div>
                             </div>
 
-                            <!-- Address Information Section (dynamic by JS) -->
-                            <div class="form-section">
-                                <h3 class="form-section-title">
-                                    <i class="fas fa-map-marker-alt"></i> Thông tin địa chỉ (ADDRESS)
-                                </h3>
-                                <c:if test="${not empty addressError}">
-                                    <div class="alert alert-danger">${addressError}</div>
-                                </c:if>
-                                <div id="addressListContainer"></div>
-                                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                                    <i class="fas fa-plus-circle"></i> Thêm địa chỉ mới
-                                </button>
-                            </div>
+
 
                             <!-- Form Actions -->
                             <div class="form-actions">
@@ -588,64 +576,6 @@
     </main>
 </div>
 
-<!-- Modal thêm địa chỉ với API tỉnh/huyện/xã -->
-<div class="modal fade" id="addAddressModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-plus-circle text-primary"></i> Thêm địa chỉ mới
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Tên địa chỉ <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="addressName" placeholder="Ví dụ: Nhà riêng, Công ty...">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Loại địa chỉ</label>
-                    <select class="form-select" id="addressType">
-                        <option value="normal">Địa chỉ phụ</option>
-                        <option value="main" selected>Địa chỉ chính</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Tỉnh/Thành phố</label>
-                        <select class="form-select" id="provinceSelect">
-                            <option value="">-- Chọn tỉnh/thành --</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Quận/Huyện</label>
-                        <select class="form-select" id="districtSelect" disabled>
-                            <option value="">-- Chọn quận/huyện --</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Xã/Phường</label>
-                        <select class="form-select" id="wardSelect" disabled>
-                            <option value="">-- Chọn xã/phường --</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Số nhà, tên đường</label>
-                        <input type="text" class="form-control" id="street" placeholder="Số nhà, tên đường">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times"></i> Hủy
-                </button>
-                <button type="button" class="btn btn-success" id="confirmAddAddressBtn">
-                    <i class="fas fa-save"></i> Thêm địa chỉ
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>

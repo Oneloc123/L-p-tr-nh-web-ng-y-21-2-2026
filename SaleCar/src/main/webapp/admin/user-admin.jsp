@@ -613,7 +613,7 @@
                                 <div class="current-avatar">
                                     <c:choose>
                                         <c:when test="${not empty u.imgURL}">
-                                            <img src="${pageContext.request.contextPath}${sessionScope.user.imgURL}" alt="Avatar">
+                                            <img src="${pageContext.request.contextPath}${u.imgURL}" alt="Avatar">
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${pageContext.request.contextPath}/assets/img/default-avatar.png" alt="Avatar">
@@ -690,10 +690,10 @@
                                                     <c:forEach var="a" items="${listAddress}" >
                                                         <c:choose>
                                                             <c:when test="${a.type=='main' && a.userId==u.id}">
-                                                                <option selected>${a.id}- ${a.name}-địa chỉ chính</option>
+                                                                <option selected>${a.id}- ${a.nameAddress}-địa chỉ chính</option>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <option>${a.id}- ${a.name}-địa chỉ phụ</option>
+                                                                <option>${a.id}- ${a.nameAddress}-địa chỉ phụ</option>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </c:forEach>
@@ -730,24 +730,30 @@
                                                             📍 Địa chỉ phụ:
                                                         </c:otherwise>
                                                     </c:choose>
-                                                        ${a.name} (ID: ${a.id})
+                                                        ${a.nameAddress} (ID: ${a.id})
                                                 </h4>
                                             </div>
 
                                             <div class="row">
+
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Số nhà, đường</label>
-                                                    <input type="text" class="form-control" value="${a.street}" readonly >
+                                                    <input type="text" class="form-control" value="${a.addressLine}" readonly >
                                                 </div>
 
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Phường/Xã</label>
-                                                    <input type="text" class="form-control" value="${a.commune}" readonly >
+                                                    <input type="text" class="form-control" value="${a.wardName}" readonly >
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Quận/Huyện</label>
+                                                    <input type="text" class="form-control" value="${a.districName}" readonly >
                                                 </div>
 
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Tỉnh/TP</label>
-                                                    <input type="text" class="form-control" value="${a.province}" readonly >
+                                                    <input type="text" class="form-control" value="${a.provinceName}" readonly >
                                                 </div>
                                             </div>
                                         </div>

@@ -2,9 +2,11 @@ package code.salecar.controller.admin.user;
 
 import code.salecar.config.AppConfig;
 import code.salecar.model.Address;
+import code.salecar.model.Addresses;
 import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
+import code.salecar.service.address.AddressesService;
 import code.salecar.service.user.UserService;
 import code.salecar.util.FileUtil;
 import code.salecar.util.NotificationUtil;
@@ -39,8 +41,8 @@ public class UpdateUser extends HttpServlet {
             }
             int id = Integer.parseInt(request.getParameter("id"));
             User user = us.getUserById(id);
-            AddressService as = new AddressService();
-            List<Address> listAddress = as.getListAddressById(user.getId());
+            AddressesService as = new AddressesService();
+            List<Addresses> listAddress = as.getListAddressById(user.getId());
             request.setAttribute("listAddress",listAddress);
             request.setAttribute("user",user);
             request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
@@ -124,8 +126,6 @@ public class UpdateUser extends HttpServlet {
             System.err.println("Warning: Could not process logo upload: " + e.getMessage());
             return;
         }
-
-        HttpSession session = request.getSession();
         UserService us = new UserService();
         User user = us.getUserById(id);
         user.setUsername(username);
@@ -138,25 +138,6 @@ public class UpdateUser extends HttpServlet {
         user.setUpdatedat(new Date(System.currentTimeMillis()));
         user.setRole(role);
         us.UpdateProfile(user);
-        if(addressId!=0){
-            AddressService as = new AddressService();
-            as.setMainAddress(addressId,user.getId());
-        }
-        AddressService as = new AddressService();
-        List<Address> listAddress = as.getListAddressById(user.getId());
-        if(!listAddress.isEmpty()){
-            for(Address a :listAddress){
-                String street = request.getParameter("street"+a.getId());
-                String commune = request.getParameter("commune"+a.getId());
-                String province = request.getParameter("province"+a.getId());
-                a.setStreet(street);
-                a.setCommune(commune);
-                a.setProvince(province);
-                as.updateAddress(a);
-            }
-        }
-        request.setAttribute("listAddress", listAddress);
-        request.setAttribute("user", user);
 
         //alert
         request.getSession().setAttribute("toastMessage", "cật nhật User thành công");

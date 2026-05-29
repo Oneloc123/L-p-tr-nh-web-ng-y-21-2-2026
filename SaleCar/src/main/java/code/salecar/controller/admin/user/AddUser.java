@@ -102,19 +102,6 @@ public class AddUser extends HttpServlet {
             return;
         }
 
-        String addressesJson = request.getParameter("addressesJson");
-        List<Address> addressList = new ArrayList<>();
-        if (addressesJson != null && !addressesJson.isEmpty()) {
-            try {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<Address>>() {}.getType();
-                addressList = gson.fromJson(addressesJson, listType);
-            } catch (Exception e) {
-                request.setAttribute("addressError",e.getMessage());
-                request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
-                return;
-            }
-        }
 
         String link = "";
         try {
@@ -169,11 +156,6 @@ public class AddUser extends HttpServlet {
         us.register(u);
         u = us.getUserByUsername(username);
 
-        AddressService addressService = new AddressService();
-        for (Address addr : addressList) {
-            addr.setUserId(u.getId());
-            addressService.addAddress(addr);
-        }
 
         //alert
         request.getSession().setAttribute("toastMessage", "Thêm User thành công");
