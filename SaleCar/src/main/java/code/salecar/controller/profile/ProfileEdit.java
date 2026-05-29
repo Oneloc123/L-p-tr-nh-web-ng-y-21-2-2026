@@ -1,9 +1,11 @@
 package code.salecar.controller.profile;
 
 import code.salecar.model.Address;
+import code.salecar.model.Addresses;
 import code.salecar.model.User;
 import code.salecar.model.invalidate.UserInvalidate;
 import code.salecar.service.address.AddressService;
+import code.salecar.service.address.AddressesService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -24,8 +26,8 @@ public class ProfileEdit extends HttpServlet {
             response.sendRedirect("/login");
         }else{
             User user = (User)session.getAttribute("user");
-            AddressService as = new AddressService();
-            List<Address> listAddress = as.getListAddressById(user.getId());
+            AddressesService as = new AddressesService();
+            List<Addresses> listAddress = as.getListAddressById(user.getId());
             request.setAttribute("listAddress",listAddress);
             request.setAttribute("user",user);
             request.getRequestDispatcher("/pages/profile-edit.jsp").forward(request,response);
@@ -43,8 +45,8 @@ public class ProfileEdit extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
 
-        AddressService as = new AddressService();
-        List<Address> listAddress = as.getListAddressById(user.getId());
+        AddressesService as = new AddressesService();
+        List<Addresses> listAddress = as.getListAddressById(user.getId());
 
         String fullnameError = UserInvalidate.checkFullname(fullname);
         if(!fullnameError.equals("true")){
@@ -78,7 +80,6 @@ public class ProfileEdit extends HttpServlet {
             status = true;
         }
 
-
         user.setFullname(fullname);
         user.setEmail(email);
         user.setPhonenumber(phoneNumber);
@@ -88,18 +89,6 @@ public class ProfileEdit extends HttpServlet {
         UserService us = new UserService();
         us.UpdateProfile(user);
 
-
-        if(!listAddress.isEmpty()){
-            for(Address a :listAddress){
-                String street = request.getParameter("street"+a.getId());
-                String commune = request.getParameter("commune"+a.getId());
-                String province = request.getParameter("province"+a.getId());
-                a.setStreet(street);
-                a.setCommune(commune);
-                a.setProvince(province);
-                as.updateAddress(a);
-            }
-        }
         request.setAttribute("listAddress", listAddress);
         request.setAttribute("user", user);
 

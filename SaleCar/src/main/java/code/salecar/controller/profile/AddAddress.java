@@ -1,6 +1,8 @@
     package code.salecar.controller.profile;
 
+    import code.salecar.dao.AddressesDao;
     import code.salecar.model.Address;
+    import code.salecar.model.Addresses;
     import code.salecar.model.User;
     import code.salecar.service.address.AddressService;
     import jakarta.servlet.*;
@@ -8,6 +10,7 @@
     import jakarta.servlet.annotation.*;
 
     import java.io.IOException;
+    import java.sql.Date;
 
     @WebServlet(name = "AddAddress", value = "/addAddress")
     public class AddAddress extends HttpServlet {
@@ -18,18 +21,43 @@
 
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            String name = request.getParameter("name");
-            String type = request.getParameter("type");
-            String street = request.getParameter("street");
-            String commune = request.getParameter("commune");
-            String province = request.getParameter("province");
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
-            int id = user.getId();
-            AddressService as = new AddressService();
-            Address address = new Address(id,street,commune,province,type,name);
-            as.addAddress(address);
-            System.out.println(name+type+street+commune+province+id);
-            response.sendRedirect("/profileEdit");
+            if (user == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+            String name = request.getParameter("name");
+            String street = request.getParameter("street");
+            String commune = request.getParameter("commune");
+            String district = request.getParameter("district");
+            String province = request.getParameter("province");
+
+            if (name == null || name.trim().isEmpty() ||
+                    street == null || street.trim().isEmpty() ||
+                    commune == null || commune.trim().isEmpty() ||
+                    district == null || district.trim().isEmpty() ||
+                    province == null || province.trim().isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+            String fullAddress = street + ", " + commune + ", " + district + ", " + province;
+
+            Addresses address = new Addresses();
+            address.setUserId(user.getId());
+            address.setNameAddress(name);
+            address.setAddressLine(street);
+            address.setWardName(commune);
+            address.setDistricName(district);
+            address.setProvinceName(province);
+            address.setFullAddress(fullAddress);
+            address.setType("normal");
+            address.setCreateAt(new Date(System.currentTimeMillis()));
+
+            AddressesDao dao = new AddressesDao();
+            dao.addAddress(address);
+
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
