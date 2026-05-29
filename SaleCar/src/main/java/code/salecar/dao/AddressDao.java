@@ -66,7 +66,7 @@ public class AddressDao {
     }
 
     public void removeAddressById(int id) {
-        String sql = "delete from address where id = ?";
+        String sql = "delete from addresses where id = ?";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {

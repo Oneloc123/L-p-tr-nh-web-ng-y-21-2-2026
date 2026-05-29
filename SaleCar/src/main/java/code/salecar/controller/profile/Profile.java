@@ -1,8 +1,10 @@
 package code.salecar.controller.profile;
 
 import code.salecar.model.Address;
+import code.salecar.model.Addresses;
 import code.salecar.model.User;
 import code.salecar.service.address.AddressService;
+import code.salecar.service.address.AddressesService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -21,8 +23,8 @@ public class Profile extends HttpServlet {
             response.sendRedirect("/login");
         }else{
             User user = (User)session.getAttribute("user");
-            AddressService as = new AddressService();
-            List<Address> listAddress = as.getListAddressById(user.getId());
+            AddressesService as = new AddressesService();
+            List<Addresses> listAddress = as.getListAddressById(user.getId());
             request.setAttribute("listAddress",listAddress);
             request.setAttribute("user",user);
             request.getRequestDispatcher("/pages/profile.jsp").forward(request,response);
