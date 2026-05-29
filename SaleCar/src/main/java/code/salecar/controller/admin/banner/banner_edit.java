@@ -67,14 +67,14 @@ public class banner_edit extends HttpServlet {
         String statusParam = request.getParameter("status");
         String orderParam = request.getParameter("displayOrder");
 
-        // Validate title
+        /** Kiểm tra tiêu đề */
         if (title == null || title.trim().isEmpty()) {
             NotificationUtil.setError(request.getSession(), "Tiêu đề banner không được để trống");
             response.sendRedirect(request.getContextPath() + "/admin/banners/edit?id=" + id);
             return;
         }
 
-        // Validate link
+        /** Kiểm tra link */
         if (!BannerUploadUtil.isValidLink(redirectUrl)) {
             NotificationUtil.setError(request.getSession(), "Link điều hướng không hợp lệ. Phải bắt đầu bằng http://, https:// hoặc /");
             response.sendRedirect(request.getContextPath() + "/admin/banners/edit?id=" + id);
@@ -83,7 +83,7 @@ public class banner_edit extends HttpServlet {
 
         int displayOrder = BannerUploadUtil.parseIntSafe(orderParam, 0);
 
-        // Handle image upload (reuse existing if no new file)
+        /** Xử lý upload ảnh (giữ ảnh cũ nếu không có file mới) */
         try {
             Part filePart = request.getPart("image");
             String oldImageUrl = banner.getImageUrl();
@@ -94,7 +94,7 @@ public class banner_edit extends HttpServlet {
                 return;
             }
 
-            // If a new image was uploaded (URL changed), delete the old file
+            /** Nếu có ảnh mới được upload (URL thay đổi), xoá file cũ */
             if (!newImageUrl.equals(oldImageUrl) && oldImageUrl != null && !oldImageUrl.isEmpty()) {
                 BannerUploadUtil.deleteImageFile(oldImageUrl);
             }

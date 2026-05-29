@@ -447,8 +447,8 @@
                     <div class="col-md-4">
                         <label for="status" class="form-label">Status</label>
                         <select class="admin-select" id="status" name="status">
-                            <option value="active" ${brand.status == 'active' ? 'selected' : ''}>Active</option>
-                            <option value="inactive" ${brand.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                            <option value="active" ${brand.status.name() == 'ACTIVE' ? 'selected' : ''}>Active</option>
+                            <option value="inactive" ${brand.status.name() == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
                         </select>
                         <c:if test="${not empty errors.status}">
                             <div class="text-danger">${errors.status}</div>
@@ -463,7 +463,7 @@
                             <div class="logo-preview-wrapper has-image" id="logoPreviewWrapper">
                                 <!-- Current logo from server -->
                                 <img id="logoPreviewImg"
-                                     src="${brand.image}"
+                                     src="${pageContext.request.contextPath}${brand.logo}"
                                      alt="Current logo"
                                      class="img-fluid"
                                      onerror="this.style.display='none'; document.getElementById('logoPlaceholder').style.display='block';">
@@ -489,8 +489,8 @@
                                            accept="image/*">
                                     <span class="file-name" id="fileNameDisplay"></span>
                                 </div>
-                                <c:if test="${not empty errors.image}">
-                                    <div class="text-danger mt-2">${errors.image}</div>
+                                <c:if test="${not empty errors.logo}">
+                                    <div class="text-danger mt-2">${errors.logo}</div>
                                 </c:if>
                             </div>
                         </div>
@@ -530,7 +530,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Lưu URL logo ban đầu để có thể khôi phục nếu người dùng hủy chọn file
-    const originalLogoSrc = '${brand.image}';
+    const contextPath = '${pageContext.request.contextPath}';
+    const originalLogoSrc = contextPath + '${brand.logo}';
     const logoInput = document.getElementById('logoInput');
     const logoPreviewImg = document.getElementById('logoPreviewImg');
     const logoPlaceholder = document.getElementById('logoPlaceholder');

@@ -28,6 +28,47 @@
     }
 
     /* SIDEBAR STYLE - Soft Gray */
+    .logo i {
+        color: var(--admin-primary);
+    }
+
+    .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar nav ul li {
+        margin-bottom: 5px;
+    }
+
+    .sidebar nav ul li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        border-radius: 50px;
+        color: #64748b;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .sidebar nav ul li a i {
+        font-size: 1.2rem;
+    }
+
+    .sidebar nav ul li a:hover {
+        background-color: #f8fafc;
+        color: var(--admin-primary);
+    }
+
+    .sidebar nav ul li a.active {
+        background-color: #eff6ff;
+        color: var(--admin-primary);
+    }
+
     .sidebar {
         width: 280px;
         background-color: #ffffff;
@@ -118,6 +159,43 @@
         .sidebar nav ul li a i {
             font-size: 1.5rem;
         }
+    }
+
+    .sidebar {
+        flex: 0 0 280px;
+        width: 280px;
+        min-width: 280px;
+        max-width: 280px;
+
+        background-color: #ffffff;
+        border-right: 1px solid #e9edf2;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        padding: 2rem 1.2rem;
+        transition: all 0.3s;
+    }
+    .main-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .sidebar * {
+        transform: none !important;
+        zoom: 1 !important;
+    }
+
+    .sidebar nav ul li a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    .sidebar nav ul li a i {
+        font-size: 1.3rem;
+        min-width: 24px;
     }
 
 </style>
@@ -228,7 +306,7 @@
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 4000,
+        timer: 3000,
         timerProgressBar: true
     });
 </script>

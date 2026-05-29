@@ -356,6 +356,23 @@
                 font-size: 1.5rem;
             }
         }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item a {
+            color: #5a6e7c;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c7da0;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -366,6 +383,10 @@
         <!-- Header with Breadcrumb -->
         <header class="admin-header d-flex justify-content-between align-items-center">
             <div>
+                <h3 class="fw-bold m-0 mt-2">
+                    <i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i>
+                    ${product.productName}
+                </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
                         <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/admin/dashboard"
@@ -375,10 +396,7 @@
                         <li class="breadcrumb-item active">${product.productName}</li>
                     </ol>
                 </nav>
-                <h3 class="fw-bold m-0 mt-2">
-                    <i class="bi bi-box-seam me-2" style="color:#2c7da0;"></i>
-                    ${product.productName}
-                </h3>
+
             </div>
             <div class="d-flex gap-2">
                 <a href="${pageContext.request.contextPath}/product-detail?id=${product.productId}" target="_blank"
@@ -885,7 +903,7 @@
                     <h5><i class="bi bi-building me-2"></i>Thông tin thương hiệu</h5>
                     <div class="d-flex align-items-center gap-3">
                         <c:if test="${product.brandLogo != null}">
-                            <img src="${product.brandLogo}" style="width: 60px; height: 60px; object-fit: contain;"
+                            <img src="${pageContext.request.contextPath}${product.brandLogo}" style="width: 60px; height: 60px; object-fit: contain;"
                                  alt="Brand Logo">
                         </c:if>
                         <div>

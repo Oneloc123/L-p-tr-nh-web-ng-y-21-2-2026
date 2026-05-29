@@ -16,7 +16,7 @@ public class BrandDAO {
 
     public List<Brand> getBrands() {
         List<Brand> brands = new ArrayList<>();
-        String sql = "SELECT br.id, br.name, br.link_brand, br.description,br.status, br.created_at, br.updated_at " +
+        String sql = "SELECT br.id, br.name, br.link_brand, br.description, br.logo, br.status, br.created_at, br.updated_at " +
                 "FROM brand br ";
 
         try (Connection con = DBConnection.getConnection();
@@ -29,6 +29,7 @@ public class BrandDAO {
                 brand.setName(rs.getString("name"));
                 brand.setLinkBrand(rs.getString("link_brand"));
                 brand.setDescription(rs.getString("description"));
+                brand.setLogo(rs.getString("logo"));
                 brand.setStatus(Status.fromCode(rs.getInt("status")));
                 brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
@@ -48,7 +49,7 @@ public class BrandDAO {
         List<Brand> brands = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
-        String sql = "SELECT br.id, br.name, br.link_brand, br.description, br.status, br.created_at, br.updated_at, " +
+        String sql = "SELECT br.id, br.name, br.link_brand, br.description, br.logo, br.status, br.created_at, br.updated_at, " +
                 "COUNT(pr.id) AS product_count " +
                 "FROM brand br " +
                 "LEFT JOIN product pr ON br.id = pr.brand_id " +
@@ -56,13 +57,13 @@ public class BrandDAO {
 
         StringBuilder query = new StringBuilder(sql);
 
-        // filter name
+        /** Lọc theo tên */
         if (brandFilter.getName() != null && !brandFilter.getName().isEmpty()) {
             query.append(" AND br.name LIKE ? ");
             params.add("%" + brandFilter.getName() + "%");
         }
 
-        // filter status
+        /** Lọc theo trạng thái */
         if (brandFilter.getStatus() != -1) {
             query.append(" AND br.status = ? ");
             params.add(brandFilter.getStatus());
@@ -70,10 +71,10 @@ public class BrandDAO {
 
         }
 
-        // GROUP BY
+        /** GROUP BY */
         query.append(" GROUP BY br.id, br.name, br.link_brand, br.description, br.status, br.created_at, br.updated_at ");
 
-        // sort (giữ kiểu đơn giản)
+        /** Sắp xếp */
         if (brandFilter.getSort() != null && !brandFilter.getSort().isEmpty()) {
 
             String sortField = "br.id";
@@ -94,7 +95,7 @@ public class BrandDAO {
             query.append(" ORDER BY ").append(sortField).append(" ").append(sortOrder);
         }
 
-        // pagination
+        /** Phân trang */
         int offset = (brandFilter.getPage() - 1) * brandFilter.getLimit();
         query.append(" LIMIT ? OFFSET ? ");
         params.add(brandFilter.getLimit());
@@ -115,6 +116,7 @@ public class BrandDAO {
                 brand.setName(rs.getString("name"));
                 brand.setLinkBrand(rs.getString("link_brand"));
                 brand.setDescription(rs.getString("description"));
+                brand.setLogo(rs.getString("logo"));
                 brand.setStatus(Status.fromCode(rs.getInt("status")));
                 brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
@@ -145,10 +147,11 @@ public class BrandDAO {
                 brand.setName(rs.getString("name"));
                 brand.setLinkBrand(rs.getString("link_brand"));
                 brand.setDescription(rs.getString("description"));
+                brand.setLogo(rs.getString("logo"));
                 brand.setStatus(Status.fromCode(rs.getInt("status")));
                 brand.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 brand.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-                            }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -209,18 +212,45 @@ public class BrandDAO {
 
 
     public boolean updateBrand(Brand brand) {
-        String sql = "update brand set name = ?, status = ?,link_brand = ?,description = ?, updated_at = ? where id = ?";
+        String sql = "UPDATE brand SET name = ?, logo = ?, status = ?, link_brand = ?, description = ?, updated_at = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, brand.getName());
-            ps.setInt(2, brand.getIntStatus());
-            ps.setString(3, brand.getLinkBrand());
-            ps.setString(4, brand.getDescription());
-            ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
-            ps.setLong(6, brand.getId());
+            ps.setString(2, brand.getLogo());
+            ps.setInt(3, brand.getIntStatus());
+            ps.setString(4, brand.getLinkBrand());
+            ps.setString(5, brand.getDescription());
+            ps.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setLong(7, brand.getId());
             System.out.println("SQL: " + sql);
             System.out.println(brand.getId());
             return ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public long insertBrand(Brand brand) {
+        String sql = "INSERT INTO brand (name, logo, status, link_brand, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, brand.getName());
+            ps.setString(2, brand.getLogo());
+            ps.setInt(3, brand.getIntStatus());
+            ps.setString(4, brand.getLinkBrand());
+            ps.setString(5, brand.getDescription());
+            ps.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setTimestamp(7, new java.sql.Timestamp(System.currentTimeMillis()));
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                return 0;
+            }
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+            return 0;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

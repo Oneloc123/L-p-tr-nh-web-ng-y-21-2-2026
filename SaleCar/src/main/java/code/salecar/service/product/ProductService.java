@@ -42,7 +42,7 @@ public class ProductService {
         // 2. Lấy Brand và tạo BrandInfo
         Brand brand = bs.getBrandByID(product.getBrandId());
         BrandInfo brandInfo = brand != null
-                ? BrandInfo.builder().id(brand.getId()).name(brand.getName()).link(brand.getLinkBrand()).logo(brand.getImage()).build()
+                ? BrandInfo.builder().id(brand.getId()).name(brand.getName()).link(brand.getLinkBrand()).logo(brand.getLogo()).build()
                 : null;
 
         // 3. Lấy Category và tạo CategoryInfo
@@ -370,9 +370,7 @@ public class ProductService {
         productDAO.updateBasicInfo(product);
     }
 
-    /**
-     * Cập nhật toàn bộ thông tin sản phẩm (thông tin cơ bản + thuộc tính + mô tả)
-     */
+    /** Cập nhật toàn bộ thông tin sản phẩm (thông tin cơ bản + thuộc tính + mô tả) */
     public void updateProductDetails(long productId, String name, int categoryId, int brandId,
                                       int status, String ratio, String size,
                                       String material, String origin, String description) {
@@ -380,9 +378,7 @@ public class ProductService {
                 status, ratio, size, material, origin, description);
     }
 
-    /**
-     * Cập nhật thông tin biến thể
-     */
+    /** Cập nhật thông tin biến thể */
     public void updateVariantInfo(long variantId, String name, String sku, BigDecimal price) {
         ProductVariants v = new ProductVariants();
         v.setId(variantId);
@@ -392,9 +388,7 @@ public class ProductService {
         pvDAO.update(v);
     }
 
-    /**
-     * Thêm biến thể mới
-     */
+    /** Thêm biến thể mới */
     public long addVariant(long productId, String name, String sku, BigDecimal price) {
         ProductVariants v = ProductVariants.builder()
                 .productId(productId)
@@ -407,23 +401,20 @@ public class ProductService {
         return pvDAO.insertVariant(v);
     }
 
-    /**
-     * Xoá biến thể
-     */
+    /** Xoá biến thể */
     public void removeVariant(long variantId) {
         pvDAO.deleteVariant(variantId);
     }
 
-    /**
-     * Xóa sản phẩm theo ID
-     * @return true nếu xóa thành công
+    /** Xoá sản phẩm theo ID
+     * @return true nếu xoá thành công
      */
     public boolean deleteProduct(long productId) {
         productDAO.deleteProduct(productId);
         return true;
     }
 
-    /* Tạo sản phẩm mới
+    /** Tạo sản phẩm mới
     1. Gán giá: Lấy giá của màu sắc/phiên bản đầu tiên gán vào sản phẩm chính (Đây là cách làm đúng để hiển thị giá "Từ..." trên trang danh sách).
     2. Lưu sản phẩm chính: Gọi insertProduct để tạo bản ghi trong bảng product và lấy về productId.
     3. Lưu biến thể: Dùng vòng lặp for để gán productId vào từng biến thể và lưu vào bảng product_variants.
