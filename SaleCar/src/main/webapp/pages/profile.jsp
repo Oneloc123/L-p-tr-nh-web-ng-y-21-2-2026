@@ -664,22 +664,27 @@
                                         <div class="address-field">
                                             <i class="fas fa-tag field-icon"></i>
                                             <span class="field-label">Tên địa chỉ:</span>
-                                            <span class="field-value">${a.name}</span>
+                                            <span class="field-value">${a.nameAddress}</span>       <%-- SỬA: name → nameAddress --%>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-road field-icon"></i>
                                             <span class="field-label">Đường:</span>
-                                            <span class="field-value">${a.street}</span>
+                                            <span class="field-value">${a.addressLine}</span>        <%-- SỬA: street → addressLine --%>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-map-pin field-icon"></i>
                                             <span class="field-label">Xã/Phường:</span>
-                                            <span class="field-value">${a.commune}</span>
+                                            <span class="field-value">${a.wardName}</span>           <%-- SỬA: commune → wardName --%>
+                                        </div>
+                                        <div class="address-field">
+                                            <i class="fas fa-building field-icon"></i>
+                                            <span class="field-label">Quận/Huyện:</span>
+                                            <span class="field-value">${a.districName}</span>        <%-- THÊM MỚI: hiển thị quận/huyện --%>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-city field-icon"></i>
                                             <span class="field-label">Tỉnh/Thành phố:</span>
-                                            <span class="field-value">${a.province}</span>
+                                            <span class="field-value">${a.provinceName}</span>       <%-- SỬA: province → provinceName --%>
                                         </div>
                                     </div>
                                 </div>
