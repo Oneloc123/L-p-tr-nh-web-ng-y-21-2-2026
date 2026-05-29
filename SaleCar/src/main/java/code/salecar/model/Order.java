@@ -12,6 +12,7 @@ public class Order{
     private String phone;
     private String paymentMethod;
     private String orderStatus;
+    private double shippingFee;
     private List<OrderItem> items;
 
     public int getId() {
@@ -76,6 +77,14 @@ public class Order{
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 
     public List<OrderItem> getItems() {

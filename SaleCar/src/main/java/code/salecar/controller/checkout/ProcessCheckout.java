@@ -45,12 +45,23 @@ public class ProcessCheckout extends HttpServlet {
         String shippingAddress = request.getParameter("shippingAddress");
         String paymentMethod = request.getParameter("paymentMethod");
 
+        // Lấy phí vận chuyển từ form
+        double shippingFee = 0;
+        String shippingFeeStr = request.getParameter("shippingFee");
+        if (shippingFeeStr != null && !shippingFeeStr.isEmpty()) {
+            try {
+                shippingFee = Double.parseDouble(shippingFeeStr);
+            } catch (NumberFormatException e) {
+                shippingFee = 0;
+            }
+        }
+
         OrderService orderService = new OrderService();
 
-        // CHÚ Ý: Hàm này giờ sẽ trả về đối tượng Order thay vì boolean isSuccess
-        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod);
 
-        // Nếu tạo đơn hàng thành công (newOrder != null và đã có ID từ Database)
+        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod, shippingFee);
+
+
         if (newOrder != null && newOrder.getId() > 0) {
 
             // Xóa giỏ hàng
@@ -60,7 +71,7 @@ public class ProcessCheckout extends HttpServlet {
                 session.removeAttribute("cart");
             }
 
-            // PHÂN LUỒNG THANH TOÁN
+
             if ("VNPAY".equals(paymentMethod)) {
                 // Gọi Service tạo link VNPay
                 VNPayService vnPayService = new VNPayService();
@@ -69,7 +80,7 @@ public class ProcessCheckout extends HttpServlet {
                 // Chuyển hướng người dùng qua giao diện của VNPay
                 response.sendRedirect(paymentUrl);
             } else {
-                // Thanh toán COD (Thanh toán khi nhận hàng) như cũ
+                // Thanh toán COD
                 response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
             }
 

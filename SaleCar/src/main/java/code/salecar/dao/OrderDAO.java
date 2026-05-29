@@ -29,7 +29,7 @@ public class OrderDAO {
                 ord.setShippingAddress(rs.getString("address"));
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
-
+                ord.setShippingFee(rs.getDouble("shipping_fee"));
 
                 return ord;
             }
@@ -45,9 +45,9 @@ public class OrderDAO {
            conn.setAutoCommit(false);
            try{
                String sql = "insert into `order` " +
-                       "(user_id, total_price, address, payment_method, payment_status, order_status) " +
+                       "(user_id, total_price, address, payment_method, payment_status, order_status, shipping_fee) " +
                        "values " +
-                       "(?,?,?,?,?,?)";
+                       "(?,?,?,?,?,?,?)";
                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                pstmt.setInt(1, order.getUserId());
                pstmt.setDouble(2,order.getTotalAmount());
@@ -55,6 +55,7 @@ public class OrderDAO {
                pstmt.setString(4, order.getPaymentMethod());
                pstmt.setString(5, "chưa thanh toán");
                pstmt.setString(6, order.getOrderStatus());
+               pstmt.setDouble(7, order.getShippingFee());
 
                pstmt.executeUpdate();
                ResultSet rs = pstmt.getGeneratedKeys();
@@ -110,6 +111,7 @@ public class OrderDAO {
                 ord.setShippingAddress(rs.getString("address"));
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
+                ord.setShippingFee(rs.getDouble("shipping_fee"));
 
                 lstOrder.add(ord);
             }
@@ -227,6 +229,7 @@ public class OrderDAO {
                 ord.setShippingAddress(rs.getString("address"));
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
+                ord.setShippingFee(rs.getDouble("shipping_fee"));
 
                 lstOrder.add(ord);
             }
@@ -235,80 +238,7 @@ public class OrderDAO {
         }
         return lstOrder;
     }
-//    public List<Order> getAllOrdersWithItems() {
-//        String query = "SELECT \n" +
-//                "    o.id AS order_id, \n" +
-//                "    o.userId, \n" +
-//                "    o.orderDate, \n" +
-//                "    o.totalAmount, \n" +
-//                "    o.shippingAddress, \n" +
-//                "    o.phone, \n" +
-//                "    o.paymentMethod, \n" +
-//                "    o.orderStatus,\n" +
-//                "    oi.id AS item_id, \n" +
-//                "    oi.quantity, \n" +
-//                "    oi.price AS item_price,\n" +
-//                "    p.id AS product_id, \n" +
-//                "    p.name AS product_name \n" +
-//                "FROM `order` o\n" +
-//                "LEFT JOIN order_item oi ON o.id = oi.orderId\n" +
-//                "LEFT JOIN product p ON oi.productId = p.id\n" +
-//                "ORDER BY o.id DESC;";
-//
-//        try (Connection conn = DBConnection.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(query)) {
-//
-//            ResultSet rs = ps.executeQuery();
-//
-//            Map<Integer, Order> ord = new LinkedHashMap<>();
-//
-//            while (rs.next()) {
-//                int crrOrder = rs.getInt("order_id");
-//
-//                Order order = ord.get(crrOrder);
-//
-//                if (order == null) {
-//                    order = new Order();
-//                    order.setId(crrOrder);
-//                    order.setUserId(rs.getInt("userId"));
-//                    order.setOrderDate(rs.getDate("orderDate"));
-//                    order.setTotalAmount(rs.getDouble("totalAmount"));
-//
-//
-//                    order.setShippingAddress(rs.getString("shippingAddress"));
-//                    order.setPhone(rs.getString("phone"));
-//                    order.setPaymentMethod(rs.getString("paymentMethod"));
-//                    order.setOrderStatus(rs.getString("orderStatus"));
-//                    order.setItems(new ArrayList<>());
-//
-//                    ord.put(crrOrder, order);
-//                }
-//
-//                int itemId = rs.getInt("item_id");
-//
-//                if (itemId != 0) {
-//                    Product p = new Product();
-//                    p.setId(rs.getInt("product_id"));
-//                    p.setName(rs.getString("product_name"));
-//
-//                    OrderItem item = new OrderItem();
-//                    item.setId(itemId);
-//                    item.setQuantity(rs.getInt("quantity"));
-//                    item.setPrice(rs.getDouble("item_price"));
-//
-//                    item.setProduct(p);
-//
-//                    order.getItems().add(item);
-//                }
-//            }
-//
-//            return new ArrayList<>(ord.values());
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new ArrayList<>();
-//    }
+
 
     public List<Order> getOrdByKeyWord(String keyword) {
         List<Order> list = new ArrayList<>();
@@ -327,6 +257,7 @@ public class OrderDAO {
                 o.setShippingAddress(rs.getString("address"));
                 o.setPaymentMethod(rs.getString("payment_method"));
                 o.setOrderStatus(rs.getString("order_status"));
+                o.setShippingFee(rs.getDouble("shipping_fee"));
 
                 list.add(o);
             }
@@ -353,6 +284,7 @@ public class OrderDAO {
                 o.setShippingAddress(rs.getString("address"));
                 o.setPaymentMethod(rs.getString("payment_method"));
                 o.setOrderStatus(rs.getString("order_status"));
+                o.setShippingFee(rs.getDouble("shipping_fee"));
 
                 list.add(o);
             }

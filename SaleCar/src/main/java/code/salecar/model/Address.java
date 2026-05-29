@@ -8,8 +8,10 @@ public class Address {
     private String province;
     private String type;
     private String name;
+    private int ghnDistrictId;
+    private String ghnWardCode;
 
-    public Address( int userId, String street, String commune, String province, String type, String name) {
+    public Address(int userId, String street, String commune, String province, String type, String name) {
         this.userId = userId;
         this.street = street;
         this.commune = commune;
@@ -26,6 +28,18 @@ public class Address {
         this.province = province;
         this.type = type;
         this.name = name;
+    }
+
+    public Address(int id, int userId, String street, String commune, String province, String type, String name, int ghnDistrictId, String ghnWardCode) {
+        this.id = id;
+        this.userId = userId;
+        this.street = street;
+        this.commune = commune;
+        this.province = province;
+        this.type = type;
+        this.name = name;
+        this.ghnDistrictId = ghnDistrictId;
+        this.ghnWardCode = ghnWardCode;
     }
 
     public Address(){
@@ -86,5 +100,21 @@ public class Address {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public int getGhnDistrictId() {
+        return ghnDistrictId;
+    }
+
+    public void setGhnDistrictId(int ghnDistrictId) {
+        this.ghnDistrictId = ghnDistrictId;
+    }
+
+    public String getGhnWardCode() {
+        return ghnWardCode;
+    }
+
+    public void setGhnWardCode(String ghnWardCode) {
+        this.ghnWardCode = ghnWardCode;
     }
 }
