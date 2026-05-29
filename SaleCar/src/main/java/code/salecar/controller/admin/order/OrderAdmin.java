@@ -48,6 +48,7 @@ public class OrderAdmin extends HttpServlet {
                     if (currentStatus.equalsIgnoreCase(statusParam) ||
                             (statusParam.equals("PENDING") && currentStatus.equalsIgnoreCase("Đang xử lý")) ||
                             (statusParam.equals("CONFIRMED") && currentStatus.equalsIgnoreCase("Đã xác nhận")) ||
+                            (statusParam.equals("SHIPPING") && currentStatus.equalsIgnoreCase("Đang vận chuyển")) ||
                             (statusParam.equals("DELIVERED") && currentStatus.equalsIgnoreCase("Đã giao")) ||
                             (statusParam.equals("CANCELLED") && currentStatus.equalsIgnoreCase("Đã hủy"))) {
                         filteredList.add(ord);

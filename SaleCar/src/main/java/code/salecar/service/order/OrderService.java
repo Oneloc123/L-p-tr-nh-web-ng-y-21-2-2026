@@ -14,7 +14,7 @@ public class OrderService {
     OrderDAO ordDAO = new OrderDAO();
     UserService userSV = new UserService();
 
-    public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod) {
+    public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod, double shippingFee) {
 
 
         if (user == null || cart == null || cart.getItems().isEmpty()) {
@@ -24,12 +24,16 @@ public class OrderService {
 
         String fullInfor = name + " - SĐT: " + phone + " - Địa chỉ: " + shippingAddress;
 
+        // Tổng tiền = tiền hàng + phí ship
+        double totalAmount = cart.getTotal() + shippingFee;
+
         Order order = new Order();
         order.setUserId(user.getId());
-        order.setTotalAmount(cart.getTotal());
+        order.setTotalAmount(totalAmount);
         order.setShippingAddress(fullInfor);
         order.setPaymentMethod(paymentMethod);
         order.setOrderStatus("Đang xử lý");
+        order.setShippingFee(shippingFee);
 
 
         try {

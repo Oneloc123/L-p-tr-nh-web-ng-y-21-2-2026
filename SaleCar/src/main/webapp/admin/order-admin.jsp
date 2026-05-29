@@ -196,6 +196,7 @@
 
         .status-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
         .status-confirmed { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .status-shipping { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
         .status-delivered { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
         .status-cancelled { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
@@ -221,6 +222,8 @@
         .btn-deliver:hover { background: #22c55e; color: white; }
         .btn-cancel { border-color: #ef4444; color: #ef4444; }
         .btn-cancel:hover { background: #ef4444; color: white; }
+        .btn-shipping { border-color: #8b5cf6; color: #8b5cf6; }
+        .btn-shipping:hover { background: #8b5cf6; color: white; }
 
         /* Nút Xem mới */
         .action-view {
@@ -314,6 +317,7 @@
                            <option value="" ${empty currentStatus ? 'selected' : ''}>Tất cả trạng thái</option>
                            <option value="PENDING" ${currentStatus == 'PENDING' ? 'selected' : ''}>Chờ xử lý</option>
                            <option value="CONFIRMED" ${currentStatus == 'CONFIRMED' ? 'selected' : ''}>Đã xác nhận</option>
+                           <option value="SHIPPING" ${currentStatus == 'SHIPPING' ? 'selected' : ''}>Đang vận chuyển</option>
                            <option value="DELIVERED" ${currentStatus == 'DELIVERED' ? 'selected' : ''}>Đã giao</option>
                            <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
                         </select>
@@ -391,6 +395,9 @@
                                                 <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
                                                     <span class="status-badge status-confirmed">Đã xác nhận</span>
                                                 </c:when>
+                                                <c:when test="${ord.orderStatus == 'SHIPPING' || ord.orderStatus == 'Đang vận chuyển'}">
+                                                    <span class="status-badge status-shipping">Đang vận chuyển</span>
+                                                </c:when>
                                                 <c:when test="${ord.orderStatus == 'DELIVERED' || ord.orderStatus == 'Đã giao'}">
                                                     <span class="status-badge status-delivered">Đã giao</span>
                                                 </c:when>
@@ -423,8 +430,16 @@
                                                         </button>
                                                     </c:when>
                                                     <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
+                                                        <button type="button" class="btn-action btn-shipping" onclick="updateStatusOrder(event, ${ord.id}, 'SHIPPING')">
+                                                            <i class="bi bi-truck"></i> Giao cho ĐVVC
+                                                        </button>
+                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        </button>
+                                                    </c:when>
+                                                    <c:when test="${ord.orderStatus == 'SHIPPING' || ord.orderStatus == 'Đang vận chuyển'}">
                                                         <button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ${ord.id}, 'DELIVERED')">
-                                                            <i class="bi bi-truck"></i> Đã giao
+                                                            <i class="bi bi-check2-circle"></i> Đã giao
                                                         </button>
                                                         <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
                                                             <i class="bi bi-x-circle"></i> Cancel
@@ -599,6 +614,22 @@
                             '</button>';
 
                         trangThai.innerHTML = '<span class="status-badge status-confirmed">Đã xác nhận</span>';
+
+                    } else if("SHIPPING" === newStatus){
+                        document.getElementById("toastMessage").innerText = "Đã bàn giao cho đơn vị vận chuyển!";
+
+                        actionGroup.innerHTML =
+                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                                '<i class="bi bi-eye"></i>' +
+                            '</button>' +
+                            '<button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ' + orderId + ', \'DELIVERED\')">' +
+                                '<i class="bi bi-check2-circle"></i> Đã giao' +
+                            '</button>' +
+                            '<button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
+                                '<i class="bi bi-x-circle"></i> Cancel' +
+                            '</button>';
+
+                        trangThai.innerHTML = '<span class="status-badge status-shipping">Đang vận chuyển</span>';
 
                     } else if("DELIVERED" === newStatus){
                         document.getElementById("toastMessage").innerText = "Đơn hàng #ORD-"+ orderId + " đã được giao!";

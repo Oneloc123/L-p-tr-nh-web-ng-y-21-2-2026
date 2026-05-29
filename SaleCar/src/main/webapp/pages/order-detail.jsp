@@ -2,6 +2,7 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -425,7 +426,7 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </span>
                     </c:when>
-                    <c:when test="${order.orderStatus == 'SHIPPING'}">
+                    <c:when test="${order.orderStatus == 'SHIPPING' || fn:contains(order.orderStatus, 'Đang vận chuyển')}">
                         <span class="status-badge status-shipping">
                             <i class="fas fa-truck"></i> Đang giao hàng
                         </span>
@@ -453,10 +454,7 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
         <div class="order-info-grid">
             <div class="info-card">
                 <h4><i class="fas fa-map-marker-alt"></i> Thông tin nhận hàng</h4>
-                <div class="info-row">
-                    <i class="fas fa-phone"></i>
-                    <span>${order.phone}</span>
-                </div>
+
                 <div class="info-row">
                     <i class="fas fa-map"></i>
                     <span>${order.shippingAddress}</span>

@@ -38,6 +38,17 @@ public class addAddress extends HttpServlet {
         String street = request.getParameter("street");
         String type = request.getParameter("type");
 
+        // Lấy GHN districtId và wardCode từ request
+        int ghnDistrictId = 0;
+        String ghnDistrictIdStr = request.getParameter("ghnDistrictId");
+        if (ghnDistrictIdStr != null && !ghnDistrictIdStr.isEmpty()) {
+            try {
+                ghnDistrictId = Integer.parseInt(ghnDistrictIdStr);
+            } catch (NumberFormatException ignored) {}
+        }
+        String ghnWardCode = request.getParameter("ghnWardCode");
+        if (ghnWardCode == null) ghnWardCode = "";
+
         AddressService addSv = new AddressService();
         List<Address> crrAddr = addSv.getListAddressById(userId);
 
@@ -49,6 +60,8 @@ public class addAddress extends HttpServlet {
             addr.setCommune(commune);
             addr.setStreet(street);
             addr.setType(type);
+            addr.setGhnDistrictId(ghnDistrictId);
+            addr.setGhnWardCode(ghnWardCode);
 
             addSv.addAddress(addr);
 

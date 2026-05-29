@@ -42,9 +42,9 @@ public class AddressDao {
 
     public void addAddress(Address address) {
         String sql = "insert into address" +
-                "(user_id,street,commune,province,type,name) " +
+                "(user_id,street,commune,province,type,name,ghn_district_id,ghn_ward_code) " +
                 "values " +
-                "(?,?,?,?,?,?)";
+                "(?,?,?,?,?,?,?,?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
@@ -54,6 +54,8 @@ public class AddressDao {
             ps.setString(4,address.getProvince());
             ps.setString(5,address.getType());
             ps.setString(6,address.getName());
+            ps.setInt(7,address.getGhnDistrictId());
+            ps.setString(8,address.getGhnWardCode());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -87,8 +89,11 @@ public class AddressDao {
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                list.add(new Address(rs.getInt(1),rs.getInt(2),rs.getString(3)
-                ,rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+                list.add(new Address(
+                    rs.getInt(1),rs.getInt(2),rs.getString(3),
+                    rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),
+                    rs.getInt(8),rs.getString(9)
+                ));
             }
 
         } catch (SQLException e) {
@@ -104,6 +109,8 @@ public class AddressDao {
                 "set street = ?" +
                 ", commune = ?" +
                 ", province = ?" +
+                ", ghn_district_id = ?" +
+                ", ghn_ward_code = ?" +
                 " where id=?";
 
         try (Connection con = DBConnection.getConnection();
@@ -111,7 +118,9 @@ public class AddressDao {
             ps.setString(1,a.getStreet());
             ps.setString(2,a.getCommune());
             ps.setString(3, a.getProvince());
-            ps.setInt(4,a.getId());
+            ps.setInt(4, a.getGhnDistrictId());
+            ps.setString(5, a.getGhnWardCode());
+            ps.setInt(6,a.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -129,8 +138,11 @@ public class AddressDao {
              PreparedStatement ps = con.prepareStatement(sql);) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                list.add(new Address(rs.getInt(1),rs.getInt(2),rs.getString(3)
-                        ,rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+                list.add(new Address(
+                    rs.getInt(1),rs.getInt(2),rs.getString(3),
+                    rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),
+                    rs.getInt(8),rs.getString(9)
+                ));
             }
 
         } catch (SQLException e) {
