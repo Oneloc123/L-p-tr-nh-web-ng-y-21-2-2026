@@ -272,6 +272,7 @@
         .status-completed { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-cancelled { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .status-confirmed { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+        .status-shipping { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
 
         /* Reorder button */
         .btn-reorder {
@@ -629,6 +630,8 @@
         <div class="order-tabs">
             <div class="order-tab active" onclick="filterOrders('all', this)">Tất cả</div>
             <div class="order-tab" onclick="filterOrders('pending', this)">Đang xử lý</div>
+            <div class="order-tab" onclick="filterOrders('confirmed', this)">Đã xác nhận</div>
+            <div class="order-tab" onclick="filterOrders('shipping', this)">Đang vận chuyển</div>
             <div class="order-tab" onclick="filterOrders('completed', this)">Đã Giao</div>
             <div class="order-tab" onclick="filterOrders('cancelled', this)">Đã huỷ</div>
 
@@ -639,9 +642,18 @@
 
             <c:set var="statusCategory" value="pending" />
 
+            <c:if test="${order.orderStatus == 'CONFIRMED' || fn:contains(order.orderStatus, 'Đã xác nhận')}">
+                <c:set var="statusCategory" value="confirmed" />
+            </c:if>
+
             <c:if test="${fn:contains(order.orderStatus, 'Đã huỷ') ||
  fn:contains(order.orderStatus, 'Đã hủy') || order.orderStatus == 'CANCELLED'}">
                 <c:set var="statusCategory" value="cancelled" />
+            </c:if>
+
+            <c:if test="${fn:contains(order.orderStatus, 'SHIPPING') ||
+ fn:contains(order.orderStatus, 'Đang vận chuyển')}">
+                <c:set var="statusCategory" value="shipping" />
             </c:if>
 
             <c:if test="${fn:contains(order.orderStatus, 'Đã giao') ||
@@ -691,6 +703,13 @@
                                 </button>
 
                              </c:when>
+
+                            <%-- ĐANG VẬN CHUYỂN --%>
+                            <c:when test="${statusCategory == 'shipping'}">
+                                <span class="order-status status-shipping">
+                                    <i class="fas fa-truck"></i> ${order.orderStatus}
+                                </span>
+                            </c:when>
 
                             <%-- XÁC NHẬN --%>
                             <c:when test="${order.orderStatus == 'CONFIRMED' ||

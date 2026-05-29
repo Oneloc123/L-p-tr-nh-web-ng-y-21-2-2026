@@ -23,11 +23,23 @@
             String street = request.getParameter("street");
             String commune = request.getParameter("commune");
             String province = request.getParameter("province");
+
+            // Lấy GHN fields (nếu có từ client)
+            int ghnDistrictId = 0;
+            String ghnDistrictIdStr = request.getParameter("ghnDistrictId");
+            if (ghnDistrictIdStr != null && !ghnDistrictIdStr.isEmpty()) {
+                try { ghnDistrictId = Integer.parseInt(ghnDistrictIdStr); } catch (NumberFormatException ignored) {}
+            }
+            String ghnWardCode = request.getParameter("ghnWardCode");
+            if (ghnWardCode == null) ghnWardCode = "";
+
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             int id = user.getId();
             AddressService as = new AddressService();
             Address address = new Address(id,street,commune,province,type,name);
+            address.setGhnDistrictId(ghnDistrictId);
+            address.setGhnWardCode(ghnWardCode);
             as.addAddress(address);
             System.out.println(name+type+street+commune+province+id);
             response.sendRedirect("/profileEdit");
