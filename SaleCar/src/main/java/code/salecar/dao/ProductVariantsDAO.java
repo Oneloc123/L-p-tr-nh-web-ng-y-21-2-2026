@@ -4,6 +4,7 @@ import code.salecar.config.DBConnection;
 import code.salecar.model.Image;
 import code.salecar.model.product.entity.ProductVariants;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +30,11 @@ public class ProductVariantsDAO {
                         .sku(rs.getString("sku"))
                         .quantity(rs.getInt("quantity"))
                         .build();
+
+                BigDecimal finalPrice = rs.getBigDecimal("final_price");
+                if (finalPrice != null) {
+                    pv.setFinalPrice(finalPrice);
+                }
 
                 list.add(pv);
             }
@@ -75,6 +81,12 @@ public class ProductVariantsDAO {
                         .price(rs.getBigDecimal("price"))
                         .sku(rs.getString("sku"))
                         .build();
+
+                BigDecimal finalPrice = rs.getBigDecimal("final_price");
+                if (finalPrice != null) {
+                    pv.setFinalPrice(finalPrice);
+                }
+
                 return pv;
             }
 
@@ -88,13 +100,16 @@ public class ProductVariantsDAO {
 
     public boolean update(ProductVariants variant) {
 
-        String sql = " UPDATE product_variants SET  name = ?, price = ?, sku = ? WHERE id = ? ";
+        String sql = " UPDATE product_variants SET name = ?, price = ?, sku = ?, final_price = ? WHERE id = ? ";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, variant.getVariantName());
             ps.setBigDecimal(2, variant.getPrice());
             ps.setString(3, variant.getSku());
-            ps.setLong(4, variant.getId());
+            // Nếu variant đã có finalPrice thì dùng, nếu không thì mặc định bằng price
+            BigDecimal finalPrice = variant.getFinalPrice() != null ? variant.getFinalPrice() : variant.getPrice();
+            ps.setBigDecimal(4, finalPrice);
+            ps.setLong(5, variant.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -105,19 +120,37 @@ public class ProductVariantsDAO {
 
     /** Thêm biến thể mới */
     public long insertVariant(ProductVariants variant) {
-        String sql = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO product_variants (product_id, name, price, sku, final_price) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, variant.getProductId());
             ps.setString(2, variant.getVariantName());
             ps.setBigDecimal(3, variant.getPrice());
             ps.setString(4, variant.getSku());
+            // Nếu variant đã có finalPrice thì dùng, nếu không thì mặc định bằng price
+            BigDecimal finalPrice = variant.getFinalPrice() != null ? variant.getFinalPrice() : variant.getPrice();
+            ps.setBigDecimal(5, finalPrice);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 return rs.getLong(1);
             }
             return -1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Cập nhật final_price cho một variant.
+     */
+    public void updateFinalPrice(long variantId, BigDecimal finalPrice) {
+        String sql = "UPDATE product_variants SET final_price = ? WHERE id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setBigDecimal(1, finalPrice);
+            ps.setLong(2, variantId);
+            ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

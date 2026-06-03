@@ -88,6 +88,11 @@ public class ProductDetailDTO {
         return variants;}
     public void calcFinalPrice(){
         for(ProductVariants variant: variants){
+            // Nếu variant đã có finalPrice từ DB (đã được cập nhật qua DiscountService)
+            // thì dùng luôn, không cần tính lại
+            if (variant.getFinalPrice() != null) continue;
+
+            // Fallback: tính từ discountPercent của product (cho variant chưa có finalPrice)
             BigDecimal price = variant.getPrice();
             double discountPercent = getDiscountPercent();
             double dn = price.doubleValue() * (100 - discountPercent) /100;

@@ -18,6 +18,44 @@ import java.util.List;
 public class ProductDAO {
 
 
+    /**
+     * Lấy danh sách ID sản phẩm theo BrandId.
+     */
+    public List<Long> getProductIdsByBrandId(int brandId) {
+        List<Long> ids = new ArrayList<>();
+        String sql = "SELECT id FROM product WHERE brand_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, brandId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getLong("id"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ids;
+    }
+
+    /**
+     * Lấy danh sách ID sản phẩm theo CategoryId.
+     */
+    public List<Long> getProductIdsByCategoryId(int categoryId) {
+        List<Long> ids = new ArrayList<>();
+        String sql = "SELECT id FROM product WHERE category_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ids.add(rs.getLong("id"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ids;
+    }
+
     // Lấy danh sách sản phẩm mới nhất (dùng cho trang chủ)
     public List<ProductItemDTO> getProductNew() {
         List<ProductItemDTO> products = new ArrayList<>();
@@ -824,13 +862,16 @@ public class ProductDAO {
 
     //
     public void insertVariant(ProductVariants variant) {
-        String query = "INSERT INTO product_variants (product_id, name, price, sku) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO product_variants (product_id, name, price, sku, final_price) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, variant.getProductId());
             ps.setString(2, variant.getVariantName());
             ps.setBigDecimal(3, variant.getPrice());
             ps.setString(4, variant.getSku());
+            // Nếu variant đã có finalPrice thì dùng, nếu không thì mặc định bằng price
+            BigDecimal finalPrice = variant.getFinalPrice() != null ? variant.getFinalPrice() : variant.getPrice();
+            ps.setBigDecimal(5, finalPrice);
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);

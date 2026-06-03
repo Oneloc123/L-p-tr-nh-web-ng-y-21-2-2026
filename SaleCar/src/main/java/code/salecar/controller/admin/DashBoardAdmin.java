@@ -3,6 +3,7 @@ package code.salecar.controller.admin;
 import code.salecar.dao.OrderDAO;
 import code.salecar.model.Order;
 import code.salecar.model.User;
+import code.salecar.service.order.OrderService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -15,43 +16,77 @@ import java.util.List;
 public class DashBoardAdmin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserService us = new UserService();
-        List<User> listUser = us.getList();
-        int totalUser = 0;
-        int activeUsers = 0;
-        int inactiveUsers = 0;
-        int totalAdmins = 0;
-        for(User u : listUser){
-            totalUser++;
-            if(u.getStatus()){
-                activeUsers++;
-            }else{
-                inactiveUsers++;
-            }
-//            if(u.getRole().equals("admin")||u.getRole()!=null){
-//                totalAdmins++;
-//            }
-        }
-        request.setAttribute("totalUser",totalUser);
-        request.setAttribute("activeUsers",activeUsers);
-        request.setAttribute("inactiveUsers",inactiveUsers);
-//        request.setAttribute("totalAdmins",totalAdmins);
-        OrderDAO od = new OrderDAO();
-        List<Order> listOrder = od.getAllOrders();
-        int totalOrders = 0;
-        double totalSpending = 0;
+
+        OrderService os = new OrderService();
+        List<Order> listOrder = os.getOrderByDays(7);
+        List<Order> listOrderPre = os.getOrderByDaysPrevious(7);
+
+        double totalPriceOrder = 0;
+        int totalOrder = 0;
+
+        int totalOrderInProcess = 0;
+        int totalOrderCancelled = 0;
+        int totalOrderDelivered = 0;
+
         for (Order o : listOrder){
-            totalOrders++;
-            totalSpending+= o.getTotalAmount();
+            //
+            totalPriceOrder += o.getTotalAmount();
+            totalOrder ++;
+            if(o.getOrderStatus().equals("Đang xử lý")){
+                totalOrderInProcess++;
+            }
+            if(o.getOrderStatus().equals("CANCELLED")){
+                totalOrderCancelled++;
+            }
+            if(o.getOrderStatus().equals("DELIVERED")){
+                totalOrderDelivered++;
+            }
+
         }
-        request.setAttribute("totalOrders", totalOrders);
-        request.setAttribute("totalSpending",totalSpending);
+
+        double totalPriceOrderPre = 0;
+        int totalOrderPre = 0;
+
+        for (Order o : listOrderPre){
+            //
+            totalPriceOrderPre += o.getTotalAmount();
+            totalOrderPre ++;
+        }
+        double averagePriceOrderPre =
+                Math.round((totalPriceOrderPre / totalOrderPre) * 100.0) / 100.0;
+
+        double averagePriceOrder =
+                Math.round((totalPriceOrder / totalOrder) * 100.0) / 100.0;
+
+        request.setAttribute("averagePriceOrder", Math.round(averagePriceOrder));
+        request.setAttribute("totalOrder",totalOrder);
+        request.setAttribute("totalPriceOrder", Math.round(totalPriceOrder));
+
+        request.setAttribute("growPriceOder",calculateGrowthRate(totalPriceOrder,totalPriceOrderPre));
+        request.setAttribute("growTotalOrder",calculateGrowthRate(totalOrder,totalOrderPre));
+        request.setAttribute("growAverage",calculateGrowthRate(averagePriceOrder,averagePriceOrderPre));
+
+        request.setAttribute("inProcess", totalOrderInProcess);
+        request.setAttribute("cancelled",totalOrderCancelled);
+        request.setAttribute("delivered",totalOrderDelivered);
+
         request.setAttribute("listOrder",listOrder);
+
         request.getRequestDispatcher("/admin/dashBoardAdmin.jsp").forward(request,response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    }
+
+    public double calculateGrowthRate(double currentRevenue, double previousRevenue) {
+        if (previousRevenue == 0) {
+            return currentRevenue > 0 ? 100.0 : 0.0;
+        }
+
+        double growthRate = ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+
+        return Math.round(growthRate * 100.0) / 100.0;
     }
 }

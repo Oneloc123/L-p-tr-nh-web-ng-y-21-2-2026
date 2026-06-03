@@ -1,8 +1,10 @@
 package code.salecar.controller.profile;
 
 import code.salecar.model.Address;
+import code.salecar.model.Addresses;
 import code.salecar.model.User;
 import code.salecar.service.address.AddressService;
+import code.salecar.service.address.AddressesService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -17,9 +19,9 @@ public class SetMainAddress extends HttpServlet {
         int addressId = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        AddressService as = new AddressService();
+        AddressesService as = new AddressesService();
         as.setMainAddress(addressId,user.getId());
-        List<Address> listAddress = as.getListAddressById(user.getId());
+        List<Addresses> listAddress = as.getListAddressById(user.getId());
         request.setAttribute("listAddress", listAddress);
         request.setAttribute("user", user);
 

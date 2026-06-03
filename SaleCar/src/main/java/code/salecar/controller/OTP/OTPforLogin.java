@@ -57,7 +57,7 @@ public class OTPforLogin extends HttpServlet {
 
             if(user.getRole().equals("admin")){
                 session.setAttribute("user",user);
-                response.sendRedirect("/userAdmin");
+                response.sendRedirect("/admin/dashboard");
                 return;
             }
             //alert
