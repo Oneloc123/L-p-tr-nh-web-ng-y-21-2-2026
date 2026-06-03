@@ -14,6 +14,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 
     <style>
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-shipping {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -446,9 +472,13 @@
                 <div class="stat-card">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="stat-info">
-                            <h3>1,425,000,000 ₫</h3>
+                            <h3><fmt:formatNumber
+                                    value="${totalPriceOrder}"
+                                    type="number"
+                                    groupingUsed="true"/>
+                                ₫</h3>
                             <p>Doanh thu thuần</p>
-                            <span class="stat-trend trend-up"><i class="bi bi-arrow-up-short"></i> +12.5%</span>
+                            <span class="stat-trend trend-up"><i class="bi bi-arrow-up-short"></i> ${growPriceOder}% </span>
                         </div>
                         <div class="stat-icon success">
                             <i class="bi bi-currency-dollar"></i>
@@ -461,9 +491,9 @@
                 <div class="stat-card" onclick="window.location.href='/orderAdmin'">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="stat-info">
-                            <h3>342 đơn</h3>
+                            <h3>${totalOrder} đơn</h3>
                             <p>Tổng đơn hàng</p>
-                            <span class="stat-trend trend-up"><i class="bi bi-arrow-up-short"></i> +8.3%</span>
+                            <span class="stat-trend trend-up"><i class="bi bi-arrow-up-short"></i> ${growTotalOrder}%</span>
                         </div>
                         <div class="stat-icon orders">
                             <i class="bi bi-bag-check-fill"></i>
@@ -476,27 +506,16 @@
                 <div class="stat-card">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="stat-info">
-                            <h3>4,166,000 ₫</h3>
+                            <h3><fmt:formatNumber
+                                    value="${averagePriceOrder}"
+                                    type="number"
+                                    groupingUsed="true"/>
+                                ₫</h3>
                             <p>Giá trị TB đơn (AOV)</p>
-                            <span class="stat-trend trend-down"><i class="bi bi-arrow-down-short"></i> -1.2%</span>
+                            <span class="stat-trend trend-down"><i class="bi bi-arrow-down-short"></i> ${growAverage}%</span>
                         </div>
                         <div class="stat-icon spending">
                             <i class="bi bi-graph-up-arrow"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-sm-6">
-                <div class="stat-card">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="stat-info">
-                            <h3>2.45 %</h3>
-                            <p>Tỷ lệ chuyển đổi</p>
-                            <span class="stat-trend text-primary"><i class="bi bi-eye"></i> 42 online</span>
-                        </div>
-                        <div class="stat-icon primary">
-                            <i class="bi bi-people-fill"></i>
                         </div>
                     </div>
                 </div>
@@ -508,8 +527,8 @@
                 <div class="alert-box border-danger-light">
                     <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
                     <div>
-                        <div class="fw-bold text-dark mb-0">3 Sản phẩm hết hàng</div>
-                        <small class="text-muted">Cần nhập thêm kho LUXCAR ngay</small>
+                        <div class="fw-bold text-dark mb-0">${inProcess} đơn hàng đang chờ xử lý</div>
+                        <small class="text-muted">Đang chờ quản trị viên phê duyệt</small>
                     </div>
                 </div>
             </div>
@@ -517,8 +536,8 @@
                 <div class="alert-box border-warning-light">
                     <i class="bi bi-clock-fill text-warning fs-4"></i>
                     <div>
-                        <div class="fw-bold text-dark mb-0">12 Đơn chờ xác nhận</div>
-                        <small class="text-muted">Có 4 đơn đặt hàng từ tối qua</small>
+                        <div class="fw-bold text-dark mb-0">${cancelled} Đơn hàng đã huỷ</div>
+                        <small class="text-muted">Xem lý do huỷ đơn hàng</small>
                     </div>
                 </div>
             </div>
@@ -526,8 +545,8 @@
                 <div class="alert-box border-info-light">
                     <i class="bi bi-arrow-counterclockwise text-info fs-4"></i>
                     <div>
-                        <div class="fw-bold text-dark mb-0">2 Đổi trả / Hoàn tiền</div>
-                        <small class="text-muted">Đang chờ quản trị viên phê duyệt</small>
+                        <div class="fw-bold text-dark mb-0">${delivered} đơn hàng đã giao</div>
+                        <small class="text-muted">Theo dõi thanh toán đơn hàng</small>
                     </div>
                 </div>
             </div>
@@ -564,38 +583,64 @@
                         <a href="/orderAdmin" class="view-all">Xem tất cả <i class="bi bi-arrow-right-short"></i></a>
                     </div>
                     <div class="orders-table">
-                        <div class="order-item">
-                            <div class="order-info">
-                                <div class="order-id">#ORD-9482 <span class="fw-normal text-muted" style="font-size:13px;">- Nguyễn Văn A</span></div>
-                                <div class="order-date">02/06/2026 11:30</div>
+                        <c:forEach items="${listOrder}" var="order" begin="0" end="4">
+
+                            <c:set var="statusClass" value="status-pending"/>
+
+                            <c:choose>
+                                <c:when test="${order.orderStatus eq 'PENDING'}">
+                                    <c:set var="statusClass" value="status-pending"/>
+                                    <c:set var="statusText" value="Chờ xử lý"/>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus eq 'Đang xử lý'}">
+                                    <c:set var="statusClass" value="status-processing"/>
+                                    <c:set var="statusText" value="Đang xử lý"/>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus eq 'SHIPPING'}">
+                                    <c:set var="statusClass" value="status-shipping"/>
+                                    <c:set var="statusText" value="Đang giao"/>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus eq 'CONFIRMED'}">
+                                    <c:set var="statusClass" value="status-completed"/>
+                                    <c:set var="statusText" value="Đã hoàn thành"/>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus eq 'CANCELLED'}">
+                                    <c:set var="statusClass" value="status-cancelled"/>
+                                    <c:set var="statusText" value="Đã hủy"/>
+                                </c:when>
+                            </c:choose>
+                            <div class="order-item">
+                                <div class="order-info">
+                                    <div class="order-id">
+                                        #ORD-${order.id}
+                                        <span class="fw-normal text-muted" style="font-size:13px;">
+                    - mã khách hàng ${order.userId}
+                </span>
+                                    </div>
+
+                                    <div class="order-date">
+                                        <fmt:formatDate
+                                                value="${order.orderDate}"
+                                                pattern="dd/MM/yyyy HH:mm"/>
+                                    </div>
+                                </div>
+
+                                <div class="order-amount">
+                                    <fmt:formatNumber
+                                            value="${order.totalAmount}"
+                                            type="number"
+                                            groupingUsed="true"/>
+                                    ₫
+                                </div>
+
                             </div>
-                            <div class="order-amount">15,500,000 ₫</div>
-                            <span class="order-status status-pending">Chờ xử lý</span>
-                        </div>
-                        <div class="order-item">
-                            <div class="order-info">
-                                <div class="order-id">#ORD-9481 <span class="fw-normal text-muted" style="font-size:13px;">- Trần Thị B</span></div>
-                                <div class="order-date">02/06/2026 09:15</div>
-                            </div>
-                            <div class="order-amount">3,200,000 ₫</div>
-                            <span class="order-status status-processing">Đang xử lý</span>
-                        </div>
-                        <div class="order-item">
-                            <div class="order-info">
-                                <div class="order-id">#ORD-9480 <span class="fw-normal text-muted" style="font-size:13px;">- Lê Hoàng C</span></div>
-                                <div class="order-date">01/06/2026 18:45</div>
-                            </div>
-                            <div class="order-amount">850,000 ₫</div>
-                            <span class="order-status status-shipping">Đang giao</span>
-                        </div>
-                        <div class="order-item">
-                            <div class="order-info">
-                                <div class="order-id">#ORD-9479 <span class="fw-normal text-muted" style="font-size:13px;">- Phạm Minh D</span></div>
-                                <div class="order-date">01/06/2026 14:20</div>
-                            </div>
-                            <div class="order-amount">24,000,000 ₫</div>
-                            <span class="order-status status-completed">Đã hoàn thành</span>
-                        </div>
+
+                        </c:forEach>
+
                     </div>
                 </div>
             </div>

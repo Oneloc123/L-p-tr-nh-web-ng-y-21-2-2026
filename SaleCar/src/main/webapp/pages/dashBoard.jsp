@@ -238,50 +238,77 @@
 
         <div class="welcome-banner">
             <div class="welcome-text">
-                <h2>Chào mừng trở lại, Nguyễn Hoàng Long!</h2>
+                <h2>Chào mừng trở lại, ${sessionScope.user.username}!</h2>
                 <p>Hệ thống giám sát hành trình mua sắm và ưu đãi dành riêng cho bạn tại LUXCAR.</p>
             </div>
             <div class="welcome-stats">
                 <div class="welcome-stat">
-                    <div class="number">12</div>
+                    <div class="number">${totalOrders}</div>
                     <div class="label">Đơn hàng</div>
                 </div>
                 <div class="welcome-stat">
-                    <div class="number">68.200.000 ₫</div>
+                    <div class="number"><fmt:formatNumber
+                            value="${totalSpending}"
+                            type="number"
+                            groupingUsed="true"/>
+                        ₫</div>
                     <div class="label">Đã chi tiêu</div>
                 </div>
                 <div class="welcome-stat">
-                    <div class="number">3</div>
-                    <div class="label">Mã giảm giá</div>
+                    <div class="number">${totalVoucher}</div>
+                    <div class="label"> Mã giảm giá</div>
                 </div>
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-info"><h3>12</h3><p>Tổng đơn đặt hàng</p></div>
+                <div class="stat-info"><h3>${totalOrders}</h3><p>Tổng đơn đặt hàng</p></div>
                 <div class="stat-icon orders"><i class="fas fa-shopping-bag"></i></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>68.200.000 ₫</h3><p>Tổng chi tiêu tích lũy</p></div>
+                <div class="stat-info"><h3><fmt:formatNumber
+                        value="${totalSpending}"
+                        type="number"
+                        groupingUsed="true"/>
+                    ₫</h3><p>Tổng chi tiêu tích lũy</p></div>
                 <div class="stat-icon spending"><i class="fas fa-wallet"></i></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>5</h3><p>Sản phẩm yêu thích</p></div>
+                <div class="stat-info"><h3>${totalFavorites}</h3><p> Sản phẩm yêu thích</p></div>
                 <div class="stat-icon favorites"><i class="fas fa-heart"></i></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>3 mã áp dụng</h3><p>Kho Voucher khả dụng</p></div>
+                <div class="stat-info"><h3>${totalVoucher} mã áp dụng</h3><p>Kho Voucher khả dụng</p></div>
                 <div class="stat-icon vouchers"><i class="fas fa-ticket-alt"></i></div>
             </div>
         </div>
 
         <div class="status-summary">
-            <div class="status-pill"><span class="dot dot-pending"></span>Chờ xác nhận: <strong>1</strong></div>
-            <div class="status-pill"><span class="dot dot-processing"></span>Đang xử lý: <strong>1</strong></div>
-            <div class="status-pill"><span class="dot dot-shipping"></span>Đang giao: <strong>0</strong></div>
-            <div class="status-pill"><span class="dot dot-delivered"></span>Đã giao: <strong>9</strong></div>
-            <div class="status-pill"><span class="dot dot-cancelled"></span>Đã hủy: <strong>1</strong></div>
+            <div class="status-pill">
+                <span class="dot dot-pending"></span>
+                Chờ xác nhận: <strong>${pendingCount}</strong>
+            </div>
+
+            <div class="status-pill">
+                <span class="dot dot-processing"></span>
+                Đang xử lý: <strong>${processingCount}</strong>
+            </div>
+
+            <div class="status-pill">
+                <span class="dot dot-shipping"></span>
+                Đang giao: <strong>${shippingCount}</strong>
+            </div>
+
+            <div class="status-pill">
+                <span class="dot dot-delivered"></span>
+                Đã giao: <strong>${deliveredCount}</strong>
+            </div>
+
+            <div class="status-pill">
+                <span class="dot dot-cancelled"></span>
+                Đã hủy: <strong>${cancelledCount}</strong>
+            </div>
         </div>
 
         <div class="dashboard-grid">
@@ -290,30 +317,61 @@
                     <h3><i class="fas fa-history"></i> Đơn hàng gần đây</h3>
                     <a href="#" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></a>
                 </div>
-                <div class="order-item">
-                    <div class="order-info">
-                        <div class="order-id">#LC-8954</div>
-                        <div class="order-meta"><span>Hôm nay, 10:25</span><span class="payment-method">MoMo</span><span class="payment-status payment-paid">Đã thanh toán</span></div>
+                <c:forEach items="${listOrder}" var="order" begin="0" end="4">
+
+
+                    <c:choose>
+                        <c:when test="${order.orderStatus eq 'PENDING'}">
+                            <c:set var="statusClass" value="status-pending"/>
+                            <c:set var="statusText" value="Chờ xử lý"/>
+                        </c:when>
+
+                        <c:when test="${order.orderStatus eq 'Đang xử lý'}">
+                            <c:set var="statusClass" value="status-processing"/>
+                            <c:set var="statusText" value="Đang xử lý"/>
+                        </c:when>
+
+                        <c:when test="${order.orderStatus eq 'SHIPPING'}">
+                            <c:set var="statusClass" value="status-shipping"/>
+                            <c:set var="statusText" value="Đang giao"/>
+                        </c:when>
+
+                        <c:when test="${order.orderStatus eq 'CONFIRMED'}">
+                            <c:set var="statusClass" value="status-completed"/>
+                            <c:set var="statusText" value="Đã hoàn thành"/>
+                        </c:when>
+
+                        <c:when test="${order.orderStatus eq 'CANCELLED'}">
+                            <c:set var="statusClass" value="status-cancelled"/>
+                            <c:set var="statusText" value="Đã hủy"/>
+                        </c:when>
+                    </c:choose>
+
+                    <div class="order-item">
+                        <div class="order-info">
+                            <div class="order-id">#LC-${order.id}</div>
+
+                            <div class="order-meta">
+                <span>
+                    <fmt:formatDate value="${order.orderDate}"
+                                    pattern="dd/MM/yyyy HH:mm"/>
+                </span>
+
+                                <span class="payment-method">
+                                        ${order.paymentMethod}
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <div class="order-amount">
+                            <fmt:formatNumber value="${order.totalAmount}"
+                                              type="number"
+                                              groupingUsed="true"/> ₫
+                        </div>
                     </div>
-                    <div class="order-amount">24.500.000 ₫</div>
-                    <div><span class="order-status status-processing">Đang xử lý</span></div>
-                </div>
-                <div class="order-item">
-                    <div class="order-info">
-                        <div class="order-id">#LC-8812</div>
-                        <div class="order-meta"><span>28/05/2026</span><span class="payment-method">COD</span><span class="payment-status payment-unpaid">Chưa thanh toán</span></div>
-                    </div>
-                    <div class="order-amount">3.200.000 ₫</div>
-                    <div><span class="order-status status-pending">Chờ xác nhận</span></div>
-                </div>
-                <div class="order-item">
-                    <div class="order-info">
-                        <div class="order-id">#LC-8240</div>
-                        <div class="order-meta"><span>15/04/2026</span><span class="payment-method">Chuyển khoản</span><span class="payment-status payment-paid">Đã thanh toán</span></div>
-                    </div>
-                    <div class="order-amount">40.500.000 ₫</div>
-                    <div><span class="order-status status-delivered">Đã giao</span></div>
-                </div>
+
+                </c:forEach>
             </div>
 
             <div class="recent-card">
@@ -351,20 +409,28 @@
                     <h3><i class="fas fa-ticket-alt"></i> Kho Voucher / Ưu đãi của tôi</h3>
                     <a href="#" class="view-all">Xem tủ voucher <i class="fas fa-arrow-right"></i></a>
                 </div>
-                <div class="voucher-item">
-                    <div class="voucher-left"><i class="fas fa-shipping-fast"></i><span>FREESHIP</span></div>
-                    <div class="voucher-right">
-                        <div class="voucher-title">Miễn phí vận chuyển toàn quốc</div>
-                        <div class="voucher-expiry">Hạn dùng: Hết hạn trong 3 ngày tới</div>
+                <c:forEach items="${vouchers}" var="voucher" begin="0" end="1">
+
+                    <div class="voucher-item">
+                        <div class="voucher-left ${voucher.code eq 'FREESHIP' ? '' : ''}"
+                                <c:if test="${voucher.code ne 'FREESHIP'}">
+                                    style="background:#d32f2f;"
+                                </c:if>>
+                            <i class="fas ${voucher.code eq 'FREESHIP' ? 'fa-shipping-fast' : 'fa-percentage'}"></i>
+                            <span>${voucher.code}</span>
+                        </div>
+
+                        <div class="voucher-right">
+
+                            <div class="voucher-expiry">
+                                Hạn dùng:
+                                <fmt:formatDate value="${voucher.endAt}"
+                                                pattern="dd/MM/yyyy"/>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="voucher-item">
-                    <div class="voucher-left" style="background:#d32f2f;"><i class="fas fa-percentage"></i><span>LUXCAR10</span></div>
-                    <div class="voucher-right">
-                        <div class="voucher-title">Giảm 10% cho đơn phụ kiện xe từ 2TR</div>
-                        <div class="voucher-expiry">Hạn dùng: Đến hết ngày 30/06/2026</div>
-                    </div>
-                </div>
+
+                </c:forEach>
             </div>
 
             <div class="recent-card">
@@ -374,9 +440,9 @@
                 </div>
                 <div class="address-box default">
                     <span class="address-badge">Mặc định</span>
-                    <div class="address-name">Nguyễn Hoàng Long (Nhà riêng)</div>
-                    <div class="address-phone"><i class="fas fa-phone-alt"></i> 0901.234.567</div>
-                    <div class="address-text"><i class="fas fa-home"></i> Lầu 5, Tòa nhà Landmark 81, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh</div>
+                    <div class="address-name">${address.nameAddress}</div>
+                    <div class="address-phone"><i class="fas fa-phone-alt"></i> ${sessionScope.user.phonenumber}</div>
+                    <div class="address-text"><i class="fas fa-home"></i> ${address.fullAddress}</div>
                 </div>
             </div>
         </div>

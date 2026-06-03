@@ -14,6 +14,9 @@ public class AddressesService {
         ad.setMainAddress(addressId,userId);
 
     }
+    public Addresses getMainAddressById(int id){
+        return ad.getMainAddressById(id);
+    }
 
     public void addAddress(Addresses address) {
         ad.addAddress(address);

@@ -14,6 +14,14 @@ public class OrderService {
     OrderDAO ordDAO = new OrderDAO();
     UserService userSV = new UserService();
 
+
+    public List<Order> getOrderByDays(int days){
+        return ordDAO.getOrdersByLastDays(days);
+    }
+    public List<Order> getOrderByDaysPrevious(int days){
+        return ordDAO.getOrdersByPreviousDays(days);
+    }
+
     public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod, double shippingFee) {
 
 

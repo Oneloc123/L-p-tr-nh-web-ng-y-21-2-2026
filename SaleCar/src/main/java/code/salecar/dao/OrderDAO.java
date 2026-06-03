@@ -10,7 +10,74 @@ import java.util.*;
 
 
 public class OrderDAO {
+    public List<Order> getOrdersByPreviousDays(int days) {
+        List<Order> orders = new ArrayList<>();
 
+        String query = "SELECT * FROM `order` " +
+                "WHERE order_date >= DATE_SUB(NOW(), INTERVAL ? DAY) " +
+                "AND order_date < DATE_SUB(NOW(), INTERVAL ? DAY) " +
+                "ORDER BY order_date DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, days * 2);
+            ps.setInt(2, days);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order ord = new Order();
+                ord.setId(rs.getInt("id"));
+                ord.setUserId(rs.getInt("user_id"));
+                ord.setOrderDate(rs.getTimestamp("order_date"));
+                ord.setTotalAmount(rs.getDouble("total_price"));
+                ord.setShippingAddress(rs.getString("address"));
+                ord.setPaymentMethod(rs.getString("payment_method"));
+                ord.setOrderStatus(rs.getString("order_status"));
+                ord.setShippingFee(rs.getDouble("shipping_fee"));
+
+                orders.add(ord);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+    public List<Order> getOrdersByLastDays(int days) {
+        List<Order> orders = new ArrayList<>();
+
+        String query = "SELECT * FROM `order` " +
+                "WHERE order_date >= DATE_SUB(NOW(), INTERVAL ? DAY) " +
+                "ORDER BY order_date DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, days);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order ord = new Order();
+                ord.setId(rs.getInt("id"));
+                ord.setUserId(rs.getInt("user_id"));
+                ord.setOrderDate(rs.getTimestamp("order_date"));
+                ord.setTotalAmount(rs.getDouble("total_price"));
+                ord.setShippingAddress(rs.getString("address"));
+                ord.setPaymentMethod(rs.getString("payment_method"));
+                ord.setOrderStatus(rs.getString("order_status"));
+                ord.setShippingFee(rs.getDouble("shipping_fee"));
+
+                orders.add(ord);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
 
     public Order getOrderById(int orderId) {
         String query = "SELECT * FROM `order` WHERE id = ?";
