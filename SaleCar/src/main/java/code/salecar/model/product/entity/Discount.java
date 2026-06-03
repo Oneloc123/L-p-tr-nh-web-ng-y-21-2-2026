@@ -2,9 +2,12 @@ package code.salecar.model.product.entity;
 
 import code.salecar.model.enumeration.DiscountValueType;
 import code.salecar.model.enumeration.DiscountEntityType;
+import code.salecar.model.enumeration.Status;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Discount implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -15,11 +18,21 @@ public class Discount implements Serializable {
     private BigDecimal value;
     private DiscountEntityType entityType;
     private long entityId;
+    private Status status;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private double percent;
+    /** Số lượng product mà discount này áp dụng lên (chỉ dùng cho màn hình Admin, không lưu DB) */
+    private long appliedProductsCount;
+
+    public long getAppliedProductsCount() {
+        return appliedProductsCount;
+    }
+    public void setAppliedProductsCount(long appliedProductsCount) {
+        this.appliedProductsCount = appliedProductsCount;
+    }
 
     // 1. Constructor mặc định
     public Discount() {
@@ -27,8 +40,9 @@ public class Discount implements Serializable {
 
     // 2. Constructor với tất cả tham số
     public Discount(long id, String name, DiscountValueType valueType, BigDecimal value,
-                    DiscountEntityType entityType, long entityId, LocalDateTime startAt,
-                    LocalDateTime endAt, LocalDateTime createAt, LocalDateTime updateAt,
+                    DiscountEntityType entityType, long entityId, Status status,
+                    LocalDateTime startAt, LocalDateTime endAt,
+                    LocalDateTime createAt, LocalDateTime updateAt,
                     double percent) {
         this.id = id;
         this.name = name;
@@ -36,6 +50,7 @@ public class Discount implements Serializable {
         this.value = value;
         this.entityType = entityType;
         this.entityId = entityId;
+        this.status = status;
         this.startAt = startAt;
         this.endAt = endAt;
         this.createAt = createAt;
@@ -51,6 +66,7 @@ public class Discount implements Serializable {
         this.value = builder.value;
         this.entityType = builder.entityType;
         this.entityId = builder.entityId;
+        this.status = builder.status;
         this.startAt = builder.startAt;
         this.endAt = builder.endAt;
         this.createAt = builder.createAt;
@@ -95,6 +111,12 @@ public class Discount implements Serializable {
     public void setEntityId(long entityId) {
         this.entityId = entityId;
     }
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
     public LocalDateTime getStartAt() {
         return startAt;
     }
@@ -126,6 +148,17 @@ public class Discount implements Serializable {
         this.percent = percent;
     }
 
+    /** Date getters for JSP formatting */
+    public Date getStartAtDate() {
+        return startAt != null ? Timestamp.valueOf(startAt) : null;
+    }
+    public Date getEndAtDate() {
+        return endAt != null ? Timestamp.valueOf(endAt) : null;
+    }
+    public Date getCreateAtDate() {
+        return createAt != null ? Timestamp.valueOf(createAt) : null;
+    }
+
     // 5. Builder pattern
     public static Builder builder() {
         return new Builder();
@@ -137,6 +170,7 @@ public class Discount implements Serializable {
         private BigDecimal value;
         private DiscountEntityType entityType;
         private long entityId;
+        private Status status;
         private LocalDateTime startAt;
         private LocalDateTime endAt;
         private LocalDateTime createAt;
@@ -165,6 +199,10 @@ public class Discount implements Serializable {
         }
         public Builder entityId(long entityId) {
             this.entityId = entityId;
+            return this;
+        }
+        public Builder status(Status status) {
+            this.status = status;
             return this;
         }
         public Builder startAt(LocalDateTime startAt) {
@@ -227,6 +265,7 @@ public class Discount implements Serializable {
                 ", value=" + value +
                 ", entityType=" + entityType +
                 ", entityId=" + entityId +
+                ", status=" + status +
                 ", startAt=" + startAt +
                 ", endAt=" + endAt +
                 ", createAt=" + createAt +
