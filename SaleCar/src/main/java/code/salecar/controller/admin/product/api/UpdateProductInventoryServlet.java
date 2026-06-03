@@ -47,10 +47,10 @@ public class UpdateProductInventoryServlet extends HttpServlet {
                 current += quantity;
                 variant.setQuantity(current);
                 log = ActivityLog.builder().action("Nhập Hàng").timestamp(new Date()).user(user.getFullname()).details(type+": +"+quantity).build();
-                System.out.println(log.getAction());
-                System.out.println(log.getTimestamp());
-                System.out.println(log.getUser());
-                System.out.println(log.getDetails());
+//                System.out.println(log.getAction());
+//                System.out.println(log.getTimestamp());
+//                System.out.println(log.getUser());
+//                System.out.println(log.getDetails());
                 ls.writeLog(variant.getProductId(), log);
                 pvs.createImportReceipt(variant,user);
                 break;
