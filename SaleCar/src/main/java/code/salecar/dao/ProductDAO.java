@@ -57,9 +57,14 @@ public class ProductDAO {
     }
 
     // Lấy danh sách sản phẩm mới nhất (dùng cho trang chủ)
+    /**
+     * Lấy sản phẩm mới — chỉ lấy product có tồn tại variant.
+     */
     public List<ProductItemDTO> getProductNew() {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product where status = 1 order by created_at desc limit 4";
+        String query = "select * from product pr where pr.status = 1 " +
+                "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
+                "order by pr.created_at desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -83,10 +88,14 @@ public class ProductDAO {
 
     }
 
-    //
+    /**
+     * Lấy sản phẩm hot — chỉ lấy product có tồn tại variant.
+     */
     public List<ProductItemDTO> getProductHot() {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product where status = 1 order by price desc limit 4";
+        String query = "select * from product pr where pr.status = 1 " +
+                "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
+                "order by pr.price desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -115,10 +124,11 @@ public class ProductDAO {
 
         List<Object> params = new ArrayList<>();
 
-        String sql = "select   count(*) from product pr  " +
-                " join brand br on pr.brand_id = br.id  " +
+        String sql = "select count(*) from product pr " +
+                " join brand br on pr.brand_id = br.id " +
                 " join category ct on pr.category_id = ct.id " +
-                " where 1=1 ";
+                " where 1=1 " +
+                " and exists (select 1 from product_variants pv where pv.product_id = pr.id) ";
 
         StringBuilder query = new StringBuilder(sql);
 
@@ -197,10 +207,11 @@ public class ProductDAO {
         List<ProductItemDTO> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
-        String sql = "select   pr.* from product pr  " +
-                " join brand br on pr.brand_id = br.id  " +
+        String sql = "select pr.* from product pr " +
+                " join brand br on pr.brand_id = br.id " +
                 " join category ct on pr.category_id = ct.id " +
-                " where 1=1 ";
+                " where 1=1 " +
+                " and exists (select 1 from product_variants pv where pv.product_id = pr.id) ";
 
         StringBuilder query = new StringBuilder(sql);
 
@@ -336,11 +347,15 @@ public class ProductDAO {
     }
 
     //Lấy danh sách ID sản phẩm liên quan cùng chất liệu (material) để hiển thị ở phần sản phẩm liên quan trong trang chi tiết sản phẩm
+    /**
+     * Lấy sản phẩm liên quan — chỉ lấy product có tồn tại variant.
+     */
     public List<Integer> getRelatedProductMaterial(String byWith) {
         List<Integer> products = new ArrayList<>();
-        String query = "select * from product where  status = 1 " +
-                " and  material = ? " +
-                " order by created_at desc limit 4";
+        String query = "select pr.id from product pr where pr.status = 1 " +
+                " and pr.material = ? " +
+                " and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
+                " order by pr.created_at desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, byWith);
@@ -469,9 +484,13 @@ public class ProductDAO {
     }
 
     // Lấy các sản phẩm liên quan cùng thương hiệu
+    /**
+     * Lấy sản phẩm liên quan cùng brand — chỉ lấy product có tồn tại variant.
+     */
     public List<ProductItemDTO> getRelatedProductBrand(long brandId) {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product where brand_id = ? ";
+        String query = "select pr.* from product pr where pr.brand_id = ? " +
+                " and exists (select 1 from product_variants pv where pv.product_id = pr.id) ";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
@@ -872,6 +891,22 @@ public class ProductDAO {
             // Nếu variant đã có finalPrice thì dùng, nếu không thì mặc định bằng price
             BigDecimal finalPrice = variant.getFinalPrice() != null ? variant.getFinalPrice() : variant.getPrice();
             ps.setBigDecimal(5, finalPrice);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Chỉ cập nhật trạng thái sản phẩm (không cần brand/category).
+     * Dùng khi tự động set INACTIVE cho product không variant.
+     */
+    public void updateStatus(long productId, Status status) {
+        String query = "UPDATE product SET status = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, status.getCode());
+            ps.setLong(2, productId);
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);

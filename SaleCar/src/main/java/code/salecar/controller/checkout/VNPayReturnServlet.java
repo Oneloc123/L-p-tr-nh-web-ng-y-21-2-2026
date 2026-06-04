@@ -2,6 +2,7 @@ package code.salecar.controller.checkout;
 
 import code.salecar.config.VNPayConfig;
 import code.salecar.dao.OrderDAO;
+import code.salecar.service.inventory.InventoryService;
 import code.salecar.model.Cart;
 import code.salecar.model.Order;
 import code.salecar.model.User;
@@ -95,6 +96,8 @@ public class VNPayReturnServlet extends HttpServlet {
                         session.removeAttribute("cart");
                         session.removeAttribute("buyNowCart");
                     }
+                   InventoryService invService = new InventoryService();
+                        invService.deductStock(orderId, 0); // 0 = system
                     response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
                 } else {
                     orderDAO.updateOrderStatus(orderId, "CANCELLED");

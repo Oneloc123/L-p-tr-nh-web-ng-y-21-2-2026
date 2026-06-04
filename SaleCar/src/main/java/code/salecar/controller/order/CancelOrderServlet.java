@@ -1,6 +1,6 @@
 package code.salecar.controller.order;
 
-import code.salecar.dao.NotificationDAO;
+//import code.salecar.dao.NotificationDAO;
 import code.salecar.model.Order;
 import code.salecar.model.User;
 import code.salecar.service.order.OrderService;
@@ -45,6 +45,8 @@ public class CancelOrderServlet extends HttpServlet {
                 request.getSession().setAttribute("toastMessage", "Không thể hủy đơn hàng đang giao hoặc đã hoàn thành!");
                 request.getSession().setAttribute("toastType", "error");
             }
+            NotificationDAO notiDAO = new NotificationDAO();
+            notiDAO.insertNotification(user.getId(), message);
         }
         response.sendRedirect("order");
     }
