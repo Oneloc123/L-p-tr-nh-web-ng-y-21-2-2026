@@ -187,6 +187,11 @@
                 <span>Sản phẩm yêu thích</span>
             </a>
 
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
+
 <%--            <div class="menu-divider"></div>--%>
 
 <%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>

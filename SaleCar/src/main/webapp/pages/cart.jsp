@@ -101,26 +101,15 @@
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/wishlist" class="menu-item">
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
 
-<%--            <div class="menu-divider"></div>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>
-<%--                <i class="fas fa-map-marker-alt"></i>--%>
-<%--                <span>Sổ địa chỉ</span>--%>
-<%--            </a>--%>
-<%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
-<%--                <i class="fas fa-bell"></i>--%>
-<%--                <span>Thông báo</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/settings" class="menu-item">--%>
-<%--                <i class="fas fa-cog"></i>--%>
-<%--                <span>Cài đặt</span>--%>
-<%--            </a>--%>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
 
             <div class="menu-divider"></div>
 

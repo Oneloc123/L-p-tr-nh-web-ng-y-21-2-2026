@@ -68,20 +68,24 @@ public class OrderService {
         }
     }
 
-    /**
-     * Hủy đơn hàng: cập nhật trạng thái + hoàn kho (nếu đã trừ kho trước đó).
-     */
-    public void cancelOrder(int orderId, int userId, String reason){
-
-        String finalStatus = "Đã huỷ (" + reason + ")";
-
-        ordDAO.updateOrderStatusAndReason(orderId, userId, finalStatus);
-
+    public boolean cancelOrder(int orderId, int userId, String reason){
+        // Chặn hủy nếu đơn đang SHIPPING, DELIVERED hoặc đã CANCELLED
+        Order order = ordDAO.getOrderById(orderId);
+        if (order == null) return false;
+        String currentStatus = order.getOrderStatus();
+        if ("SHIPPING".equalsIgnoreCase(currentStatus)
+                || "DELIVERED".equalsIgnoreCase(currentStatus)
+                || "CANCELLED".equalsIgnoreCase(currentStatus)) {
+            return false;
+        }
+        // Dùng "CANCELLED" đồng bộ với DashBoard, DashBoardAdmin, OrderAdmin
+        ordDAO.updateOrderStatusAndReason(orderId, userId, "CANCELLED");
         /* Hoàn kho nếu đơn đã được trừ kho trước đó */
         InventoryService invService = new InventoryService();
         if (invService.isInventoryDeducted(orderId)) {
             invService.restoreStock(orderId);
         }
+        return true;
     }
     public List<OrderItem> getOrderItem(int orderId){
         return ordDAO.getOrderItemsByOrderId(orderId);

@@ -217,8 +217,12 @@
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Đăng xuất</span>
             </a>
@@ -424,7 +428,7 @@
 
                             <div class="voucher-expiry">
                                 Hạn dùng:
-                                <fmt:formatDate value="${voucher.endAt}"
+                                <fmt:formatDate value="${voucher.endAtDate}"
                                                 pattern="dd/MM/yyyy"/>
                             </div>
                         </div>
@@ -438,12 +442,22 @@
                     <h3><i class="fas fa-map-marker-alt"></i> Sổ địa chỉ mặc định</h3>
                     <a href="#" class="view-all">Quản lý địa chỉ <i class="fas fa-arrow-right"></i></a>
                 </div>
-                <div class="address-box default">
-                    <span class="address-badge">Mặc định</span>
-                    <div class="address-name">${address.nameAddress}</div>
-                    <div class="address-phone"><i class="fas fa-phone-alt"></i> ${sessionScope.user.phonenumber}</div>
-                    <div class="address-text"><i class="fas fa-home"></i> ${address.fullAddress}</div>
-                </div>
+                <c:choose>
+                    <c:when test="${not empty address}">
+                        <div class="address-box default">
+                            <span class="address-badge">Mặc định</span>
+                            <div class="address-name">${address.nameAddress}</div>
+                            <div class="address-phone"><i class="fas fa-phone-alt"></i> ${sessionScope.user.phonenumber}</div>
+                            <div class="address-text"><i class="fas fa-home"></i> ${address.fullAddress}</div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="address-box default">
+                            <span class="address-badge">Mặc định</span>
+                            <div class="address-text"><i class="fas fa-home"></i> Chưa có địa chỉ mặc định.</div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 

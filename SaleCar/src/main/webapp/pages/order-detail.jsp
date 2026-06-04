@@ -13,147 +13,31 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 
     <%@ include file="/common/header.jsp" %>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --gold:        #C9A84C;
-            --gold-hover:  #E8C96A;
-            --gold-dim:    rgba(201,168,76,0.13);
-            --gold-border: rgba(201,168,76,0.35);
-            --green:       #22c55e;
-            --green-dim:   rgba(34,197,94,0.10);
-            --black:       #000000;
-            --bg:          #0c0c0c;
-            --sidebar-bg:  #060606;
-            --card-bg:     #ffffff;
-            --card-header: #f7f6f3;
-            --card-border: #e8e3d8;
-            --text-dark:   #111111;
-            --text-mid:    #555555;
-            --text-light:  #999999;
-            --white:       #ffffff;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        /* Main layout & Sidebar (Giống dashboard/profile) */
+        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
+        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .menu-items { padding: 20px 0; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
+        .menu-item span { font-size: 15px; font-weight: 500; }
+        .menu-item:hover { background-color: #333333; color: #ffffff; }
+        .menu-item.active { background-color: #ffffff; color: #000000; }
+        .menu-item.active i { color: #000000; }
+        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
 
-        body {
-            font-family: 'Jost', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-        }
-
-        .profile-wrapper { display:flex; align-items:flex-start; min-height:100vh; }
-
-        /* ── SIDEBAR ── */
-        .sidebar-menu {
-            width: 260px;
-            background: var(--sidebar-bg);
-            padding: 32px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-            border-right: 1px solid rgba(201,168,76,0.18);
-            flex-shrink: 0;
-        }
-
-        .sidebar-brand {
-            padding: 0 24px 28px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            margin-bottom: 8px;
-        }
-
-        .brand-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--white);
-        }
-
-        .brand-name span { color: var(--gold); }
-
-        .brand-sub {
-            font-size: 10px;
-            color: var(--text-light);
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .menu-items { padding: 8px 0; }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 22px;
-            color: #888;
-            text-decoration: none;
-            transition: all 0.22s;
-            margin: 2px 10px;
-            border-radius: 7px;
-            border: 1px solid transparent;
-        }
-
-        .menu-item i { width: 20px; margin-right: 11px; font-size: 15px; }
-        .menu-item span { font-size: 13.5px; font-weight: 400; }
-
-        .menu-item:hover {
-            background: rgba(255,255,255,0.05);
-            color: var(--white);
-            border-color: rgba(255,255,255,0.07);
-        }
-
-        .menu-item.active {
-            background: var(--gold-dim);
-            color: var(--gold);
-            border-color: var(--gold-border);
-        }
-
-        .menu-item.active i { color: var(--gold); }
-        .menu-divider { height:1px; background:rgba(255,255,255,0.06); margin:10px 18px; }
-
-        /* ── MAIN ── */
-        .main-content {
-            flex: 1;
-            padding: 38px 32px;
-            background: var(--bg);
-            min-height: 100vh;
-        }
-
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 28px;
-        }
-
-        .content-header h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--white);
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .breadcrumb {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 0;
-            margin: 0;
-            background: none;
-        }
-
-        .breadcrumb-item a { color: #666; text-decoration: none; font-size: 12px; transition: color 0.2s; }
-        .breadcrumb-item a:hover { color: var(--gold); }
-        .breadcrumb-item.active { color: var(--gold); font-size: 12px; }
-        .breadcrumb-item i { color: #444; font-size: 8px; }
+        /* Main Content */
+        .main-content { flex: 1; padding: 30px; background-color: #f8f9fa; min-height: 100vh; }
+        .content-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
+        .breadcrumb { list-style: none; display: flex; align-items: center; gap: 5px; padding: 0; margin: 0; background: none; }
+        .breadcrumb-item a { color: #666; text-decoration: none; font-size: 13px; }
+        .breadcrumb-item a:hover { color: #000; }
+        .breadcrumb-item.active { color: #000; font-weight: 500; font-size: 13px; }
+        .breadcrumb-item i { color: #ccc; font-size: 9px; }
 
         /* Status badge */
         .status-badge {
@@ -167,196 +51,148 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
             align-items: center;
             gap: 6px;
         }
+        .status-pending  { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-shipping { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+        .status-completed{ background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-cancelled{ background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        .status-pending  { background:rgba(201,168,76,0.15); color:#92730a; border:1px solid rgba(201,168,76,0.4); }
-        .status-shipping { background:rgba(59,130,246,0.10); color:#1e40af; border:1px solid rgba(59,130,246,0.3); }
-        .status-completed{ background:var(--green-dim);      color:#166534; border:1px solid rgba(34,197,94,0.35);}
-        .status-cancelled{ background:rgba(239,68,68,0.08);  color:#991b1b; border:1px solid rgba(239,68,68,0.3); }
-
-        /* ── INFO CARDS ── */
+        /* Info Cards (profile-card style) */
         .order-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 18px;
             margin-bottom: 22px;
         }
-
         .info-card {
-            background: var(--card-bg);
-            border-radius: 11px;
+            background: #fff;
+            border-radius: 12px;
             padding: 22px 24px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-            transition: box-shadow 0.22s;
+            border: 1px solid #eee;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
-
-        .info-card:hover { box-shadow: 0 4px 24px rgba(201,168,76,0.15); }
-
         .info-card h4 {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--gold);
+            color: #000;
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 1.5px solid rgba(201,168,76,0.25);
+            border-bottom: 2px solid #000;
             display: flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: 1.8px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
-
         .info-row {
             display: flex;
             align-items: flex-start;
             gap: 10px;
             margin-bottom: 11px;
-            font-size: 13.5px;
-            color: var(--text-mid);
+            font-size: 14px;
+            color: #555;
         }
-
-        .info-row i { color: var(--gold); margin-top: 2px; width: 15px; flex-shrink: 0; }
+        .info-row i { color: #000; margin-top: 2px; width: 15px; flex-shrink: 0; }
         .info-row span { line-height: 1.55; flex: 1; }
-        .info-row strong { color: var(--text-dark); font-weight: 600; }
+        .info-row strong { color: #000; font-weight: 600; }
 
-        /* ── TABLE CARD ── */
+        /* Table Card */
         .order-card {
-            background: var(--card-bg);
-            border-radius: 11px;
-            border: 1px solid var(--card-border);
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #eee;
             overflow: hidden;
             margin-bottom: 22px;
-            box-shadow: 0 2px 14px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
 
         .lux-table { width: 100%; border-collapse: collapse; }
-
-        .lux-table thead tr {
-            background: var(--black);
-            border-bottom: 2px solid var(--gold);
-        }
-
+        .lux-table thead tr { background: #000; }
         .lux-table th {
             padding: 15px 20px;
             text-align: left;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--gold);
+            color: #fff;
             text-transform: uppercase;
-            letter-spacing: 1.8px;
+            letter-spacing: 1.5px;
         }
-
         .lux-table td {
             padding: 18px 20px;
-            border-bottom: 1px solid #f0ede6;
+            border-bottom: 1px solid #eee;
             vertical-align: middle;
-            font-size: 13.5px;
-            color: var(--text-mid);
+            font-size: 14px;
+            color: #555;
         }
-
         .lux-table tbody tr:last-child td { border-bottom: none; }
-        .lux-table tbody tr { transition: background 0.18s; }
-        .lux-table tbody tr:hover { background: #faf9f6; }
+        .lux-table tbody tr:hover { background: #f8f9fa; }
 
         .product-col { display: flex; align-items: center; gap: 14px; }
-
         .product-img {
-            width: 56px;
-            height: 56px;
-            background: #f0ede6;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #e0d9c8;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 56px; height: 56px; background: #f0f0f0;
+            border-radius: 8px; overflow: hidden; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
         }
-
         .product-img img { width:100%; height:100%; object-fit:cover; }
+        .product-name { font-weight: 700; color: #000; font-size: 14px; margin-bottom: 4px; }
+        .product-meta { font-size: 12px; color: #999; }
+        .price-cell { color: #555; }
+        .total-cell { font-weight: 700; color: #22c55e; font-size: 14px; }
 
-        .product-img-placeholder {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 9px;
-            color: var(--gold);
-            letter-spacing: 1px;
-        }
-
-        .product-name { font-weight: 700; color: var(--text-dark); font-size: 13.5px; margin-bottom: 4px; }
-        .product-meta { font-size: 11.5px; color: var(--text-light); }
-
-        .price-cell { color: var(--text-mid); }
-
-        .total-cell {
-            font-weight: 700;
-            color: var(--green);
-            font-size: 14px;
-        }
-
-        /* ── SUMMARY ── */
+        /* Summary */
         .order-summary {
             padding: 22px 24px 26px;
-            background: var(--card-header);
-            border-top: 1.5px solid var(--gold);
+            background: #fafafa;
+            border-top: 2px solid #000;
             display: flex;
             justify-content: flex-end;
         }
-
         .summary-inner { width: 320px; }
-
         .summary-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            font-size: 13.5px;
-            color: var(--text-mid);
+            font-size: 14px;
+            color: #666;
             padding: 3px 0;
         }
-
         .summary-row.total {
             margin-top: 14px;
             padding-top: 14px;
-            border-top: 1px dashed #d8d3c8;
-            font-size: 15px;
-            color: var(--text-dark);
+            border-top: 1px dashed #ddd;
+            font-size: 16px;
+            color: #000;
             font-weight: 700;
         }
-
         .summary-row.total .total-val {
-            font-family: 'Jost', sans-serif;
             font-size: 22px;
             font-weight: 700;
-            color: var(--green);
+            color: #22c55e;
         }
 
-        /* ── BACK BUTTON ── */
+        /* Back button */
         .btn-back {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 10px 22px;
-            background: var(--white);
-            border: 1.5px solid #d0cac0;
-            color: var(--text-dark);
+            background: #fff;
+            border: 1.5px solid #000;
+            color: #000;
             border-radius: 7px;
             text-decoration: none;
             font-weight: 600;
             font-size: 13px;
-            letter-spacing: 0.3px;
             transition: all 0.22s;
         }
-
         .btn-back:hover {
-            background: var(--black);
-            color: var(--white);
-            border-color: var(--black);
+            background: #000;
+            color: #fff;
         }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -364,11 +200,6 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 
     <%-- SIDEBAR --%>
     <div class="sidebar-menu">
-        <div class="sidebar-brand">
-            <div class="brand-name">LUX<span>CAR</span></div>
-            <div class="brand-sub">Mô hình xe cao cấp</div>
-        </div>
-
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
                 <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
@@ -390,6 +221,9 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
             </a>
             <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i><span>Sản phẩm yêu thích</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i><span>Thông báo</span>
             </a>
             <div class="menu-divider"></div>
             <a href="${pageContext.request.contextPath}/loggout" class="menu-item">

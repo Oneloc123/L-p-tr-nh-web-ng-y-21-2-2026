@@ -4,7 +4,6 @@ import code.salecar.dao.OrderDAO;
 import code.salecar.model.*;
 import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.entity.Voucher;
-import code.salecar.service.address.AddressService;
 import code.salecar.service.address.AddressesService;
 import code.salecar.service.product.FavoritesService;
 import code.salecar.service.product.VoucherService;
@@ -94,9 +93,7 @@ public class DashBoard extends HttpServlet {
             request.setAttribute("vouchers",listVC);
 
             Addresses add = as.getMainAddressById(user.getId());
-
             request.setAttribute("address",add);
-
 
             request.getRequestDispatcher("/pages/dashBoard.jsp").forward(request,response);
         }

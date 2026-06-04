@@ -15,8 +15,21 @@ public class updateCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        int value = Integer.parseInt(request.getParameter("value"));
+        String idStr = request.getParameter("id");
+        String valueStr = request.getParameter("value");
+
+        if (idStr == null || valueStr == null || idStr.isEmpty() || valueStr.isEmpty()) {
+            response.sendRedirect("cart");
+            return;
+        }
+        int id, value;
+        try {
+            id = Integer.parseInt(idStr);
+            value = Integer.parseInt(valueStr);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("cart");
+            return;
+        }
 
         ProductService ps = new ProductService();
         ProductDetailDTO product = ps.getProductByID(id);
@@ -32,6 +45,10 @@ public class updateCart extends HttpServlet {
 
 
         CartItem item = cart.getItemById(id);
+        if (item == null) {
+            response.sendRedirect("cart");
+            return;
+        }
         if(value + item.getQuantity() <= 0){
             cart.delItem(id);
             response.sendRedirect("cart");

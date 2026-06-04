@@ -52,11 +52,15 @@ public class DashBoardAdmin extends HttpServlet {
             totalPriceOrderPre += o.getTotalAmount();
             totalOrderPre ++;
         }
-        double averagePriceOrderPre =
-                Math.round((totalPriceOrderPre / totalOrderPre) * 100.0) / 100.0;
+        double averagePriceOrderPre = 0;
+        if (totalOrderPre > 0) {
+            averagePriceOrderPre = Math.round((totalPriceOrderPre / totalOrderPre) * 100.0) / 100.0;
+        }
 
-        double averagePriceOrder =
-                Math.round((totalPriceOrder / totalOrder) * 100.0) / 100.0;
+        double averagePriceOrder = 0;
+        if (totalOrder > 0) {
+            averagePriceOrder = Math.round((totalPriceOrder / totalOrder) * 100.0) / 100.0;
+        }
 
         request.setAttribute("averagePriceOrder", Math.round(averagePriceOrder));
         request.setAttribute("totalOrder",totalOrder);
