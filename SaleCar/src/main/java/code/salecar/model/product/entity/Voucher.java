@@ -4,17 +4,20 @@ import code.salecar.model.enumeration.DiscountValueType;
 import code.salecar.model.enumeration.Status;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Voucher {
     private long id;
     private String code;
-    private DiscountValueType valueType;      // percent / fixed
+    private DiscountValueType valueType;      // phần trăm / số tiền cố định
     private BigDecimal value;
     private BigDecimal maxDiscount;
     private BigDecimal minOrderValue;
     private int usageLimit;
     private int usedCount;
+    private int maxUsagePerUser;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private Status status;
@@ -22,6 +25,7 @@ public class Voucher {
 
     // 1. Constructor mặc định
     public Voucher() {
+        this.maxUsagePerUser = 1;
     }
     // 2. Constructor với tất cả tham số (dùng cho Builder)
     public Voucher(long id, String code, DiscountValueType valueType, BigDecimal value,
@@ -36,6 +40,7 @@ public class Voucher {
         this.minOrderValue = minOrderValue;
         this.usageLimit = usageLimit;
         this.usedCount = usedCount;
+        this.maxUsagePerUser = 1;
         this.startAt = startAt;
         this.endAt = endAt;
         this.status = status;
@@ -51,6 +56,7 @@ public class Voucher {
         this.minOrderValue = builder.minOrderValue;
         this.usageLimit = builder.usageLimit;
         this.usedCount = builder.usedCount;
+        this.maxUsagePerUser = builder.maxUsagePerUser;
         this.startAt = builder.startAt;
         this.endAt = builder.endAt;
         this.status = builder.status;
@@ -62,6 +68,17 @@ public class Voucher {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    /** Getter Date để format trong JSP */
+    public Date getStartAtDate() {
+        return startAt != null ? Timestamp.valueOf(startAt) : null;
+    }
+    public Date getEndAtDate() {
+        return endAt != null ? Timestamp.valueOf(endAt) : null;
+    }
+    public Date getCreatedAtDate() {
+        return createdAt != null ? Timestamp.valueOf(createdAt) : null;
     }
     public Status getStatus() {
         return status;
@@ -77,6 +94,9 @@ public class Voucher {
     }
     public int getUsageLimit() {
         return usageLimit;
+    }
+    public int getMaxUsagePerUser() {
+        return maxUsagePerUser;
     }
     public BigDecimal getMinOrderValue() {
         return minOrderValue;
@@ -118,6 +138,9 @@ public class Voucher {
     public void setUsageLimit(int usageLimit) {
         this.usageLimit = usageLimit;
     }
+    public void setMaxUsagePerUser(int maxUsagePerUser) {
+        this.maxUsagePerUser = maxUsagePerUser;
+    }
     public void setUsedCount(int usedCount) {
         this.usedCount = usedCount;
     }
@@ -134,7 +157,7 @@ public class Voucher {
         this.createdAt = createdAt;
     }
 
-    // 5. Builder pattern
+    // 5. Pattern Builder
     public static Builder builder() {
         return new Builder();
     }
@@ -147,6 +170,7 @@ public class Voucher {
         private BigDecimal minOrderValue;
         private int usageLimit;
         private int usedCount;
+        private int maxUsagePerUser;
         private LocalDateTime startAt;
         private LocalDateTime endAt;
         private Status status;
@@ -182,6 +206,10 @@ public class Voucher {
         }
         public Builder usedCount(int usedCount) {
             this.usedCount = usedCount;
+            return this;
+        }
+        public Builder maxUsagePerUser(int maxUsagePerUser) {
+            this.maxUsagePerUser = maxUsagePerUser;
             return this;
         }
         public Builder startAt(LocalDateTime startAt) {
@@ -240,6 +268,7 @@ public class Voucher {
                 ", minOrderValue=" + minOrderValue +
                 ", usageLimit=" + usageLimit +
                 ", usedCount=" + usedCount +
+                ", maxUsagePerUser=" + maxUsagePerUser +
                 ", startAt=" + startAt +
                 ", endAt=" + endAt +
                 ", status=" + status +

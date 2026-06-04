@@ -402,7 +402,7 @@
     <%@ include file="/admin/sidebar/sidebar.jsp" %>
 
     <main class="main-content">
-        <!-- Header with Breadcrumb -->
+        <!-- Header với Breadcrumb -->
         <header class="admin-header d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h3 class="fw-bold m-0">
@@ -422,12 +422,12 @@
             </div>
         </header>
 
-        <!-- Filter Section -->
+        <!-- Phần bộ lọc -->
         <form action="/admin/discounts" method="get" id="filterForm">
             <div class="admin-filter-sidebar">
                 <h6 class="mb-3"><i class="bi bi-funnel"></i> Bộ lọc</h6>
                 <div class="row g-3">
-                    <!-- Time Status Filter -->
+                    <!-- Lọc thời gian -->
                     <div class="col-md-3">
                         <label class="form-label">Thời gian hoạt động</label>
                         <select class="admin-select" name="timeStatus" onchange="this.form.submit()">
@@ -438,7 +438,7 @@
                         </select>
                     </div>
 
-                    <!-- Brand Filter -->
+                    <!-- Lọc thương hiệu -->
                     <div class="col-md-3">
                         <label class="form-label">Thương hiệu</label>
                         <select class="admin-select" name="brandId" onchange="this.form.submit()">
@@ -449,7 +449,7 @@
                         </select>
                     </div>
 
-                    <!-- Category Filter -->
+                    <!-- Lọc danh mục -->
                     <div class="col-md-3">
                         <label class="form-label">Danh mục</label>
                         <select class="admin-select" name="categoryId" onchange="this.form.submit()">
@@ -460,7 +460,7 @@
                         </select>
                     </div>
 
-                    <!-- Product Filter -->
+                    <!-- Lọc sản phẩm -->
                     <div class="col-md-3">
                         <label class="form-label">Sản phẩm</label>
                         <select class="admin-select" name="productId" onchange="this.form.submit()">
@@ -478,11 +478,11 @@
                 </div>
             </div>
 
-            <!-- Hidden fields for pagination -->
+            <!-- Trường ẩn cho phân trang -->
             <input type="hidden" name="page" id="page" value="${currentPage}">
         </form>
 
-        <!-- Discount Table -->
+        <!-- Bảng Discount -->
         <div class="admin-card shadow-sm">
             <div class="admin-card-body p-0">
                 <div class="table-responsive">
@@ -602,7 +602,7 @@
             </div>
         </div>
 
-        <!-- Pagination -->
+        <!-- Phân trang -->
         <c:if test="${totalPages > 1}">
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center admin-pagination">
@@ -640,7 +640,7 @@
             </nav>
         </c:if>
 
-        <!-- Results summary -->
+        <!-- Tổng kết kết quả -->
         <c:if test="${not empty discounts}">
             <div class="text-center text-muted small mt-2">
                 Trang ${currentPage} / ${totalPages}
@@ -650,7 +650,7 @@
     </main>
 </div>
 
-<!-- Delete Confirmation -->
+<!-- Xác nhận xóa -->
 <form id="deleteForm" method="post" action="/admin/discounts" style="display:none;">
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="deleteId">
@@ -658,7 +658,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // ========== INIT TOOLTIPS ==========
+    // ========== KHỞI TẠO TOOLTIPS ==========
     document.addEventListener('DOMContentLoaded', function () {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -668,7 +668,7 @@
         });
     });
 
-    // ========== PAGINATION ==========
+    // ========== PHÂN TRANG ==========
     document.querySelectorAll('.admin-page-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -681,7 +681,7 @@
         });
     });
 
-    // ========== CONFIRM DELETE ==========
+    // ========== XÁC NHẬN XÓA ==========
     function confirmDelete(id, name) {
         Swal.fire({
             title: 'Xác nhận xóa',

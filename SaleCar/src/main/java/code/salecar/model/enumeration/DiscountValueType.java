@@ -25,7 +25,8 @@ public enum DiscountValueType {
     public static DiscountValueType fromString(String str) {
         if (str == null) return PERCENT;
         switch (str.toLowerCase()) {
-            case "rate": return PERCENT;
+            case "rate":
+            case "percent": return PERCENT;
             case "amount": return AMOUNT;
             default: throw new IllegalArgumentException();
         }

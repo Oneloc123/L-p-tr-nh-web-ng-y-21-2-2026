@@ -41,7 +41,7 @@ public class discount_list extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
-        /** Tạo filter từ request params */
+        /** Tạo bộ lọc từ tham số request */
         DiscountFilter filter = new DiscountFilter();
         filter.setTimeStatus(request.getParameter("timeStatus"));
         filter.setBrandId(request.getParameter("brandId"));
@@ -60,7 +60,7 @@ public class discount_list extends HttpServlet {
         List<Category> categories = discountService.getCategoriesHaveDiscount();
         List<Product> products = discountService.getProductsHaveDiscount();
 
-        /** Set attributes cho JSP */
+        /** Đặt thuộc tính cho JSP */
         request.setAttribute("discounts", discounts);
         request.setAttribute("brands", brands);
         request.setAttribute("categories", categories);
@@ -70,7 +70,7 @@ public class discount_list extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("pageSize", limit);
 
-        /** Current URL for pagination */
+        /** URL hiện tại cho phân trang */
         String currentUrl = request.getRequestURI();
         String queryString = request.getQueryString();
         if (queryString != null) {
