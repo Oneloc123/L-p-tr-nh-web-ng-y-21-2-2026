@@ -217,8 +217,12 @@
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
             <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/logout" class="menu-item">
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Đăng xuất</span>
             </a>

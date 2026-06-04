@@ -14,169 +14,42 @@
     <%@ include file="/common/header.jsp" %>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --gold: #C9A84C;
-            --gold-light: #E8C96A;
-            --gold-dim: rgba(201, 168, 76, 0.15);
-            --black: #000000;
-            --black-hover: #222222;
-            --white: #ffffff;
-
-            /* Màu nền cho Light Theme */
-            --bg-body: #f8f9fa;
-            --bg-card: #ffffff;
-            --bg-header: #fafafa;
-
-            /* Màu chữ và viền */
-            --border-color: #eeeeee;
-            --text-main: #111111;
-            --text-muted: #666666;
-
-            /* Màu trạng thái & tiền */
-            --red: #d9534f;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
-        body {
-            font-family: 'Jost', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-        }
+        /* Main layout & Sidebar (Giống dashboard/profile) */
+        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
+        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .menu-items { padding: 20px 0; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
+        .menu-item span { font-size: 15px; font-weight: 500; }
+        .menu-item:hover { background-color: #333333; color: #ffffff; }
+        .menu-item.active { background-color: #ffffff; color: #000000; }
+        .menu-item.active i { color: #000000; }
+        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
 
-        /* ===== SIDEBAR (Giữ nguyên Đen - Vàng) ===== */
-        .profile-wrapper {
-            display: flex;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .sidebar-menu {
-            width: 270px;
-            background-color: var(--black);
-            color: var(--white);
-            padding: 35px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-            flex-shrink: 0;
-        }
-
-        .sidebar-brand {
-            padding: 0 25px 30px;
-            border-bottom: 1px solid #333;
-            margin-bottom: 10px;
-        }
-
-        .sidebar-brand .brand-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--white);
-        }
-
-        .sidebar-brand .brand-name span { color: var(--gold); }
-
-        .sidebar-brand .brand-sub {
-            font-size: 11px;
-            color: #999;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 3px;
-        }
-
-        .menu-items { padding: 10px 0; }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 13px 25px;
-            color: #aaa;
-            text-decoration: none;
-            transition: all 0.25s ease;
-            margin: 3px 12px;
-            border-radius: 6px;
-        }
-
-        .menu-item i { width: 22px; margin-right: 12px; font-size: 16px; }
-        .menu-item span { font-size: 14px; font-weight: 400; letter-spacing: 0.3px; }
-
-        .menu-item:hover {
-            background-color: var(--black-hover);
-            color: var(--white);
-        }
-
-        .menu-item.active {
-            background-color: var(--white);
-            color: var(--black);
-        }
-        .menu-item.active i { color: var(--black); }
-
-        .menu-divider {
-            height: 1px;
-            background: #333;
-            margin: 12px 20px;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            padding: 40px 35px;
-            background-color: var(--bg-body);
-            min-height: 100vh;
-        }
-
-        /* Header */
-        .content-header { margin-bottom: 32px; }
-
-        .content-header h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
-            font-weight: 600;
-            color: var(--text-main);
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .breadcrumb {
-            background: none;
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .breadcrumb-item a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
-
-        .breadcrumb-item a:hover { color: var(--black); }
-        .breadcrumb-item.active { color: var(--black); font-size: 13px; font-weight: 600;}
+        /* Main Content */
+        .main-content { flex: 1; padding: 30px; }
+        .content-header { margin-bottom: 30px; }
+        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
+        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; align-items: center; gap: 6px; }
+        .breadcrumb-item { margin-right: 10px; }
+        .breadcrumb-item a { color: #666666; text-decoration: none; font-size: 13px; }
+        .breadcrumb-item.active { color: #000000; font-weight: 500; font-size: 13px; }
         .breadcrumb-item i { color: #ccc; font-size: 9px; }
 
         /* ===== ORDER TABS ===== */
         .order-tabs {
             display: flex;
-            background: var(--bg-card);
+            background: #ffffff;
             border-radius: 8px;
             margin-bottom: 28px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #eeeeee;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
             overflow: hidden;
         }
-
         .order-tab {
             flex: 1;
             text-align: center;
@@ -184,77 +57,41 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            color: var(--text-muted);
+            color: #666666;
             border-bottom: 2px solid transparent;
             transition: all 0.25s ease;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
+        .order-tab:hover { color: #000; background: #fafafa; }
+        .order-tab.active { color: #000000; border-bottom-color: #000000; background: #fff; font-weight: 600; }
 
-        .order-tab:hover {
-            color: var(--text-main);
-            background: #fafafa;
-        }
-
-        .order-tab.active {
-            color: var(--black);
-            border-bottom-color: var(--black);
-            background: var(--bg-card);
-            font-weight: 600;
-        }
-
-        /* ===== ORDER CARD ===== */
+        /* ===== ORDER CARD (giống profile-card) ===== */
         .order-card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #eeeeee;
             overflow: hidden;
             margin-bottom: 24px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
+        .order-card:hover { border-color: #000; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
 
-        .order-card:hover {
-            border-color: var(--black);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-        }
-
-        /* Order Header */
         .order-header {
-            background: var(--bg-header);
+            background: #fafafa;
             padding: 18px 28px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #eeeeee;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
         }
-
-        .order-id-date .id {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--black);
-            display: block;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .order-id-date .date {
-            font-size: 12px;
-            color: var(--text-muted);
-            letter-spacing: 0.3px;
-        }
-
-        .order-id-date .date i { margin-right: 5px; color: var(--black); }
-
-        .order-header-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-        }
+        .order-id-date .id { font-size: 18px; font-weight: 700; color: #000; display: block; margin-bottom: 4px; }
+        .order-id-date .date { font-size: 12px; color: #666; }
+        .order-id-date .date i { margin-right: 5px; }
+        .order-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
         /* Status badges */
         .order-status {
@@ -267,289 +104,93 @@
             align-items: center;
             gap: 6px;
         }
-
         .status-processing { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
         .status-completed { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-cancelled { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .status-confirmed { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
         .status-shipping { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
 
-        /* Reorder button */
         .btn-reorder {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border: 1px solid var(--black);
-            color: var(--black);
-            background: transparent;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s;
-            letter-spacing: 0.3px;
-            font-family: 'Jost', sans-serif;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border: 1px solid #000; color: #000;
+            background: transparent; border-radius: 5px; font-size: 12px;
+            font-weight: 500; cursor: pointer; transition: all 0.25s;
         }
+        .btn-reorder:hover { background: #000; color: #fff; }
 
-        .btn-reorder:hover {
-            background: var(--black);
-            color: var(--gold);
-        }
-
-        /* Cancel button */
         .btn-cancel-order {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-            background: transparent;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s;
-            letter-spacing: 0.3px;
-            font-family: 'Jost', sans-serif;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border: 1px solid #dc3545; color: #dc3545;
+            background: transparent; border-radius: 5px; font-size: 12px;
+            font-weight: 500; cursor: pointer; transition: all 0.25s;
         }
+        .btn-cancel-order:hover { background: #dc3545; color: #fff; }
 
-        .btn-cancel-order:hover {
-            background: #dc3545;
-            color: var(--white);
-        }
-
-        /* Info grid */
         .order-info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0;
             padding: 20px 28px;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--bg-card);
+            border-bottom: 1px solid #eeeeee;
+            background: #fff;
         }
+        .info-block h4 { font-size: 11px; text-transform: uppercase; color: #000; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
+        .info-block p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+        .info-block i { margin-right: 6px; color: #000; }
 
-        .info-block h4 {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--black);
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .info-block p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .info-block i { margin-right: 6px; color: var(--gold); }
-
-        /* Order items table */
         .order-items-wrapper { padding: 0 28px 20px; }
-
-        .order-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .order-table th {
-            padding: 10px 0;
-            border-bottom: 2px solid var(--black);
-            text-align: left;
-            font-size: 11px;
-            color: var(--black);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .order-table td {
-            padding: 16px 0;
-            border-bottom: 1px dashed #eee;
-            vertical-align: middle;
-            font-size: 14px;
-        }
-
-        .item-name { font-weight: 500; color: var(--text-main); }
-        .item-price { color: var(--text-main); font-weight: 500;}
-
-        .item-total {
-            font-weight: 700;
-            color: var(--red);
-            text-align: right;
-        }
-
+        .order-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .order-table th { padding: 10px 0; border-bottom: 2px solid #000; text-align: left; font-size: 11px; color: #000; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .order-table td { padding: 16px 0; border-bottom: 1px dashed #eee; vertical-align: middle; font-size: 14px; }
+        .item-name { font-weight: 500; color: #111; }
+        .item-price { color: #111; font-weight: 500; }
+        .item-total { font-weight: 700; color: #d9534f; text-align: right; }
         .col-right { text-align: right; }
         .col-center { text-align: center; }
 
-        /* Order footer */
         .order-footer {
             padding: 18px 28px;
-            background: var(--bg-header);
-            border-top: 1px solid var(--border-color);
+            background: #fafafa;
+            border-top: 1px solid #eeeeee;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .btn-detail {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 9px 20px;
-            background: transparent;
-            border: 1px solid var(--black);
-            color: var(--black);
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 13px;
-            transition: all 0.25s;
-            letter-spacing: 0.3px;
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px; border: 1px solid #000; color: #000;
+            border-radius: 6px; text-decoration: none; font-weight: 500;
+            font-size: 13px; transition: all 0.25s;
         }
-
-        .btn-detail:hover {
-            background: var(--black);
-            color: var(--gold);
-        }
-
-        .total-amount-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-right: 12px;
-        }
-
-         .total-amount-value {
-            font-family: 'Jost', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--red);
-        }
+        .btn-detail:hover { background: #000; color: #fff; }
+        .total-amount-label { font-size: 13px; color: #666; margin-right: 12px; }
+        .total-amount-value { font-size: 22px; font-weight: 700; color: #d9534f; }
 
         /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 70px 30px;
-            color: var(--text-muted);
-        }
-
-        .empty-state i {
-            font-size: 64px;
-            color: #ddd;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .empty-state h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 22px;
-            color: var(--black);
-            margin-bottom: 20px;
-        }
-
-        .btn-shop {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 28px;
-            background: var(--black);
-            color: var(--white);
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            transition: all 0.25s;
-        }
-
-        .btn-shop:hover { background: var(--gold); }
+        .empty-state { text-align: center; padding: 70px 30px; color: #666; }
+        .empty-state i { font-size: 64px; color: #ddd; margin-bottom: 20px; display: block; }
+        .empty-state h4 { font-size: 22px; color: #000; margin-bottom: 20px; }
+        .btn-shop { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: #000; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.25s; }
+        .btn-shop:hover { background: #333; }
 
         /* ===== MODAL ===== */
-        .modal-content {
-            background: var(--bg-card) !important;
-            border: none !important;
-            border-radius: 10px !important;
-            color: var(--text-main);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid var(--border-color) !important;
-            padding: 20px 25px !important;
-        }
-
-        .modal-title {
-            color: #dc3545 !important;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 20px !important;
-            font-weight: 600;
-        }
-
+        .modal-content { background: #fff !important; border: none !important; border-radius: 10px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-header { border-bottom: 1px solid #eee !important; padding: 20px 25px !important; }
+        .modal-title { color: #dc3545 !important; font-size: 20px !important; font-weight: 600; }
         .btn-close { filter: none !important; opacity: 0.5 !important; }
-
-        .modal-body p { color: var(--text-main); font-size: 15px;}
-        .modal-body p strong { color: var(--black); }
-
-        .modal-body label {
-            color: var(--text-muted) !important;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .form-select {
-            background: #fff !important;
-            border: 1px solid #ccc !important;
-            color: var(--text-main) !important;
-            border-radius: 6px !important;
-        }
-
-        .form-select:focus {
-            border-color: var(--black) !important;
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.1) !important;
-        }
-
+        .modal-body p { font-size: 15px; }
+        .modal-body label { font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
+        .form-select { background: #fff !important; border: 1px solid #ccc !important; border-radius: 6px !important; }
+        .form-select:focus { border-color: #000 !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.1) !important; }
         .modal-footer { border-top: none !important; padding: 15px 25px 20px !important; gap: 10px; }
+        .btn-keep { padding: 9px 20px; background: transparent; border: 1px solid #ccc; color: #666; border-radius: 6px; font-size: 13px; cursor: pointer; transition: 0.25s; font-weight: 500; }
+        .btn-keep:hover { border-color: #000; color: #000; }
+        .btn-confirm-cancel { padding: 9px 22px; background: #dc3545; border: 1px solid #dc3545; color: #fff; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.25s; }
+        .btn-confirm-cancel:hover { background: #c82333; }
 
-        .btn-keep {
-            padding: 9px 20px;
-            background: transparent;
-            border: 1px solid #ccc;
-            color: var(--text-muted);
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.25s;
-            font-weight: 500;
-        }
-
-        .btn-keep:hover { border-color: var(--black); color: var(--black); }
-
-        .btn-confirm-cancel {
-            padding: 9px 22px;
-            background: #dc3545;
-            border: 1px solid #dc3545;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-
-        .btn-confirm-cancel:hover { background: #c82333; border-color: #bd2130; }
-
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
     </style>
 </head>
 <body>
@@ -557,29 +198,21 @@
 
     <%-- SIDEBAR --%>
     <div class="sidebar-menu">
-        <div class="sidebar-brand">
-            <div class="brand-name">LUX<span>CAR</span></div>
-            <div class="brand-sub">Mô hình xe cao cấp</div>
-        </div>
-
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-
-                 <i class="fas fa-chart-pie"></i>
+                <i class="fas fa-chart-pie"></i>
                 <span>Bảng điều khiển</span>
             </a>
             <a href="${pageContext.request.contextPath}/profile" class="menu-item">
                 <i class="fas fa-user-circle"></i>
                 <span>Thông tin cá nhân</span>
             </a>
-
             <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
                 <i class="fas fa-user-edit"></i>
                 <span>Chỉnh sửa thông tin</span>
             </a>
             <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
                 <i class="fas fa-lock"></i>
-
                 <span>Đổi mật khẩu</span>
             </a>
             <a href="${pageContext.request.contextPath}/order" class="menu-item active">
@@ -593,8 +226,11 @@
             <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
-
-             </a>
+            </a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
             <div class="menu-divider"></div>
             <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
                 <i class="fas fa-sign-out-alt"></i>
