@@ -1,6 +1,7 @@
 package code.salecar.controller.order;
 
 //import code.salecar.dao.NotificationDAO;
+import code.salecar.dao.NotificationDAO;
 import code.salecar.model.Order;
 import code.salecar.model.User;
 import code.salecar.service.order.OrderService;
@@ -29,11 +30,11 @@ public class CancelOrderServlet extends HttpServlet {
         if(user != null){
 
             OrderService orderService = new OrderService();
-            boolean cancelled = orderService.cancelOrder(orderId, user.getId(), cancelReason);
-
+            boolean cancelled = orderService.cancelOrder(orderId, user. getId(), cancelReason);
+            String message ="";
             if (cancelled) {
                 // Tạo thông báo cho người dùng khi họ hủy đơn hàng
-                String message = "Đơn hàng #" + orderId + " đã được hủy thành công.";
+                 message = "Đơn hàng #" + orderId + " đã được hủy thành công.";
                 if (cancelReason != null && !cancelReason.trim().isEmpty()) {
                     message = "Đơn hàng #" + orderId + " của bạn đã bị hủy. Lý do: " + cancelReason;
                 }
