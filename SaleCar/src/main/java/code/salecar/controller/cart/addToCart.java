@@ -23,16 +23,31 @@ public class addToCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int id = Integer.parseInt(request.getParameter("productId"));
+        String idStr = request.getParameter("productId");
+        if (idStr == null || idStr.isEmpty()) {
+            response.sendRedirect("home");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("home");
+            return;
+        }
         String quantitypr = request.getParameter("quantity");
-
 
         String action = request.getParameter("action");
         AddressDao AddrDAO = new AddressDao();
 
         int quantity = 1;
         if (quantitypr != null) {
-            quantity = Integer.parseInt(quantitypr);
+            try {
+                quantity = Integer.parseInt(quantitypr);
+                if (quantity < 1) quantity = 1;
+            } catch (NumberFormatException e) {
+                quantity = 1;
+            }
         }
 
         ProductService ps = new ProductService();

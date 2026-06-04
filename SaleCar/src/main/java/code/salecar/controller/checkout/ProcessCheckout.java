@@ -64,23 +64,26 @@ public class ProcessCheckout extends HttpServlet {
 
         if (newOrder != null && newOrder.getId() > 0) {
 
-            // Xóa giỏ hàng
-            if ("buynow".equals(type)) {
-                session.removeAttribute("buyNowCart");
-            } else {
-                session.removeAttribute("cart");
-            }
-
-
             if ("VNPAY".equals(paymentMethod)) {
-                // Gọi Service tạo link VNPay
+                // VNPay: backup cart rồi redirect user sang VNPay, chưa xóa cart ngay
+                // Nếu VNPay thành công, VNPayReturnServlet sẽ dọn cart
+                // Nếu VNPay thất bại, cart backup được khôi phục
+                if ("buynow".equals(type)) {
+                    session.setAttribute("pendingCartBackup", session.getAttribute("buyNowCart"));
+                } else {
+                    session.setAttribute("pendingCartBackup", session.getAttribute("cart"));
+                }
+
                 VNPayService vnPayService = new VNPayService();
                 String paymentUrl = vnPayService.createPaymentUrl(request, newOrder);
-
-                // Chuyển hướng người dùng qua giao diện của VNPay
                 response.sendRedirect(paymentUrl);
             } else {
-                // Thanh toán COD
+                // COD: xóa cart ngay và redirect sang thank you
+                if ("buynow".equals(type)) {
+                    session.removeAttribute("buyNowCart");
+                } else {
+                    session.removeAttribute("cart");
+                }
                 response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
             }
 
