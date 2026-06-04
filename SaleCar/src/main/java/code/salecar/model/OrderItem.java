@@ -6,6 +6,7 @@ public class OrderItem {
     private int id;
     private int orderId;
     private int productId;
+    private int variantId;
     private int quantity;
     private double price;
 
@@ -38,6 +39,9 @@ public class OrderItem {
     public void setProductId(int productId) {
         this.productId = productId;
     }
+
+    public int getVariantId() { return variantId; }
+    public void setVariantId(int variantId) { this.variantId = variantId; }
 
     public int getQuantity() {
         return quantity;

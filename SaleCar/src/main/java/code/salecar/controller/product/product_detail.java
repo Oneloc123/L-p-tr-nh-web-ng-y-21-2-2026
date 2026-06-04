@@ -22,7 +22,7 @@ public class product_detail extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/products");
             return;
         }
-        System.out.println("Product ID param: " + idParam);
+//        System.out.println("Product ID param: " + idParam);
 
         int id;
 
@@ -35,7 +35,7 @@ public class product_detail extends HttpServlet {
 
         ProductService ps  = new ProductService();
         ProductDetailDTO product = ps.getProductByID(id);
-        System.out.println("Product: " + product);
+//        System.out.println("Product: " + product);
         if(product==null){
             response.sendRedirect(request.getContextPath() + "/home");
             return;
