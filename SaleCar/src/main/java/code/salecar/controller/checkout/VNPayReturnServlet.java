@@ -2,6 +2,9 @@ package code.salecar.controller.checkout;
 
 import code.salecar.config.VNPayConfig;
 import code.salecar.dao.OrderDAO;
+import code.salecar.model.Cart;
+import code.salecar.model.Order;
+import code.salecar.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -48,26 +51,62 @@ public class VNPayReturnServlet extends HttpServlet {
                 // Kiểm tra chữ ký bảo mật
                 String checkSignature = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, signData.toString());
 
-                // Lấy mã ord va ma phan hoi tu vnpay
+                String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
+
+                if (!checkSignature.equalsIgnoreCase(vnp_SecureHash)) {
+                    response.getWriter().println("Chữ ký bảo mật không hợp lệ!");
+                    return;
+                }
+
+                // Chỉ xử lý khi signature hợp lệ
                 String orderIdStr = request.getParameter("vnp_TxnRef");
                 String responseCode = request.getParameter("vnp_ResponseCode");
 
+                int orderId;
+                try {
+                    orderId = Integer.parseInt(orderIdStr);
+                } catch (NumberFormatException e) {
+                    response.getWriter().println("Mã đơn hàng không hợp lệ!");
+                    return;
+                }
+
+                // MAJOR-04: Kiểm tra order có thuộc về user không
                 OrderDAO orderDAO = new OrderDAO();
-                int orderId = Integer.parseInt(orderIdStr);
-
-                if (checkSignature.equalsIgnoreCase(vnp_SecureHash)) {
-                    if ("00".equals(responseCode)) {
-
-                        orderDAO.updateOrderStatus(orderId, "CONFIRMED");
-
-                        response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
-                    } else {
-                        //thanh toan false
-                        orderDAO.updateOrderStatus(orderId, "CANCELLED");
-                        response.sendRedirect(request.getContextPath() + "/order");
+                Order order = orderDAO.getOrderById(orderId);
+                if (order == null) {
+                    response.getWriter().println("Đơn hàng không tồn tại!");
+                    return;
+                }
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    User user = (User) session.getAttribute("user");
+                    if (user != null && order.getUserId() != user.getId()) {
+                        response.getWriter().println("Đơn hàng không thuộc về bạn!");
+                        return;
                     }
+                }
+
+                if ("00".equals(responseCode)) {
+                    orderDAO.updateOrderStatus(orderId, "CONFIRMED");
+                    // VNPay thành công: dọn cart backup
+                    if (session != null) {
+                        session.removeAttribute("pendingCartBackup");
+                        // Xóa cart chính nếu user đã dùng cart đó để thanh toán
+                        session.removeAttribute("cart");
+                        session.removeAttribute("buyNowCart");
+                    }
+                    response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
                 } else {
-                    response.getWriter().println("Chữ ký bảo mật không hợp lệ!");
+                    orderDAO.updateOrderStatus(orderId, "CANCELLED");
+                    // VNPay thất bại: khôi phục cart từ backup
+                    if (session != null) {
+                        Cart backupCart = (Cart) session.getAttribute("pendingCartBackup");
+                        if (backupCart != null) {
+                            session.setAttribute("cart", backupCart);
+                        }
+                        session.removeAttribute("pendingCartBackup");
+                    }
+                    response.sendRedirect(request.getContextPath() + "/order");
                 }
             }
 
@@ -75,7 +114,9 @@ public class VNPayReturnServlet extends HttpServlet {
         @Override
         protected void doPost (HttpServletRequest request, HttpServletResponse response) throws
         ServletException, IOException {
-
+            // Xử lý IPN (Instant Payment Notification) từ VNPay server
+            // Dùng chung logic với doGet
+            doGet(request, response);
         }
 
 }

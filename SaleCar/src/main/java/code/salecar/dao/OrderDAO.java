@@ -162,7 +162,7 @@ public class OrderDAO {
 
     public List<Order> getOrdersByUserId(int userId){
         ArrayList<Order> lstOrder = new ArrayList<>();
-        String querry = "select * from `order` where user_id = ? ";
+        String querry = "select * from `order` where user_id = ? order by id desc";
         try(Connection conn = DBConnection.getConnection();
         PreparedStatement ps = conn.prepareStatement(querry)){
             ps.setInt(1,userId);
