@@ -9,10 +9,15 @@ import java.util.*;
 public class cartService {
 
 
-    private Map<Integer, CartItem> listToMap(List<CartItem> list) {
-        Map<Integer, CartItem> map = new HashMap<>();
+    /**
+     * Chuyển List<CartItem> thành Map<String, CartItem> với key = "productId_variantId"
+     * để tương thích với Cart.java dùng composite key.
+     */
+    private Map<String, CartItem> listToMap(List<CartItem> list) {
+        Map<String, CartItem> map = new HashMap<>();
         for (CartItem item : list) {
-            map.put(item.getProductId(), item);
+            String key = item.getProductId() + "_" + item.getVariantId();
+            map.put(key, item);
         }
         return map;
     }
@@ -85,7 +90,7 @@ public class cartService {
     // 4. xóa hết
     public List<CartItem> delAll(Cart cart) {
         List<CartItem> data = cart.getItems();
-        cart.setItems(new HashMap<>());
+        cart.setItems(new HashMap<String, CartItem>());
         return data;
     }
 

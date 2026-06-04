@@ -1,11 +1,12 @@
 package code.salecar.service.order;
 
 import code.salecar.dao.OrderDAO;
-import code.salecar.dao.UserDao;
 import code.salecar.model.Cart;
+import code.salecar.model.CartItem;
 import code.salecar.model.Order;
 import code.salecar.model.OrderItem;
 import code.salecar.model.User;
+import code.salecar.service.inventory.InventoryService;
 import code.salecar.service.user.UserService;
 
 import java.util.List;
@@ -22,13 +23,27 @@ public class OrderService {
         return ordDAO.getOrdersByPreviousDays(days);
     }
 
+    /**
+     * Xử lý đơn hàng: validate stock → tạo order → trả về kết quả.
+     * Nếu bất kỳ item nào không đủ stock, trả về null.
+     */
     public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod, double shippingFee) {
-
 
         if (user == null || cart == null || cart.getItems().isEmpty()) {
             return null;
         }
 
+        /* Kiểm tra tồn kho cho từng item trong giỏ */
+        InventoryService invService = new InventoryService();
+        for (CartItem item : cart.getItems()) {
+            /* variantId > 0 nghĩa là có variant, cần check stock theo variant */
+            if (item.getVariantId() > 0) {
+                if (!invService.hasEnoughStock(item.getVariantId(), item.getQuantity())) {
+                    /* Không đủ stock — từ chối tạo đơn */
+                    return null;
+                }
+            }
+        }
 
         String fullInfor = name + " - SĐT: " + phone + " - Địa chỉ: " + shippingAddress;
 
@@ -53,11 +68,20 @@ public class OrderService {
         }
     }
 
-    public  void cancelOrder(int orderId, int userId, String reason){
+    /**
+     * Hủy đơn hàng: cập nhật trạng thái + hoàn kho (nếu đã trừ kho trước đó).
+     */
+    public void cancelOrder(int orderId, int userId, String reason){
 
         String finalStatus = "Đã huỷ (" + reason + ")";
 
         ordDAO.updateOrderStatusAndReason(orderId, userId, finalStatus);
+
+        /* Hoàn kho nếu đơn đã được trừ kho trước đó */
+        InventoryService invService = new InventoryService();
+        if (invService.isInventoryDeducted(orderId)) {
+            invService.restoreStock(orderId);
+        }
     }
     public List<OrderItem> getOrderItem(int orderId){
         return ordDAO.getOrderItemsByOrderId(orderId);

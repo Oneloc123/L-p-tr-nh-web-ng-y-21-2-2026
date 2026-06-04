@@ -1140,7 +1140,7 @@
                                     <div class="card product-card">
                                         <div class="product-image-wrapper">
                                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                                <img src="${p.image}"
+                                                <img src="${pageContext.request.contextPath}/uploads/${p.image}"
                                                      class="card-img-top" alt="${p.name}">
                                             </a>
                                             <c:if test="${p.discountPercent > 0}">
@@ -1188,7 +1188,7 @@
 
 
                                                     <button type="button" class="btn-buy"
-                                                            onclick="addToCartAjax(event,'${p.id}', '${p.name}', true)">
+                                                            onclick="addToCartAjax(event,'${p.id}', '${fn:replace(p.name, "'", "\\'")}', true)">
                                                         <i class="bi bi-lightning-charge me-1"></i>Mua
                                                     </button>
 
@@ -1198,7 +1198,7 @@
 
                                                     <!--sua type act thanh btt -->
                                                     <button type="button" class="btn-action"
-                                                            onclick="addToCartAjax(event,'${p.id}', '${p.name}', false)">
+                                                            onclick="addToCartAjax(event,'${p.id}', '${fn:replace(p.name, "'", "\\'")}', false)">
                                                         <i class="bi bi-cart-plus"></i>
                                                     </button>
 

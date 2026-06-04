@@ -1,6 +1,6 @@
 package code.salecar.controller.order;
 
-import code.salecar.dao.NotificationDAO;
+//import code.salecar.dao.NotificationDAO;
 import code.salecar.model.Order;
 import code.salecar.model.User;
 import code.salecar.service.order.OrderService;
@@ -36,8 +36,8 @@ public class CancelOrderServlet extends HttpServlet {
             if (cancelReason != null && !cancelReason.trim().isEmpty()) {
                 message = "Đơn hàng #" + orderId + " của bạn đã bị hủy. Lý do: " + cancelReason;
             }
-            NotificationDAO notiDAO = new NotificationDAO();
-            notiDAO.insertNotification(user.getId(), message);
+//            NotificationDAO notiDAO = new NotificationDAO();
+//            notiDAO.insertNotification(user.getId(), message);
         }
         response.sendRedirect("order");
     }

@@ -2,6 +2,7 @@ package code.salecar.controller.checkout;
 
 import code.salecar.config.VNPayConfig;
 import code.salecar.dao.OrderDAO;
+import code.salecar.service.inventory.InventoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -59,6 +60,10 @@ public class VNPayReturnServlet extends HttpServlet {
                     if ("00".equals(responseCode)) {
 
                         orderDAO.updateOrderStatus(orderId, "CONFIRMED");
+
+                        /* VNPay thanh toán thành công → tự động trừ kho */
+                        InventoryService invService = new InventoryService();
+                        invService.deductStock(orderId, 0); // 0 = system
 
                         response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
                     } else {

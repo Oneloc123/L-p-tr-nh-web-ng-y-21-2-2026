@@ -328,7 +328,7 @@
                                 <div class="summary-item">
                                     <div class="summary-item-info">
 
-                                        <img src="${not empty item.productDetail.images ? item.productDetail.images[0] : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
+                                        <img src="${not empty item.productDetail.images ? pageContext.request.contextPath.concat('/uploads/').concat(item.productDetail.images[0]) : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
 
                                         <div>
 

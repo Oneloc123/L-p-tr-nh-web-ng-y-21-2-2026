@@ -1024,7 +1024,7 @@
                         <span class="badge-custom badge-hot"><i class="bi bi-fire"></i> Bán chạy</span>
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
+                        <img src="${product.image ne null ? pageContext.request.contextPath.concat('/uploads/').concat(product.image) : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">
@@ -1086,7 +1086,7 @@
                         <span class="badge-custom badge-new"><i class="bi bi-stars"></i> Mới</span>
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
+                        <img src="${product.image ne null ? pageContext.request.contextPath.concat('/uploads/').concat(product.image) : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">
@@ -1148,7 +1148,7 @@
                         <span class="badge-custom badge-sale"><i class="bi bi-tag"></i> Giảm ${not empty product.discountPercent and product.discountPercent ne 0 ? product.discountPercent : ''}%</span>
                     </div>
                     <div class="product-img-wrapper" onclick="location.href='/product-detail?id=${product.id}'">
-                        <img src="${product.image ne null ? product.image : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
+                        <img src="${product.image ne null ? pageContext.request.contextPath.concat('/uploads/').concat(product.image) : 'https://product.hstatic.net/1000328919/product/mo-hinh-xe-ferrari-296-gtb-assetto-fiorano-1-18-bburago-red__1__5f3c41eeffdf431b984bd7b18153072f_grande.jpg'}"
                              alt="${product.name}"
                              class="product-img"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Image+Not+Found';">

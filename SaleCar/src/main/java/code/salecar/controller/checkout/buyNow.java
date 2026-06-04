@@ -34,12 +34,19 @@ public class buyNow extends HttpServlet {
         }
         int id = Integer.parseInt(request.getParameter("productId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        String variantIdStr = request.getParameter("variantId");
         ProductService ps = new ProductService();
         ProductDetailDTO product = ps.getProductByID(id);
 
         if(product != null){
             buyNowService buyNowS = new buyNowService();
-            Cart buyNowCart = buyNowS.buyNow(product,quantity);
+            Cart buyNowCart;
+            if (variantIdStr != null && !variantIdStr.isEmpty()) {
+                int variantId = Integer.parseInt(variantIdStr);
+                buyNowCart = buyNowS.buyNow(product, variantId, quantity);
+            } else {
+                buyNowCart = buyNowS.buyNow(product, quantity);
+            }
 
             session.setAttribute("buyNowCart", buyNowCart);
 

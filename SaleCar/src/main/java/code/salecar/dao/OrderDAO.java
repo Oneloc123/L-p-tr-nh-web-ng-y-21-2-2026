@@ -132,14 +132,19 @@ public class OrderDAO {
 
 
                    for(CartItem item : cart.getItems()){
-                       String sql1 = "insert into order_item (order_id, product_id, quantity, price, total_price) values (?, ?, ?, ?, ?)";
+                       /**
+                        * Insert order_item với variant_id (nếu có).
+                        * @variantId: 0 nếu không có variant.
+                        */
+                       String sql1 = "insert into order_item (order_id, product_id, variant_id, quantity, price, total_price) values (?, ?, ?, ?, ?, ?)";
                        PreparedStatement pstmtItem = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
 
                        pstmtItem.setInt(1, orderId);
                        pstmtItem.setInt(2,item.getProductId());
-                       pstmtItem.setInt(3, item.getQuantity());
-                       pstmtItem.setDouble(4, item.getPrice());
-                       pstmtItem.setDouble(5, item.getTotalPrice());
+                       pstmtItem.setInt(3, item.getVariantId());
+                       pstmtItem.setInt(4, item.getQuantity());
+                       pstmtItem.setDouble(5, item.getPrice());
+                       pstmtItem.setDouble(6, item.getTotalPrice());
 
                        pstmtItem.executeUpdate();
                        pstmtItem.close();
@@ -209,14 +214,11 @@ public class OrderDAO {
                 item.setId(rs.getInt("id"));
                 item.setOrderId(rs.getInt("order_id"));
                 item.setProductId(rs.getInt("product_id"));
+                item.setVariantId(rs.getInt("variant_id"));
                 item.setQuantity(rs.getInt("quantity"));
                 item.setPrice(rs.getDouble("price"));
 
-
-
                 Product product = productDAO.getProductByID(rs.getInt("product_id"));
-
-
                 item.setProduct(product);
 
                 listItems.add(item);
