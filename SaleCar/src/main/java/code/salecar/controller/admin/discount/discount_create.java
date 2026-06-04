@@ -129,7 +129,7 @@ public class discount_create extends HttpServlet {
             return;
         }
 
-        /** Parse dates */
+        /** Phân tích ngày tháng */
         LocalDateTime startAt = LocalDateTime.now();
         if (startDateParam != null && !startDateParam.trim().isEmpty()) {
             try {

@@ -18,7 +18,7 @@ import java.util.List;
 public class DiscountDAO {
 
     /**
-     * Helper: map current ResultSet row to Discount object (static version).
+     * Hỗ trợ: ánh xạ dòng ResultSet hiện tại thành đối tượng Discount (phiên bản static).
      */
     private static Discount mapDiscountStatic(ResultSet rs) throws SQLException {
         return Discount.builder()
@@ -37,7 +37,7 @@ public class DiscountDAO {
     }
 
     /**
-     * Helper: map current ResultSet row to Discount object (instance version).
+     * Hỗ trợ: ánh xạ dòng ResultSet hiện tại thành đối tượng Discount (phiên bản instance).
      */
     private Discount mapDiscount(ResultSet rs) throws SQLException {
         return mapDiscountStatic(rs);
@@ -142,7 +142,7 @@ public class DiscountDAO {
             ps.setString(4, discount.getEntityType().toString().toLowerCase());
             ps.setLong(5, discount.getEntityId());
             ps.setInt(6, discount.getStatus() != null ? discount.getStatus().getCode() : Status.ACTIVE.getCode());
-            ps.setObject(7, discount.getId() > 0 ? null : 1); // priority
+            ps.setObject(7, discount.getId() > 0 ? null : 1); // độ ưu tiên
             ps.setTimestamp(8, Timestamp.valueOf(discount.getStartAt()));
             ps.setTimestamp(9, Timestamp.valueOf(discount.getEndAt()));
 
@@ -183,7 +183,7 @@ public class DiscountDAO {
     }
 
     /**
-     * Lấy danh sách discount với filter và phân trang.
+     * Lấy danh sách discount với bộ lọc và phân trang.
      */
     public List<Discount> getAllDiscounts(DiscountFilter filter) {
         List<Discount> discounts = new ArrayList<>();
@@ -194,7 +194,7 @@ public class DiscountDAO {
         sql.append("   WHERE d.entity_type = 'product' AND d.entity_id = p.id) AS applied_products_count ");
         sql.append("FROM discount d WHERE 1=1 ");
 
-        /** Filter theo thời gian hoạt động */
+        /** Lọc theo thời gian hoạt động */
         if ("active".equals(filter.getTimeStatus())) {
             sql.append(" AND NOW() BETWEEN d.start_at AND d.end_at ");
         } else if ("upcoming".equals(filter.getTimeStatus())) {
@@ -202,9 +202,9 @@ public class DiscountDAO {
         } else if ("expired".equals(filter.getTimeStatus())) {
             sql.append(" AND NOW() > d.end_at ");
         }
-        // "all" -> no filter
+        // "all" -> không lọc
 
-        /** Filter theo brand */
+        /** Lọc theo thương hiệu */
         if (filter.getBrandId() > 0) {
             sql.append(" AND ((d.entity_type = 'product' AND d.entity_id IN (SELECT id FROM product WHERE brand_id = ?))");
             sql.append("   OR (d.entity_type = 'brand' AND d.entity_id = ?))");
@@ -212,7 +212,7 @@ public class DiscountDAO {
             params.add(filter.getBrandId());
         }
 
-        /** Filter theo category */
+        /** Lọc theo danh mục */
         if (filter.getCategoryId() > 0) {
             sql.append(" AND ((d.entity_type = 'product' AND d.entity_id IN (SELECT id FROM product WHERE category_id = ?))");
             sql.append("   OR (d.entity_type = 'category' AND d.entity_id = ?))");
@@ -220,7 +220,7 @@ public class DiscountDAO {
             params.add(filter.getCategoryId());
         }
 
-        /** Filter theo product */
+        /** Lọc theo sản phẩm */
         if (filter.getProductId() > 0) {
             sql.append(" AND d.entity_type = 'product' AND d.entity_id = ?");
             params.add(filter.getProductId());
@@ -255,14 +255,14 @@ public class DiscountDAO {
     }
 
     /**
-     * Đếm tổng số discount với filter (cho pagination).
+     * Đếm tổng số discount với bộ lọc (cho phân trang).
      */
     public int getTotalDiscounts(DiscountFilter filter) {
         List<Object> params = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(*) FROM discount d WHERE 1=1 ");
 
-        /** Filter theo thời gian hoạt động */
+        /** Lọc theo thời gian hoạt động */
         if ("active".equals(filter.getTimeStatus())) {
             sql.append(" AND NOW() BETWEEN d.start_at AND d.end_at ");
         } else if ("upcoming".equals(filter.getTimeStatus())) {
@@ -271,7 +271,7 @@ public class DiscountDAO {
             sql.append(" AND NOW() > d.end_at ");
         }
 
-        /** Filter theo brand */
+        /** Lọc theo thương hiệu */
         if (filter.getBrandId() > 0) {
             sql.append(" AND ((d.entity_type = 'product' AND d.entity_id IN (SELECT id FROM product WHERE brand_id = ?))");
             sql.append("   OR (d.entity_type = 'brand' AND d.entity_id = ?))");
@@ -279,7 +279,7 @@ public class DiscountDAO {
             params.add(filter.getBrandId());
         }
 
-        /** Filter theo category */
+        /** Lọc theo danh mục */
         if (filter.getCategoryId() > 0) {
             sql.append(" AND ((d.entity_type = 'product' AND d.entity_id IN (SELECT id FROM product WHERE category_id = ?))");
             sql.append("   OR (d.entity_type = 'category' AND d.entity_id = ?))");
@@ -287,7 +287,7 @@ public class DiscountDAO {
             params.add(filter.getCategoryId());
         }
 
-        /** Filter theo product */
+        /** Lọc theo sản phẩm */
         if (filter.getProductId() > 0) {
             sql.append(" AND d.entity_type = 'product' AND d.entity_id = ?");
             params.add(filter.getProductId());
@@ -343,7 +343,7 @@ public class DiscountDAO {
     }
 
     /**
-     * Lấy danh sách Brand có product đang có discount (entity_type='product').
+     * Lấy danh sách thương hiệu có sản phẩm đang có discount (entity_type='product').
      */
     public List<Brand> getBrandsHaveDiscount() {
         List<Brand> brands = new ArrayList<>();
@@ -370,7 +370,7 @@ public class DiscountDAO {
     }
 
     /**
-     * Lấy danh sách Category có product đang có discount (entity_type='product').
+     * Lấy danh sách danh mục có sản phẩm đang có discount (entity_type='product').
      */
     public List<Category> getCategoriesHaveDiscount() {
         List<Category> categories = new ArrayList<>();
@@ -397,7 +397,7 @@ public class DiscountDAO {
     }
 
     /**
-     * Lấy danh sách Product có discount (entity_type='product').
+     * Lấy danh sách sản phẩm có discount (entity_type='product').
      */
     public List<Product> getProductsHaveDiscount() {
         List<Product> products = new ArrayList<>();
