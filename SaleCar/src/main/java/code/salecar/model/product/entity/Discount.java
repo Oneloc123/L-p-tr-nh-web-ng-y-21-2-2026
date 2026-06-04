@@ -24,7 +24,7 @@ public class Discount implements Serializable {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private double percent;
-    /** Số lượng product mà discount này áp dụng lên (chỉ dùng cho màn hình Admin, không lưu DB) */
+    /** Số lượng sản phẩm mà discount này áp dụng lên (chỉ dùng cho màn hình Admin, không lưu DB) */
     private long appliedProductsCount;
 
     public long getAppliedProductsCount() {
@@ -148,7 +148,7 @@ public class Discount implements Serializable {
         this.percent = percent;
     }
 
-    /** Date getters for JSP formatting */
+    /** Getter Date để format trong JSP */
     public Date getStartAtDate() {
         return startAt != null ? Timestamp.valueOf(startAt) : null;
     }
@@ -159,7 +159,7 @@ public class Discount implements Serializable {
         return createAt != null ? Timestamp.valueOf(createAt) : null;
     }
 
-    // 5. Builder pattern
+    // 5. Pattern Builder
     public static Builder builder() {
         return new Builder();
     }
@@ -227,7 +227,7 @@ public class Discount implements Serializable {
         }
 
         public Discount build() {
-            // Validation
+            // Kiểm tra hợp lệ
             if (name == null ) {
                 throw new IllegalArgumentException("Tên discount không được để trống");
             }
