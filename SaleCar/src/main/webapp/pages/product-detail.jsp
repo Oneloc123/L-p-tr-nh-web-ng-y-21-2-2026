@@ -337,6 +337,115 @@
             color: var(--success);
         }
 
+        .stock-status.out-of-stock {
+            color: var(--danger);
+        }
+
+        /* ============================================
+           VARIANT SELECTOR
+        ============================================ */
+        .variant-section {
+            margin: 20px 0;
+        }
+
+        .variant-label {
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .variant-label small {
+            font-weight: 400;
+            color: var(--gray-medium);
+            font-size: 13px;
+        }
+
+        .variant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .variant-btn {
+            position: relative;
+            padding: 10px 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            min-width: 80px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .variant-btn:hover:not(.disabled) {
+            border-color: var(--gold);
+            background: #fcf9f0;
+        }
+
+        .variant-btn.selected {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+        }
+
+        .variant-btn .variant-name {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .variant-btn .variant-price-tag {
+            font-size: 11px;
+            opacity: 0.7;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .variant-btn.selected .variant-price-tag {
+            opacity: 1;
+        }
+
+        .variant-btn.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .variant-btn.disabled::after {
+            content: 'Hết hàng';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            line-height: 1.2;
+        }
+
+        .variant-btn.disabled.selected {
+            opacity: 0.6;
+            border-color: var(--danger);
+            background: #fde8e8;
+            color: var(--danger);
+        }
+
+        .no-variant-msg {
+            padding: 10px 16px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            color: var(--gray-medium);
+            font-size: 13px;
+            font-style: italic;
+        }
 
         /* ============================================
     ACTION BUTTONS -
@@ -833,7 +942,7 @@
                 <div class="main-image-wrapper">
                     <c:choose>
                         <c:when test="${not empty product.images and fn:length(product.images) > 0}">
-                            <img src="${product.images[0]}" alt="${product.productName}" class="main-image" id="galleryMain">
+                            <img src="${pageContext.request.contextPath}/uploads/${product.images[0]}" alt="${product.productName}" class="main-image" id="galleryMain">
                         </c:when>
                         <c:otherwise>
                             <!-- Fixed: set size trước cho ảnh mặc định -->
@@ -846,8 +955,8 @@
                 <!-- Thumbnails - Fixed: chỉ hiển thị tối đa 4 ảnh con -->
                 <div class="thumbnail-list">
                     <c:forEach items="${product.images}" var="img" varStatus="status" end="3">
-                        <div class="thumbnail-item ${status.first ? 'active' : ''}" data-image="${img}">
-                            <img src="${img}" alt="Thumbnail ${status.index + 1}">
+                        <div class="thumbnail-item ${status.first ? 'active' : ''}" data-image="${pageContext.request.contextPath}/uploads/${img}">
+                            <img src="${pageContext.request.contextPath}/uploads/${img}" alt="Thumbnail ${status.index + 1}">
                         </div>
                     </c:forEach>
                     <c:if test="${empty product.images or fn:length(product.images) == 0}">
@@ -903,26 +1012,80 @@
                     </span>
                 </div>
 
+                <!-- ============================== -->
+                <!-- VARIANT SELECTOR -->
+                <!-- ============================== -->
+                <div class="variant-section">
+                    <div class="variant-label">
+                        <i class="bi bi-palette"></i> Chọn biến thể
+                        <small id="variantSkuDisplay">
+                            <c:if test="${not empty product.variants and fn:length(product.variants) > 0}">
+                                SKU: ${product.variants[0].sku}
+                            </c:if>
+                        </small>
+                    </div>
+
+                    <div class="variant-list" id="variantList">
+                        <c:choose>
+                            <%-- Có variant -> render từng button --%>
+                            <c:when test="${not empty product.variants and fn:length(product.variants) > 0}">
+                                <c:forEach var="v" items="${product.variants}" varStatus="vs">
+                                    <c:set var="isFirst" value="${vs.first}" />
+                                    <c:set var="stockQty" value="${v.quantity}" />
+                                    <c:set var="isOutOfStock" value="${stockQty <= 0}" />
+                                    <c:set var="vPrice" value="${v.finalPrice != null ? v.finalPrice : v.price}" />
+                                    <div class="variant-btn ${isFirst ? 'selected' : ''} ${isOutOfStock ? 'disabled' : ''}"
+                                         data-variant-id="${v.id}"
+                                         data-variant-name="${v.variantName}"
+                                         data-variant-sku="${v.sku}"
+                                         data-variant-price="${v.price}"
+                                         data-variant-final-price="${vPrice}"
+                                         data-variant-stock="${stockQty}"
+                                         data-variant-discount="${product.discountPercent}"
+                                         onclick="selectVariant(this)"
+                                         title="${isOutOfStock ? 'Biến thể này đã hết hàng' : v.variantName}">
+                                        <span class="variant-name">${v.variantName}</span>
+                                        <span class="variant-price-tag">
+                                            <fmt:formatNumber value="${vPrice}" type="number" groupingUsed="true"/> ₫
+                                        </span>
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <%-- Không có variant -> thông báo + disable toàn bộ --%>
+                            <c:otherwise>
+                                <c:set var="hasNoVariants" value="true" scope="page" />
+                                <div class="no-variant-msg">
+                                    <i class="bi bi-info-circle"></i>
+                                    Sản phẩm tạm thời không khả dụng
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+
+                <!-- ============================== -->
+                <!-- / VARIANT SELECTOR -->
+                <!-- ============================== -->
+
                 <!-- Price -->
-                <div class="price-container">
+                <div class="price-container" id="priceContainer">
                     <div>
-                        <span class="current-price">
+                        <span class="current-price" id="displayFinalPrice">
                             <fmt:formatNumber value="${product.finalPrice}" type="number" groupingUsed="true"/> ₫
                         </span>
-                        <c:if test="${product.discountPercent > 0}">
-                            <span class="old-price">
-                                <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/> ₫
-                            </span>
-                            <span class="discount-badge">-${product.discountPercent}%</span>
-                        </c:if>
+                        <span class="old-price" id="displayOldPrice" style="${product.discountPercent > 0 ? '' : 'display:none;'}">
+                            <fmt:formatNumber value="${product.price}" type="number" groupingUsed="true"/> ₫
+                        </span>
+                        <span class="discount-badge" id="displayDiscountBadge" style="${product.discountPercent > 0 ? '' : 'display:none;'}">
+                            -<span id="displayDiscountPercent">${product.discountPercent}</span>%
+                        </span>
                     </div>
-                    <c:if test="${product.discountPercent > 0}">
-                        <div class="savings">
-                            <i class="bi bi-piggy-bank"></i> Tiết kiệm:
-                            <fmt:formatNumber value="${product.price - product.finalPrice}" type="number"
-                                              groupingUsed="true"/> ₫
-                        </div>
-                    </c:if>
+                    <div class="savings" id="displaySavings" style="${product.discountPercent > 0 ? '' : 'display:none;'}">
+                        <i class="bi bi-piggy-bank"></i> Tiết kiệm:
+                        <span id="displaySavingsAmount">
+                            <fmt:formatNumber value="${product.price - product.finalPrice}" type="number" groupingUsed="true"/>
+                        </span> ₫
+                    </div>
                 </div>
 
                 <!-- Delivery Info -->
@@ -951,31 +1114,48 @@
                                form="add-to-cart">
                         <button type="button" class="qty-btn" id="qtyPlus">+</button>
                     </div>
-                    <span class="stock-status">
-                        <i class="bi bi-check-circle-fill"></i> Còn hàng
+                    <span class="stock-status ${pageScope.hasNoVariants ? 'out-of-stock' : ''}" id="stockStatus">
+                        <c:choose>
+                            <c:when test="${pageScope.hasNoVariants}">
+                                <i class="bi bi-x-circle-fill"></i> Không khả dụng
+                            </c:when>
+                            <%-- Có variant: hiển thị dựa trên stock của variant đầu tiên --%>
+                            <c:when test="${not empty product.variants and fn:length(product.variants) > 0 and product.variants[0].quantity le 0}">
+                                <i class="bi bi-x-circle-fill"></i> Hết hàng
+                            </c:when>
+                            <c:when test="${not empty product.variants and fn:length(product.variants) > 0 and product.variants[0].quantity le 5}">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Chỉ còn ${product.variants[0].quantity} sản phẩm
+                            </c:when>
+                            <c:otherwise>
+                                <i class="bi bi-check-circle-fill"></i> Còn hàng
+                            </c:otherwise>
+                        </c:choose>
                     </span>
                 </div>
 
-                <!-- Action Buttons - FIXED: cùng hàng, size bằng nhau -->
+                <!-- Action Buttons -->
                 <div class="d-grid gap-2">
-
 
                     <!-- them sp vao cart -->
                     <form id="add-to-cart" action="cart-add" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.productId}">
-
+                        <input type="hidden" name="variantId" id="variantIdInputAddCart" value="0">
 
                         <button type="button" class="btn btn-outline-dark w-100"
-                                onclick="addToCartAjax(event,'${product.productId}', '${product.productName}', false)">Thêm vào giỏ
-                            hàng
+                                ${pageScope.hasNoVariants ? 'disabled' : ''}
+                                onclick="addToCartAjax(event,'${product.productId}', '${fn:replace(product.productName, "'", "\\'")}', false)">
+                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
                         </button>
                     </form>
 
                     <form id="buy-now" action="buy-now" method="get" class="w-100">
                         <input type="hidden" name="productId" value="${product.productId}">
+                        <input type="hidden" name="variantId" id="variantIdInputBuyNow" value="0">
 
                         <button type="button" class="btn btn-buy w-100"
-                                onclick="addToCartAjax(event,'${product.productId}', '${product.productName}', true)">Mua ngay
+                                ${pageScope.hasNoVariants ? 'disabled' : ''}
+                                onclick="addToCartAjax(event,'${product.productId}', '${fn:replace(product.productName, "'", "\\'")}', true)">
+                            <i class="bi bi-lightning-charge"></i> Mua ngay
                         </button>
                     </form>
 
@@ -1206,7 +1386,7 @@
                         <div class="related-image">
                             <c:choose>
                                 <c:when test="${not empty rl.images and fn:length(rl.images) > 0}">
-                                    <img src="${rl.images[0]}" alt="${rl.productName}">
+                                    <img src="${pageContext.request.contextPath}/uploads/${rl.images[0]}" alt="${rl.productName}">
                                 </c:when>
                                 <c:otherwise>
                                     <img src="https://via.placeholder.com/300x220?text=LUXCAR" alt="${rl.productName}">
@@ -1253,7 +1433,7 @@
 <!-- khai bao TOAST -->
 <div id="customToast"
      style="visibility: hidden; min-width: 250px; background-color: #28a745; color: white; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 9999; right: 30px; top: 30px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); transition: opacity 1s;">
-    <i class="fas fa-check-circle"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
+    <i class="bi bi-check-circle-fill"></i> <span id="toastMessage"> Đã thêm vào giỏ!</span>
 </div>
 <!-- thong bao dang nhap -->
 <div class="modal fade" id="requireLoginModal" tabindex="-1" aria-hidden="true">
@@ -1289,6 +1469,142 @@
 
 
 <script>
+    /**
+     * Hàm format số tiền VNĐ.
+     */
+    function formatVND(amount) {
+        return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' ₫';
+    }
+
+    /**
+     * Biến lưu variant đang chọn.
+     */
+    let selectedVariant = null;
+
+    /**
+     * Xử lý khi user click chọn variant button.
+     */
+    function selectVariant(btn) {
+        // Nếu button bị disabled (hết hàng) thì không cho chọn
+        if (btn.classList.contains('disabled')) {
+            return;
+        }
+
+        // Bỏ selected tất cả
+        document.querySelectorAll('.variant-btn').forEach(function (b) {
+            b.classList.remove('selected');
+        });
+
+        // Đánh dấu selected
+        btn.classList.add('selected');
+
+        // Lấy thông tin variant từ data attributes
+        var variantId = btn.getAttribute('data-variant-id');
+        var variantName = btn.getAttribute('data-variant-name');
+        var variantSku = btn.getAttribute('data-variant-sku');
+        var variantPrice = parseFloat(btn.getAttribute('data-variant-price'));
+        var variantFinalPrice = parseFloat(btn.getAttribute('data-variant-final-price'));
+        var variantStock = parseInt(btn.getAttribute('data-variant-stock'));
+        var discountPercent = parseFloat(btn.getAttribute('data-variant-discount')) || 0;
+
+        selectedVariant = {
+            id: parseInt(variantId),
+            name: variantName,
+            sku: variantSku,
+            price: variantPrice,
+            finalPrice: variantFinalPrice,
+            stock: variantStock
+        };
+
+        // Cập nhật hidden input
+        document.getElementById('variantIdInputAddCart').value = variantId;
+        document.getElementById('variantIdInputBuyNow').value = variantId;
+
+        // Cập nhật SKU hiển thị
+        document.getElementById('variantSkuDisplay').textContent = 'SKU: ' + variantSku;
+
+        // Cập nhật giá real-time
+        updatePriceDisplay(variantPrice, variantFinalPrice, discountPercent);
+
+        // Cập nhật tồn kho
+        updateStockDisplay(variantStock);
+
+        // Reset số lượng về 1
+        var qtyInput = document.getElementById('quantity');
+        if (qtyInput) {
+            qtyInput.value = 1;
+            qtyInput.max = Math.max(1, variantStock);
+        }
+    }
+
+    /**
+     * Cập nhật hiển thị giá real-time dựa trên variant.
+     * Tính discount % từ originalPrice và finalPrice (không phụ thuộc product-level).
+     */
+    function updatePriceDisplay(originalPrice, finalPrice, discountPercent) {
+        var displayFinal = document.getElementById('displayFinalPrice');
+        var displayOld = document.getElementById('displayOldPrice');
+        var displayBadge = document.getElementById('displayDiscountBadge');
+        var displayPercent = document.getElementById('displayDiscountPercent');
+        var displaySavings = document.getElementById('displaySavings');
+        var displaySavingsAmount = document.getElementById('displaySavingsAmount');
+
+        displayFinal.textContent = formatVND(finalPrice);
+
+        /* Tính discount thực tế dựa trên chênh lệch giá variant */
+        var actualDiscount = 0;
+        if (originalPrice > 0 && finalPrice < originalPrice) {
+            actualDiscount = Math.round((originalPrice - finalPrice) / originalPrice * 100);
+        }
+
+        if (actualDiscount > 0) {
+            displayOld.textContent = formatVND(originalPrice);
+            displayOld.style.display = 'inline';
+            displayBadge.style.display = 'inline';
+            displayPercent.textContent = actualDiscount;
+            displaySavings.style.display = 'block';
+            displaySavingsAmount.textContent = formatVND(originalPrice - finalPrice);
+        } else {
+            displayOld.style.display = 'none';
+            displayBadge.style.display = 'none';
+            displaySavings.style.display = 'none';
+        }
+    }
+
+    /**
+     * Cập nhật hiển thị tồn kho real-time.
+     * - stock <= 0: OUT_OF_STOCK (đỏ, disable buttons)
+     * - stock <= 5: LOW_STOCK (cam, cảnh báo)
+     * - stock > 5: IN_STOCK (xanh, bình thường)
+     */
+    function updateStockDisplay(stock) {
+        var stockEl = document.getElementById('stockStatus');
+        var addCartBtn = document.querySelector('#add-to-cart button');
+        var buyNowBtn = document.querySelector('#buy-now button');
+
+        if (stock <= 0) {
+            stockEl.innerHTML = '<i class="bi bi-x-circle-fill"></i> Hết hàng';
+            stockEl.className = 'stock-status out-of-stock';
+            if (addCartBtn) addCartBtn.disabled = true;
+            if (buyNowBtn) buyNowBtn.disabled = true;
+        } else if (stock <= 5) {
+            stockEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Chỉ còn ' + stock + ' sản phẩm';
+            stockEl.style.color = 'var(--warning)';
+            stockEl.className = 'stock-status';
+            if (addCartBtn) addCartBtn.disabled = false;
+            if (buyNowBtn) buyNowBtn.disabled = false;
+        } else {
+            stockEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Còn ' + stock + ' sản phẩm';
+            stockEl.style.color = '';
+            stockEl.className = 'stock-status';
+            if (addCartBtn) addCartBtn.disabled = false;
+            if (buyNowBtn) buyNowBtn.disabled = false;
+        }
+    }
+
+    /**
+     * Cập nhật addToCart để gửi kèm variantId.
+     */
     function addToCartAjax(event, productId, productName, isBuyNow) {
         event.preventDefault();
 
@@ -1301,6 +1617,14 @@
             quantity = 1;
         }
 
+        // Lấy variantId từ hidden input
+        var variantId;
+        if (isBuyNow) {
+            variantId = document.getElementById('variantIdInputBuyNow').value;
+        } else {
+            variantId = document.getElementById('variantIdInputAddCart').value;
+        }
+
         let apiUrl;
         if (isBuyNow == true) {
             apiUrl = 'buy-now';
@@ -1308,7 +1632,7 @@
             apiUrl = 'cart-add';
         }
 
-        fetch(apiUrl + '?productId=' + productId + '&quantity=' + quantity + '&ajax=true')
+        fetch(apiUrl + '?productId=' + productId + '&variantId=' + variantId + '&quantity=' + quantity + '&ajax=true')
             .then(function (response) {
                 return response.text();
             })
@@ -1361,8 +1685,8 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         // ========== IMAGE GALLERY ==========
-        const mainImage = document.getElementById('mainImage');
-        const thumbItems = document.querySelectorAll('.thumb-item');
+        const mainImage = document.getElementById('galleryMain');
+        const thumbItems = document.querySelectorAll('.thumbnail-item');
 
         thumbItems.forEach(thumb => {
             thumb.addEventListener('click', function () {
@@ -1425,6 +1749,40 @@
         quantityInput.addEventListener('change', () => {
             updateQuantity(quantityInput.value);
         });
+
+        // ========== VARIANT INITIALIZATION ==========
+        // Auto-select variant đầu tiên còn hàng khi trang load.
+        // Nếu tất cả variant đều hết hàng → hiển thị "Hết hàng" + disable buttons.
+        var variantBtns = document.querySelectorAll('.variant-btn');
+        var firstUsableBtn = null;
+        var allDisabled = true;
+
+        variantBtns.forEach(function (btn) {
+            if (!btn.classList.contains('disabled')) {
+                allDisabled = false;
+                if (!firstUsableBtn) {
+                    firstUsableBtn = btn;
+                }
+            }
+        });
+
+        if (variantBtns.length > 0) {
+            if (firstUsableBtn) {
+                // Có ít nhất 1 variant còn hàng → auto-select
+                selectVariant(firstUsableBtn);
+            } else if (allDisabled) {
+                // Tất cả variant đều hết hàng → hiển thị "Hết hàng" + disable buttons
+                var stockEl = document.getElementById('stockStatus');
+                var addCartBtn = document.querySelector('#add-to-cart button');
+                var buyNowBtn = document.querySelector('#buy-now button');
+                if (stockEl) {
+                    stockEl.innerHTML = '<i class="bi bi-x-circle-fill"></i> Hết hàng';
+                    stockEl.className = 'stock-status out-of-stock';
+                }
+                if (addCartBtn) addCartBtn.disabled = true;
+                if (buyNowBtn) buyNowBtn.disabled = true;
+            }
+        }
     })
 
     // ========== TAB SWITCHING ==========

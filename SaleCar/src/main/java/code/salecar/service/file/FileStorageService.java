@@ -39,7 +39,6 @@ public class FileStorageService {
         return relativePath;
     }
     private String exit(long i) {
-        i++;
         if (i > 1000) return "" + i;
         else if (i > 100) return "00" + i;
         else if (i > 10) return "000" + i;
