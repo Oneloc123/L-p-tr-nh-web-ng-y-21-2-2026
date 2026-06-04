@@ -59,7 +59,7 @@ public class DiscountService {
 
     /**
      * Tính toán lại final_price và discount_percent cho một sản phẩm
-     * dựa trên discount đang hoạt động (ưu tiên: product > brand > category).
+     * dựa trên discount đang hoạt động (ưu tiên: sản phẩm > thương hiệu > danh mục).
      */
     private void recalculateProductDiscount(long productId) {
         Discount activeDiscount = findActiveByProductId(productId);
@@ -92,21 +92,21 @@ public class DiscountService {
             productDAO.updateFinalPrice(productId, finalPrice,
                     BigDecimal.valueOf(discountPercent), LocalDateTime.now());
         } else {
-            // Không có discount nào active -> reset về giá gốc
+            // Không có discount nào đang hoạt động -> đặt lại về giá gốc
             productDAO.updateFinalPrice(productId, product.getPrice(),
                     BigDecimal.ZERO, LocalDateTime.now());
         }
 
-        // Cập nhật final_price cho các variant của sản phẩm
+        // Cập nhật final_price cho các biến thể của sản phẩm
         updateVariantFinalPrices(productId);
     }
 
     /**
-     * Tính và cập nhật final_price cho tất cả variant của một sản phẩm
+     * Tính và cập nhật final_price cho tất cả biến thể của một sản phẩm
      * dựa trên discount_percent của sản phẩm đó.
      */
     private void updateVariantFinalPrices(long productId) {
-        // Đọc lại product để lấy discountPercent đã cập nhật
+        // Đọc lại sản phẩm để lấy discountPercent đã cập nhật
         Product product = productDAO.getProductByID(productId);
         if (product == null) return;
 
@@ -149,19 +149,19 @@ public class DiscountService {
         Product product = productDAO.getProductByID(productId);
         if (product == null) return null;
 
-        // 2. Kiểm tra giảm giá trực tiếp trên Sản phẩm (Ưu tiên 1)
+        // 2. Kiểm tra giảm giá trực tiếp trên sản phẩm (Ưu tiên 1)
         Discount productDiscount = discountDAO.findActiveDiscount("product", productId);
         if (productDiscount != null) {
             return productDiscount;
         }
 
-        // 3. Kiểm tra giảm giá theo Thương hiệu (Ưu tiên 2)
+        // 3. Kiểm tra giảm giá theo thương hiệu (Ưu tiên 2)
         Discount brandDiscount = discountDAO.findActiveDiscount("brand", (long) product.getBrandId());
         if (brandDiscount != null) {
             return brandDiscount;
         }
 
-        // 4. Kiểm tra giảm giá theo Danh mục (Ưu tiên 3)
+        // 4. Kiểm tra giảm giá theo danh mục (Ưu tiên 3)
         Discount categoryDiscount = discountDAO.findActiveDiscount("category", (long) product.getCategoryId());
         if (categoryDiscount != null) {
             return categoryDiscount;
@@ -170,14 +170,14 @@ public class DiscountService {
     }
 
     /**
-     * Lấy danh sách discount với filter + phân trang (cho Admin).
+     * Lấy danh sách discount với bộ lọc + phân trang (cho Admin).
      */
     public List<Discount> getAllDiscounts(DiscountFilter filter) {
         return discountDAO.getAllDiscounts(filter);
     }
 
     /**
-     * Đếm tổng số discount với filter (cho pagination).
+     * Đếm tổng số discount với bộ lọc (cho phân trang).
      */
     public int getTotalDiscounts(DiscountFilter filter) {
         return discountDAO.getTotalDiscounts(filter);
@@ -187,7 +187,7 @@ public class DiscountService {
      * Xóa discount theo ID và cập nhật lại final_price cho các sản phẩm bị ảnh hưởng.
      */
     public boolean deleteDiscount(long id) {
-        // Lấy thông tin discount trước khi xoá
+        // Lấy thông tin discount trước khi xóa
         Discount discount = discountDAO.getDiscountById(id);
         if (discount == null) return false;
 
@@ -202,21 +202,21 @@ public class DiscountService {
     }
 
     /**
-     * Lấy danh sách Brand có product đang có discount (cho filter dropdown).
+     * Lấy danh sách thương hiệu có sản phẩm đang có discount (cho dropdown bộ lọc).
      */
     public List<Brand> getBrandsHaveDiscount() {
         return discountDAO.getBrandsHaveDiscount();
     }
 
     /**
-     * Lấy danh sách Category có product đang có discount (cho filter dropdown).
+     * Lấy danh sách danh mục có sản phẩm đang có discount (cho dropdown bộ lọc).
      */
     public List<Category> getCategoriesHaveDiscount() {
         return discountDAO.getCategoriesHaveDiscount();
     }
 
     /**
-     * Lấy danh sách Product đang có discount (cho filter dropdown).
+     * Lấy danh sách sản phẩm đang có discount (cho dropdown bộ lọc).
      */
     public List<Product> getProductsHaveDiscount() {
         return discountDAO.getProductsHaveDiscount();

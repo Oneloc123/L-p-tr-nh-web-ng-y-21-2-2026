@@ -1,11 +1,11 @@
 package code.salecar.model.product.filter;
 
 /**
- * Filter model cho trang quản lý Discount (Admin).
- * Hỗ trợ lọc theo thời gian hoạt động, brand, category, product.
+ * Model bộ lọc cho trang quản lý Discount (Admin).
+ * Hỗ trợ lọc theo thời gian hoạt động, thương hiệu, danh mục, sản phẩm.
  */
 public class DiscountFilter {
-    /** Thời gian hoạt động: active / upcoming / expired / all */
+    /** Thời gian hoạt động: active / upcoming / expired / tất cả */
     private String timeStatus;
     private long brandId;
     private long categoryId;
