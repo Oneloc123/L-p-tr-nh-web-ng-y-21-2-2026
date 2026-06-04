@@ -9,15 +9,20 @@ import code.salecar.service.user.UserService;
 import code.salecar.util.FileUtil;
 import code.salecar.util.NotificationUtil;
 import code.salecar.util.UploadUserImageUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "AddUser", value = "/addUser")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 2 * 1024 * 1024,
@@ -25,7 +30,19 @@ import java.sql.Date;
 public class AddUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if(session==null||session.getAttribute("user")==null){
+            response.sendRedirect("/login");
+        }else{
+            UserService us = new UserService();
+            User userCheck = (User)session.getAttribute("user");
+            if(!userCheck.getRole().equals("admin")){
+                response.sendRedirect("/login");
+                return;
+            }
 
+            request.getRequestDispatcher("/admin/user-admin-add.jsp").forward(request,response);
+        }
     }
 
     @Override
@@ -38,6 +55,53 @@ public class AddUser extends HttpServlet {
         String phone = request.getParameter("phonenumber");
         String role = request.getParameter("role");
         String statusStr = request.getParameter("status");
+
+
+
+        String name = request.getParameter("name");
+        String street = request.getParameter("street");
+        String commune = request.getParameter("commune");
+        String province = request.getParameter("province");
+
+        String fullnameError = UserInvalidate.checkFullname(fullname);
+        if(!fullnameError.equals("true")){
+            request.setAttribute("fullnameError",fullnameError);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String usernameError = UserInvalidate.checkUsername(username);
+        if(!usernameError.equals("true")){
+            request.setAttribute("usernameError",usernameError);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String emailError = UserInvalidate.checkEmail(email);
+        if(!emailError.equals("true")){
+            request.setAttribute("emailError",emailError);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String passwordError = UserInvalidate.checkPassword(password);
+        if(!passwordError.equals("true")){
+            request.setAttribute("passwordError",passwordError);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+        String phonenumberError = UserInvalidate.checkPhonenumber(phone);
+        if(!phonenumberError.equals("true")){
+            request.setAttribute("phonenumberError",phonenumberError);
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+
+        UserService us = new UserService();
+        User user = us.getUserByUsername(username);
+        if(user!=null){
+            request.setAttribute("usernameError","tên đăng nhập đã tồn tại");
+            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
+            return;
+        }
+
 
         String link = "";
         try {
@@ -73,61 +137,6 @@ public class AddUser extends HttpServlet {
             return;
         }
 
-        String name = request.getParameter("name");
-        String street = request.getParameter("street");
-        String commune = request.getParameter("commune");
-        String province = request.getParameter("province");
-
-        String fullnameError = UserInvalidate.checkFullname(fullname);
-        if(!fullnameError.equals("true")){
-            request.setAttribute("fullnameError",fullnameError);
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        String usernameError = UserInvalidate.checkUsername(username);
-        if(!usernameError.equals("true")){
-            request.setAttribute("usernameError",usernameError);
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        String emailError = UserInvalidate.checkEmail(email);
-        if(!emailError.equals("true")){
-            request.setAttribute("emailError",emailError);
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        String passwordError = UserInvalidate.checkPassword(password);
-        if(!passwordError.equals("true")){
-            request.setAttribute("passwordError",passwordError);
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        String phonenumberError = UserInvalidate.checkPhonenumber(phone);
-        if(!phonenumberError.equals("true")){
-            request.setAttribute("phonenumberError",phonenumberError);
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        UserService us = new UserService();
-        User user = us.getUserByUsername(username);
-        if(user!=null){
-            request.setAttribute("usernameError","tên đăng nhập đã tồn tại");
-            request.setAttribute("openAddUserModal", "true");
-            request.getRequestDispatcher("/admin/user-admin.jsp").forward(request,response);
-            return;
-        }
-        AddressService as = new AddressService();
-        Address add = new Address();
-        add.setName(name);
-        add.setStreet(street);
-        add.setCommune(commune);
-        add.setProvince(province);
-        add.setType("main");
         boolean status = true;
         if(statusStr.equals("false")){
             status = false;
@@ -146,8 +155,7 @@ public class AddUser extends HttpServlet {
         u.setUpdatedat(new Date(System.currentTimeMillis()));
         us.register(u);
         u = us.getUserByUsername(username);
-        add.setUserId(u.getId());
-        as.addAddress(add);
+
 
         //alert
         request.getSession().setAttribute("toastMessage", "Thêm User thành công");
@@ -155,4 +163,6 @@ public class AddUser extends HttpServlet {
 
         response.sendRedirect("/userAdmin");
     }
+
+
 }

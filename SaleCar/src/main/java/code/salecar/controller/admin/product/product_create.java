@@ -271,10 +271,9 @@ public class product_create extends HttpServlet {
 
                     DiscountService discountService = new DiscountService();
                     int discountId = discountService.createProductDiscount(discount);
-
-                    if (discountId > 0) {
-                        System.out.println("Discount created successfully with ID: " + discountId);
-                    }
+//                    if (discountId > 0) {
+//                        System.out.println("Discount created successfully with ID: " + discountId);
+//                    }
                 } catch (IllegalArgumentException e) {
                     System.err.println("Invalid discount value type or date format: " + e.getMessage());
                 } catch (Exception e) {
