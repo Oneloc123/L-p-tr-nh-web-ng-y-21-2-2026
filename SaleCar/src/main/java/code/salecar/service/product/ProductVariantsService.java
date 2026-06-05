@@ -3,6 +3,7 @@ package code.salecar.service.product;
 import code.salecar.dao.ExportReceiptDAO;
 import code.salecar.dao.ImportReceiptDAO;
 import code.salecar.dao.InventoryDAO;
+import code.salecar.dao.ProductDAO;
 import code.salecar.dao.ProductVariantsDAO;
 import code.salecar.model.User;
 import code.salecar.model.product.entity.ActivityLog;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class ProductVariantsService {
     ProductVariantsDAO pvd = new ProductVariantsDAO();
+    ProductDAO productDAO = new ProductDAO();
     ImportReceiptDAO ird = new ImportReceiptDAO();
     ExportReceiptDAO erd = new ExportReceiptDAO();
     InventoryDAO iv = new InventoryDAO();
@@ -43,6 +45,14 @@ public class ProductVariantsService {
 
         iv.update(variant);
 
+    }
+
+    /**
+     * Đồng bộ product.price với MIN variant price.
+     * Gọi sau khi variant thay đổi (thêm/sửa/xóa).
+     */
+    public void syncProductPrice(long productId) {
+        productDAO.syncProductPrice(productId);
     }
 
     public void createExportReceipt(ProductVariants variants, User user) {

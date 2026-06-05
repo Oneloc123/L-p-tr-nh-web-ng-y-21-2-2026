@@ -89,8 +89,9 @@ public class Cart implements Serializable {
      * Giữ lại overload cũ (không variant) cho tương thích.
      */
     public void addProduct(ProductDetailDTO product, int quantity) {
-        double price = product.getProduct().getPrice();
-        addProduct(product, 0, "", "", price, price, quantity);
+        double price = product.getPrice();
+        double finalPrice = product.getFinalPrice();
+        addProduct(product, 0, "", "", price, finalPrice, quantity);
     }
 
 

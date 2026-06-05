@@ -62,7 +62,10 @@ public class ProductDAO {
      */
     public List<ProductItemDTO> getProductNew() {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product pr where pr.status = 1 " +
+        String query = "select pr.id, pr.name, pr.discount_percent, pr.brand_id, pr.category_id, pr.ratio, " +
+                "COALESCE((SELECT MIN(pv.price) FROM product_variants pv WHERE pv.product_id = pr.id), pr.price) AS price, " +
+                "COALESCE((SELECT MIN(COALESCE(pv.final_price, pv.price)) FROM product_variants pv WHERE pv.product_id = pr.id), pr.final_price) AS final_price " +
+                "from product pr where pr.status = 1 " +
                 "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
                 "order by pr.created_at desc limit 4";
         try (Connection conn = DBConnection.getConnection();
@@ -93,9 +96,12 @@ public class ProductDAO {
      */
     public List<ProductItemDTO> getProductHot() {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product pr where pr.status = 1 " +
+        String query = "select pr.id, pr.name, pr.discount_percent, pr.brand_id, pr.category_id, pr.ratio, " +
+                "COALESCE((SELECT MIN(pv.price) FROM product_variants pv WHERE pv.product_id = pr.id), pr.price) AS price, " +
+                "COALESCE((SELECT MIN(COALESCE(pv.final_price, pv.price)) FROM product_variants pv WHERE pv.product_id = pr.id), pr.final_price) AS final_price " +
+                "from product pr where pr.status = 1 " +
                 "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
-                "order by pr.price desc limit 4";
+                "order by price desc limit 4";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -124,7 +130,10 @@ public class ProductDAO {
      */
     public List<ProductItemDTO> getProductSale() {
         List<ProductItemDTO> products = new ArrayList<>();
-        String query = "select * from product pr where pr.status = 1 " +
+        String query = "select pr.id, pr.name, pr.discount_percent, pr.brand_id, pr.category_id, pr.ratio, " +
+                "COALESCE((SELECT MIN(pv.price) FROM product_variants pv WHERE pv.product_id = pr.id), pr.price) AS price, " +
+                "COALESCE((SELECT MIN(COALESCE(pv.final_price, pv.price)) FROM product_variants pv WHERE pv.product_id = pr.id), pr.final_price) AS final_price " +
+                "from product pr where pr.status = 1 " +
                 "and pr.discount_percent > 0 " +
                 "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
                 "order by pr.discount_percent desc limit 4";
@@ -156,6 +165,7 @@ public class ProductDAO {
         List<Object> params = new ArrayList<>();
 
         String sql = "select count(*) from product pr " +
+                " left join (select product_id, MIN(price) as min_price, MIN(COALESCE(final_price, price)) as min_final_price from product_variants group by product_id) mp on mp.product_id = pr.id " +
                 " join brand br on pr.brand_id = br.id " +
                 " join category ct on pr.category_id = ct.id " +
                 " where 1=1 " +
@@ -190,11 +200,11 @@ public class ProductDAO {
         }
 
         if (filter.getMaxPrice() != null) {
-            query.append(" and pr.final_price <= ? ");
+            query.append(" and COALESCE(mp.min_final_price, pr.final_price) <= ? ");
             params.add(filter.getMaxPrice().doubleValue());
         }
         if (filter.getMinPrice() != null) {
-            query.append(" and pr.final_price >= ? ");
+            query.append(" and COALESCE(mp.min_final_price, pr.final_price) >= ? ");
             params.add(filter.getMinPrice().doubleValue());
         }
 
@@ -202,10 +212,10 @@ public class ProductDAO {
         if (filter.getSortBy() != null) {
             switch (filter.getSortBy()) {
                 case PRICE_DESC:
-                    query.append(" order by pr.price desc");
+                    query.append(" order by price desc");
                     break;
                 case PRICE_ASC:
-                    query.append(" order by pr.price asc");
+                    query.append(" order by price asc");
                     break;
                 case NEWEST:
                     query.append(" order by pr.created_at desc");
@@ -238,7 +248,11 @@ public class ProductDAO {
         List<ProductItemDTO> products = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
-        String sql = "select pr.* from product pr " +
+        String sql = "select pr.id, pr.name, pr.discount_percent, pr.brand_id, pr.category_id, pr.ratio, pr.created_at, " +
+                "COALESCE(mp.min_price, pr.price) AS price, " +
+                "COALESCE(mp.min_final_price, pr.final_price) AS final_price " +
+                "from product pr " +
+                "left join (select product_id, MIN(price) as min_price, MIN(COALESCE(final_price, price)) as min_final_price from product_variants group by product_id) mp on mp.product_id = pr.id " +
                 " join brand br on pr.brand_id = br.id " +
                 " join category ct on pr.category_id = ct.id " +
                 " where 1=1 " +
@@ -273,11 +287,11 @@ public class ProductDAO {
         }
 
         if (filter.getMaxPrice() != null) {
-            query.append(" and pr.final_price <= ? ");
+            query.append(" and COALESCE(mp.min_final_price, pr.final_price) <= ? ");
             params.add(filter.getMaxPrice().doubleValue());
         }
         if (filter.getMinPrice() != null) {
-            query.append(" and pr.final_price >= ? ");
+            query.append(" and COALESCE(mp.min_final_price, pr.final_price) >= ? ");
             params.add(filter.getMinPrice().doubleValue());
         }
 
@@ -285,10 +299,10 @@ public class ProductDAO {
         if (filter.getSortBy() != null) {
             switch (filter.getSortBy()) {
                 case PRICE_DESC:
-                    query.append(" order by pr.price desc");
+                    query.append(" order by price desc");
                     break;
                 case PRICE_ASC:
-                    query.append(" order by pr.price asc");
+                    query.append(" order by price asc");
                     break;
                 case NEWEST:
                     query.append(" order by pr.created_at desc");
@@ -952,6 +966,24 @@ public class ProductDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, variantId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Đồng bộ product.price với MIN variant price.
+     * Đảm bảo product luôn hiển thị giá khởi điểm từ variant rẻ nhất.
+     */
+    public void syncProductPrice(long productId) {
+        String sql = "UPDATE product p " +
+                "SET p.price = (SELECT COALESCE(MIN(pv.price), 0) FROM product_variants pv WHERE pv.product_id = p.id), " +
+                "p.updated_at = NOW() " +
+                "WHERE p.id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, productId);
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);

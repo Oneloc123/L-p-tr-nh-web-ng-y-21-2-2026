@@ -1261,8 +1261,8 @@
     }
 
     .product-name {
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 17px;
+        font-weight: 700;
         color: var(--black);
         margin-bottom: 10px;
         text-decoration: none;
@@ -1273,6 +1273,7 @@
         line-height: 1.4;
         min-height: 44px;
         transition: color 0.3s ease;
+        letter-spacing: 0.3px;
     }
 
     .product-name:hover {
@@ -1307,15 +1308,22 @@
     }
 
     .current-price {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 800;
         color: var(--gold);
+        text-shadow: 0 1px 3px rgba(212, 175, 55, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .product-card:hover .current-price {
+        transform: scale(1.04);
     }
 
     .old-price {
-        font-size: 13px;
-        color: #bbb;
+        font-size: 14px;
+        color: #ccc;
         text-decoration: line-through;
+        font-weight: 400;
     }
 
     /* ─── View Detail CTA ─── */
