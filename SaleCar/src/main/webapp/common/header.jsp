@@ -95,6 +95,34 @@
             <!-- RIGHT SIDE -->
             <div class="nav-right">
 
+                <!-- NOTIFICATION BELL (only for logged-in users) -->
+                <c:if test="${sessionScope.user != null}">
+                    <div class="dropdown notification-dropdown" id="notificationDropdown">
+                        <a href="#" class="cart-btn notification-bell" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationBell">
+                            <i class="bi bi-bell"></i>
+                            <span id="notification-count" class="cart-count notification-badge" style="display:none;">0</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationBell">
+                            <div class="notification-header">
+                                <span class="fw-bold">Thông báo</span>
+                                <span id="notification-header-count" class="badge bg-danger rounded-pill ms-2">0</span>
+                            </div>
+                            <div class="notification-divider"></div>
+                            <ul id="notification-list" class="list-unstyled mb-0">
+                                <li class="notification-empty text-center text-muted py-3">
+                                    <i class="bi bi-bell-slash"></i> Không có thông báo
+                                </li>
+                            </ul>
+                            <div class="notification-divider"></div>
+                            <div class="notification-footer">
+                                <a href="${pageContext.request.contextPath}/notifications" class="notification-view-all">
+                                    <i class="bi bi-eye"></i> Xem tất cả
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
+
                 <!-- CART -->
                 <a href="${pageContext.request.contextPath}/cart" class="cart-btn">
                     <i class="bi bi-cart3"></i>
@@ -115,6 +143,10 @@
                                          style="width: 100%; height: 100%; object-fit: cover;" />
                                 </div>
                                 <div class="auth-dropdown-content">
+                                    <a href="${pageContext.request.contextPath}/notifications" class="auth-dropdown-item">
+                                        <i class="bi bi-bell"></i>
+                                        <span>Thông báo</span>
+                                    </a>
                                     <a href="${pageContext.request.contextPath}/dashboard" class="auth-dropdown-item">
                                         <i class="bi bi-person-circle"></i>
                                         <span>Tài khoản của tôi</span>
@@ -191,6 +223,117 @@
         });
     });
 
+    // ========================
+    // NOTIFICATION SYSTEM
+    // ========================
+    (function() {
+        const isLoggedIn = ${sessionScope.user != null};
+        if (!isLoggedIn) return;
+
+        const notifCountEl = document.getElementById('notification-count');
+        const notifListEl = document.getElementById('notification-list');
+        const notifHeaderCount = document.getElementById('notification-header-count');
+        const bellIcon = document.querySelector('.notification-bell i');
+
+        function loadNotifications() {
+            fetch('${pageContext.request.contextPath}/api/notifications?action=summary')
+                .then(function(res) {
+                    if (!res.ok) throw new Error('Unauthorized');
+                    return res.json();
+                })
+                .then(function(data) {
+                    // Update badge count
+                    var count = data.count || 0;
+                    if (notifCountEl) {
+                        if (count > 0) {
+                            notifCountEl.textContent = count > 99 ? '99+' : count;
+                            notifCountEl.style.display = 'flex';
+                            if (bellIcon) bellIcon.closest('.notification-bell')?.classList.add('has-unread');
+                        } else {
+                            notifCountEl.style.display = 'none';
+                            if (bellIcon) bellIcon.closest('.notification-bell')?.classList.remove('has-unread');
+                        }
+                    }
+                    if (notifHeaderCount) {
+                        notifHeaderCount.textContent = count;
+                        notifHeaderCount.style.display = count > 0 ? 'inline-block' : 'none';
+                    }
+
+                    // Render notification list
+                    if (notifListEl) {
+                        var notifs = data.notifications || [];
+                        if (notifs.length === 0) {
+                            notifListEl.innerHTML = '<li class="notification-empty text-center text-muted py-3">' +
+                                '<i class="bi bi-bell-slash"></i> Không có thông báo</li>';
+                        } else {
+                            var html = '';
+                            for (var i = 0; i < notifs.length; i++) {
+                                var n = notifs[i];
+                                var unreadClass = n.isRead ? '' : 'unread';
+                                html += '<li class="notification-item ' + unreadClass + '">' +
+                                    '<div class="noti-icon"><i class="bi ' + (n.isRead ? 'bi-bell' : 'bi-bell-fill') + '"></i></div>' +
+                                    '<div class="noti-content">' +
+                                        '<div class="noti-message">' + escapeHtml(n.message) + '</div>' +
+                                        '<small class="noti-time"><i class="bi bi-clock"></i> ' + escapeHtml(n.createdAt) + '</small>' +
+                                    '</div>' +
+                                '</li>';
+                            }
+                            notifListEl.innerHTML = html;
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    console.log('Notification load error:', err);
+                });
+        }
+
+        function markAllRead() {
+            fetch('${pageContext.request.contextPath}/api/notifications?action=markRead')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (notifCountEl) notifCountEl.style.display = 'none';
+                        if (notifHeaderCount) notifHeaderCount.style.display = 'none';
+                        if (bellIcon) bellIcon.closest('.notification-bell')?.classList.remove('has-unread');
+                        // Update all items to read style
+                        var items = notifListEl ? notifListEl.querySelectorAll('.notification-item') : [];
+                        for (var i = 0; i < items.length; i++) {
+                            items[i].classList.remove('unread');
+                            var icon = items[i].querySelector('.noti-icon i');
+                            if (icon) {
+                                icon.className = 'bi bi-bell';
+                            }
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    console.log('Mark read error:', err);
+                });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        // Load on page load
+        loadNotifications();
+
+        // Mark all as read when dropdown is opened
+        var dropdownEl = document.getElementById('notificationDropdown');
+        if (dropdownEl) {
+            dropdownEl.addEventListener('shown.bs.dropdown', function () {
+                markAllRead();
+                // Reload notifications to update UI
+                setTimeout(loadNotifications, 500);
+            });
+        }
+
+        // Refresh every 60 seconds
+        setInterval(loadNotifications, 60000);
+    })();
 
 </script>
 

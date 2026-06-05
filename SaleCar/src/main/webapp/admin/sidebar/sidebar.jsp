@@ -265,6 +265,20 @@
             </li>
 
             <li>
+                <a href="${pageContext.request.contextPath}/admin/discounts"
+                   class="${fn:contains(pageContext.request.requestURI, 'discounts') || fn:contains(pageContext.request.requestURI, 'discount') ? 'active' : ''}">
+                    <i class="bi bi-percent"></i><span> Discount</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/vouchers"
+                   class="${fn:contains(pageContext.request.requestURI, 'vouchers') || fn:contains(pageContext.request.requestURI, 'voucher') ? 'active' : ''}">
+                    <i class="bi bi-ticket-perforated"></i><span> Voucher</span>
+                </a>
+            </li>
+
+            <li>
                 <a href="${pageContext.request.contextPath}/admin/banners"
                    class="${fn:contains(pageContext.request.requestURI, 'banners') || fn:contains(pageContext.request.requestURI, 'banner') ? 'active' : ''}">
                     <i class="bi bi-image"></i><span> Banner</span>

@@ -101,26 +101,15 @@
                 <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
             </a>
 
-            <a href="${pageContext.request.contextPath}/wishlist" class="menu-item">
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
                 <i class="fas fa-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
 
-<%--            <div class="menu-divider"></div>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>
-<%--                <i class="fas fa-map-marker-alt"></i>--%>
-<%--                <span>Sổ địa chỉ</span>--%>
-<%--            </a>--%>
-<%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
-<%--                <i class="fas fa-bell"></i>--%>
-<%--                <span>Thông báo</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/settings" class="menu-item">--%>
-<%--                <i class="fas fa-cog"></i>--%>
-<%--                <span>Cài đặt</span>--%>
-<%--            </a>--%>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Thông báo</span>
+            </a>
 
             <div class="menu-divider"></div>
 
@@ -167,7 +156,7 @@
                        <div class="product-col">
                             <div class="product-img">
                                                     <%-- Đồng nhất gọi productDetail và bọc chống rỗng ảnh --%>
-                                 <img src="${not empty item.productDetail.images ? item.productDetail.images[0] : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
+                                 <img src="${not empty item.productDetail.images ? pageContext.request.contextPath.concat('/uploads/').concat(item.productDetail.images[0]) : 'https://placehold.co/50'}" style="width: 50px; height: 50px; object-fit: cover;" alt="${item.productDetail.productName}" />
                             </div>
 
                             <div>

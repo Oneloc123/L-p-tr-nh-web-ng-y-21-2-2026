@@ -23,16 +23,32 @@ public class addToCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int id = Integer.parseInt(request.getParameter("productId"));
+        String idStr = request.getParameter("productId");
+        if (idStr == null || idStr.isEmpty()) {
+            response.sendRedirect("home");
+            return;
+        }
+        int id;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("home");
+            return;
+        }
         String quantitypr = request.getParameter("quantity");
-
+        String variantIdStr = request.getParameter("variantId");
 
         String action = request.getParameter("action");
         AddressDao AddrDAO = new AddressDao();
 
         int quantity = 1;
         if (quantitypr != null) {
-            quantity = Integer.parseInt(quantitypr);
+            try {
+                quantity = Integer.parseInt(quantitypr);
+                if (quantity < 1) quantity = 1;
+            } catch (NumberFormatException e) {
+                quantity = 1;
+            }
         }
 
         ProductService ps = new ProductService();
@@ -59,10 +75,29 @@ public class addToCart extends HttpServlet {
                 cart = new Cart();
             }
 
-
-
-
-            cart.addProduct(productDT, quantity);
+            // Nếu có variantId thì thêm variant vào cart
+            if (variantIdStr != null && !variantIdStr.isEmpty()) {
+                int variantId = Integer.parseInt(variantIdStr);
+                // Tìm variant từ productDetail
+                code.salecar.model.product.entity.ProductVariants selectedVariant = null;
+                if (productDT.getVariants() != null) {
+                    for (code.salecar.model.product.entity.ProductVariants v : productDT.getVariants()) {
+                        if (v.getId() == variantId) {
+                            selectedVariant = v;
+                            break;
+                        }
+                    }
+                }
+                if (selectedVariant != null) {
+                    double price = selectedVariant.getFinalPrice() != null ? selectedVariant.getFinalPrice().doubleValue() : selectedVariant.getPrice().doubleValue();
+                    double originalPrice = selectedVariant.getPrice().doubleValue();
+                    cart.addProduct(productDT, (int) selectedVariant.getId(), selectedVariant.getVariantName(), selectedVariant.getSku(), originalPrice, price, quantity);
+                } else {
+                    cart.addProduct(productDT, quantity);
+                }
+            } else {
+                cart.addProduct(productDT, quantity);
+            }
             session.setAttribute("cart", cart);
 
 

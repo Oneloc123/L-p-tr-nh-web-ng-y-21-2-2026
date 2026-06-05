@@ -62,12 +62,12 @@ public class DiscountInfo {
         public Builder endAt(LocalDateTime endAt) { this.endAt = endAt; return this; }
 
         public DiscountInfo build() {
-            // Validate các trường bắt buộc (tuỳ logic)
+            // Kiểm tra các trường bắt buộc (tuỳ logic)
             if (discountId == null) throw new IllegalStateException("discountId is required");
             if (name == null) throw new IllegalStateException("name is required");
             if (discountType == null) throw new IllegalStateException("discountType is required");
             if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalStateException("value must be positive");
-            // Không validate startAt, endAt (có thể null)
+            // Không kiểm tra startAt, endAt (có thể null)
             return new DiscountInfo(this);
         }
     }

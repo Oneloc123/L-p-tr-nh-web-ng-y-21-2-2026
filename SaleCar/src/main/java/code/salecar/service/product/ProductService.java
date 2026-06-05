@@ -6,6 +6,7 @@ import code.salecar.model.brand.BrandInfo;
 import code.salecar.model.category.Category;
 import code.salecar.model.category.CategoryInfo;
 import code.salecar.model.enumeration.DiscountValueType;
+import code.salecar.model.enumeration.Status;
 import code.salecar.model.product.dto.ProductDetailDTO;
 import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.model.product.entity.*;
@@ -37,6 +38,9 @@ public class ProductService {
 
         // 1. Lấy entity Product
         Product product = productDAO.getProductByID(id);
+        if (product == null) {
+            return null;
+        }
         long productId = product.getId();
 
         // 2. Lấy Brand và tạo BrandInfo
@@ -90,13 +94,27 @@ public class ProductService {
         // 8. Tính phân bố rating (từ danh sách review)
         ProductRatingDistribution ratingDist = calculateRatingDistribution(reviews);
 
-        // 9. Lấy product vảiant
+        // 9. Lấy product variant
         List<ProductVariants> variants = pvs.getVariantById(productId);
+
+        /**
+         * Nếu product không có variant nào → tự động set status = INACTIVE
+         * và cập nhật DB để product không hiển thị trên frontend.
+         * Business rule: product không variant = không bán được.
+         * Dùng updateStatus()
+         * vì updateBasicInfo() cần brand/category không null.
+         */
+        if (variants == null || variants.isEmpty()) {
+            if (product.getStatus() == Status.ACTIVE) {
+                product.setStatus(Status.INACTIVE);
+                productDAO.updateStatus(product.getId(), Status.INACTIVE);
+            }
+        }
 
         //10. Log
         List<ActivityLog> activityLog = ls.readLogs(productId);
 
-        // 10. Dùng Builder để tạo ProductDetailDTO
+        // 11. Dùng Builder để tạo ProductDetailDTO
         return ProductDetailDTO.builder()
                 .product(product)
                 .brand(brandInfo)

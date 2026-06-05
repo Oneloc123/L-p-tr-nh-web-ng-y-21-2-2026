@@ -1,0 +1,235 @@
+# TÀI LIỆU MÔ TẢ CƠ SỞ DỮ LIỆU
+
+---
+
+# 1. Tổng quan hệ thống
+
+Hệ thống được thiết kế để quản lý:
+
+* Sản phẩm mô hình xe
+* Biến thể sản phẩm (màu sắc, phiên bản)
+* Tồn kho
+* Nhập kho (Stock In)
+* Xuất kho (Stock Out)
+
+Kiến trúc dữ liệu tuân theo nguyên tắc:
+
+* Chuẩn hóa dữ liệu (Normalization)
+* Tách biệt dữ liệu tĩnh và dữ liệu biến động
+* Tối ưu truy vấn thông qua bảng cache (inventory)
+
+---
+
+# 2. Danh sách bảng
+
+Hệ thống bao gồm các bảng chính:
+
+1. products
+2. product_variants
+3. inventory
+4. import_receipts
+5. import_receipt_items
+6. export_receipts
+7. export_receipt_items
+
+---
+
+# 3. Mô tả chi tiết từng bảng
+
+---
+
+## 3.1. Bảng: products
+
+### Mục đích:
+
+Lưu thông tin chung của sản phẩm (không phụ thuộc biến thể)
+
+### Các trường:
+
+* id: Khóa chính
+* name: Tên sản phẩm
+* description: Mô tả chi tiết
+* brand_id: Liên kết thương hiệu
+* category_id: Liên kết danh mục
+* base_price: Giá cơ bản (dùng để hiển thị)
+* final_price: Giá sau khi áp discount
+* discount_percent: Phần trăm giảm giá
+* discount_updated_at: Thời gian cập nhập giảm giá
+* ratio: tỷ lệ mô hình so với thực tế
+* size: kích thước mô hình
+* material: Chất liệu
+* origin: xuất bản ơ đâu
+* status: Trạng thái (active/inactive)
+* created_at: Ngày tạo
+* updated_at: Ngày cập nhật
+
+### Đặc điểm:
+
+* Không lưu tồn kho
+* Không dùng để tính giá bán thực tế
+
+---
+
+## 3.2. Bảng: product_variants
+
+### Mục đích:
+
+Lưu các biến thể cụ thể của sản phẩm
+
+### Các trường:
+
+* id: Khóa chính
+* product_id: Liên kết tới products
+* name: Tên biến thể (VD: Red, Blue)
+* price: Giá của biến thể
+* sku: Mã định danh duy nhất
+* created_at: Ngày tạo
+
+### Đặc điểm:
+
+* Đây là đơn vị bán hàng thực tế
+* Giá sản phẩm được lấy từ bảng này
+
+### Quan hệ:
+
+* Một product có nhiều variants
+
+---
+
+## 3.3. Bảng: inventory
+
+### Mục đích:
+
+Lưu tồn kho hiện tại (dữ liệu cache)
+
+### Các trường:
+
+* id: Khóa chính
+* product_id: Sản phẩm
+* variant_id: Biến thể (có thể NULL)
+* quantity: Số lượng tồn kho
+* last_updated: Thời gian cập nhật
+
+### Ràng buộc:
+
+* UNIQUE(product_id, variant_id)
+
+### Đặc điểm:
+
+* Không phải nguồn dữ liệu gốc
+* Được cập nhật từ nhập/xuất kho
+* Giúp truy vấn nhanh
+
+---
+
+## 3.4. Bảng: import_receipts
+
+### Mục đích:
+
+Lưu thông tin phiếu nhập kho
+
+### Các trường:
+
+* id: Khóa chính
+* created_by: Người tạo
+* note: Ghi chú
+* status: Trạng thái (pending/completed)
+* created_at: Thời gian tạo
+
+---
+
+## 3.5. Bảng: import_receipt_items
+
+### Mục đích:
+
+Chi tiết các sản phẩm trong phiếu nhập
+
+### Các trường:
+
+* id: Khóa chính
+* receipt_id: Liên kết import_receipts
+* product_id: Sản phẩm
+* variant_id: Biến thể
+* quantity: Số lượng nhập
+* import_price: Giá nhập
+
+### Đặc điểm:
+
+* Đây là nguồn dữ liệu gốc của stock in
+
+---
+
+## 3.6. Bảng: export_receipts
+
+### Mục đích:
+
+Lưu thông tin phiếu xuất kho
+
+### Các trường:
+
+* id: Khóa chính
+* created_by: Người tạo
+* type: Loại xuất (order/manual)
+* status: Trạng thái
+* created_at: Thời gian tạo
+
+---
+
+## 3.7. Bảng: export_receipt_items
+
+### Mục đích:
+
+Chi tiết sản phẩm được xuất kho
+
+### Các trường:
+
+* id: Khóa chính
+* receipt_id: Liên kết export_receipts
+* product_id: Sản phẩm
+* variant_id: Biến thể
+* quantity: Số lượng xuất
+* export_price: Giá bán
+
+### Đặc điểm:
+
+* Là nguồn dữ liệu gốc của stock out
+
+---
+
+# 4. Quan hệ giữa các bảng
+
+* products 1 - n product_variants
+* products 1 - n inventory
+* product_variants 1 - 1 inventory
+* import_receipts 1 - n import_receipt_items
+* export_receipts 1 - n export_receipt_items
+
+---
+
+# 5. Nguyên tắc hoạt động
+
+## 5.1. Nhập kho
+
+* Tạo import_receipt
+* Thêm import_receipt_items
+* Cập nhật inventory: tăng số lượng
+
+## 5.2. Xuất kho
+
+* Kiểm tra tồn kho
+* Tạo export_receipt
+* Thêm export_receipt_items
+* Cập nhật inventory: giảm số lượng
+
+---
+
+# 6. Nguyên tắc quan trọng
+
+1. Không lưu tồn kho trong bảng products
+2. Giá bán luôn lấy từ product_variants
+3. inventory chỉ là cache
+4. Luôn sử dụng transaction khi cập nhật kho
+5. Mọi thao tác nhập/xuất đều phải lưu lịch sử
+
+---
+
