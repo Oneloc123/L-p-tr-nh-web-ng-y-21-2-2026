@@ -319,7 +319,7 @@
             <div class="recent-card">
                 <div class="card-header">
                     <h3><i class="fas fa-history"></i> Đơn hàng gần đây</h3>
-                    <a href="#" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                    <a href="/order" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <c:forEach items="${listOrder}" var="order" begin="0" end="4">
 
@@ -381,7 +381,7 @@
             <div class="recent-card">
                 <div class="card-header">
                     <h3><i class="fas fa-heart"></i> Yêu thích gần đây</h3>
-                    <a href="#" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                    <a href="/favorites" class="view-all">Xem tất cả <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="wishlist-item">
                     <img src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=100" class="wishlist-img" alt="Product">
@@ -410,8 +410,7 @@
         <div class="dashboard-grid">
             <div class="recent-card">
                 <div class="card-header">
-                    <h3><i class="fas fa-ticket-alt"></i> Kho Voucher / Ưu đãi của tôi</h3>
-                    <a href="#" class="view-all">Xem tủ voucher <i class="fas fa-arrow-right"></i></a>
+                    <h3><i class="fas fa-ticket-alt"></i>  Voucher </h3>
                 </div>
                 <c:forEach items="${vouchers}" var="voucher" begin="0" end="1">
 
@@ -423,9 +422,7 @@
                             <i class="fas ${voucher.code eq 'FREESHIP' ? 'fa-shipping-fast' : 'fa-percentage'}"></i>
                             <span>${voucher.code}</span>
                         </div>
-
                         <div class="voucher-right">
-
                             <div class="voucher-expiry">
                                 Hạn dùng:
                                 <fmt:formatDate value="${voucher.endAtDate}"
@@ -433,14 +430,13 @@
                             </div>
                         </div>
                     </div>
-
                 </c:forEach>
             </div>
 
             <div class="recent-card">
                 <div class="card-header">
                     <h3><i class="fas fa-map-marker-alt"></i> Sổ địa chỉ mặc định</h3>
-                    <a href="#" class="view-all">Quản lý địa chỉ <i class="fas fa-arrow-right"></i></a>
+                    <a href="/profileEdit" class="view-all">Quản lý địa chỉ <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <c:choose>
                     <c:when test="${not empty address}">
@@ -465,53 +461,108 @@
             <div class="recent-card">
                 <div class="card-header">
                     <h3><i class="fas fa-bell"></i> Thông báo mới nhất</h3>
-                    <a href="#" class="view-all">Đọc tất cả <i class="fas fa-arrow-right"></i></a>
+                    <a href="/notifications" class="view-all">Đọc tất cả <i class="fas fa-arrow-right"></i></a>
                 </div>
-                <div class="noti-item">
-                    <div class="noti-icon success"><i class="fas fa-check"></i></div>
-                    <div class="noti-content">
-                        <div class="noti-text">Đơn hàng <strong>#LC-8240</strong> của bạn đã được giao thành công. Đánh giá ngay để nhận ưu đãi!</div>
-                        <div class="noti-time">1 giờ trước</div>
-                    </div>
-                </div>
-                <div class="noti-item">
-                    <div class="noti-icon info"><i class="fas fa-truck"></i></div>
-                    <div class="noti-content">
-                        <div class="noti-text">Đơn hàng <strong>#LC-8954</strong> đã được đóng gói và bàn giao cho ĐVVC Giao Hàng Nhanh.</div>
-                        <div class="noti-time">5 giờ trước</div>
-                    </div>
-                </div>
+                <c:choose>
+                    <%-- 1. KIỂM TRA CÒN THÔNG BÁO HAY KHÔNG --%>
+                    <c:when test="${empty notificationList}">
+                        <div class="noti-empty">
+                            <p>Bạn không có thông báo nào mới.</p>
+                        </div>
+                    </c:when>
+
+                    <c:otherwise>
+                        <%-- 2. HIỂN THỊ DANH SÁCH KHOẢNG 3 CÁI (Sử dụng thuộc tính end="2" vì index chạy từ 0) --%>
+                        <c:forEach items="${notificationList}" var="noti" end="2">
+                            <div class="noti-item">
+                                <div class="noti-content">
+                                        <%-- Hiển thị nội dung thông báo (cho phép chứa thẻ HTML như <strong> nếu có) --%>
+                                    <div class="noti-text">${noti.message}</div>
+                                        <%-- Hiển thị thời gian thông báo --%>
+                                    <div class="noti-time">${noti.createdAt}</div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="recent-card">
                 <div class="card-header">
                     <h3><i class="fas fa-shield-alt"></i> An toàn & Bảo mật tài khoản</h3>
-                    <a href="#" class="view-all">Thiết lập <i class="fas fa-cog"></i></a>
+                    <a href="/profileEdit" class="view-all">Thiết lập <i class="fas fa-cog"></i></a>
                 </div>
                 <div class="security-list">
                     <div class="security-item">
                         <div class="security-info">
                             <i class="fas fa-envelope"></i>
                             <span class="sidebar-header-label">Email đăng nhập</span>
-                            <span class="security-value">longnh****@gmail.com</span>
+                            <span class="security-value">${user.email}</span>
                         </div>
-                        <span class="security-status status-verified">Đã xác minh</span>
                     </div>
                     <div class="security-item">
                         <div class="security-info">
                             <i class="fas fa-mobile-alt"></i>
                             <span class="sidebar-header-label">Số điện thoại</span>
-                            <span class="security-value">******567</span>
+                            <span class="security-value">${user.phonenumber}</span>
                         </div>
-                        <span class="security-status status-verified">Đã liên kết</span>
                     </div>
+                    <%-- 1. LẤY THỜI GIAN HIỆN TẠI VÀ THỜI GIAN ĐỔI MẬT KHẨU (Tính bằng mili-giây) --%>
+                    <jsp:useBean id="now" class="java.util.Date" />
+                    <c:set var="currentTime" value="${now.time}" />
+                    <c:set var="lastUpdateTime" value="${user.updatePassword.time}" />
+
+                    <%-- 2. TÍNH KHOẢNG CÁCH THỜI GIAN --%>
+                    <c:set var="diffTime" value="${currentTime - lastUpdateTime}" />
+
+                    <%-- Quy đổi mili-giây:
+                         1 ngày = 24 * 60 * 60 * 1000 = 86,400,000 ms
+                         1 tháng (tạm tính 30 ngày) = 30 * 86,400,000 = 2,592,000,000 ms
+                    --%>
+                    <c:set var="diffDays" value="${diffTime / 86400000}" />
+                    <c:set var="diffMonths" value="${diffTime / 2592000000}" />
+
+                    <%-- Làm tròn số để hiển thị đẹp mắt --%>
+                    <fmt:formatNumber var="roundedMonths" value="${diffMonths}" maxFractionDigits="0" pattern="#" />
+                    <fmt:formatNumber var="roundedDays" value="${diffDays}" maxFractionDigits="0" pattern="#" />
+
+                    <%-- 3. ĐỊNH DẠNG TEXT HIỂN THỊ THỜI GIAN --%>
+                    <c:choose>
+                        <c:when test="${roundedMonths >= 1}">
+                            <c:set var="timeLabel" value="Thay đổi ${roundedMonths} tháng trước" />
+                        </c:when>
+                        <c:when test="${roundedDays >= 1}">
+                            <c:set var="timeLabel" value="Thay đổi ${roundedDays} ngày trước" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="timeLabel" value="Vừa thay đổi gần đây" />
+                        </c:otherwise>
+                    </c:choose>
+
+                    <%-- 4. KIỂM TRA ĐIỀU KIỆN 3 THÁNG ĐỂ HIỂN THỊ TRẠNG THÁI --%>
+                    <c:choose>
+                        <%-- Nếu thời gian vượt quá hoặc bằng 3 tháng --%>
+                        <c:when test="${diffMonths >= 3}">
+                            <c:set var="statusClass" value="status-warning" />
+                            <c:set var="statusText" value="Cần cập nhật" />
+                        </c:when>
+                        <%-- Mật khẩu vẫn còn an toàn (< 3 tháng) --%>
+                        <c:otherwise>
+                            <c:set var="statusClass" value="status-success" />
+                            <c:set var="statusText" value="An toàn" />
+                        </c:otherwise>
+                    </c:choose>
+                    ---
+                    <%-- 5. ĐỔ DỮ LIỆU VÀO GIAO DIỆN HTML --%>
                     <div class="security-item">
                         <div class="security-info">
                             <i class="fas fa-key"></i>
                             <span class="sidebar-header-label">Mật khẩu tài khoản</span>
-                            <span class="security-value">Thay đổi 3 tháng trước</span>
+                            <%-- Hiển thị số tháng/ngày động --%>
+                            <span class="security-value">${timeLabel}</span>
                         </div>
-                        <span class="security-status status-warning">Cần cập nhật</span>
+                        <%-- Thay đổi class và text dựa theo logic kiểm tra bên trên --%>
+                        <span class="security-status ${statusClass}">${statusText}</span>
                     </div>
                 </div>
             </div>
@@ -522,10 +573,10 @@
                 <h3><i class="fas fa-bolt"></i> Thao tác nhanh</h3>
             </div>
             <div class="actions-grid">
-                <a href="#" class="action-btn"><i class="fas fa-store"></i><span>Mua sắm xe</span></a>
-                <a href="#" class="action-btn"><i class="fas fa-shopping-cart"></i><span>Xem giỏ hàng</span></a>
-                <a href="#" class="action-btn"><i class="fas fa-truck"></i><span>Theo dõi vận đơn</span></a>
-                <a href="#" class="action-btn"><i class="fas fa-heart"></i><span>Mục đã lưu</span></a>
+                <a href="/products" class="action-btn"><i class="fas fa-store"></i><span>Mua sắm xe</span></a>
+                <a href="/cart" class="action-btn"><i class="fas fa-shopping-cart"></i><span>Xem giỏ hàng</span></a>
+                <a href="/order" class="action-btn"><i class="fas fa-truck"></i><span>Theo dõi vận đơn</span></a>
+                <a href="/favorites" class="action-btn"><i class="fas fa-heart"></i><span>Mục đã lưu</span></a>
             </div>
         </div>
     </div></div><%@ include file="/common/footer.jsp" %>

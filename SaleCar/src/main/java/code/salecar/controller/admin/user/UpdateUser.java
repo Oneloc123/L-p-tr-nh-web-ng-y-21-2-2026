@@ -52,48 +52,62 @@ public class UpdateUser extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
+
+        UserService us = new UserService();
+        User user = us.getUserById(id);
+
         String username = request.getParameter("username");
-        String fullname = request.getParameter("fullname").toString();
-        String email = request.getParameter("email").toString();
-        String phoneNumber = request.getParameter("phoneNumber").toString();
-        String description = request.getParameter("description").toString();
+        String fullname = request.getParameter("fullname");
+        String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String description = request.getParameter("description");
         String statuss = request.getParameter("status");
         String role = request.getParameter("role");
 
+        user.setUsername(username);
+        user.setFullname(fullname);
+        user.setEmail(email);
+        user.setPhonenumber(phoneNumber);
+        user.setDescription(description);
+        user.setRole(role);
+        boolean status = "true".equals(statuss);
+        user.setStatus(status);
+
+        boolean hasError = false;
+
         String fullnameError = UserInvalidate.checkFullname(fullname);
         if(!fullnameError.equals("true")){
-            request.setAttribute("fullnameError",fullnameError);
-            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
-            return;
+            request.setAttribute("fullnameError", fullnameError);
+            hasError = true;
         }
+
         String usernameError = UserInvalidate.checkUsername(username);
         if(!usernameError.equals("true")){
-            request.setAttribute("usernameError",usernameError);
-            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
-            return;
+            request.setAttribute("usernameError", usernameError);
+            hasError = true;
         }
+
         String emailError = UserInvalidate.checkEmail(email);
         if(!emailError.equals("true")){
-            request.setAttribute("emailError",emailError);
-            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
-            return;
+            request.setAttribute("emailError", emailError);
+            hasError = true;
         }
 
         String phonenumberError = UserInvalidate.checkPhonenumber(phoneNumber);
         if(!phonenumberError.equals("true")){
-            request.setAttribute("phonenumberError",phonenumberError);
-            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request,response);
+            request.setAttribute("phonenumberError", phonenumberError);
+            hasError = true;
+        }
+
+        if (hasError) {
+            AddressesService as = new AddressesService();
+            List<Addresses> listAddress = as.getListAddressById(id);
+            request.setAttribute("listAddress", listAddress);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request, response);
             return;
         }
 
-
-        boolean status= false;
-        if(statuss.equals("true")){
-            status = true;
-        }
-        int addressId = Integer.parseInt(request.getParameter("addressId"));
-
-        String link = "";
         try {
             Part filePart = request.getPart("avatar");
             if (filePart != null && filePart.getSize() > 0) {
@@ -103,44 +117,35 @@ public class UpdateUser extends HttpServlet {
                     String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
                     if (!ext.matches("jpg|jpeg|png|webp")) {
-                        NotificationUtil.setError(request.getSession(), "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
-                        response.sendRedirect("/admin/user-admin-edit.jsp");
+                        request.setAttribute("toastMessage", "Chỉ chấp nhận file ảnh JPG, PNG, WEBP");
+                        request.setAttribute("toastType", "error");
+
+                        AddressesService as = new AddressesService();
+                        request.setAttribute("listAddress", as.getListAddressById(id));
+                        request.setAttribute("user", user);
+                        request.getRequestDispatcher("/admin/user-admin-edit.jsp").forward(request, response);
                         return;
                     }
-
                     String newFileName = FileUtil.generateFileName(fileName);
                     String baseDir = AppConfig.get("upload.base-dir");
                     if (baseDir == null || baseDir.isEmpty()) {
                         throw new RuntimeException("upload.base-dir not configured in application.properties");
                     }
-
                     java.nio.file.Path uploadPath = Paths.get(baseDir, "users");
                     Files.createDirectories(uploadPath);
                     java.nio.file.Path filePath = uploadPath.resolve(newFileName);
                     filePart.write(filePath.toString());
-
-                    link = "/uploads/users/" + newFileName;
+                    user.setImgURL("/uploads/users/" + newFileName);
                 }
             }
         } catch (ServletException e) {
-            System.err.println("Warning: Could not process logo upload: " + e.getMessage());
-            return;
+            System.err.println("Warning: Could not process avatar upload: " + e.getMessage());
         }
-        UserService us = new UserService();
-        User user = us.getUserById(id);
-        user.setUsername(username);
-        user.setFullname(fullname);
-        user.setEmail(email);
-        user.setImgURL(link);
-        user.setPhonenumber(phoneNumber);
-        user.setDescription(description);
-        user.setStatus(status);
+
         user.setUpdatedat(new Date(System.currentTimeMillis()));
-        user.setRole(role);
         us.UpdateProfile(user);
 
-        //alert
-        request.getSession().setAttribute("toastMessage", "cật nhật User thành công");
+        request.getSession().setAttribute("toastMessage", "Cập nhật User thành công");
         request.getSession().setAttribute("toastType", "success");
 
         response.sendRedirect("/userAdmin");

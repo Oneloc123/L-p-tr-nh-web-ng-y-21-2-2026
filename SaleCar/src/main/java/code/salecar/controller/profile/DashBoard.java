@@ -1,5 +1,6 @@
 package code.salecar.controller.profile;
 
+import code.salecar.dao.NotificationDAO;
 import code.salecar.dao.OrderDAO;
 import code.salecar.model.*;
 import code.salecar.model.product.dto.ProductDetailDTO;
@@ -94,6 +95,10 @@ public class DashBoard extends HttpServlet {
 
             Addresses add = as.getMainAddressById(user.getId());
             request.setAttribute("address",add);
+
+            NotificationDAO ns = new NotificationDAO();
+            List<Notification> listNotification = ns.getTop5Notifications(user.getId());
+            request.setAttribute("notificationList",listNotification);
 
             request.getRequestDispatcher("/pages/dashBoard.jsp").forward(request,response);
         }

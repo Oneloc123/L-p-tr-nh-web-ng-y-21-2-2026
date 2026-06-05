@@ -24,7 +24,9 @@ public class DeleteUser extends HttpServlet {
             }
             int id = Integer.parseInt(request.getParameter("id"));
             UserService us = new UserService();
-            us.deleteUserById(id);
+            User u = us.getUserById(id);
+            u.setStatus(false);
+            us.UpdateProfile(u);
             response.sendRedirect("/userAdmin");
         }
     }

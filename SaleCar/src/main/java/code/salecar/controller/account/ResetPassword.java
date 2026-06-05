@@ -8,6 +8,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
 
 @WebServlet(name = "ResetPassword", value = "/resetPassword")
 public class ResetPassword extends HttpServlet {
@@ -46,6 +47,7 @@ public class ResetPassword extends HttpServlet {
         User user = (User)session.getAttribute("userTemp");
         UserService us = new UserService();
         user.setPassword(newPassword);
+        user.setUpdatePassword(new Date(System.currentTimeMillis()));
         us.UpdateProfile(user);
         session.removeAttribute("resetPasswordState");
         session.removeAttribute("userTemp");

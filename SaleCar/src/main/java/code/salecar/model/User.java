@@ -18,6 +18,7 @@ public class User {
     private String imgURL;
     private String authProvider;
     private String googleId;
+    private Date updatePassword;
 
     public User(){
 
@@ -51,6 +52,14 @@ public class User {
         this.createdat = createdat;
         this.updatedat = updatedat;
         this.imgURL = imgURL;
+    }
+
+    public Date getUpdatePassword() {
+        return updatePassword;
+    }
+
+    public void setUpdatePassword(Date updatePassword) {
+        this.updatePassword = updatePassword;
     }
 
     public String getAuthProvider() {

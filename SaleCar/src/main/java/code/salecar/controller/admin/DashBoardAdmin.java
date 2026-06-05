@@ -5,6 +5,9 @@ import code.salecar.model.Order;
 import code.salecar.model.User;
 import code.salecar.service.order.OrderService;
 import code.salecar.service.user.UserService;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -16,10 +19,18 @@ import java.util.List;
 public class DashBoardAdmin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String daysParam = request.getParameter("days");
+        int days = 7;
+        if (daysParam != null && !daysParam.isEmpty()) {
+            try {
+                days = Integer.parseInt(daysParam);
+            } catch (NumberFormatException e) {
+                days = 7;
+            }
+        }
         OrderService os = new OrderService();
-        List<Order> listOrder = os.getOrderByDays(7);
-        List<Order> listOrderPre = os.getOrderByDaysPrevious(7);
+        List<Order> listOrder = os.getOrderByDays(days);
+        List<Order> listOrderPre = os.getOrderByDaysPrevious(days);
 
         double totalPriceOrder = 0;
         int totalOrder = 0;
@@ -61,6 +72,7 @@ public class DashBoardAdmin extends HttpServlet {
         if (totalOrder > 0) {
             averagePriceOrder = Math.round((totalPriceOrder / totalOrder) * 100.0) / 100.0;
         }
+        request.setAttribute("selectedDays", days);
 
         request.setAttribute("averagePriceOrder", Math.round(averagePriceOrder));
         request.setAttribute("totalOrder",totalOrder);
@@ -75,6 +87,17 @@ public class DashBoardAdmin extends HttpServlet {
         request.setAttribute("delivered",totalOrderDelivered);
 
         request.setAttribute("listOrder",listOrder);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+        Map<String, Double> revenueMap = listOrder.stream()
+                .filter(o -> "CONFIRMED".equals(o.getOrderStatus()))
+                .collect(Collectors.groupingBy(o -> sdf.format(o.getOrderDate()), LinkedHashMap::new, Collectors.summingDouble(Order::getTotalAmount)));
+        request.setAttribute("revenueLabels", revenueMap.keySet());
+        request.setAttribute("revenueData", revenueMap.values());
+
+        Map<String, Long> paymentMap = listOrder.stream().collect(Collectors.groupingBy(Order::getPaymentMethod, Collectors.counting()));
+        request.setAttribute("paymentLabels", paymentMap.keySet());
+        request.setAttribute("paymentData", paymentMap.values());
 
         request.getRequestDispatcher("/admin/dashBoardAdmin.jsp").forward(request,response);
     }
