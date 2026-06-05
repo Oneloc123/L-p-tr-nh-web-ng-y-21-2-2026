@@ -40,12 +40,12 @@ public class ProductDAO {
     /**
      * Lấy danh sách ID sản phẩm theo CategoryId.
      */
-    public List<Long> getProductIdsByCategoryId(int categoryId) {
+    public List<Long> getProductIdsByCategoryId(long categoryId) {
         List<Long> ids = new ArrayList<>();
         String sql = "SELECT id FROM product WHERE category_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, categoryId);
+            ps.setLong(1, categoryId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ids.add(rs.getLong("id"));
@@ -118,6 +118,37 @@ public class ProductDAO {
         return products;
     }
 
+
+    /**
+     * Lấy sản phẩm khuyến mãi — chỉ lấy product có discount_percent > 0 và có variant.
+     */
+    public List<ProductItemDTO> getProductSale() {
+        List<ProductItemDTO> products = new ArrayList<>();
+        String query = "select * from product pr where pr.status = 1 " +
+                "and pr.discount_percent > 0 " +
+                "and exists (select 1 from product_variants pv where pv.product_id = pr.id) " +
+                "order by pr.discount_percent desc limit 4";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductItemDTO p = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .build();
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
 
     //Tổng số lượng sản phẩm theo filter (không phân trang)
     public int getTotalProduct(ProductFilter filter) {
