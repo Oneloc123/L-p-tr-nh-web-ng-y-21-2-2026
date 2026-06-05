@@ -415,6 +415,11 @@ public class ProductService {
         v.setSku(sku);
         v.setPrice(price);
         pvDAO.update(v);
+        // Đồng bộ product.price với MIN variant price sau khi sửa
+        ProductVariants existing = pvDAO.getVariantByVariantId(variantId);
+        if (existing != null) {
+            productDAO.syncProductPrice(existing.getProductId());
+        }
     }
 
     /** Thêm biến thể mới */
@@ -427,12 +432,22 @@ public class ProductService {
                 .quantity(0)
                 .reservedQuantity(0)
                 .build();
-        return pvDAO.insertVariant(v);
+        long newId = pvDAO.insertVariant(v);
+        // Đồng bộ product.price với MIN variant price sau khi thêm
+        productDAO.syncProductPrice(productId);
+        return newId;
     }
 
     /** Xoá biến thể */
     public void removeVariant(long variantId) {
+        // Lấy productId trước khi xoá
+        ProductVariants existing = pvDAO.getVariantByVariantId(variantId);
+        long productId = (existing != null) ? existing.getProductId() : 0;
         pvDAO.deleteVariant(variantId);
+        // Đồng bộ product.price với MIN variant price sau khi xoá
+        if (productId > 0) {
+            productDAO.syncProductPrice(productId);
+        }
     }
 
     /** Xoá sản phẩm theo ID

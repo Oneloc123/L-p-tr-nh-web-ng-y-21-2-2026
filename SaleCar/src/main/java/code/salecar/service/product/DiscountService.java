@@ -53,6 +53,8 @@ public class DiscountService {
         }
 
         for (Long productId : productIds) {
+            // Đồng bộ product.price với MIN variant price trước khi tính discount
+            productDAO.syncProductPrice(productId);
             recalculateProductDiscount(productId);
         }
     }

@@ -24,7 +24,14 @@ public class PromotionEngine {
     DiscountDAO discountDAO = new DiscountDAO();
 
     public void run() {
+        // 1. Đồng bộ tất cả product.price với MIN variant price (1 query)
         List<ProductItemDTO> products = productDAO.getAllProducts();
+        for (ProductItemDTO product : products) {
+            productDAO.syncProductPrice(product.getId());
+        }
+
+        // 2. Đọc lại toàn bộ product sau sync
+        products = productDAO.getAllProducts();
         List<Discount> discounts = discountDAO.selectAll();
 
         for (ProductItemDTO product : products) {
@@ -36,11 +43,9 @@ public class PromotionEngine {
             LocalDateTime discountUpdatedAt = product.getUpdatedAt();
 
             if (bestDiscount != null) {
-
                 finalPrice = calculateAmount(product.getPrice(), bestDiscount);
                 percent = BigDecimal.valueOf(bestDiscount.getPercent());
                 discountUpdatedAt = bestDiscount.getUpdateAt();
-
             }
 
             productDAO.updateFinalPrice(
@@ -48,10 +53,8 @@ public class PromotionEngine {
                     finalPrice,
                     percent,
                     discountUpdatedAt
-
             );
         }
-
     }
 
     private Discount findBestDiscount(ProductItemDTO product,

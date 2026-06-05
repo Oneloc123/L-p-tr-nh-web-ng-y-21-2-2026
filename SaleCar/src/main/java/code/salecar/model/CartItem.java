@@ -113,6 +113,6 @@ public class CartItem implements Serializable {
             this.quantity += quantity;
     }
     public double getTotalPrice(){
-        return price * quantity;
+        return variantFinalPrice * quantity;
     }
 }
