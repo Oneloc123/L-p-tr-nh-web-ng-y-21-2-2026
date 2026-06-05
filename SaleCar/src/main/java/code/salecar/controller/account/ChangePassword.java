@@ -10,6 +10,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 @WebServlet(name = "ChangePassword", value = "/changePassword")
@@ -54,6 +55,7 @@ public class ChangePassword extends HttpServlet {
 
         session.setAttribute("otpChangePasswordState","true");
         user.setPassword(confirmPass);
+        user.setUpdatePassword(new Date(System.currentTimeMillis()));
         session.setAttribute("userTemp",user);
         response.sendRedirect("/OTPforChangePassword");
     }

@@ -51,9 +51,9 @@ public class UserDao {
 
     public void register(User user) {
         String sql = "insert into users" +
-                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt,imgURL) " +
+                "(username,password,fullname,email,description,phoneNumber,role,address,status,CreateAt,UpdateAt,imgURL,updatePassword) " +
                 "values " +
-                "(?,?,?,?,?,?,?,?,?,?,?,?)";
+                "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);) {
@@ -69,6 +69,7 @@ public class UserDao {
             ps.setDate(10, user.getCreatedat());
             ps.setDate(11, user.getUpdatedat());
             ps.setString(12,user.getImgURL());
+            ps.setDate(13,user.getCreatedat());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -92,6 +93,7 @@ public class UserDao {
                 ", password = ?" +
                 ", imgURL = ?" +
                 ", username = ?" +
+                ", updatePassword = ?" +
                 " WHERE id = ?;";
 
         try (Connection con = DBConnection.getConnection();
@@ -106,6 +108,7 @@ public class UserDao {
             ps.setString(8, user.getImgURL());
             ps.setString(9,user.getUsername());
             ps.setInt(10, user.getId());
+            ps.setDate(11, user.getUpdatePassword());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -156,6 +159,7 @@ public class UserDao {
                 user.setCreatedat(rs.getDate(11));
                 user.setUpdatedat(rs.getDate(12));
                 user.setImgURL(rs.getString(13));
+                user.setUpdatePassword(rs.getDate(14));
                 return user;
             } else {
                 return null;
@@ -191,6 +195,7 @@ public class UserDao {
                 user.setCreatedat(rs.getDate(11));
                 user.setUpdatedat(rs.getDate(12));
                 user.setImgURL(rs.getString(13));
+                user.setUpdatePassword(rs.getDate(14));
                 return user;
             } else {
                 return null;
