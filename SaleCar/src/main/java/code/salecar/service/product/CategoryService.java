@@ -1,6 +1,7 @@
 package code.salecar.service.product;
 
 import code.salecar.dao.CategoryDAO;
+import code.salecar.dao.ProductDAO;
 import code.salecar.model.category.Category;
 import code.salecar.model.Image;
 import code.salecar.model.category.CategoryFilter;
@@ -14,22 +15,23 @@ import java.util.Map;
 public class CategoryService {
     CategoryDAO categoryDAO = new CategoryDAO();
     ImageService imageService = new ImageService();
+    ProductDAO productDAO = new ProductDAO();
     public  List<Category> getCategory() {
         List<Category> categories = categoryDAO.getCategory();
-        for(Category category:categories){
-            category.setImage(imageService.getImage(Image.entityType.category,category.getId()));
+        for(Category category : categories){
+            List<Long> productIds = productDAO.getProductIdsByCategoryId(category.getId());
+            if (!productIds.isEmpty()) {
+                List<String> images = imageService.getImageProduct(productIds.get(0));
+                if (!images.isEmpty()) {
+                    category.setImage(images.get(0));
+                }
+            }
         }
         return categories;
     }
 
 
-    public  List<Category> getCategories() {
-        List<Category> categories = categoryDAO.getCategories();
-        for(Category category:categories){
-            category.setImage(imageService.getImage(Image.entityType.category,category.getId()));
-        }
-        return categories;
-    }
+
     public  List<Category> getCategories(CategoryFilter categoryFilter) {
         List<Category> categories = categoryDAO.getCategories(categoryFilter);
         for(Category category:categories){
