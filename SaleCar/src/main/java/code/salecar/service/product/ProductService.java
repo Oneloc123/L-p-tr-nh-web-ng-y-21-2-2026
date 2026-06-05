@@ -327,13 +327,24 @@ public class ProductService {
     }
 
     //
+    public List<ProductItemDTO> getProductSale() {
+        List<ProductItemDTO> product = productDAO.getProductSale();
+        addMoreInformation(product);
+        return product;
+    }
+
+    //
     public List<ProductItemDTO> getProductNew() {
-        return productDAO.getProductNew();
+        List<ProductItemDTO>  product = productDAO.getProductNew();
+        addMoreInformation(product);
+        return product;
     }
 
     //
     public List<ProductItemDTO> getProductHot() {
-        return productDAO.getProductHot();
+        List<ProductItemDTO>  product = productDAO.getProductHot();
+        addMoreInformation(product);
+        return product;
     }
 
     //
