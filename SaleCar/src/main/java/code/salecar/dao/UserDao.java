@@ -107,8 +107,8 @@ public class UserDao {
             ps.setString(7, user.getPassword());
             ps.setString(8, user.getImgURL());
             ps.setString(9,user.getUsername());
-            ps.setInt(10, user.getId());
-            ps.setDate(11, user.getUpdatePassword());
+            ps.setDate(10, user.getUpdatePassword());
+             ps.setInt(11, user.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
