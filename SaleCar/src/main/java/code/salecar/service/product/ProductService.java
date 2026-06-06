@@ -368,16 +368,20 @@ public class ProductService {
     //
     public void addMoreInformation(List<ProductItemDTO> pi) {
         for (ProductItemDTO productItemDTO : pi) {
+            //brand
             String brand = bs.getBrandName(productItemDTO.getBrandId());
             productItemDTO.setBrandName(brand != null ? brand : "");
 
+            //category
             String categoryName = cs.getCategoryName(productItemDTO.getCategoryId());
             productItemDTO.setCategoryName(categoryName != null ? categoryName : "");
 
+            //img
             List<String> image = is.getImageProduct(productItemDTO.getId());
             image.add(is.getImage(Image.entityType.product, productItemDTO.getId()));
             productItemDTO.setImage(image.get(0));
 
+            //review
             List<Review> reviews = rs.getReviewsByID(productItemDTO.getId());
             if (reviews != null && !reviews.isEmpty()) {
                 productItemDTO.setAvgRating(caculateRates(reviews));
@@ -385,6 +389,7 @@ public class ProductService {
                 productItemDTO.setAvgRating(0);
             }
 
+            //quantity
             productItemDTO.setQuantity(pvDAO.getQuantityById(productItemDTO.getId()));
         }
     }
