@@ -138,6 +138,18 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
         .price-cell { color: #555; }
         .total-cell { font-weight: 700; color: #22c55e; font-size: 14px; }
 
+        /* Link product hover */
+        .product-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .product-link:hover .product-name {
+            color: #d4a017;
+        }
+
         /* Summary */
         .order-summary {
             padding: 22px 24px 26px;
@@ -198,39 +210,47 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 <body>
 <div class="profile-wrapper">
 
-    <%-- SIDEBAR --%>
     <div class="sidebar-menu">
-        <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                <i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                <i class="fas fa-user-edit"></i><span>Chỉnh sửa thông tin</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                <i class="fas fa-lock"></i><span>Đổi mật khẩu</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item active">
-                <i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
-                <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                <i class="fas fa-heart"></i><span>Sản phẩm yêu thích</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                <i class="fas fa-bell"></i><span>Thông báo</span>
-            </a>
-            <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span>
-            </a>
+            <div class="menu-items">
+                <a href="${pageContext.request.contextPath}/dashboard" class="menu-item active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Bảng điều khiển</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/profile" class="menu-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Thông tin cá nhân</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Chỉnh sửa thông tin</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Đổi mật khẩu</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/order" class="menu-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Đơn hàng của tôi</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/cart" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Giỏ hàng</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Sản phẩm yêu thích</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Thông báo</span>
+                </a>
+                <div class="menu-divider"></div>
+                <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </div>
         </div>
-    </div>
 
     <%-- MAIN CONTENT --%>
     <div class="main-content">
@@ -312,8 +332,49 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
                 </div>
                 <div class="info-row">
                     <i class="fas fa-truck"></i>
-                    <span>Đơn vị vận chuyển: <strong>LUXCAR Express (Miễn phí)</strong></span>
+                    <span>Phí vận chuyển: 
+                        <strong>
+                            <c:choose>
+                                <c:when test="${order.shippingFee > 0}">
+                                    <fmt:formatNumber value="${order.shippingFee}" type="number" groupingUsed="true"/> &#8363;
+                                </c:when>
+                                <c:otherwise>
+                                    Miễn phí
+                                </c:otherwise>
+                            </c:choose>
+                        </strong>
+                    </span>
                 </div>
+                <%-- Tính toán ngày giao dự kiến từ ngày đặt hàng --%>
+                <c:if test="${!fn:contains(order.orderStatus, 'Đã huỷ') && !fn:contains(order.orderStatus, 'Đã hủy') && order.orderStatus != 'CANCELLED' && !fn:contains(order.orderStatus, 'Đã giao') && order.orderStatus != 'DELIVERED' && order.orderStatus != 'COMPLETED'}">
+                <%
+                    code.salecar.model.Order ord = (code.salecar.model.Order) pageContext.findAttribute("order");
+                    if (ord != null && ord.getOrderDate() != null) {
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        cal.setTime(ord.getOrderDate());
+                        cal.add(java.util.Calendar.DAY_OF_MONTH, 5);
+                        pageContext.setAttribute("estFrom", cal.getTime());
+                        cal.add(java.util.Calendar.DAY_OF_MONTH, 3);
+                        pageContext.setAttribute("estTo", cal.getTime());
+                    }
+                %>
+                <div class="info-row">
+                    <i class="fas fa-clock"></i>
+                    <span>Nhận hàng dự kiến:
+                        <strong>
+                            <c:choose>
+                                <c:when test="${fn:contains(order.orderStatus, 'SHIPPING') || fn:contains(order.orderStatus, 'Đang vận chuyển')}">
+                                    <fmt:formatDate value="${estFrom}" pattern="dd/MM"/> – <fmt:formatDate value="${estTo}" pattern="dd/MM/yyyy"/>
+                                    <span style="color:#0284c7; font-size:12px; font-weight:400;">(Đang giao)</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:formatDate value="${estFrom}" pattern="dd/MM"/> – <fmt:formatDate value="${estTo}" pattern="dd/MM/yyyy"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </strong>
+                    </span>
+                </div>
+                </c:if>
             </div>
         </div>
 
@@ -333,15 +394,18 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
                         <c:forEach var="item" items="${order.items}">
                             <tr>
                                 <td>
-                                    <div class="product-col">
+                                    <a href="${pageContext.request.contextPath}/product-detail?id=${item.product.id}"
+                                       class="product-link">
                                         <div class="product-img">
-                                            <img src="https://placehold.co/100?text=LUXCAR" alt="${item.product.name}">
+                                            <img src="${item.imageUrl}"
+                                                 alt="${item.product.name}"
+                                                 onerror="this.src='https://placehold.co/100?text=LUXCAR'">
                                         </div>
                                         <div>
                                             <div class="product-name">${item.product.name}</div>
                                             <div class="product-meta">ID: LUX-${item.productId}</div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </td>
                                 <td class="price-cell" style="text-align:center;">
                                     <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> &#8363;
@@ -360,13 +424,24 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 
             <div class="order-summary">
                 <div class="summary-inner">
+                    <%-- Tính tạm tính = tổng tiền - phí ship --%>
+                    <c:set var="subtotal" value="${order.totalAmount - order.shippingFee}" />
                     <div class="summary-row">
                         <span>Tạm tính:</span>
-                        <span><fmt:formatNumber value="${order.totalAmount - order.shippingFee}" type="number" groupingUsed="true"/> &#8363;</span>
+                        <span><fmt:formatNumber value="${subtotal}" type="number" groupingUsed="true"/> &#8363;</span>
                     </div>
                     <div class="summary-row">
                         <span>Phí vận chuyển:</span>
-                        <span style="color:var(--green); font-weight:600;">Miễn phí</span>
+                        <span style="font-weight:600;">
+                            <c:choose>
+                                <c:when test="${order.shippingFee > 0}">
+                                    <fmt:formatNumber value="${order.shippingFee}" type="number" groupingUsed="true"/> &#8363;
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color:var(--green);">Miễn phí</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </span>
                     </div>
                     <div class="summary-row total">
                         <span>Tổng cộng:</span>
