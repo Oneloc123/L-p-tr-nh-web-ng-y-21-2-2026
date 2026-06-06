@@ -443,7 +443,6 @@
 <div class="d-flex">
 
     <%@ include file="sidebar/sidebar.jsp"%>
-
     <main class="main-content">
         <header class="header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 class="fw-bold m-0">
@@ -451,11 +450,13 @@
                 Bảng điều khiển kinh doanh
             </h3>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-                <select class="form-select form-select-sm border-secondary-subtle" style="border-radius: 30px; width: 150px; font-size: 13px;">
-                    <option value="today">Hôm nay</option>
-                    <option value="7days" selected>7 ngày qua</option>
-                    <option value="month">Tháng này</option>
-                    <option value="year">Năm nay</option>
+                <select class="form-select form-select-sm border-secondary-subtle"
+                        style="border-radius: 30px; width: 150px; font-size: 13px;"
+                        onchange="window.location.href='${pageContext.request.contextPath}/admin/dashboard?days=' + this.value">
+                    <option value="1" ${selectedDays == 1 ? 'selected' : ''}>Hôm nay</option>
+                    <option value="7" ${selectedDays == 7 || selectedDays == null ? 'selected' : ''}>7 ngày qua</option>
+                    <option value="30" ${selectedDays == 30 ? 'selected' : ''}>Tháng này (30 ngày)</option>
+                    <option value="365" ${selectedDays == 365 ? 'selected' : ''}>Năm nay (365 ngày)</option>
                 </select>
                 <span class="text-muted small px-2">
                     <i class="bi bi-calendar3"></i>
@@ -556,7 +557,7 @@
             <div class="col-lg-8">
                 <div class="recent-card">
                     <div class="card-header">
-                        <h3><i class="bi bi-bar-chart-line"></i> Doanh thu & Đơn hàng (7 ngày qua)</h3>
+                        <h3><i class="bi bi-bar-chart-line"></i> Doanh thu & Đơn hàng (${selectedDays != null ? selectedDays : 7} ngày qua)</h3>
                     </div>
                     <div class="p-3">
                         <canvas id="revenueChart" style="max-height: 320px; width: 100%;"></canvas>
@@ -580,7 +581,7 @@
                 <div class="recent-card">
                     <div class="card-header">
                         <h3><i class="bi bi-clock-history"></i> Đơn hàng vừa đặt</h3>
-                        <a href="/orderAdmin" class="view-all">Xem tất cả <i class="bi bi-arrow-right-short"></i></a>
+                        <a href="/order-admin" class="view-all">Xem tất cả <i class="bi bi-arrow-right-short"></i></a>
                     </div>
                     <div class="orders-table">
                         <c:forEach items="${listOrder}" var="order" begin="0" end="4">
@@ -687,7 +688,7 @@
                 <i class="bi bi-box-seam-fill"></i>
                 <span>Thêm sản phẩm mới</span>
             </a>
-            <a href="/orderAdmin" class="quick-action-btn">
+            <a href="/order-admin" class="quick-action-btn">
                 <i class="bi bi-cart-fill"></i>
                 <span>Xử lý đơn hàng</span>
             </a>
@@ -695,7 +696,7 @@
                 <i class="bi bi-people-fill"></i>
                 <span>Phân nhóm khách hàng</span>
             </a>
-            <a href="#" class="quick-action-btn">
+            <a href="/admin/vouchers" class="quick-action-btn">
                 <i class="bi bi-ticket-perforated-fill text-warning"></i>
                 <span>Tạo mã giảm giá</span>
             </a>
@@ -706,15 +707,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // 1. Khởi tạo Biểu đồ Doanh thu (Line Chart)
+    // 1. Khởi tạo Biểu đồ Doanh thu 7 ngày qua (Line Chart)
     const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
     new Chart(ctxRevenue, {
         type: 'line',
         data: {
-            labels: ['27/05', '28/05', '29/05', '30/05', '31/05', '01/06', '02/06'],
+            // Duyệt danh sách ngày từ Backend gửi qua (Ví dụ: '27/05', '28/05'...)
+            labels: [
+                <c:forEach var="label" items="${revenueLabels}" varStatus="status">
+                '${label}'${!status.last ? ',' : ''}
+                </c:forEach>
+            ],
             datasets: [{
-                label: 'Doanh thu (triệu ₫)',
-                data: [120, 150, 180, 90, 210, 240, 145],
+                label: 'Doanh thu (₫)',
+                // Duyệt danh sách số tiền tương ứng của từng ngày
+                data: [
+                    <c:forEach var="value" items="${revenueData}" varStatus="status">
+                    ${value}${!status.last ? ',' : ''}
+                    </c:forEach>
+                ],
                 borderColor: '#2c7da0',
                 backgroundColor: 'rgba(44, 125, 160, 0.1)',
                 borderWidth: 3,
@@ -725,7 +736,17 @@
         options: {
             responsive: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        // Định dạng hiển thị tiền tệ VNĐ trên trục Y cho chuyên nghiệp
+                        callback: function(value) {
+                            return value.toLocaleString('vi-VN') + ' ₫';
+                        }
+                    }
+                }
+            }
         }
     });
 
@@ -734,11 +755,22 @@
     new Chart(ctxPayment, {
         type: 'doughnut',
         data: {
-            labels: ['Ví Momo/VNPAY', 'Thẻ Visa/Master', 'COD (Tiền mặt)'],
+            // Duyệt danh sách các phương thức thanh toán xuất hiện (Ví dụ: 'COD', 'Momo'...)
+            labels: [
+                <c:forEach var="label" items="${paymentLabels}" varStatus="status">
+                '${label}'${!status.last ? ',' : ''}
+                </c:forEach>
+            ],
             datasets: [{
-                data: [55, 25, 20],
-                backgroundColor: ['#2c7da0', '#22c55e', '#f59e0b'],
-                borderWidth: 0
+                // Duyệt số lượng đơn hàng hoặc tỷ lệ tương ứng
+                data: [
+                    <c:forEach var="value" items="${paymentData}" varStatus="status">
+                    ${value}${!status.last ? ',' : ''}
+                    </c:forEach>
+                ],
+                backgroundColor: ['#2c7da0', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
             }]
         },
         options: {

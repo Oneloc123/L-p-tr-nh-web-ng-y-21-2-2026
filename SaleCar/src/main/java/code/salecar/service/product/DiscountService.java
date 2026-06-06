@@ -48,11 +48,13 @@ public class DiscountService {
                 productIds.addAll(productDAO.getProductIdsByBrandId((int) discount.getEntityId()));
                 break;
             case CATEGORY:
-                productIds.addAll(productDAO.getProductIdsByCategoryId((int) discount.getEntityId()));
+                productIds.addAll(productDAO.getProductIdsByCategoryId( discount.getEntityId()));
                 break;
         }
 
         for (Long productId : productIds) {
+            // Đồng bộ product.price với MIN variant price trước khi tính discount
+            productDAO.syncProductPrice(productId);
             recalculateProductDiscount(productId);
         }
     }

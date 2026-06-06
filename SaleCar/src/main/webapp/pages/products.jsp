@@ -682,12 +682,12 @@
         font-size: 10px;
         color: var(--gold);
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 1px;
         margin-bottom: 4px;
-        font-weight: 500;
+        font-weight: 600;
     }
     .product-name {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 4px;
         font-size: 18px;
         color: var(--text-primary);
@@ -696,11 +696,17 @@
         text-overflow: ellipsis;
         font-family: 'Cormorant Garamond', serif;
         line-height: 1.3;
+        transition: color 0.25s ease;
+        letter-spacing: 0.3px;
+    }
+    .product-card:hover .product-name {
+        color: var(--gold);
     }
     .product-model {
         font-size: 12px;
         color: var(--text-secondary);
         margin-bottom: 6px;
+        font-weight: 400;
     }
     .product-model i {
         color: var(--gold);
@@ -717,16 +723,22 @@
         gap: 4px;
     }
     .product-price-old {
-        font-size: 12px;
+        font-size: 13px;
         text-decoration: line-through;
-        color: #bbb;
+        color: #ccc;
+        font-weight: 400;
     }
     .product-price-current {
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--black);
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--gold);
         font-family: 'Cormorant Garamond', serif;
         line-height: 1.2;
+        text-shadow: 0 1px 2px rgba(212, 175, 55, 0.08);
+        transition: transform 0.2s ease;
+    }
+    .product-card:hover .product-price-current {
+        transform: scale(1.03);
     }
     .product-actions {
         display: flex;
@@ -735,7 +747,7 @@
         border-top: 1px solid #f0f0f0;
         padding-top: 12px;
         opacity: 0.85;
-        transition: opacity 0.3s;
+        transition: opacity 0.3s, transform 0.3s;
     }
     .product-card:hover .product-actions {
         opacity: 1;

@@ -589,8 +589,9 @@
                                         <a href="/updateUser?id=${u.id}" class="action-btn action-edit"><i
                                                 class="bi bi-pencil-square"></i></a>
                                         <a href="/deleteUser?id=${u.id}"
-                                           onclick="return confirm('Xóa người dùng này?')"
-                                           class="action-btn action-delete"><i class="bi bi-trash"></i></a>
+                                           onclick="return confirm('Ngừng hoạt động tài khoản này?')"
+                                           class="action-btn action-disable">
+                                            <i class="bi bi-person-x"></i></a>
                                     </td>
                                 </tr>
                             </c:forEach>

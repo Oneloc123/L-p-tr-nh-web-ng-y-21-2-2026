@@ -31,6 +31,10 @@ public class Login extends HttpServlet {
 
         UserService us = new UserService();
         User user = us.getUserByUsername(username);
+        if(!user.getStatus()){
+            request.setAttribute("usernameError","tài khoản đã bị khoá vô thời hạn");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request,response);
+        }
         if(user == null){
             request.setAttribute("usernameError","sai tên đăng nhập hoặc tên đăng nhập không tồn tại");
             request.getRequestDispatcher("/pages/login.jsp").forward(request,response);

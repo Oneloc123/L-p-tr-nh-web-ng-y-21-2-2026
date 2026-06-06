@@ -168,7 +168,7 @@
                     </td>
 
                     <td class="price-text">
-                        <fmt:formatNumber value="${item.price}" type="number" groupingUsed="true"/> ₫
+                        <fmt:formatNumber value="${item.variantFinalPrice}" type="number" groupingUsed="true"/> ₫
                     </td>
 
 
@@ -203,7 +203,7 @@
 
 
                     <td class="total-text">
-                       <fmt:formatNumber value="${item.price * item.quantity}" type="number" groupingUsed="true"/> ₫
+                       <fmt:formatNumber value="${item.variantFinalPrice * item.quantity}" type="number" groupingUsed="true"/> ₫
                     </td>
 
                     <!-- xoa san pham -->
