@@ -156,6 +156,25 @@ public class ProductVariantsDAO {
         }
     }
 
+    /**
+     * Lấy giá nhỏ nhất trong các variant của một product.
+     * Dùng để đồng bộ product.price với MIN variant price.
+     */
+    public BigDecimal getMinPrice(long productId) {
+        String sql = "SELECT MIN(price) FROM product_variants WHERE product_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     /** Xoá biến thể theo ID */
     public void deleteVariant(long variantId) {
         // Xoá inventory trước
