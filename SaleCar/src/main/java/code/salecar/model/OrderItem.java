@@ -11,6 +11,7 @@ public class OrderItem {
     private double price;
 
     private Product product;
+    private String imageUrl;
 
     public double getTotalPrice() {
         return quantity * price;
@@ -65,5 +66,13 @@ public class OrderItem {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
