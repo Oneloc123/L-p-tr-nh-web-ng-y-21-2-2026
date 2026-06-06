@@ -1,6 +1,8 @@
 package code.salecar.controller.admin.order;
 
+import code.salecar.dao.NotificationDAO;
 import code.salecar.dao.OrderDAO;
+import code.salecar.model.Order;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -34,6 +36,26 @@ public class UpdateOrderStatus extends HttpServlet {
         boolean isSuccess = ordDAO.updateOrderStatus(orderId, status);
 
         if (isSuccess) {
+            // Tạo thông báo cho khách hàng khi admin thay đổi trạng thái
+            try {
+                Order order = ordDAO.getOrderById(orderId);
+                if (order != null) {
+                    String notifMessage = "";
+                    if ("CONFIRMED".equals(status)) {
+                        notifMessage = "Đơn hàng #" + orderId + " của bạn đã được xác nhận.";
+                    } else if ("SHIPPING".equals(status)) {
+                        notifMessage = "Đơn hàng #" + orderId + " của bạn đã được bàn giao cho đơn vị vận chuyển.";
+                    } else if ("CANCELLED".equals(status)) {
+                        notifMessage = "Đơn hàng #" + orderId + " của bạn đã bị hủy bởi quản trị viên.";
+                    }
+                    if (!notifMessage.isEmpty()) {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        notiDAO.insertNotification(order.getUserId(), notifMessage, orderId);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             response.getWriter().write("success");
         } else {
             response.getWriter().write("error");
