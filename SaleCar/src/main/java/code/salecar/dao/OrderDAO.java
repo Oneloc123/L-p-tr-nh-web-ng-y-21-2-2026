@@ -60,6 +60,7 @@ public class OrderDAO {
 
             while (rs.next()) {
                 Order ord = new Order();
+
                 ord.setId(rs.getInt("id"));
                 ord.setUserId(rs.getInt("user_id"));
                 ord.setOrderDate(rs.getTimestamp("order_date"));
@@ -197,6 +198,7 @@ public class OrderDAO {
         List<OrderItem> listItems = new ArrayList<>();
 
         ProductDAO productDAO = new ProductDAO();
+        ProductImageDAO productImageDAO = new ProductImageDAO();
 
 
         String query = "SELECT * FROM order_item WHERE order_id = ?";
@@ -220,6 +222,10 @@ public class OrderDAO {
 
                 Product product = productDAO.getProductByID(rs.getInt("product_id"));
                 item.setProduct(product);
+
+                // Lấy ảnh chính của sản phẩm từ bảng image
+                String mainImage = productImageDAO.getMainImage(product.getId());
+                item.setImageUrl(mainImage);
 
                 listItems.add(item);
             }

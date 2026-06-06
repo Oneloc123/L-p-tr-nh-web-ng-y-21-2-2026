@@ -388,6 +388,37 @@
                         <h4>Phương thức thanh toán</h4>
                         <p><i class="fas fa-credit-card"></i> ${order.paymentMethod}</p>
                     </div>
+                    <div class="info-block">
+                        <h4>Vận chuyển &amp; Dự kiến</h4>
+                        <p><i class="fas fa-truck"></i> Phí ship:
+                            <c:choose>
+                                <c:when test="${order.shippingFee > 0}">
+                                    <fmt:formatNumber value="${order.shippingFee}" type="number" groupingUsed="true"/> ₫
+                                </c:when>
+                                <c:otherwise>
+                                    Miễn phí
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                        <c:if test="${!fn:contains(order.orderStatus, 'Đã huỷ') && !fn:contains(order.orderStatus, 'Đã hủy') && order.orderStatus != 'CANCELLED' && !fn:contains(order.orderStatus, 'Đã giao') && order.orderStatus != 'DELIVERED' && order.orderStatus != 'COMPLETED'}">
+                        <%
+                            code.salecar.model.Order ord = (code.salecar.model.Order) pageContext.findAttribute("order");
+                            if (ord != null && ord.getOrderDate() != null) {
+                                java.util.Calendar cal = java.util.Calendar.getInstance();
+                                cal.setTime(ord.getOrderDate());
+                                cal.add(java.util.Calendar.DAY_OF_MONTH, 5);
+                                pageContext.setAttribute("estFrom", cal.getTime());
+                                cal.add(java.util.Calendar.DAY_OF_MONTH, 3);
+                                pageContext.setAttribute("estTo", cal.getTime());
+                            }
+                        %>
+                        <p><i class="fas fa-clock"></i> Nhận hàng:
+                            <strong>
+                                <fmt:formatDate value="${estFrom}" pattern="dd/MM"/> – <fmt:formatDate value="${estTo}" pattern="dd/MM/yyyy"/>
+                            </strong>
+                        </p>
+                        </c:if>
+                    </div>
                 </div>
 
 
