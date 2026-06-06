@@ -209,7 +209,7 @@
         <ul>
             <li>
                 <a href="${pageContext.request.contextPath}/admin/dashboard"
-                   class="${fn:contains(pageContext.request.requestURI, 'dashboard') ? 'active' : ''}">
+                   class="${fn:contains(pageContext.request.requestURI, 'dashboard')  || fn:contains(pageContext.request.requestURI, 'dashboard') ? 'active' : ''}">
                     <i class="bi bi-speedometer2"></i><span> Dashboard</span>
                 </a>
             </li>
@@ -243,12 +243,7 @@
                 </a>
             </li>
 
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/payment"
-                   class="${fn:contains(pageContext.request.requestURI, 'payment') ? 'active' : ''}">
-                    <i class="bi bi-credit-card"></i><span> Thanh toán</span>
-                </a>
-            </li>
+
 
             <li>
                 <a href="${pageContext.request.contextPath}/userAdmin"
@@ -257,12 +252,7 @@
                 </a>
             </li>
 
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/blogs"
-                   class="${fn:contains(pageContext.request.requestURI, 'blogs') || fn:contains(pageContext.request.requestURI, 'blog') ? 'active' : ''}">
-                    <i class="bi bi-journal-text"></i><span> Blog</span>
-                </a>
-            </li>
+
 
             <li>
                 <a href="${pageContext.request.contextPath}/admin/discounts"

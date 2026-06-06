@@ -3,6 +3,7 @@ package code.salecar.controller.checkout;
 import code.salecar.config.VNPayConfig;
 import code.salecar.dao.OrderDAO;
 import code.salecar.service.inventory.InventoryService;
+import code.salecar.service.product.VoucherService;
 import code.salecar.model.Cart;
 import code.salecar.model.Order;
 import code.salecar.model.User;
@@ -87,10 +88,19 @@ public class VNPayReturnServlet extends HttpServlet {
                     }
                 }
 
+                VoucherService voucherService = new VoucherService();
+
                 if ("00".equals(responseCode)) {
                     orderDAO.updateOrderStatus(orderId, "CONFIRMED");
-                    // VNPay thành công: dọn cart backup
+                    // VNPay thành công: tăng usedCount voucher, dọn cart backup
                     if (session != null) {
+                        // Tăng usedCount nếu có voucher pending
+                        Long pendingVoucherId = (Long) session.getAttribute("pendingVoucherId");
+                        if (pendingVoucherId != null) {
+                            voucherService.incrementUsedCount(pendingVoucherId);
+                        }
+                        session.removeAttribute("pendingVoucherId");
+                        session.removeAttribute("selectedVoucherId");
                         session.removeAttribute("pendingCartBackup");
                         // Xóa cart chính nếu user đã dùng cart đó để thanh toán
                         session.removeAttribute("cart");
@@ -101,12 +111,18 @@ public class VNPayReturnServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
                 } else {
                     orderDAO.updateOrderStatus(orderId, "CANCELLED");
-                    // VNPay thất bại: khôi phục cart từ backup
+                    // VNPay thất bại: khôi phục cart từ backup + giữ nguyên voucher đã chọn
                     if (session != null) {
                         Cart backupCart = (Cart) session.getAttribute("pendingCartBackup");
                         if (backupCart != null) {
                             session.setAttribute("cart", backupCart);
                         }
+                        // Khôi phục selectedVoucherId từ pendingVoucherId
+                        Long pendingVoucherId = (Long) session.getAttribute("pendingVoucherId");
+                        if (pendingVoucherId != null) {
+                            session.setAttribute("selectedVoucherId", pendingVoucherId);
+                        }
+                        session.removeAttribute("pendingVoucherId");
                         session.removeAttribute("pendingCartBackup");
                     }
                     response.sendRedirect(request.getContextPath() + "/order");

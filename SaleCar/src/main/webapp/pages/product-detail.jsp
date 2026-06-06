@@ -1159,7 +1159,7 @@
                         </button>
                     </form>
 
-                    <form method="post" action="/favorites" class="w-100">
+                    <form method="post" action="${pageContext.request.contextPath}/favorites" class="w-100">
                         <button type="submit"
                                 class="btn star-btn w-100"
                                 name="productid"

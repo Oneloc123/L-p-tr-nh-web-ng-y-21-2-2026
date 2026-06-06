@@ -1217,7 +1217,7 @@
 
 
 
-                                                <form method="post" action="/favorites" style="display: contents;">
+                                                <form method="post" action="${pageContext.request.contextPath}/favorites" style="display: contents;">
                                                     <button class="btn-action" name="productid" value="${p.id}">
                                                         <i class="bi bi-star"></i>
                                                     </button>
