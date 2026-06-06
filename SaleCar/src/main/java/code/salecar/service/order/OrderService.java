@@ -27,7 +27,7 @@ public class OrderService {
      * Xử lý đơn hàng: validate stock → tạo order → trả về kết quả.
      * Nếu bất kỳ item nào không đủ stock, trả về null.
      */
-    public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod, double shippingFee) {
+    public Order processOrder(User user, Cart cart, String name, String phone, String shippingAddress, String paymentMethod, double shippingFee, String note, String shippingMethod) {
 
         if (user == null || cart == null || cart.getItems().isEmpty()) {
             return null;
@@ -57,6 +57,8 @@ public class OrderService {
         order.setPaymentMethod(paymentMethod);
         order.setOrderStatus("Đang xử lý");
         order.setShippingFee(shippingFee);
+        order.setNote(note);
+        order.setShippingMethod(shippingMethod);
 
 
         try {

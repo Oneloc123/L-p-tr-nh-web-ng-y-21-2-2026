@@ -323,6 +323,12 @@
                     <i class="fas fa-map"></i>
                     <span>${order.shippingAddress}</span>
                 </div>
+                <c:if test="${not empty order.note}">
+                <div class="info-row">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Ghi chú: <strong>${order.note}</strong></span>
+                </div>
+                </c:if>
             </div>
 
             <div class="info-card">
@@ -355,6 +361,12 @@
                         </strong>
                     </span>
                 </div>
+                <c:if test="${not empty order.shippingMethod}">
+                <div class="info-row">
+                    <i class="fas fa-shipping-fast"></i>
+                    <span>Phương thức giao hàng: <strong>${order.shippingMethod}</strong></span>
+                </div>
+                </c:if>
                 <%-- Tính toán ngày giao dự kiến từ ngày đặt hàng --%>
                 <c:if test="${!fn:contains(order.orderStatus, 'Đã huỷ') && !fn:contains(order.orderStatus, 'Đã hủy') && order.orderStatus != 'CANCELLED' && !fn:contains(order.orderStatus, 'Đã giao') && order.orderStatus != 'DELIVERED' && order.orderStatus != 'COMPLETED'}">
                 <%

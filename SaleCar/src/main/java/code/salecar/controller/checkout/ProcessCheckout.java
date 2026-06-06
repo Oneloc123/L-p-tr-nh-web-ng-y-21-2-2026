@@ -44,6 +44,8 @@ public class ProcessCheckout extends HttpServlet {
         String phone = request.getParameter("phone");
         String shippingAddress = request.getParameter("shippingAddress");
         String paymentMethod = request.getParameter("paymentMethod");
+        String note = request.getParameter("note");
+        String shippingMethod = request.getParameter("shippingMethod");
 
         // Lấy phí vận chuyển từ form
         double shippingFee = 0;
@@ -59,7 +61,7 @@ public class ProcessCheckout extends HttpServlet {
         OrderService orderService = new OrderService();
 
 
-        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod, shippingFee);
+        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod, shippingFee, note, shippingMethod);
 
 
         if (newOrder != null && newOrder.getId() > 0) {

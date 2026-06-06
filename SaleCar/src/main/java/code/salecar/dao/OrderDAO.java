@@ -34,6 +34,8 @@ public class OrderDAO {
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
                 ord.setShippingFee(rs.getDouble("shipping_fee"));
+                ord.setNote(rs.getString("note"));
+                ord.setShippingMethod(rs.getString("shipping_method"));
 
                 orders.add(ord);
             }
@@ -69,6 +71,8 @@ public class OrderDAO {
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
                 ord.setShippingFee(rs.getDouble("shipping_fee"));
+                ord.setNote(rs.getString("note"));
+                ord.setShippingMethod(rs.getString("shipping_method"));
 
                 orders.add(ord);
             }
@@ -98,6 +102,8 @@ public class OrderDAO {
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
                 ord.setShippingFee(rs.getDouble("shipping_fee"));
+                ord.setNote(rs.getString("note"));
+                ord.setShippingMethod(rs.getString("shipping_method"));
 
                 return ord;
             }
@@ -113,9 +119,9 @@ public class OrderDAO {
             conn.setAutoCommit(false);
             try{
                 String sql = "insert into `order` " +
-                        "(user_id, total_price, address, payment_method, payment_status, order_status, shipping_fee) " +
+                        "(user_id, total_price, address, payment_method, payment_status, order_status, shipping_fee, note, shipping_method) " +
                         "values " +
-                        "(?,?,?,?,?,?,?)";
+                        "(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 pstmt.setInt(1, order.getUserId());
                 pstmt.setDouble(2,order.getTotalAmount());
@@ -124,6 +130,8 @@ public class OrderDAO {
                 pstmt.setString(5, "chưa thanh toán");
                 pstmt.setString(6, order.getOrderStatus());
                 pstmt.setDouble(7, order.getShippingFee());
+                pstmt.setString(8, order.getNote());
+                pstmt.setString(9, order.getShippingMethod());
 
                 pstmt.executeUpdate();
                 ResultSet rs = pstmt.getGeneratedKeys();
@@ -185,6 +193,8 @@ public class OrderDAO {
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
                 ord.setShippingFee(rs.getDouble("shipping_fee"));
+                ord.setNote(rs.getString("note"));
+                ord.setShippingMethod(rs.getString("shipping_method"));
 
                 lstOrder.add(ord);
             }
@@ -478,6 +488,8 @@ public class OrderDAO {
                 ord.setPaymentMethod(rs.getString("payment_method"));
                 ord.setOrderStatus(rs.getString("order_status"));
                 ord.setShippingFee(rs.getDouble("shipping_fee"));
+                ord.setNote(rs.getString("note"));
+                ord.setShippingMethod(rs.getString("shipping_method"));
 
                 lstOrder.add(ord);
             }
@@ -506,6 +518,8 @@ public class OrderDAO {
                 o.setPaymentMethod(rs.getString("payment_method"));
                 o.setOrderStatus(rs.getString("order_status"));
                 o.setShippingFee(rs.getDouble("shipping_fee"));
+                o.setNote(rs.getString("note"));
+                o.setShippingMethod(rs.getString("shipping_method"));
 
                 list.add(o);
             }
@@ -533,6 +547,8 @@ public class OrderDAO {
                 o.setPaymentMethod(rs.getString("payment_method"));
                 o.setOrderStatus(rs.getString("order_status"));
                 o.setShippingFee(rs.getDouble("shipping_fee"));
+                o.setNote(rs.getString("note"));
+                o.setShippingMethod(rs.getString("shipping_method"));
 
                 list.add(o);
             }
