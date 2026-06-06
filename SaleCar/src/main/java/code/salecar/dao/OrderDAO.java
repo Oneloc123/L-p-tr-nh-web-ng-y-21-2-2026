@@ -60,6 +60,7 @@ public class OrderDAO {
 
             while (rs.next()) {
                 Order ord = new Order();
+
                 ord.setId(rs.getInt("id"));
                 ord.setUserId(rs.getInt("user_id"));
                 ord.setOrderDate(rs.getTimestamp("order_date"));
@@ -108,60 +109,60 @@ public class OrderDAO {
 
     public void insertOrder(Order order, Cart cart) {
 
-       try(Connection conn = DBConnection.getConnection()){
-           conn.setAutoCommit(false);
-           try{
-               String sql = "insert into `order` " +
-                       "(user_id, total_price, address, payment_method, payment_status, order_status, shipping_fee) " +
-                       "values " +
-                       "(?,?,?,?,?,?,?)";
-               PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-               pstmt.setInt(1, order.getUserId());
-               pstmt.setDouble(2,order.getTotalAmount());
-               pstmt.setString(3, order.getShippingAddress());
-               pstmt.setString(4, order.getPaymentMethod());
-               pstmt.setString(5, "chưa thanh toán");
-               pstmt.setString(6, order.getOrderStatus());
-               pstmt.setDouble(7, order.getShippingFee());
+        try(Connection conn = DBConnection.getConnection()){
+            conn.setAutoCommit(false);
+            try{
+                String sql = "insert into `order` " +
+                        "(user_id, total_price, address, payment_method, payment_status, order_status, shipping_fee) " +
+                        "values " +
+                        "(?,?,?,?,?,?,?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setInt(1, order.getUserId());
+                pstmt.setDouble(2,order.getTotalAmount());
+                pstmt.setString(3, order.getShippingAddress());
+                pstmt.setString(4, order.getPaymentMethod());
+                pstmt.setString(5, "chưa thanh toán");
+                pstmt.setString(6, order.getOrderStatus());
+                pstmt.setDouble(7, order.getShippingFee());
 
-               pstmt.executeUpdate();
-               ResultSet rs = pstmt.getGeneratedKeys();
-               if(rs.next()){
-                   int orderId = rs.getInt(1);
-                   order.setId(orderId);
-
-
-                   for(CartItem item : cart.getItems()){
-                       /**
-                        * Insert order_item với variant_id (nếu có).
-                        * @variantId: 0 nếu không có variant.
-                        */
-                       String sql1 = "insert into order_item (order_id, product_id, variant_id, quantity, price, total_price) values (?, ?, ?, ?, ?, ?)";
-                       PreparedStatement pstmtItem = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
-
-                       pstmtItem.setInt(1, orderId);
-                       pstmtItem.setInt(2,item.getProductId());
-                       pstmtItem.setInt(3, item.getVariantId());
-                       pstmtItem.setInt(4, item.getQuantity());
-                       pstmtItem.setDouble(5, item.getPrice());
-                       pstmtItem.setDouble(6, item.getTotalPrice());
-
-                       pstmtItem.executeUpdate();
-                       pstmtItem.close();
-                   }
-                   conn.commit();
-               }
-           }catch (Exception e){
-               conn.rollback();
-               e.printStackTrace();
-           }
+                pstmt.executeUpdate();
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if(rs.next()){
+                    int orderId = rs.getInt(1);
+                    order.setId(orderId);
 
 
+                    for(CartItem item : cart.getItems()){
+                        /**
+                         * Insert order_item với variant_id (nếu có).
+                         * @variantId: 0 nếu không có variant.
+                         */
+                        String sql1 = "insert into order_item (order_id, product_id, variant_id, quantity, price, total_price) values (?, ?, ?, ?, ?, ?)";
+                        PreparedStatement pstmtItem = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
 
-       }catch (Exception e){
+                        pstmtItem.setInt(1, orderId);
+                        pstmtItem.setInt(2,item.getProductId());
+                        pstmtItem.setInt(3, item.getVariantId());
+                        pstmtItem.setInt(4, item.getQuantity());
+                        pstmtItem.setDouble(5, item.getPrice());
+                        pstmtItem.setDouble(6, item.getTotalPrice());
 
-           throw new RuntimeException();
-       }
+                        pstmtItem.executeUpdate();
+                        pstmtItem.close();
+                    }
+                    conn.commit();
+                }
+            }catch (Exception e){
+                conn.rollback();
+                e.printStackTrace();
+            }
+
+
+
+        }catch (Exception e){
+
+            throw new RuntimeException();
+        }
 
     }
 
@@ -169,7 +170,7 @@ public class OrderDAO {
         ArrayList<Order> lstOrder = new ArrayList<>();
         String querry = "select * from `order` where user_id = ? order by id desc";
         try(Connection conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(querry)){
+            PreparedStatement ps = conn.prepareStatement(querry)){
             ps.setInt(1,userId);
             ResultSet rs = ps.executeQuery();
 
@@ -197,6 +198,7 @@ public class OrderDAO {
         List<OrderItem> listItems = new ArrayList<>();
 
         ProductDAO productDAO = new ProductDAO();
+        ProductImageDAO productImageDAO = new ProductImageDAO();
 
 
         String query = "SELECT * FROM order_item WHERE order_id = ?";
@@ -221,6 +223,10 @@ public class OrderDAO {
                 Product product = productDAO.getProductByID(rs.getInt("product_id"));
                 item.setProduct(product);
 
+                // Lấy ảnh chính của sản phẩm từ bảng image
+                String mainImage = productImageDAO.getMainImage(product.getId());
+                item.setImageUrl(mainImage);
+
                 listItems.add(item);
             }
         } catch (Exception e) {
@@ -233,7 +239,7 @@ public class OrderDAO {
         String query = "UPDATE `order` SET order_status = ? WHERE id = ? AND user_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query)) {
+             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, newStatus);
             ps.setInt(2, orderId);
             ps.setInt(3, userId);
@@ -252,7 +258,7 @@ public class OrderDAO {
 
 
         try(Connection conn = DBConnection.getConnection();
-        PreparedStatement psCheck = conn.prepareStatement(checkQuery)){
+            PreparedStatement psCheck = conn.prepareStatement(checkQuery)){
 
             psCheck.setInt(1, orderId);
 
@@ -363,7 +369,4 @@ public class OrderDAO {
         return  list;
     }
 
-    }
-
-
-
+}

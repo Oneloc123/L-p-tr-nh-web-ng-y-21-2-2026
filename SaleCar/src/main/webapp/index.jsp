@@ -1674,9 +1674,11 @@
                         <div class="product-img-overlay"></div>
                     </div>
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist" data-product-id="${product.id}" title="Thêm vào yêu thích">
-                            <i class="bi bi-heart"></i>
-                        </button>
+                        <form action="${pageContext.request.contextPath}/favorites" method="post" style="display: contents;">
+                            <button class="action-btn" name="productid" value="${product.id}" title="Thêm vào yêu thích">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </form>
                         <button class="action-btn quick-view" data-product-id="${product.id}" title="Xem nhanh">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -1736,9 +1738,11 @@
                         <div class="product-img-overlay"></div>
                     </div>
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist" data-product-id="${product.id}" title="Thêm vào yêu thích">
-                            <i class="bi bi-heart"></i>
-                        </button>
+                        <form action="${pageContext.request.contextPath}/favorites" method="post" style="display: contents;">
+                            <button class="action-btn" name="productid" value="${product.id}" title="Thêm vào yêu thích">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </form>
                         <button class="action-btn quick-view" data-product-id="${product.id}" title="Xem nhanh">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -1799,9 +1803,11 @@
                         <div class="product-img-overlay"></div>
                     </div>
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist" data-product-id="${product.id}" title="Thêm vào yêu thích">
-                            <i class="bi bi-heart"></i>
-                        </button>
+                        <form action="${pageContext.request.contextPath}/favorites" method="post" style="display: contents;">
+                            <button class="action-btn" name="productid" value="${product.id}" title="Thêm vào yêu thích">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </form>
                         <button class="action-btn quick-view" data-product-id="${product.id}" title="Xem nhanh">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -1923,63 +1929,6 @@
         // Start auto slide
         showSlide(0);
         startAutoSlide();
-
-        // ==================== WISHLIST FUNCTIONALITY ====================
-        const wishlistButtons = document.querySelectorAll('.add-to-wishlist');
-        // const toast = document.getElementById('toastNotification');
-
-        // function showToast(message, isSuccess = true) {
-        //     toast.textContent = message;
-        //     toast.style.background = isSuccess ? 'var(--black)' : '#dc3545';
-        //     toast.style.color = isSuccess ? 'var(--gold)' : 'white';
-        //     toast.classList.add('show');
-        //
-        //     setTimeout(() => {
-        //         toast.classList.remove('show');
-        //     }, 3000);
-        // }
-
-        wishlistButtons.forEach(button => {
-            button.addEventListener('click', async function (e) {
-                e.stopPropagation();
-                const productId = this.getAttribute('data-product-id');
-
-                <c:choose>
-                <c:when test="${sessionScope.user != null}">
-                // User logged in - add to wishlist via AJAX
-                try {
-                    const response = await fetch('${pageContext.request.contextPath}/api/wishlist/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `productId=${productId}`
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        showAlert('Đã thêm vào yêu thích!', 'success');
-                        // Change heart icon style
-                        this.querySelector('i').classList.remove('bi-heart');
-                        this.querySelector('i').classList.add('bi-heart-fill');
-                    } else {
-                        showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showAlert('Có lỗi xảy ra!', 'error');
-                }
-                </c:when>
-                <c:otherwise>
-                // Not logged in - redirect to login
-                showAlert('Vui lòng đăng nhập để thêm vào yêu thích!', 'warning');
-                setTimeout(() => {
-                    window.location.href = '${pageContext.request.contextPath}/login';
-                }, 1500);
-                </c:otherwise>
-                </c:choose>
-            });
-        });
 
         // ==================== QUICK VIEW FUNCTIONALITY ====================
         const quickViewButtons = document.querySelectorAll('.quick-view');
