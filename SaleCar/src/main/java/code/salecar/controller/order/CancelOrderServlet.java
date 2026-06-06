@@ -31,10 +31,10 @@ public class CancelOrderServlet extends HttpServlet {
 
             OrderService orderService = new OrderService();
             boolean cancelled = orderService.cancelOrder(orderId, user. getId(), cancelReason);
-            String message ="";
+
             if (cancelled) {
                 // Tạo thông báo cho người dùng khi họ hủy đơn hàng
-                 message = "Đơn hàng #" + orderId + " đã được hủy thành công.";
+                String message = "Đơn hàng #" + orderId + " của bạn đã bị hủy.";
                 if (cancelReason != null && !cancelReason.trim().isEmpty()) {
                     message = "Đơn hàng #" + orderId + " của bạn đã bị hủy. Lý do: " + cancelReason;
                 }
@@ -46,8 +46,6 @@ public class CancelOrderServlet extends HttpServlet {
                 request.getSession().setAttribute("toastMessage", "Không thể hủy đơn hàng đang giao hoặc đã hoàn thành!");
                 request.getSession().setAttribute("toastType", "error");
             }
-            NotificationDAO notiDAO = new NotificationDAO();
-            notiDAO.insertNotification(user.getId(), message, orderId);
         }
         response.sendRedirect("order");
     }

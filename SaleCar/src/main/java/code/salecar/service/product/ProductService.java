@@ -311,6 +311,15 @@ public class ProductService {
         return result;
     }
 
+    /**
+     * Lấy sản phẩm gợi ý theo danh mục (loại trừ sản phẩm đã mua).
+     */
+    public List<ProductItemDTO> getSuggestedProducts(List<Long> categoryIds, List<Integer> excludeProductIds) {
+        List<ProductItemDTO> products = productDAO.getSuggestedProducts(categoryIds, excludeProductIds);
+        addMoreInformation(products);
+        return products;
+    }
+
     //
     public int getTotalScale() {
         return productDAO.getTotalScale();

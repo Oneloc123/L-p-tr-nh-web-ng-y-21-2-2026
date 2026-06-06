@@ -2,11 +2,14 @@ package code.salecar.controller.checkout;
 
 import code.salecar.config.VNPayConfig;
 import code.salecar.dao.OrderDAO;
-import code.salecar.service.inventory.InventoryService;
-import code.salecar.service.product.VoucherService;
 import code.salecar.model.Cart;
 import code.salecar.model.Order;
+import code.salecar.model.OrderItem;
 import code.salecar.model.User;
+import code.salecar.model.product.dto.ProductItemDTO;
+import code.salecar.service.inventory.InventoryService;
+import code.salecar.service.product.ProductService;
+import code.salecar.service.product.VoucherService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -108,6 +111,33 @@ public class VNPayReturnServlet extends HttpServlet {
                     }
                    InventoryService invService = new InventoryService();
                         invService.deductStock(orderId, 0); // 0 = system
+
+                    // Lưu sản phẩm gợi ý vào session
+                    try {
+                        ProductService productService = new ProductService();
+                        List<OrderItem> orderItems = orderDAO.getOrderItemsByOrderId(orderId);
+                        List<Long> categoryIds = new ArrayList<>();
+                        List<Integer> excludeProductIds = new ArrayList<>();
+                        Set<Long> seenCategories = new HashSet<>();
+
+                        for (OrderItem item : orderItems) {
+                            if (item.getProduct() != null) {
+                                long catId = item.getProduct().getCategoryId();
+                                if (seenCategories.add(catId)) {
+                                    categoryIds.add(catId);
+                                }
+                                excludeProductIds.add(item.getProductId());
+                            }
+                        }
+
+                        List<ProductItemDTO> suggestedProducts = productService.getSuggestedProducts(categoryIds, excludeProductIds);
+                        if (session != null) {
+                            session.setAttribute("suggestedProducts", suggestedProducts);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
                 } else {
                     orderDAO.updateOrderStatus(orderId, "CANCELLED");

@@ -1,9 +1,12 @@
 package code.salecar.controller.checkout;
 
 import code.salecar.model.Cart;
+import code.salecar.model.CartItem;
 import code.salecar.model.Order;
 import code.salecar.model.User;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.service.order.OrderService;
+import code.salecar.service.product.ProductService;
 import code.salecar.service.product.VoucherService;
 import code.salecar.service.buyNCart.VNPayService;
 import jakarta.servlet.*;
@@ -11,6 +14,10 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @WebServlet(name = "ProcessCheckout", value = "/process-checkout")
 public class ProcessCheckout extends HttpServlet {
@@ -47,6 +54,8 @@ public class ProcessCheckout extends HttpServlet {
         String phone = request.getParameter("phone");
         String shippingAddress = request.getParameter("shippingAddress");
         String paymentMethod = request.getParameter("paymentMethod");
+        String note = request.getParameter("note");
+        String shippingMethod = request.getParameter("shippingMethod");
 
         // Lấy phí vận chuyển từ form
         double shippingFee = 0;
@@ -62,7 +71,7 @@ public class ProcessCheckout extends HttpServlet {
         OrderService orderService = new OrderService();
 
 
-        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod, shippingFee);
+        Order newOrder = orderService.processOrder(user, targetCart, name, phone, shippingAddress, paymentMethod, shippingFee, note, shippingMethod);
 
 
         if (newOrder != null && newOrder.getId() > 0) {
@@ -97,6 +106,29 @@ public class ProcessCheckout extends HttpServlet {
                 } else {
                     session.removeAttribute("cart");
                 }
+
+                // Lưu sản phẩm gợi ý vào session để hiển thị trên thankyou.jsp
+                try {
+                    ProductService productService = new ProductService();
+                    List<Long> categoryIds = new ArrayList<>();
+                    List<Integer> excludeProductIds = new ArrayList<>();
+                    Set<Long> seenCategories = new HashSet<>();
+
+                    for (CartItem item : targetCart.getItems()) {
+                        if (item.getProductDetail() != null
+                                && item.getProductDetail().getCategory() != null
+                                && seenCategories.add(item.getProductDetail().getCategory().getCategoryId())) {
+                            categoryIds.add(item.getProductDetail().getCategory().getCategoryId());
+                        }
+                        excludeProductIds.add(item.getProductId());
+                    }
+
+                    List<ProductItemDTO> suggestedProducts = productService.getSuggestedProducts(categoryIds, excludeProductIds);
+                    session.setAttribute("suggestedProducts", suggestedProducts);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
             }
 

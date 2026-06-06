@@ -38,7 +38,7 @@
 
 .alert-custom span {
     font-size: 14px;
-    color: var(--text-primary);
+    color: #444444;
     font-weight: 400;
 }
 

@@ -13,6 +13,8 @@ public class Order{
     private String paymentMethod;
     private String orderStatus;
     private double shippingFee;
+    private String note;
+    private String shippingMethod;
     private List<OrderItem> items;
 
     public int getId() {
@@ -85,6 +87,22 @@ public class Order{
 
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getShippingMethod() {
+        return shippingMethod;
+    }
+
+    public void setShippingMethod(String shippingMethod) {
+        this.shippingMethod = shippingMethod;
     }
 
     public List<OrderItem> getItems() {
