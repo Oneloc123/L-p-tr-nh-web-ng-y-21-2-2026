@@ -1,9 +1,12 @@
 package code.salecar.controller.checkout;
 
 import code.salecar.model.Cart;
+import code.salecar.model.CartItem;
 import code.salecar.model.Order;
 import code.salecar.model.User;
+import code.salecar.model.product.dto.ProductItemDTO;
 import code.salecar.service.order.OrderService;
+import code.salecar.service.product.ProductService;
 import code.salecar.service.product.VoucherService;
 import code.salecar.service.buyNCart.VNPayService;
 import jakarta.servlet.*;
@@ -11,6 +14,10 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @WebServlet(name = "ProcessCheckout", value = "/process-checkout")
 public class ProcessCheckout extends HttpServlet {
@@ -99,6 +106,29 @@ public class ProcessCheckout extends HttpServlet {
                 } else {
                     session.removeAttribute("cart");
                 }
+
+                // Lưu sản phẩm gợi ý vào session để hiển thị trên thankyou.jsp
+                try {
+                    ProductService productService = new ProductService();
+                    List<Long> categoryIds = new ArrayList<>();
+                    List<Integer> excludeProductIds = new ArrayList<>();
+                    Set<Long> seenCategories = new HashSet<>();
+
+                    for (CartItem item : targetCart.getItems()) {
+                        if (item.getProductDetail() != null
+                                && item.getProductDetail().getCategory() != null
+                                && seenCategories.add(item.getProductDetail().getCategory().getCategoryId())) {
+                            categoryIds.add(item.getProductDetail().getCategory().getCategoryId());
+                        }
+                        excludeProductIds.add(item.getProductId());
+                    }
+
+                    List<ProductItemDTO> suggestedProducts = productService.getSuggestedProducts(categoryIds, excludeProductIds);
+                    session.setAttribute("suggestedProducts", suggestedProducts);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 response.sendRedirect(request.getContextPath() + "/pages/thankyou.jsp");
             }
 

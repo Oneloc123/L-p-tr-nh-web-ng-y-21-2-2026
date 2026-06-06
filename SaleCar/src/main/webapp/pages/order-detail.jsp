@@ -13,29 +13,42 @@
     <%@ include file="/common/header.jsp" %>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        :root {
+            --black: #000000;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --dark-gold: #b8960f;
+            --gray-dark: #2c2c2c;
+            --gray-medium: #666666;
+            --gray-light: #f5f5f5;
+            --border-light: #e5e5e5;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
 
-        /* Main layout & Sidebar (Giống dashboard/profile) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f6fa; }
+
+        /* Main layout & Sidebar */
         .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .sidebar-menu { width: 280px; background-color: var(--black); color: var(--white); padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
         .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: var(--white); text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
         .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
         .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333333; color: #ffffff; }
-        .menu-item.active { background-color: #ffffff; color: #000000; }
-        .menu-item.active i { color: #000000; }
-        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
+        .menu-item:hover { background-color: #333; color: var(--white); transform: translateX(4px); }
+        .menu-item.active { background-color: var(--white); color: var(--black); }
+        .menu-item.active i { color: var(--black); }
+        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
 
         /* Main Content */
-        .main-content { flex: 1; padding: 30px; background-color: #f8f9fa; min-height: 100vh; }
+        .main-content { flex: 1; padding: 30px; background: #f4f6fa; min-height: 100vh; }
         .content-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
-        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
+        .content-header h1 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 10px; letter-spacing: -0.3px; }
         .breadcrumb { list-style: none; display: flex; align-items: center; gap: 5px; padding: 0; margin: 0; background: none; }
-        .breadcrumb-item a { color: #666; text-decoration: none; font-size: 13px; }
-        .breadcrumb-item a:hover { color: #000; }
-        .breadcrumb-item.active { color: #000; font-weight: 500; font-size: 13px; }
+        .breadcrumb-item a { color: #5a6874; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .breadcrumb-item a:hover { color: var(--gold); }
+        .breadcrumb-item.active { color: var(--black); font-weight: 600; font-size: 13px; }
         .breadcrumb-item i { color: #ccc; font-size: 9px; }
 
         /* Status badge */
@@ -63,19 +76,25 @@
             margin-bottom: 22px;
         }
         .info-card {
-            background: #fff;
-            border-radius: 12px;
+            background: var(--white);
+            border-radius: 20px;
             padding: 22px 24px;
-            border: 1px solid #eee;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+        .info-card:hover {
+            border-color: #ccc;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.08);
         }
         .info-card h4 {
             font-size: 11px;
             font-weight: 700;
-            color: #000;
+            color: var(--black);
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #000;
+            border-bottom: 2px solid var(--black);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -90,34 +109,39 @@
             font-size: 14px;
             color: #555;
         }
-        .info-row i { color: #000; margin-top: 2px; width: 15px; flex-shrink: 0; }
+        .info-row i { color: var(--black); margin-top: 2px; width: 15px; flex-shrink: 0; }
         .info-row span { line-height: 1.55; flex: 1; }
-        .info-row strong { color: #000; font-weight: 600; }
+        .info-row strong { color: var(--black); font-weight: 600; }
 
         /* Table Card */
         .order-card {
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid #eee;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
             overflow: hidden;
             margin-bottom: 22px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+        .order-card:hover {
+            border-color: #ccc;
+            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.08);
         }
 
         .lux-table { width: 100%; border-collapse: collapse; }
-        .lux-table thead tr { background: #000; }
+        .lux-table thead tr { background: var(--black); }
         .lux-table th {
             padding: 15px 20px;
             text-align: left;
             font-size: 11px;
             font-weight: 700;
-            color: #fff;
+            color: var(--white);
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
         .lux-table td {
             padding: 18px 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-light);
             vertical-align: middle;
             font-size: 14px;
             color: #555;
@@ -153,7 +177,7 @@
         .order-summary {
             padding: 22px 24px 26px;
             background: #fafafa;
-            border-top: 2px solid #000;
+            border-top: 2px solid var(--black);
             display: flex;
             justify-content: flex-end;
         }
@@ -164,15 +188,15 @@
             align-items: center;
             margin-bottom: 10px;
             font-size: 14px;
-            color: #666;
+            color: var(--gray-medium);
             padding: 3px 0;
         }
         .summary-row.total {
             margin-top: 14px;
             padding-top: 14px;
-            border-top: 1px dashed #ddd;
+            border-top: 1px dashed var(--border-light);
             font-size: 16px;
-            color: #000;
+            color: var(--black);
             font-weight: 700;
         }
         .summary-row.total .total-val {
@@ -186,19 +210,21 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 22px;
-            background: #fff;
-            border: 1.5px solid #000;
-            color: #000;
-            border-radius: 7px;
+            padding: 10px 24px;
+            background: var(--white);
+            border: 1.5px solid var(--black);
+            color: var(--black);
+            border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
             font-size: 13px;
-            transition: all 0.22s;
+            transition: all 0.3s;
         }
         .btn-back:hover {
-            background: #000;
-            color: #fff;
+            background: var(--black);
+            color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -212,40 +238,40 @@
     <div class="sidebar-menu">
             <div class="menu-items">
                 <a href="${pageContext.request.contextPath}/dashboard" class="menu-item active">
-                    <i class="fas fa-chart-pie"></i>
+                    <i class="bi bi-speedometer2"></i>
                     <span>Bảng điều khiển</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                    <i class="fas fa-user-circle"></i>
+                    <i class="bi bi-person-circle"></i>
                     <span>Thông tin cá nhân</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                    <i class="fas fa-user-edit"></i>
+                    <i class="bi bi-person-gear"></i>
                     <span>Chỉnh sửa thông tin</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                    <i class="fas fa-lock"></i>
+                    <i class="bi bi-lock"></i>
                     <span>Đổi mật khẩu</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="bi bi-bag"></i>
                     <span>Đơn hàng của tôi</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/cart" class="menu-item">
-                    <i class="fas fa-shopping-cart"></i>
+                    <i class="bi bi-cart3"></i>
                     <span>Giỏ hàng</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                    <i class="fas fa-heart"></i>
+                    <i class="bi bi-heart"></i>
                     <span>Sản phẩm yêu thích</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                    <i class="fas fa-bell"></i>
+                    <i class="bi bi-bell"></i>
                     <span>Thông báo</span>
                 </a>
                 <div class="menu-divider"></div>
                 <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <i class="bi bi-box-arrow-right"></i>
                     <span>Đăng xuất</span>
                 </a>
             </div>
@@ -261,11 +287,11 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="bi bi-chevron-right"></i>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="${pageContext.request.contextPath}/order">Đơn hàng</a>
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="bi bi-chevron-right"></i>
                         </li>
                         <li class="breadcrumb-item active">Chi tiết #${order.id}</li>
                     </ol>
@@ -276,12 +302,12 @@
                 <c:choose>
                     <c:when test="${order.orderStatus == 'PENDING'}">
                         <span class="status-badge status-pending">
-                            <i class="fas fa-clock"></i> Chờ xác nhận
+                            <i class="bi bi-clock"></i> Chờ xác nhận
                         </span>
                     </c:when>
                     <c:when test="${order.orderStatus == 'SHIPPING' || fn:contains(order.orderStatus, 'Đang vận chuyển')}">
                         <span class="status-badge status-shipping">
-                            <i class="fas fa-truck"></i> Đang giao hàng
+                            <i class="bi bi-truck"></i> Đang giao hàng
                         </span>
                         <div style="margin-top:12px;">
                             <form action="${pageContext.request.contextPath}/confirm-received" method="POST" style="display:inline;">
@@ -290,24 +316,24 @@
                                         style="border-radius:20px; padding:8px 20px; font-weight:600;
                                                background:#22c55e; border-color:#22c55e;"
                                         onclick="return confirm('Bạn xác nhận đã nhận được hàng?')">
-                                    <i class="fas fa-check-circle"></i> Đã nhận được hàng
+                                    <i class="bi bi-check-circle-fill"></i> Đã nhận được hàng
                                 </button>
                             </form>
                         </div>
                     </c:when>
                     <c:when test="${order.orderStatus == 'COMPLETED'}">
                         <span class="status-badge status-completed">
-                            <i class="fas fa-check-circle"></i> Đã giao thành công
+                            <i class="bi bi-check-circle-fill"></i> Đã giao thành công
                         </span>
                     </c:when>
                     <c:when test="${order.orderStatus == 'CANCELLED'}">
                         <span class="status-badge status-cancelled">
-                            <i class="fas fa-times-circle"></i> Đã hủy
+                            <i class="bi bi-x-circle-fill"></i> Đã hủy
                         </span>
                     </c:when>
                     <c:otherwise>
                         <span class="status-badge status-pending">
-                            <i class="fas fa-info-circle"></i> ${order.orderStatus}
+                            <i class="bi bi-info-circle-fill"></i> ${order.orderStatus}
                         </span>
                     </c:otherwise>
                 </c:choose>
@@ -317,24 +343,24 @@
         <%-- INFO CARDS --%>
         <div class="order-info-grid">
             <div class="info-card">
-                <h4><i class="fas fa-map-marker-alt"></i> Thông tin nhận hàng</h4>
+                <h4><i class="bi bi-geo-alt-fill"></i> Thông tin nhận hàng</h4>
 
                 <div class="info-row">
-                    <i class="fas fa-map"></i>
+                    <i class="bi bi-geo-alt"></i>
                     <span>${order.shippingAddress}</span>
                 </div>
                 <c:if test="${not empty order.note}">
                 <div class="info-row">
-                    <i class="fas fa-sticky-note"></i>
+                    <i class="bi bi-sticky"></i>
                     <span>Ghi chú: <strong>${order.note}</strong></span>
                 </div>
                 </c:if>
             </div>
 
             <div class="info-card">
-                <h4><i class="fas fa-money-check-alt"></i> Thanh toán &amp; Vận chuyển</h4>
+                <h4><i class="bi bi-credit-card-2-front"></i> Thanh toán &amp; Vận chuyển</h4>
                 <div class="info-row">
-                    <i class="fas fa-credit-card"></i>
+                    <i class="bi bi-credit-card"></i>
                     <span>Phương thức: <strong>
                         <c:choose>
                             <c:when test="${order.paymentMethod == 'COD'}">Thanh toán khi nhận hàng (COD)</c:when>
@@ -343,11 +369,11 @@
                     </strong></span>
                 </div>
                 <div class="info-row">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="bi bi-calendar3"></i>
                     <span>Ngày đặt: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/></span>
                 </div>
                 <div class="info-row">
-                    <i class="fas fa-truck"></i>
+                    <i class="bi bi-truck"></i>
                     <span>Phí vận chuyển: 
                         <strong>
                             <c:choose>
@@ -363,7 +389,7 @@
                 </div>
                 <c:if test="${not empty order.shippingMethod}">
                 <div class="info-row">
-                    <i class="fas fa-shipping-fast"></i>
+                    <i class="bi bi-truck"></i>
                     <span>Phương thức giao hàng: <strong>${order.shippingMethod}</strong></span>
                 </div>
                 </c:if>
@@ -381,7 +407,7 @@
                     }
                 %>
                 <div class="info-row">
-                    <i class="fas fa-clock"></i>
+                    <i class="bi bi-clock"></i>
                     <span>Nhận hàng dự kiến:
                         <strong>
                             <c:choose>
@@ -477,7 +503,7 @@
 
         <div>
             <a href="${pageContext.request.contextPath}/order" class="btn-back">
-                <i class="fas fa-arrow-left"></i> Quay lại danh sách đơn hàng
+                <i class="bi bi-arrow-left"></i> Quay lại danh sách đơn hàng
             </a>
         </div>
 

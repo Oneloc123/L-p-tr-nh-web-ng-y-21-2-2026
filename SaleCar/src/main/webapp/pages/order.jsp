@@ -13,31 +13,44 @@
     <%-- Include header --%>
     <%@ include file="/common/header.jsp" %>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        :root {
+            --black: #000000;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --dark-gold: #b8960f;
+            --gray-dark: #2c2c2c;
+            --gray-medium: #666666;
+            --gray-light: #f5f5f5;
+            --border-light: #e5e5e5;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
 
-        /* Main layout & Sidebar (Giống dashboard/profile) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f6fa; }
+
+        /* Main layout & Sidebar */
         .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .sidebar-menu { width: 280px; background-color: var(--black); color: var(--white); padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
         .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: var(--white); text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
         .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
         .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333333; color: #ffffff; }
-        .menu-item.active { background-color: #ffffff; color: #000000; }
-        .menu-item.active i { color: #000000; }
-        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
+        .menu-item:hover { background-color: #333; color: var(--white); transform: translateX(4px); }
+        .menu-item.active { background-color: var(--white); color: var(--black); }
+        .menu-item.active i { color: var(--black); }
+        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
 
         /* Main Content */
-        .main-content { flex: 1; padding: 30px; }
+        .main-content { flex: 1; padding: 30px; background: #f4f6fa; }
         .content-header { margin-bottom: 30px; }
-        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
-        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; align-items: center; gap: 6px; }
+        .content-header h1 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 10px; letter-spacing: -0.3px; }
+        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; align-items: center; gap: 6px; font-size: 13px; }
         .breadcrumb-item { margin-right: 10px; }
-        .breadcrumb-item a { color: #666666; text-decoration: none; font-size: 13px; }
-        .breadcrumb-item.active { color: #000000; font-weight: 500; font-size: 13px; }
+        .breadcrumb-item a { color: #5a6874; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .breadcrumb-item a:hover { color: var(--gold); }
+        .breadcrumb-item.active { color: var(--black); font-weight: 600; font-size: 13px; }
         .breadcrumb-item i { color: #ccc; font-size: 9px; }
 
         /* ===== ORDER TABS ===== */
@@ -88,8 +101,8 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .order-id-date .id { font-size: 18px; font-weight: 700; color: #000; display: block; margin-bottom: 4px; }
-        .order-id-date .date { font-size: 12px; color: #666; }
+        .order-id-date .id { font-size: 18px; font-weight: 700; color: var(--black); display: block; margin-bottom: 4px; }
+        .order-id-date .date { font-size: 12px; color: var(--gray-medium); }
         .order-id-date .date i { margin-right: 5px; }
         .order-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
@@ -112,81 +125,84 @@
 
         .btn-reorder {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border: 1px solid #000; color: #000;
-            background: transparent; border-radius: 5px; font-size: 12px;
-            font-weight: 500; cursor: pointer; transition: all 0.25s;
+            padding: 6px 16px; border: 1.5px solid var(--black); color: var(--black);
+            background: transparent; border-radius: 20px; font-size: 12px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
-        .btn-reorder:hover { background: #000; color: #fff; }
+        .btn-reorder:hover { background: var(--black); color: var(--gold); transform: translateY(-1px); }
 
         .btn-cancel-order {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border: 1px solid #dc3545; color: #dc3545;
-            background: transparent; border-radius: 5px; font-size: 12px;
-            font-weight: 500; cursor: pointer; transition: all 0.25s;
+            padding: 6px 16px; border: 1.5px solid var(--danger); color: var(--danger);
+            background: transparent; border-radius: 20px; font-size: 12px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
         }
-        .btn-cancel-order:hover { background: #dc3545; color: #fff; }
+        .btn-cancel-order:hover { background: var(--danger); color: var(--white); transform: translateY(-1px); }
 
         .order-info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0;
             padding: 20px 28px;
-            border-bottom: 1px solid #eeeeee;
-            background: #fff;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--white);
         }
-        .info-block h4 { font-size: 11px; text-transform: uppercase; color: #000; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
-        .info-block p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
-        .info-block i { margin-right: 6px; color: #000; }
+        .info-block h4 { font-size: 11px; text-transform: uppercase; color: var(--black); margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; }
+        .info-block p { font-size: 13px; color: var(--gray-medium); line-height: 1.6; margin: 0; }
+        .info-block i { margin-right: 6px; color: var(--black); }
 
         .order-items-wrapper { padding: 0 28px 20px; }
         .order-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .order-table th { padding: 10px 0; border-bottom: 2px solid #000; text-align: left; font-size: 11px; color: #000; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .order-table td { padding: 16px 0; border-bottom: 1px dashed #eee; vertical-align: middle; font-size: 14px; }
+        .order-table th { padding: 10px 0; border-bottom: 2px solid var(--black); text-align: left; font-size: 11px; color: var(--black); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .order-table td { padding: 16px 0; border-bottom: 1px dashed var(--border-light); vertical-align: middle; font-size: 14px; transition: background 0.2s; }
+        .order-table tbody tr:hover td { background: #f8f9fa; }
         .item-name { font-weight: 500; color: #111; }
         .item-price { color: #111; font-weight: 500; }
-        .item-total { font-weight: 700; color: #d9534f; text-align: right; }
+        .item-total { font-weight: 700; color: var(--danger); text-align: right; }
         .col-right { text-align: right; }
         .col-center { text-align: center; }
 
         .order-footer {
             padding: 18px 28px;
             background: #fafafa;
-            border-top: 1px solid #eeeeee;
+            border-top: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .btn-detail {
             display: inline-flex; align-items: center; gap: 7px;
-            padding: 9px 20px; border: 1px solid #000; color: #000;
-            border-radius: 6px; text-decoration: none; font-weight: 500;
+            padding: 10px 22px; border: 1.5px solid var(--black); color: var(--black);
+            border-radius: 25px; text-decoration: none; font-weight: 600;
             font-size: 13px; transition: all 0.25s;
         }
-        .btn-detail:hover { background: #000; color: #fff; }
-        .total-amount-label { font-size: 13px; color: #666; margin-right: 12px; }
-        .total-amount-value { font-size: 22px; font-weight: 700; color: #d9534f; }
+        .btn-detail:hover { background: var(--black); color: var(--gold); transform: translateY(-1px); }
+        .total-amount-label { font-size: 13px; color: var(--gray-medium); margin-right: 12px; }
+        .total-amount-value { font-size: 22px; font-weight: 700; color: var(--danger); }
 
         /* Empty state */
-        .empty-state { text-align: center; padding: 70px 30px; color: #666; }
+        .empty-state { text-align: center; padding: 70px 30px; color: var(--gray-medium); }
         .empty-state i { font-size: 64px; color: #ddd; margin-bottom: 20px; display: block; }
-        .empty-state h4 { font-size: 22px; color: #000; margin-bottom: 20px; }
-        .btn-shop { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: #000; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.25s; }
-        .btn-shop:hover { background: #333; }
+        .empty-state h4 { font-size: 22px; color: var(--black); margin-bottom: 20px; }
+        .btn-shop { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--black); color: var(--white); border-radius: 40px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.25s; }
+        .btn-shop:hover { background: var(--gold); color: var(--black); transform: translateY(-2px); }
 
-        /* ===== MODAL ===== */
-        .modal-content { background: #fff !important; border: none !important; border-radius: 10px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .modal-header { border-bottom: 1px solid #eee !important; padding: 20px 25px !important; }
-        .modal-title { color: #dc3545 !important; font-size: 20px !important; font-weight: 600; }
+        /* Modal */
+        .modal-content { background: var(--white) !important; border: none !important; border-radius: 16px !important; box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+        .modal-header { border-bottom: 1px solid var(--border-light) !important; padding: 20px 25px !important; }
+        .modal-title { font-size: 20px !important; font-weight: 700; }
+        #cancelOrderModal .modal-title { color: var(--danger) !important; }
+        #reorderModal .modal-title { color: var(--black) !important; }
         .btn-close { filter: none !important; opacity: 0.5 !important; }
         .modal-body p { font-size: 15px; }
-        .modal-body label { font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
-        .form-select { background: #fff !important; border: 1px solid #ccc !important; border-radius: 6px !important; }
-        .form-select:focus { border-color: #000 !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.1) !important; }
+        .modal-body label { font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700; }
+        .form-select { background: var(--white) !important; border: 1.5px solid var(--border-light) !important; border-radius: 10px !important; padding: 10px 14px !important; }
+        .form-select:focus { border-color: var(--black) !important; box-shadow: 0 0 0 3px rgba(0,0,0,0.08) !important; }
         .modal-footer { border-top: none !important; padding: 15px 25px 20px !important; gap: 10px; }
-        .btn-keep { padding: 9px 20px; background: transparent; border: 1px solid #ccc; color: #666; border-radius: 6px; font-size: 13px; cursor: pointer; transition: 0.25s; font-weight: 500; }
-        .btn-keep:hover { border-color: #000; color: #000; }
-        .btn-confirm-cancel { padding: 9px 22px; background: #dc3545; border: 1px solid #dc3545; color: #fff; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.25s; }
-        .btn-confirm-cancel:hover { background: #c82333; }
+        .btn-keep { padding: 10px 22px; background: transparent; border: 1.5px solid var(--border-light); color: var(--gray-medium); border-radius: 25px; font-size: 13px; cursor: pointer; transition: 0.25s; font-weight: 500; }
+        .btn-keep:hover { border-color: var(--black); color: var(--black); }
+        .btn-confirm-cancel { padding: 10px 24px; background: var(--danger); border: 1.5px solid var(--danger); color: var(--white); border-radius: 25px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-confirm-cancel:hover { background: #c82333; transform: translateY(-1px); }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -200,40 +216,40 @@
     <div class="sidebar-menu">
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i>
+                <i class="bi bi-speedometer2"></i>
                 <span>Bảng điều khiển</span>
             </a>
             <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                <i class="fas fa-user-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <span>Thông tin cá nhân</span>
             </a>
             <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                <i class="fas fa-user-edit"></i>
+                <i class="bi bi-person-gear"></i>
                 <span>Chỉnh sửa thông tin</span>
             </a>
             <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                <i class="fas fa-lock"></i>
+                <i class="bi bi-lock"></i>
                 <span>Đổi mật khẩu</span>
             </a>
             <a href="${pageContext.request.contextPath}/order" class="menu-item active">
-                <i class="fas fa-shopping-bag"></i>
+                <i class="bi bi-bag"></i>
                 <span>Đơn hàng của tôi</span>
             </a>
             <a href="${pageContext.request.contextPath}/cart" class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
+                <i class="bi bi-cart3"></i>
                 <span>Giỏ hàng</span>
             </a>
             <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                <i class="fas fa-heart"></i>
+                <i class="bi bi-heart"></i>
                 <span>Sản phẩm yêu thích</span>
             </a>
             <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                <i class="fas fa-bell"></i>
+                <i class="bi bi-bell"></i>
                 <span>Thông báo</span>
             </a>
             <div class="menu-divider"></div>
             <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
+                <i class="bi bi-box-arrow-right"></i>
                 <span>Đăng xuất</span>
             </a>
         </div>
@@ -249,12 +265,12 @@
                     <li class="breadcrumb-item">
 
                         <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-                        <i class="fas fa-chevron-right"></i>
+                        <i class="bi bi-chevron-right"></i>
                     </li>
                     <li class="breadcrumb-item">
 
                         <a href="${pageContext.request.contextPath}/profile">Tài khoản</a>
-                        <i class="fas fa-chevron-right"></i>
+                        <i class="bi bi-chevron-right"></i>
                     </li>
                     <li class="breadcrumb-item active">Đơn hàng của tôi</li>
                 </ol>
@@ -305,7 +321,7 @@
                     <div class="order-id-date">
                         <span class="id">Đơn hàng #${order.id}</span>
                         <span class="date">
-                            <i class="far fa-clock"></i>
+                            <i class="bi bi-clock"></i>
 
                             <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy HH:mm"/>
                         </span>
@@ -318,11 +334,11 @@
                             <c:when test="${statusCategory == 'cancelled'}">
 
                                 <span class="order-status status-cancelled">
-                                    <i class="fas fa-times-circle"></i> ${order.orderStatus}
+                                    <i class="bi bi-x-circle"></i> ${order.orderStatus}
                                 </span>
 
                                 <button type="button" class="btn-reorder" onclick="reOrder('${order.id}')">
-                                    <i class="fas fa-redo"></i> Mua lại đơn này
+                                    <i class="bi bi-arrow-repeat"></i> Mua lại đơn này
                                 </button>
 
                              </c:when>
@@ -331,11 +347,11 @@
                             <c:when test="${statusCategory == 'completed'}">
 
                                 <span class="order-status status-completed">
-                                    <i class="fas fa-check-circle"></i> ${order.orderStatus}
+                                    <i class="bi bi-check-circle-fill"></i> ${order.orderStatus}
                                 </span>
 
                                 <button type="button" class="btn-reorder" onclick="reOrder('${order.id}')">
-                                    <i class="fas fa-redo"></i> Mua lại lần nữa
+                                    <i class="bi bi-arrow-repeat"></i> Mua lại lần nữa
                                 </button>
 
                              </c:when>
@@ -343,7 +359,7 @@
                             <%-- ĐANG VẬN CHUYỂN --%>
                             <c:when test="${statusCategory == 'shipping'}">
                                 <span class="order-status status-shipping">
-                                    <i class="fas fa-truck"></i> ${order.orderStatus}
+                                    <i class="bi bi-truck"></i> ${order.orderStatus}
                                 </span>
                                 <form action="${pageContext.request.contextPath}/confirm-received" method="POST" style="display:inline; margin-top: 6px;">
                                     <input type="hidden" name="id" value="${order.id}">
@@ -351,7 +367,7 @@
                                             style="border-radius:20px; padding:6px 16px; font-weight:600;
                                                    background:#22c55e; border-color:#22c55e; font-size:12px;"
                                             onclick="return confirm('Bạn xác nhận đã nhận được hàng?')">
-                                        <i class="fas fa-check-circle"></i> Đã nhận được hàng
+                                        <i class="bi bi-check-circle-fill"></i> Đã nhận được hàng
                                     </button>
                                 </form>
                             </c:when>
@@ -360,7 +376,7 @@
                             <c:when test="${order.orderStatus == 'CONFIRMED' ||
  fn:contains(order.orderStatus, 'Đã xác nhận')}">
                                 <span class="order-status status-confirmed">
-                                    <i class="fas fa-check-double"></i> ${order.orderStatus}
+                                    <i class="bi bi-check2-all"></i> ${order.orderStatus}
 
                                 </span>
                             </c:when>
@@ -369,13 +385,13 @@
                             <c:otherwise>
 
                                 <span class="order-status status-processing">
-                                    <i class="fas fa-spinner fa-spin"></i> ${order.orderStatus}
+                                    <i class="bi bi-arrow-repeat"></i> ${order.orderStatus}
 
                                 </span>
                                 <c:if test="${order.orderStatus == 'Đang xử lý' ||
  order.orderStatus == 'PENDING'}">
                                     <button type="button" class="btn-cancel-order" onclick="openCancelModal('${order.id}')">
-                                        <i class="fas fa-times"></i> Huỷ đơn hàng
+                                        <i class="bi bi-x-lg"></i> Huỷ đơn hàng
 
                                      </button>
                                 </c:if>
@@ -390,16 +406,16 @@
                     <div class="info-block">
 
                         <h4>Thông tin giao hàng</h4>
-                        <p><i class="fas fa-map-marker-alt"></i> ${order.shippingAddress}</p>
+                        <p><i class="bi bi-geo-alt"></i> ${order.shippingAddress}</p>
                     </div>
                     <div class="info-block">
 
                         <h4>Phương thức thanh toán</h4>
-                        <p><i class="fas fa-credit-card"></i> ${order.paymentMethod}</p>
+                        <p><i class="bi bi-credit-card"></i> ${order.paymentMethod}</p>
                     </div>
                     <div class="info-block">
                         <h4>Vận chuyển &amp; Dự kiến</h4>
-                        <p><i class="fas fa-truck"></i> Phí ship:
+                        <p><i class="bi bi-truck"></i> Phí ship:
                             <c:choose>
                                 <c:when test="${order.shippingFee > 0}">
                                     <fmt:formatNumber value="${order.shippingFee}" type="number" groupingUsed="true"/> ₫
@@ -410,7 +426,7 @@
                             </c:choose>
                         </p>
                         <c:if test="${not empty order.shippingMethod}">
-                        <p><i class="fas fa-shipping-fast"></i> Phương thức giao: <strong>${order.shippingMethod}</strong></p>
+                        <p><i class="bi bi-truck"></i> Phương thức giao: <strong>${order.shippingMethod}</strong></p>
                         </c:if>
                         <c:if test="${!fn:contains(order.orderStatus, 'Đã huỷ') && !fn:contains(order.orderStatus, 'Đã hủy') && order.orderStatus != 'CANCELLED' && !fn:contains(order.orderStatus, 'Đã giao') && order.orderStatus != 'DELIVERED' && order.orderStatus != 'COMPLETED'}">
                         <%
@@ -424,7 +440,7 @@
                                 pageContext.setAttribute("estTo", cal.getTime());
                             }
                         %>
-                        <p><i class="fas fa-clock"></i> Nhận hàng:
+                        <p><i class="bi bi-clock"></i> Nhận hàng:
                             <strong>
                                 <fmt:formatDate value="${estFrom}" pattern="dd/MM"/> – <fmt:formatDate value="${estTo}" pattern="dd/MM/yyyy"/>
                             </strong>
@@ -473,7 +489,7 @@
                 <%-- FOOTER --%>
                 <div class="order-footer">
                     <a href="${pageContext.request.contextPath}/order-detail?id=${order.id}" class="btn-detail">
-                        <i class="fas fa-info-circle"></i> Xem chi tiết
+                        <i class="bi bi-info-circle"></i> Xem chi tiết
 
                     </a>
                     <div>
@@ -491,10 +507,10 @@
 
         <c:if test="${empty orders}">
             <div class="empty-state">
-                <i class="fas fa-box-open"></i>
+                <i class="bi bi-box-seam"></i>
                 <h4>Bạn chưa có đơn hàng nào</h4>
                 <a href="${pageContext.request.contextPath}/home" class="btn-shop">
-                    <i class="fas fa-arrow-right"></i> Tiếp tục
+                    <i class="bi bi-arrow-right"></i> Tiếp tục
  mua sắm
                 </a>
             </div>
@@ -511,7 +527,7 @@
                 <div class="modal-header">
 
                     <h5 class="modal-title">
-                        <i class="fas fa-exclamation-triangle me-2" style="color: #dc3545;"></i>Xác nhận hủy đơn
+                        <i class="bi bi-exclamation-triangle me-2" style="color: #dc3545;"></i>Xác nhận hủy đơn
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -546,6 +562,36 @@
     </div>
 </div>
 
+<%-- REORDER MODAL --%>
+<div class="modal fade" id="reorderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 1px solid #e5e5e5; padding: 20px 25px;">
+                <h5 class="modal-title" style="color: var(--black); font-size: 20px; font-weight: 700;">
+                    <i class="bi bi-arrow-repeat me-2" style="color: var(--gold);"></i>Xác nhận mua lại
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 25px;">
+                <p style="font-size: 15px; color: #333;">
+                    Bạn có muốn thêm sản phẩm từ đơn hàng <strong>#<span id="reorderDisplayId"></span></strong> vào giỏ hàng không?
+                </p>
+                <input type="hidden" id="reorderId" value="">
+            </div>
+            <div class="modal-footer" style="border-top: none; padding: 15px 25px 20px; gap: 10px;">
+                <button type="button" class="btn-keep" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>Để sau
+                </button>
+                <button type="button" class="btn-reorder" id="confirmReorderBtn" style="padding: 10px 24px; background: var(--black); color: var(--white); border-radius: 25px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; border: 1.5px solid var(--black);"
+                        onmouseover="this.style.background='var(--gold)'; this.style.color='var(--black)'; this.style.borderColor='var(--black)'"
+                        onmouseout="this.style.background='var(--black)'; this.style.color='var(--white)'; this.style.borderColor='var(--black)'">
+                    <i class="bi bi-cart-plus me-1"></i>Thêm vào giỏ hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function openCancelModal(orderId) {
         document.getElementById('displayOrderId').innerText = orderId;
@@ -565,10 +611,20 @@
     }
 
     function reOrder(orderId) {
-        if (confirm('Bạn muốn mua lại đơn hàng #' + orderId + '?')) {
-            window.location.href = '${pageContext.request.contextPath}/reorder?id=' + orderId;
-        }
+        document.getElementById('reorderDisplayId').innerText = orderId;
+        document.getElementById('reorderId').value = orderId;
+        var reorderModal = new bootstrap.Modal(document.getElementById('reorderModal'));
+        reorderModal.show();
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('confirmReorderBtn').addEventListener('click', function() {
+            var orderId = document.getElementById('reorderId').value;
+            if (orderId) {
+                window.location.href = '${pageContext.request.contextPath}/reorder?id=' + orderId;
+            }
+        });
+    });
 </script>
 
 </body>

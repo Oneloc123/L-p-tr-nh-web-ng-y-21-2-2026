@@ -12,35 +12,47 @@
     <%-- Include header --%>
     <%@ include file="/common/header.jsp" %>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        :root {
+            --black: #000000;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --dark-gold: #b8960f;
+            --gray-dark: #2c2c2c;
+            --gray-medium: #666666;
+            --gray-light: #f5f5f5;
+            --border-light: #e5e5e5;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
 
-        /* Main layout & Sidebar (Dùng chung) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f6fa; }
+
+        /* Main layout & Sidebar */
         .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333333; text-align: center; }
-        .sidebar-header h3 { color: #ffffff; font-size: 24px; font-weight: 600; margin: 0; }
-        .sidebar-header p { color: #999999; font-size: 14px; margin-top: 5px; }
+        .sidebar-menu { width: 280px; background-color: var(--black); color: var(--white); padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
+        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333; text-align: center; }
+        .sidebar-header h3 { color: var(--white); font-size: 24px; font-weight: 600; margin: 0; }
+        .sidebar-header p { color: #999; font-size: 14px; margin-top: 5px; }
         .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
+        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: var(--white); text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
         .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
         .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333333; color: #ffffff; }
-        .menu-item.active { background-color: #ffffff; color: #000000; }
-        .menu-item.active i { color: #000000; }
-        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
+        .menu-item:hover { background-color: #333; color: var(--white); transform: translateX(4px); }
+        .menu-item.active { background-color: var(--white); color: var(--black); }
+        .menu-item.active i { color: var(--black); }
+        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
 
         /* Main Content */
-        .main-content { flex: 1; padding: 30px; }
+        .main-content { flex: 1; padding: 30px; background: #f4f6fa; }
         .content-header { margin-bottom: 30px; }
-        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
-        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; }
+        .content-header h1 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 10px; letter-spacing: -0.3px; }
+        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; flex-wrap: wrap; font-size: 13px; }
         .breadcrumb-item { margin-right: 10px; }
-        .breadcrumb-item a { color: #666666; text-decoration: none; }
-        .breadcrumb-item.active { color: #000000; font-weight: 500; }
+        .breadcrumb-item a { color: #5a6874; text-decoration: none; transition: color 0.2s; }
+        .breadcrumb-item a:hover { color: var(--gold); }
+        .breadcrumb-item.active { color: var(--black); font-weight: 600; }
 
         /* Checkout Layout */
         .checkout-container { display: flex; gap: 30px; align-items: flex-start; }
@@ -48,36 +60,109 @@
         .checkout-summary-section { flex: 1; position: sticky; top: 30px; }
 
         /* Form & Cards */
-        .checkout-card { background: #ffffff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; margin-bottom: 25px; }
-        .checkout-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #000; display: flex; align-items: center; gap: 10px; }
+        .checkout-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s;
+        }
+        .checkout-card:hover {
+            border-color: #ddd;
+        }
+        .checkout-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--black);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--black);
+        }
 
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #333; }
-        .form-control { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: border-color 0.3s; }
-        .form-control:focus { outline: none; border-color: #000; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #333; text-transform: uppercase; letter-spacing: 0.3px; }
+        .form-control { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border-light); border-radius: 10px; font-size: 14px; transition: border-color 0.3s, box-shadow 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        textarea.form-control { resize: vertical; min-height: 80px; }
 
         /* Payment Methods */
-        .payment-method { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
-        .payment-method:hover { border-color: #000; }
-        .payment-method input[type="radio"] { width: 18px; height: 18px; accent-color: #000; }
-        .payment-icon { font-size: 24px; color: #000; width: 40px; text-align: center; }
-        .payment-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 5px; color: #000; }
-        .payment-details p { font-size: 13px; color: #666; margin: 0; }
+        .payment-method {
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+        .payment-method:hover {
+            border-color: var(--black);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .payment-method input[type="radio"] { width: 18px; height: 18px; accent-color: var(--black); }
+        .payment-icon { font-size: 24px; color: var(--black); width: 40px; text-align: center; }
+        .payment-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--black); }
+        .payment-details p { font-size: 13px; color: var(--gray-medium); margin: 0; }
 
         /* Order Summary */
-        .summary-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px dashed #eee; }
+        .summary-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px dashed var(--border-light); transition: all 0.2s; }
+        .summary-item:hover { background: #fafafa; margin-left: -8px; margin-right: -8px; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
         .summary-item-info { display: flex; align-items: center; gap: 15px; }
-        .summary-img { width: 60px; height: 45px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999; }
-        .summary-name { font-size: 14px; font-weight: 600; color: #000; }
-        .summary-qty { font-size: 12px; color: #666; }
-        .summary-price { font-size: 14px; font-weight: 600; color: #000; }
+        .summary-img { width: 60px; height: 45px; background: var(--gray-light); border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-light); }
+        .summary-img img { width: 100%; height: 100%; object-fit: cover; }
+        .summary-name { font-size: 14px; font-weight: 600; color: var(--black); }
+        .summary-qty { font-size: 12px; color: var(--gray-medium); }
+        .summary-price { font-size: 14px; font-weight: 600; color: var(--black); }
 
         .summary-calc { margin-top: 20px; }
-        .calc-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; color: #666; }
-        .calc-row.total { border-top: 2px solid #000; padding-top: 15px; font-size: 18px; font-weight: 700; color: #d9534f; margin-bottom: 25px; }
+        .calc-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; color: var(--gray-medium); padding: 3px 0; }
+        .calc-row.total {
+            border-top: 2px solid var(--black);
+            padding-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--danger);
+            margin-bottom: 25px;
+        }
 
-        .btn-submit-order { width: 100%; background-color: #000; color: #fff; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-submit-order:hover { background-color: #333; }
+        .btn-submit-order {
+            width: 100%;
+            background-color: var(--black);
+            color: var(--white);
+            padding: 15px;
+            border: 2px solid transparent;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-submit-order:hover {
+            background-color: var(--gold);
+            border-color: var(--black);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212,175,55,0.3);
+        }
+        .btn-submit-order:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
 
         /* Responsive */
         @media (max-width: 992px) {
@@ -85,34 +170,27 @@
             .checkout-summary-section { position: static; width: 100%; }
         }
 
-        /* edit address */
+        /* Address slots */
         .address-slot {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            padding: 16px 18px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             position: relative;
             display: block;
-            background: #fff;
+            background: var(--white);
         }
         .address-slot:hover {
-            border-color: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border-color: var(--black);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            transform: translateX(4px);
         }
         .address-slot.selected {
-            border-color: #000;
+            border-color: var(--black);
             background-color: #fafafa;
-        }
-        .address-slot.selected::after {
-            content: '\F26A';
-            font-family: 'bootstrap-icons';
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: #000;
-            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         }
         .address-radio-hidden {
             position: absolute;
@@ -120,30 +198,31 @@
             width: 0;
             height: 0;
         }
-        .address-name { font-weight: 600; color: #000; margin-bottom: 5px; font-size: 15px; }
+        .address-name { font-weight: 700; color: var(--black); margin-bottom: 5px; font-size: 15px; }
         .address-phone { font-size: 13px; color: #555; margin-bottom: 5px; }
-        .address-detail { font-size: 13px; color: #666; margin-bottom: 0; line-height: 1.4; }
+        .address-detail { font-size: 13px; color: var(--gray-medium); margin-bottom: 0; line-height: 1.4; }
         .badge-default {
-            background: #000; color: #fff; font-size: 10px;
-            padding: 3px 8px; border-radius: 12px; margin-left: 8px; vertical-align: middle;
+            background: var(--black); color: var(--white); font-size: 10px;
+            padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle;
+            font-weight: 600;
         }
 
-        /* ================= VOUCHER INPUT ================= */
+        /* Voucher */
         .voucher-input-group { transition: all 0.3s; }
         .input-row { display: flex; align-items: stretch; }
-        .input-row .form-control:focus { border-color: #000; box-shadow: none; }
-        .input-row .btn-dark { border: 1px solid #000; border-left: none; }
-        .input-row .btn-dark:hover { background: #333; }
+        .input-row .form-control:focus { border-color: var(--black); box-shadow: none; }
+        .input-row .btn-dark { border: 1px solid var(--black); border-left: none; }
+        .input-row .btn-dark:hover { background: var(--gray-dark); }
 
-        .voucher-msg { font-size: 13px; padding: 8px 12px; border-radius: 6px; }
+        .voucher-msg { font-size: 13px; padding: 8px 12px; border-radius: 8px; }
         .voucher-msg.success { color: #155724; background: #d4edda; border: 1px solid #c3e6cb; }
         .voucher-msg.error { color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; }
 
         .voucher-applied {
             display: flex; align-items: center; justify-content: space-between;
             background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border: 1px solid #a5d6a7; border-radius: 8px;
-            padding: 12px 16px; margin-top: 10px;
+            border: 1px solid #a5d6a7; border-radius: 12px;
+            padding: 14px 18px; margin-top: 10px;
             animation: slideIn 0.3s ease;
         }
         @keyframes slideIn {
@@ -156,108 +235,57 @@
         .voucher-applied-desc { font-size: 12px; color: #388e3c; margin-top: 2px; }
         .voucher-remove-btn {
             background: transparent; border: 1px solid #a5d6a7;
-            color: #2e7d32; padding: 6px 14px; border-radius: 6px;
+            color: #2e7d32; padding: 8px 16px; border-radius: 8px;
             font-size: 12px; font-weight: 600; cursor: pointer;
             transition: all 0.2s;
         }
         .voucher-remove-btn:hover {
-            background: #2e7d32; color: #fff; border-color: #2e7d32;
+            background: #2e7d32; color: var(--white); border-color: #2e7d32;
         }
 
         .loading-spinner {
             display: inline-block; width: 14px; height: 14px;
-            border: 2px solid #fff; border-top-color: transparent;
+            border: 2px solid var(--white); border-top-color: transparent;
             border-radius: 50%; animation: spin 0.6s linear infinite;
         }
+        .spin { animation: spin 0.6s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Nút thêm địa chỉ dashed */
+        /* Add address button */
         .btn-add-address {
-            border: 2px dashed #ccc;
+            border: 2px dashed var(--border-light);
             background: transparent;
-            color: #666;
+            color: var(--gray-medium);
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 12px;
             font-weight: 600;
-            transition: 0.2s;
+            transition: all 0.25s;
             text-align: center;
             cursor: pointer;
         }
         .btn-add-address:hover {
-            border-color: #000;
-            color: #000;
+            border-color: var(--black);
+            color: var(--black);
             background: #fafafa;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
     <div class="sidebar-menu">
-        <!-- menu ben trai -->
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>Bảng điều khiển</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item ">
-                <i class="fas fa-user-circle"></i>
-                <span>Thông tin cá nhân</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                <i class="fas fa-user-edit"></i>
-                <span>Chỉnh sửa thông tin</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                <i class="fas fa-lock"></i>
-                <span>Đổi mật khẩu</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                <i class="fas fa-shopping-bag"></i>
-                <span>Đơn hàng của tôi</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item active">
-                <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                <i class="fas fa-heart"></i>
-                <span>Sản phẩm yêu thích</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                <i class="fas fa-bell"></i>
-                <span>Thông báo</span>
-            </a>
-
-<%--            <div class="menu-divider"></div>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/address-list" class="menu-item">--%>
-<%--                <i class="fas fa-map-marker-alt"></i>--%>
-<%--                <span>Sổ địa chỉ</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">--%>
-<%--                <i class="fas fa-bell"></i>--%>
-<%--                <span>Thông báo</span>--%>
-<%--            </a>--%>
-
-<%--            <a href="${pageContext.request.contextPath}/settings" class="menu-item">--%>
-<%--                <i class="fas fa-cog"></i>--%>
-<%--                <span>Cài đặt</span>--%>
-<%--            </a>--%>
-
+            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="bi bi-speedometer2"></i><span>Bảng điều khiển</span></a>
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item "><i class="bi bi-person-circle"></i><span>Thông tin cá nhân</span></a>
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item"><i class="bi bi-person-gear"></i><span>Chỉnh sửa thông tin</span></a>
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item"><i class="bi bi-lock"></i><span>Đổi mật khẩu</span></a>
+            <a href="${pageContext.request.contextPath}/order" class="menu-item"><i class="bi bi-bag"></i><span>Đơn hàng của tôi</span></a>
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item active"><i class="bi bi-cart3"></i><span>Giỏ hàng</span></a>
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item"><i class="bi bi-heart"></i><span>Sản phẩm yêu thích</span></a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item"><i class="bi bi-bell"></i><span>Thông báo</span></a>
             <div class="menu-divider"></div>
-
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Đăng xuất</span>
-            </a>
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item"><i class="bi bi-box-arrow-right"></i><span>Đăng xuất</span></a>
         </div>
     </div>
 
@@ -268,8 +296,8 @@
             <h1>Thanh toán</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
-                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a> <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang chủ</a> <i class="bi bi-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
+                    <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a> <i class="bi bi-chevron-right" style="font-size: 10px; margin: 0 5px;"></i></li>
                     <li class="breadcrumb-item active">Thanh toán</li>
                 </ol>
             </nav>
@@ -282,7 +310,7 @@
 
                 <div class="checkout-form-section">
                     <div class="checkout-card">
-                        <h3><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng (Shipping Address)</h3>
+                        <h3><i class="bi bi-geo-alt-fill"></i> Thông tin giao hàng (Shipping Address)</h3>
 
                         <div class="form-group">
                             <label for="fullName">Họ và tên người nhận</label>
@@ -303,7 +331,7 @@
                             <c:choose>
                         <c:when test="${empty listAddress}">
                             <div class="alert alert-warning py-2 mb-3" style="font-size: 14px; border-radius: 8px;">
-                                <i class="fas fa-exclamation-triangle"></i> Bạn chưa có địa chỉ nào, hãy thêm mới để đặt hàng!
+                                <i class="bi bi-exclamation-triangle-fill"></i> Bạn chưa có địa chỉ nào, hãy thêm mới để đặt hàng!
                             </div>
                         </c:when>
                             <c:otherwise>
@@ -313,10 +341,10 @@
                             data-ghn-district-id="${addr.ghnDistrictId}" data-ghn-ward-code="${addr.ghnWardCode}">
                             <label for="${radioId}" class="address-slot ${status.first ? 'selected' : ''}">
                                 <div class="address-name">
-                                    <i class="fas fa-user-tag text-muted me-1"></i> ${addr.name}
+                                    <i class="bi bi-person-tag text-muted me-1"></i> ${addr.name}
                                     <c:if test="${addr.type == 'main'}"><span class="badge-default">Mặc định</span></c:if>
                                 </div>
-                            <div class="address-detail"><i class="fas fa-map-marker-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
+                            <div class="address-detail"><i class="bi bi-geo-alt text-muted me-2"></i> ${addr.street}, ${addr.commune}, ${addr.province}</div>
                             </label>
                     </c:forEach>
                             </c:otherwise>
@@ -324,18 +352,18 @@
                     </div>
 
                             <button type="button" class="btn-add-address mt-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                                <i class="fas fa-plus-circle me-1"></i> Thêm địa chỉ mới
+                                <i class="bi bi-plus-circle me-1"></i> Thêm địa chỉ mới
                             </button>
                         </div>
                     </div>
 
                     <!-- SHIPPING METHOD -->
                     <div class="checkout-card">
-                        <h3><i class="fas fa-shipping-fast"></i> Phương thức giao hàng</h3>
+                        <h3><i class="bi bi-truck"></i> Phương thức giao hàng</h3>
 
                         <label class="payment-method">
                             <input type="radio" name="shippingMethod" value="Tiêu chuẩn" checked>
-                            <div class="payment-icon"><i class="fas fa-box"></i></div>
+                            <div class="payment-icon"><i class="bi bi-box"></i></div>
                             <div class="payment-details">
                                 <h4>Giao hàng tiêu chuẩn</h4>
                                 <p>Nhận hàng từ 5-8 ngày. Phí ship được tính theo khu vực.</p>
@@ -344,7 +372,7 @@
 
                         <label class="payment-method">
                             <input type="radio" name="shippingMethod" value="Nhanh">
-                            <div class="payment-icon"><i class="fas fa-rocket"></i></div>
+                            <div class="payment-icon"><i class="bi bi-rocket-takeoff"></i></div>
                             <div class="payment-details">
                                 <h4>Giao hàng nhanh</h4>
                                 <p>Nhận hàng trong 1-3 ngày. Phí ship cao hơn.</p>
@@ -354,7 +382,7 @@
 
                     <!-- ORDER NOTE -->
                     <div class="checkout-card">
-                        <h3><i class="fas fa-sticky-note"></i> Ghi chú đơn hàng</h3>
+                        <h3><i class="bi bi-sticky"></i> Ghi chú đơn hàng</h3>
                         <div class="form-group">
                             <label for="note">Lời nhắn cho người bán (không bắt buộc)</label>
                             <textarea id="note" name="note" class="form-control" rows="3"
@@ -364,11 +392,11 @@
                     </div>
 
                     <div class="checkout-card">
-                        <h3><i class="fas fa-wallet"></i> Phương thức thanh toán (Payment Method)</h3>
+                        <h3><i class="bi bi-wallet2"></i> Phương thức thanh toán (Payment Method)</h3>
 
                         <label class="payment-method">
                             <input type="radio" name="paymentMethod" value="COD" checked>
-                            <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
+                            <div class="payment-icon"><i class="bi bi-cash"></i></div>
                             <div class="payment-details">
                                 <h4>Thanh toán khi nhận hàng (COD)</h4>
                                 <p>Thanh toán bằng tiền mặt khi giao hàng tận nơi.</p>
@@ -377,7 +405,7 @@
 
                         <label class="payment-method">
                             <input type="radio" name="paymentMethod" value="VNPAY">
-                            <div class="payment-icon"><i class="fas fa-qrcode" style="color: #005baa;"></i></div>
+                            <div class="payment-icon"><i class="bi bi-qr-code" style="color: #005baa;"></i></div>
                             <div class="payment-details">
                                 <h4>Thanh toán qua VNPAY</h4>
                                 <p>Thanh toán an toàn qua ví điện tử VNPay hoặc quét mã QR ứng dụng ngân hàng.</p>
@@ -388,7 +416,7 @@
 
                 <div class="checkout-summary-section">
                     <div class="checkout-card">
-                        <h3><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h3>
+                        <h3><i class="bi bi-receipt"></i> Tóm tắt đơn hàng</h3>
 
                         <!-- Voucher -->
                         <div class="mb-3">
@@ -400,7 +428,7 @@
                                            style="flex:1; border-radius: 6px 0 0 6px;">
                                     <button type="button" id="btnApplyVoucher" class="btn btn-dark"
                                             style="border-radius: 0 6px 6px 0; padding: 12px 20px; font-weight: 600;">
-                                        <i class="fas fa-tag"></i> Áp dụng
+                                        <i class="bi bi-tag"></i> Áp dụng
                                     </button>
                                 </div>
                                 <div id="voucherMessage" class="voucher-msg mt-2" style="display:none;"></div>
@@ -409,14 +437,14 @@
                             <!-- Voucher applied card -->
                             <div id="voucherAppliedCard" class="voucher-applied" style="display:none;">
                                 <div class="voucher-applied-left">
-                                    <i class="fas fa-check-circle"></i>
+                                    <i class="bi bi-check-circle-fill"></i>
                                     <div>
                                         <div class="voucher-applied-code" id="voucherAppliedCode"></div>
                                         <div class="voucher-applied-desc" id="voucherAppliedDesc"></div>
                                     </div>
                                 </div>
                                 <button type="button" id="btnRemoveVoucher" class="voucher-remove-btn">
-                                    <i class="fas fa-times"></i> Hủy
+                                    <i class="bi bi-x"></i> Hủy
                                 </button>
                             </div>
                         </div>
@@ -467,14 +495,14 @@
                             <%-- Nếu danh sách địa chỉ rỗng -> Hiển thị nút ảo bị mờ (Disabled) --%>
                             <c:when test="${empty listAddress}">
                                 <button type="button" class="btn-submit-order" style="background-color: #6c757d; cursor: not-allowed;" disabled>
-                                    <i class="fas fa-lock"></i> Vui lòng thêm địa chỉ để Đặt hàng
+                                    <i class="bi bi-lock-fill"></i> Vui lòng thêm địa chỉ để Đặt hàng
                                 </button>
                             </c:when>
 
                             <%-- Nếu có địa chỉ -> Hiển thị nút Đặt hàng bình thường --%>
                             <c:otherwise>
                                 <button type="submit" class="btn-submit-order">
-                                    <i class="fas fa-check-circle"></i> Đặt Hàng
+                                    <i class="bi bi-check-circle-fill"></i> Đặt Hàng
                                 </button>
                             </c:otherwise>
                         </c:choose>
@@ -493,7 +521,7 @@
         <div class="modal-content" style="border-radius: 12px; border: none;">
             <div class="modal-header" style="border-bottom: 1px solid #eee;">
                 <h5 class="modal-title fw-bold" style="color: #000;">
-                    <i class="fas fa-map-marked-alt me-2"></i> Thêm địa chỉ giao hàng
+                    <i class="bi bi-geo-alt-fill me-2"></i> Thêm địa chỉ giao hàng
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -538,7 +566,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
 
                 <button type="button" class="btn btn-dark" id="btnSaveAddress" style="border-radius: 8px;">
-                    <i class="fas fa-save me-1"></i> Lưu địa chỉ
+                    <i class="bi bi-save me-1"></i> Lưu địa chỉ
                 </button>
             </div>
         </div>
@@ -712,7 +740,7 @@
         .then(response => response.json())
         .then(data => {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-tag"></i> \u00c1p d\u1ee5ng';
+            btn.innerHTML = '<i class="bi bi-tag"></i> \u00c1p d\u1ee5ng';
 
             if (data.success) {
                 showAppliedVoucher(data);
@@ -724,7 +752,7 @@
         })
         .catch(error => {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-tag"></i> \u00c1p d\u1ee5ng';
+            btn.innerHTML = '<i class="bi bi-tag"></i> \u00c1p d\u1ee5ng';
             showVoucherMessage('L\u1ed7i k\u1ebft n\u1ed1i, vui l\u00f2ng th\u1eed l\u1ea1i', 'error');
             console.error("Voucher error:", error);
         });
@@ -747,7 +775,7 @@
         .then(response => response.json())
         .then(data => {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-times"></i> H\u1ee7y';
+            btn.innerHTML = '<i class="bi bi-x"></i> H\u1ee7y';
 
             if (data.success) {
                 hideAppliedVoucher();
@@ -757,7 +785,7 @@
         })
         .catch(error => {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-times"></i> H\u1ee7y';
+            btn.innerHTML = '<i class="bi bi-x"></i> H\u1ee7y';
             console.error("Remove voucher error:", error);
         });
     }
@@ -909,7 +937,7 @@
 
         // UI hien thi dang luu
         const btnSave = document.getElementById('btnSaveAddress');
-        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang lưu...';
+        btnSave.innerHTML = '<i class="bi bi-arrow-clockwise spin me-1"></i> Đang lưu...';
         btnSave.disabled = true;
 
         fetch(contextPath + '/add-address', {
@@ -925,11 +953,11 @@
                 window.location.reload();
             } else if(data === 'full_slot') {
                 alert("Bạn chỉ lưu tối đa được 6 địa chỉ, vui lòng xóa để thêm!");
-                btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                btnSave.innerHTML = '<i class="bi bi-save me-1"></i> Lưu địa chỉ';
                 btnSave.disabled = false;
             } else {
                 alert("Có lỗi xảy ra, không thể lưu địa chỉ!");
-                btnSave.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
+                btnSave.innerHTML = '<i class="bi bi-save me-1"></i> Lưu địa chỉ';
                 btnSave.disabled = false;
             }
         })
