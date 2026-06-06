@@ -12,46 +12,10 @@
 
     <%@ include file="/common/header.jsp" %>
 
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/common/dark-theme.css">
     <style>
-        :root {
-            --black: #000000;
-            --gold: #D4AF37;
-            --white: #FFFFFF;
-            --dark-gold: #b8960f;
-            --gray-dark: #2c2c2c;
-            --gray-medium: #666666;
-            --gray-light: #f5f5f5;
-            --border-light: #e5e5e5;
-            --danger: #dc3545;
-            --success: #28a745;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f4f6fa; }
-
-        /* Main layout & Sidebar */
-        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: var(--black); color: var(--white); padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: var(--white); text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
-        .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333; color: var(--white); transform: translateX(4px); }
-        .menu-item.active { background-color: var(--white); color: var(--black); }
-        .menu-item.active i { color: var(--black); }
-        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
-
-        /* Main Content */
-        .main-content { flex: 1; padding: 30px; background: #f4f6fa; min-height: 100vh; }
-        .content-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
-        .content-header h1 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 10px; letter-spacing: -0.3px; }
-        .breadcrumb { list-style: none; display: flex; align-items: center; gap: 5px; padding: 0; margin: 0; background: none; }
-        .breadcrumb-item a { color: #5a6874; text-decoration: none; font-size: 13px; transition: color 0.2s; }
-        .breadcrumb-item a:hover { color: var(--gold); }
-        .breadcrumb-item.active { color: var(--black); font-weight: 600; font-size: 13px; }
-        .breadcrumb-item i { color: #ccc; font-size: 9px; }
-
-        /* Status badge */
+        /* ================= STATUS BADGE ================= */
         .status-badge {
             padding: 7px 16px;
             border-radius: 20px;
@@ -63,12 +27,12 @@
             align-items: center;
             gap: 6px;
         }
-        .status-pending  { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .status-shipping { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
-        .status-completed{ background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-cancelled{ background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-pending  { background: rgba(255,193,7,0.12); color: #ffc107; border: 1px solid rgba(255,193,7,0.2); }
+        .status-shipping { background: rgba(52,152,219,0.12); color: #3498db; border: 1px solid rgba(52,152,219,0.2); }
+        .status-completed{ background: rgba(46,204,113,0.12); color: #2ecc71; border: 1px solid rgba(46,204,113,0.2); }
+        .status-cancelled{ background: rgba(231,76,60,0.12); color: #e74c3c; border: 1px solid rgba(231,76,60,0.2); }
 
-        /* Info Cards (profile-card style) */
+        /* ================= INFO CARDS ================= */
         .order-info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -76,25 +40,25 @@
             margin-bottom: 22px;
         }
         .info-card {
-            background: var(--white);
-            border-radius: 20px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
             padding: 22px 24px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-base);
         }
         .info-card:hover {
-            border-color: #ccc;
+            border-color: var(--border-gold);
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-card-hover);
         }
         .info-card h4 {
             font-size: 11px;
             font-weight: 700;
-            color: var(--black);
+            color: var(--gold);
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 2px solid var(--black);
+            border-bottom: 2px solid rgba(212,175,55,0.2);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -107,61 +71,61 @@
             gap: 10px;
             margin-bottom: 11px;
             font-size: 14px;
-            color: #555;
+            color: var(--text-secondary);
         }
-        .info-row i { color: var(--black); margin-top: 2px; width: 15px; flex-shrink: 0; }
+        .info-row i { color: var(--gold); margin-top: 2px; width: 15px; flex-shrink: 0; }
         .info-row span { line-height: 1.55; flex: 1; }
-        .info-row strong { color: var(--black); font-weight: 600; }
+        .info-row strong { color: var(--text-primary); font-weight: 600; }
 
-        /* Table Card */
+        /* ================= TABLE CARD ================= */
         .order-card {
-            background: var(--white);
-            border-radius: 20px;
-            border: 1px solid var(--border-light);
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
             overflow: hidden;
             margin-bottom: 22px;
-            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-base);
         }
-        .order-card:hover {
-            border-color: #ccc;
-            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.08);
-        }
+        .order-card:hover { border-color: var(--border-gold); box-shadow: var(--shadow-card-hover); }
 
         .lux-table { width: 100%; border-collapse: collapse; }
-        .lux-table thead tr { background: var(--black); }
+        .lux-table thead tr { background: #0a0a0a; }
         .lux-table th {
             padding: 15px 20px;
             text-align: left;
             font-size: 11px;
             font-weight: 700;
-            color: var(--white);
+            color: var(--text-primary);
             text-transform: uppercase;
             letter-spacing: 1.5px;
+            border-bottom: 1px solid var(--border-subtle);
         }
         .lux-table td {
             padding: 18px 20px;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-subtle);
             vertical-align: middle;
             font-size: 14px;
-            color: #555;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
         }
         .lux-table tbody tr:last-child td { border-bottom: none; }
-        .lux-table tbody tr:hover { background: #f8f9fa; }
+        .lux-table tbody tr:hover td { background: var(--bg-elevated); }
 
-        .product-col { display: flex; align-items: center; gap: 14px; }
         .product-img {
-            width: 56px; height: 56px; background: #f0f0f0;
-            border-radius: 8px; overflow: hidden; flex-shrink: 0;
+            width: 56px; height: 56px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-sm);
+            overflow: hidden; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border-subtle);
         }
         .product-img img { width:100%; height:100%; object-fit:cover; }
-        .product-name { font-weight: 700; color: #000; font-size: 14px; margin-bottom: 4px; }
-        .product-meta { font-size: 12px; color: #999; }
-        .price-cell { color: #555; }
-        .total-cell { font-weight: 700; color: #22c55e; font-size: 14px; }
+        .product-name { font-weight: 700; color: var(--text-primary); font-size: 14px; margin-bottom: 4px; }
+        .product-meta { font-size: 12px; color: var(--text-muted); }
+        .price-cell { color: var(--text-secondary); }
+        .total-cell { font-weight: 700; color: var(--gold); font-size: 14px; }
 
-        /* Link product hover */
         .product-link {
             text-decoration: none;
             color: inherit;
@@ -169,15 +133,13 @@
             align-items: center;
             gap: 14px;
         }
-        .product-link:hover .product-name {
-            color: #d4a017;
-        }
+        .product-link:hover .product-name { color: var(--gold); }
 
-        /* Summary */
+        /* ================= SUMMARY ================= */
         .order-summary {
             padding: 22px 24px 26px;
-            background: #fafafa;
-            border-top: 2px solid var(--black);
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border-subtle);
             display: flex;
             justify-content: flex-end;
         }
@@ -188,94 +150,69 @@
             align-items: center;
             margin-bottom: 10px;
             font-size: 14px;
-            color: var(--gray-medium);
+            color: var(--text-muted);
             padding: 3px 0;
         }
         .summary-row.total {
             margin-top: 14px;
             padding-top: 14px;
-            border-top: 1px dashed var(--border-light);
+            border-top: 1px dashed var(--border-gold);
             font-size: 16px;
-            color: var(--black);
+            color: var(--text-primary);
             font-weight: 700;
         }
         .summary-row.total .total-val {
             font-size: 22px;
             font-weight: 700;
-            color: #22c55e;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
         }
 
-        /* Back button */
+        /* ================= BACK BUTTON ================= */
         .btn-back {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 10px 24px;
-            background: var(--white);
-            border: 1.5px solid var(--black);
-            color: var(--black);
+            background: transparent;
+            border: 1.5px solid var(--border-gold);
+            color: var(--gold);
             border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
             font-size: 13px;
-            transition: all 0.3s;
+            transition: all var(--transition-base);
         }
         .btn-back:hover {
-            background: var(--black);
-            color: var(--gold);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(212,175,55,0.2);
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        /* ================= OVERRIDES ================= */
+        .main-content { flex: 1; padding: 30px 40px; background: var(--bg-primary); min-height: 100vh; }
+        .content-header h1 { font-family: 'Playfair Display', serif; }
+        .btn-success {
+            background: rgba(34,197,94,0.12) !important;
+            border: 1px solid rgba(34,197,94,0.2) !important;
+            color: #22c55e !important;
+            border-radius: 20px !important;
+            padding: 8px 20px !important;
+            font-weight: 600 !important;
+        }
+        .btn-success:hover {
+            background: rgba(34,197,94,0.2) !important;
+            color: #22c55e !important;
+        }
+        .breadcrumb-item i { color: var(--text-muted); font-size: 9px; }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
 
-    <div class="sidebar-menu">
-            <div class="menu-items">
-                <a href="${pageContext.request.contextPath}/dashboard" class="menu-item active">
-                    <i class="bi bi-speedometer2"></i>
-                    <span>Bảng điều khiển</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/profile" class="menu-item">
-                    <i class="bi bi-person-circle"></i>
-                    <span>Thông tin cá nhân</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                    <i class="bi bi-person-gear"></i>
-                    <span>Chỉnh sửa thông tin</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                    <i class="bi bi-lock"></i>
-                    <span>Đổi mật khẩu</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                    <i class="bi bi-bag"></i>
-                    <span>Đơn hàng của tôi</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/cart" class="menu-item">
-                    <i class="bi bi-cart3"></i>
-                    <span>Giỏ hàng</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                    <i class="bi bi-heart"></i>
-                    <span>Sản phẩm yêu thích</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                    <i class="bi bi-bell"></i>
-                    <span>Thông báo</span>
-                </a>
-                <div class="menu-divider"></div>
-                <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Đăng xuất</span>
-                </a>
-            </div>
-        </div>
+    <!-- Sidebar chung -->
+    <%@ include file="/common/user-sidebar.jsp" %>
 
     <%-- MAIN CONTENT --%>
     <div class="main-content">

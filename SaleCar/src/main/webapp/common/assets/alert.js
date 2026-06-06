@@ -23,13 +23,13 @@ function showAlert(message, type) {
 
     alertDiv.innerHTML = `
         <div class="d-flex align-items-center">
-            <i class="bi ` + icon + ` me-3" style="font-size: 24px;"></i>
+            <i class="bi ` + icon + ` me-3" style="font-size: 22px;"></i>
             <div>
                 <strong>LUXCAR</strong><br>
-                <span style="font-size: 14px;">` + message + `</span>
+                <span>` + message + `</span>
             </div>
         </div>
-        <div style="position: absolute; bottom: 0; left: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--gold), var(--light-gold)); transform-origin: left; animation: progress 3s linear;"></div>
+        <div class="alert-progress"></div>
     `;
 
     // Thêm sự kiện click để đóng alert
