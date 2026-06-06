@@ -261,29 +261,23 @@ public class OrderDAO {
     }
 
     /**
-     * Cập nhật trạng thái đơn hàng + xử lý tồn kho trong 1 transaction.
-     *
-     * <ul>
-     *   <li>PENDING/CONFIRMED/SHIPPING → CANCELLED: Hoàn kho (nếu đã trừ trước đó)</li>
-     *   <li>PENDING → CONFIRMED: Trừ kho + tạo phiếu xuất</li>
-     * </ul>
+     * Cập nhật trạng thái đơn hàng.
+     * <p>
+     * Chỉ validate status và update, KHÔNG xử lý inventory ở đây.
+     * Việc trừ kho/hoàn kho do {@link code.salecar.service.inventory.InventoryService}
+     * đảm nhiệm, gọi từ Controller layer.
      *
      * @param orderId ID đơn hàng
      * @param status  Trạng thái mới
      * @return true nếu thành công, false nếu không hợp lệ hoặc lỗi
      */
     public boolean updateOrderStatus(int orderId, String status) {
-        String checkQuery = "SELECT order_status, inventory_deducted FROM `order` WHERE id = ?";
+        String checkQuery = "SELECT order_status FROM `order` WHERE id = ?";
         String updateQuery = "UPDATE `order` SET order_status = ? WHERE id = ?";
 
-        Connection conn = null;
-        try {
-            conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
-
+        try (Connection conn = DBConnection.getConnection()) {
             // ── Bước 1: Kiểm tra trạng thái hiện tại ──
             String crrStatus;
-            int inventoryDeducted;
             try (PreparedStatement psCheck = conn.prepareStatement(checkQuery)) {
                 psCheck.setInt(1, orderId);
                 try (ResultSet rs = psCheck.executeQuery()) {
@@ -291,7 +285,6 @@ public class OrderDAO {
                         return false; // Không tìm thấy đơn hàng
                     }
                     crrStatus = rs.getString("order_status");
-                    inventoryDeducted = rs.getInt("inventory_deducted");
                 }
             }
 
@@ -305,167 +298,23 @@ public class OrderDAO {
                 return false;
             }
 
-            // ── Bước 2: Xác định chuyển đổi ──
-            boolean isToConfirmed = "CONFIRMED".equals(status);
-            boolean isToCancelled = "CANCELLED".equals(status);
-
-            boolean isPendingToConfirmed = isToConfirmed
-                    && ("PENDING".equals(crrStatus) || "Đang xử lý".equals(crrStatus) || "Chờ xử lý".equals(crrStatus));
-
-            boolean isRestoreStock = isToCancelled && inventoryDeducted == 1;
-
-            // ── Bước 3a: Trừ kho (PENDING → CONFIRMED) ──
-            if (isPendingToConfirmed) {
-                // Cache order items để dùng cho cả trừ kho + tạo phiếu xuất (tránh query 2 lần)
-                java.util.List<code.salecar.model.OrderItemCache> itemsToProcess = new java.util.ArrayList<>();
-                String getItemsSQL = "SELECT product_id, variant_id, quantity, price FROM order_item WHERE order_id = ?";
-                try (PreparedStatement psItems = conn.prepareStatement(getItemsSQL)) {
-                    psItems.setInt(1, orderId);
-                    try (ResultSet rsItems = psItems.executeQuery()) {
-                        while (rsItems.next()) {
-                            int productId = rsItems.getInt("product_id");
-                            int variantId = rsItems.getInt("variant_id");
-                            int quantity = rsItems.getInt("quantity");
-                            double price = rsItems.getDouble("price");
-
-                            itemsToProcess.add(new code.salecar.model.OrderItemCache(productId, variantId, quantity, price));
-
-                            if (variantId > 0) {
-                                // Chỉ trừ kho nếu có variant
-                                String deductSQL = "UPDATE inventory SET quantity = quantity - ? WHERE variant_id = ? AND quantity >= ?";
-                                try (PreparedStatement psDeduct = conn.prepareStatement(deductSQL)) {
-                                    psDeduct.setInt(1, quantity);
-                                    psDeduct.setInt(2, variantId);
-                                    psDeduct.setInt(3, quantity);
-                                    int rows = psDeduct.executeUpdate();
-                                    if (rows == 0) {
-                                        throw new SQLException("Không đủ tồn kho cho variant_id=" + variantId);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Tạo phiếu xuất kho
-                int receiptId = createExportReceipt(conn, 0);
-                if (receiptId <= 0) {
-                    throw new SQLException("Không thể tạo phiếu xuất kho");
-                }
-
-                // Tạo chi tiết phiếu xuất từ cache (không query lại DB)
-                for (code.salecar.model.OrderItemCache cached : itemsToProcess) {
-                    createExportReceiptItem(conn, receiptId,
-                            cached.productId, cached.variantId,
-                            cached.quantity, cached.price);
-                }
-
-                // Đánh dấu đã trừ kho
-                try (PreparedStatement psMark = conn.prepareStatement("UPDATE `order` SET inventory_deducted = 1 WHERE id = ?")) {
-                    psMark.setInt(1, orderId);
-                    psMark.executeUpdate();
-                }
-            }
-
-            // ── Bước 3b: Hoàn kho (CONFIRMED/SHIPPING → CANCELLED) ──
-            if (isRestoreStock) {
-                String getItemsSQL = "SELECT variant_id, quantity FROM order_item WHERE order_id = ?";
-                try (PreparedStatement psItems = conn.prepareStatement(getItemsSQL)) {
-                    psItems.setInt(1, orderId);
-                    try (ResultSet rsItems = psItems.executeQuery()) {
-                        while (rsItems.next()) {
-                            int variantId = rsItems.getInt("variant_id");
-                            int quantity = rsItems.getInt("quantity");
-
-                            if (variantId > 0) {
-                                String restoreSQL = "UPDATE inventory SET quantity = quantity + ? WHERE variant_id = ?";
-                                try (PreparedStatement psRestore = conn.prepareStatement(restoreSQL)) {
-                                    psRestore.setInt(1, quantity);
-                                    psRestore.setInt(2, variantId);
-                                    psRestore.executeUpdate();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Đánh dấu đã hoàn kho
-                try (PreparedStatement psMark = conn.prepareStatement("UPDATE `order` SET inventory_deducted = 0 WHERE id = ?")) {
-                    psMark.setInt(1, orderId);
-                    psMark.executeUpdate();
-                }
-            }
-
-            // ── Bước 4: Cập nhật trạng thái ──
+            // ── Bước 2: Cập nhật trạng thái ──
             try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
                 ps.setString(1, status);
                 ps.setInt(2, orderId);
                 ps.executeUpdate();
             }
 
-            conn.commit();
             return true;
 
         } catch (Exception e) {
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
             System.out.println("[OrderDAO.updateOrderStatus] LỖI: " + e.getMessage());
             e.printStackTrace();
             return false;
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    /**
-     * Tạo phiếu xuất kho trong transaction.
-     */
-    private int createExportReceipt(Connection conn, int adminUserId) throws SQLException {
-        String sql = "INSERT INTO export_receipts (created_by, type, status, created_at) VALUES (?, 'order', 'completed', ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, adminUserId);
-            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-            ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
-        }
-        return -1;
-    }
 
-    /**
-     * Tạo chi tiết phiếu xuất kho trong transaction.
-     * Lưu ý: variantId = 0 (không có variant) → set NULL để tránh lỗi FK constraint.
-     */
-    private void createExportReceiptItem(Connection conn, int receiptId, int productId, int variantId, int quantity, double price) throws SQLException {
-        String sql = "INSERT INTO export_receipt_items (receipt_id, product_id, variant_id, quantity, export_price) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, receiptId);
-            ps.setInt(2, productId);
-            if (variantId > 0) {
-                ps.setInt(3, variantId);
-            } else {
-                ps.setNull(3, java.sql.Types.INTEGER);
-            }
-            ps.setInt(4, quantity);
-            ps.setDouble(5, price);
-            ps.executeUpdate();
-        }
-    }
 
     public List<Order> getAllOrders() {
         List<Order> lstOrder = new ArrayList<>();
