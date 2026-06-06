@@ -4,6 +4,7 @@ import code.salecar.model.Cart;
 import code.salecar.model.Order;
 import code.salecar.model.User;
 import code.salecar.service.order.OrderService;
+import code.salecar.service.product.VoucherService;
 import code.salecar.service.buyNCart.VNPayService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -13,6 +14,8 @@ import java.io.IOException;
 
 @WebServlet(name = "ProcessCheckout", value = "/process-checkout")
 public class ProcessCheckout extends HttpServlet {
+
+    private final VoucherService voucherService = new VoucherService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,21 +69,31 @@ public class ProcessCheckout extends HttpServlet {
 
         if (newOrder != null && newOrder.getId() > 0) {
 
+            // Lấy voucherId đã chọn từ session
+            Long selectedVoucherId = (Long) session.getAttribute("selectedVoucherId");
+
             if ("VNPAY".equals(paymentMethod)) {
-                // VNPay: backup cart rồi redirect user sang VNPay, chưa xóa cart ngay
-                // Nếu VNPay thành công, VNPayReturnServlet sẽ dọn cart
-                // Nếu VNPay thất bại, cart backup được khôi phục
+                // VNPay: backup cart + voucher, chưa tăng usedCount ngay
                 if ("buynow".equals(type)) {
                     session.setAttribute("pendingCartBackup", session.getAttribute("buyNowCart"));
                 } else {
                     session.setAttribute("pendingCartBackup", session.getAttribute("cart"));
+                }
+                // Backup voucherId để VNPayReturnServlet xử lý sau
+                if (selectedVoucherId != null) {
+                    session.setAttribute("pendingVoucherId", selectedVoucherId);
                 }
 
                 VNPayService vnPayService = new VNPayService();
                 String paymentUrl = vnPayService.createPaymentUrl(request, newOrder);
                 response.sendRedirect(paymentUrl);
             } else {
-                // COD: xóa cart ngay và redirect sang thank you
+                // COD: tăng usedCount ngay, xóa cart
+                if (selectedVoucherId != null) {
+                    voucherService.incrementUsedCount(selectedVoucherId);
+                }
+                session.removeAttribute("selectedVoucherId");
+
                 if ("buynow".equals(type)) {
                     session.removeAttribute("buyNowCart");
                 } else {

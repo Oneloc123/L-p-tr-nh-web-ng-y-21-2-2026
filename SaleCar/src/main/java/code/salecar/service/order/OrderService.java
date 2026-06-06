@@ -47,8 +47,9 @@ public class OrderService {
 
         String fullInfor = name + " - SĐT: " + phone + " - Địa chỉ: " + shippingAddress;
 
-        // Tổng tiền = tiền hàng + phí ship
-        double totalAmount = cart.getTotal() + shippingFee;
+        // Tổng tiền = tiền hàng (sau voucher) + phí ship
+        double orderTotal = cart.getFinalTotal() > 0 ? cart.getFinalTotal() : cart.getTotal();
+        double totalAmount = orderTotal + shippingFee;
 
         Order order = new Order();
         order.setUserId(user.getId());
