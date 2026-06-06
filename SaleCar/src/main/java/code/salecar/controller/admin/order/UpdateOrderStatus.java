@@ -3,6 +3,8 @@ package code.salecar.controller.admin.order;
 import code.salecar.dao.NotificationDAO;
 import code.salecar.dao.OrderDAO;
 import code.salecar.model.Order;
+import code.salecar.model.User;
+import code.salecar.service.inventory.InventoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -23,7 +25,7 @@ public class UpdateOrderStatus extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String status = request.getParameter("status");
 
-        // 🔴 Bảo mật: Admin KHÔNG được tự ý đặt trạng thái "Đã giao/DELIVERED"
+        // Admin KHÔNG được tự ý đặt trạng thái "Đã giao/DELIVERED"
         if ("DELIVERED".equalsIgnoreCase(status)
                 || "Đã giao".equals(status)
                 || "Đã giao thành công".equals(status)) {
@@ -36,6 +38,19 @@ public class UpdateOrderStatus extends HttpServlet {
         boolean isSuccess = ordDAO.updateOrderStatus(orderId, status);
 
         if (isSuccess) {
+            //  Xử lý tồn kho qua InventoryService
+            InventoryService invService = new InventoryService();
+            User adminUser = (User) request.getSession().getAttribute("user");
+            int adminUserId = (adminUser != null) ? adminUser.getId() : 0;
+
+            if ("CONFIRMED".equals(status)) {
+                // Trừ kho + tạo phiếu xuất khi xác nhận đơn
+                invService.deductStock(orderId, adminUserId);
+            } else if ("CANCELLED".equals(status) && invService.isInventoryDeducted(orderId)) {
+                // Hoàn kho khi hủy đơn đã trừ kho trước đó
+                invService.restoreStock(orderId);
+            }
+
             // Tạo thông báo cho khách hàng khi admin thay đổi trạng thái
             try {
                 Order order = ordDAO.getOrderById(orderId);

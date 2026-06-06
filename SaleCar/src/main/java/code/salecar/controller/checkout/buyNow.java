@@ -6,6 +6,7 @@ import code.salecar.model.Cart;
 import code.salecar.model.User;
 
 import code.salecar.model.product.dto.ProductDetailDTO;
+import code.salecar.model.product.entity.ProductVariants;
 import code.salecar.service.buyNCart.buyNowService;
 
 import code.salecar.service.product.ProductService;
@@ -45,7 +46,13 @@ public class buyNow extends HttpServlet {
                 int variantId = Integer.parseInt(variantIdStr);
                 buyNowCart = buyNowS.buyNow(product, variantId, quantity);
             } else {
-                buyNowCart = buyNowS.buyNow(product, quantity);
+                // chọn variant rẻ nhất còn hàng khi mua từ product list
+                int autoVariantId = findCheapestAvailableVariant(product);
+                if (autoVariantId > 0) {
+                    buyNowCart = buyNowS.buyNow(product, autoVariantId, quantity);
+                } else {
+                    buyNowCart = buyNowS.buyNow(product, quantity);
+                }
             }
 
             session.setAttribute("buyNowCart", buyNowCart);
@@ -64,4 +71,37 @@ public class buyNow extends HttpServlet {
 
 
     }
+
+    /**
+     * Tìm variant rẻ nhất còn hàng (quantity > 0) từ product.
+     * So sánh dựa trên finalPrice (giá sau giảm), fallback price gốc nếu finalPrice null.
+     *
+     * @return variantId (> 0) nếu tìm thấy, 0 nếu không có variant phù hợp
+     */
+    private int findCheapestAvailableVariant(ProductDetailDTO product) {
+        if (product.getVariants() == null || product.getVariants().isEmpty()) {
+            return 0;
+        }
+
+        ProductVariants cheapest = null;
+        double cheapestPrice = Double.MAX_VALUE;
+
+        for (ProductVariants v : product.getVariants()) {
+            // Bỏ qua variant hết hàng
+            if (v.getQuantity() <= 0) continue;
+
+            double vPrice = v.getFinalPrice() != null
+                    ? v.getFinalPrice().doubleValue()
+                    : v.getPrice().doubleValue();
+
+            if (vPrice < cheapestPrice) {
+                cheapestPrice = vPrice;
+                cheapest = v;
+            }
+        }
+
+        return cheapest != null ? (int) cheapest.getId() : 0;
+    }
+
+
 }
