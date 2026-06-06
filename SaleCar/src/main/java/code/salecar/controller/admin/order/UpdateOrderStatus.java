@@ -1,8 +1,6 @@
 package code.salecar.controller.admin.order;
 
 import code.salecar.dao.OrderDAO;
-import code.salecar.model.User;
-import code.salecar.service.inventory.InventoryService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -11,8 +9,6 @@ import java.io.IOException;
 
 @WebServlet(name = "UpdateOrderStatus", value = "/update-order-status")
 public class UpdateOrderStatus extends HttpServlet {
-
-    private final InventoryService invService = new InventoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,20 +21,19 @@ public class UpdateOrderStatus extends HttpServlet {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String status = request.getParameter("status");
 
+        // 🔴 Bảo mật: Admin KHÔNG được tự ý đặt trạng thái "Đã giao/DELIVERED"
+        if ("DELIVERED".equalsIgnoreCase(status)
+                || "Đã giao".equals(status)
+                || "Đã giao thành công".equals(status)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("error: Admin không có quyền tự chuyển trạng thái Đã giao!");
+            return;
+        }
+
         OrderDAO ordDAO = new OrderDAO();
         boolean isSuccess = ordDAO.updateOrderStatus(orderId, status);
 
         if (isSuccess) {
-            /**
-             * Nếu admin xác nhận đơn (CONFIRMED), thực hiện trừ kho.
-             * Lấy admin userId từ session (người đang thao tác).
-             */
-            if ("CONFIRMED".equalsIgnoreCase(status)) {
-                User admin = (User) request.getSession().getAttribute("user");
-                int adminUserId = admin != null ? admin.getId() : 0;
-                invService.deductStock(orderId, adminUserId);
-            }
-
             response.getWriter().write("success");
         } else {
             response.getWriter().write("error");

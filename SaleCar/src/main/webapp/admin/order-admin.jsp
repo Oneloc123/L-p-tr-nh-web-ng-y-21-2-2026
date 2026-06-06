@@ -20,6 +20,9 @@
             --admin-sidebar: #ffffff;
             --admin-text: #333333;
             --admin-border: #eaedf1;
+            --admin-gold: #d4a017;
+            --admin-red: #ef4444;
+            --admin-green: #22c55e;
         }
 
         body {
@@ -105,12 +108,16 @@
             max-width: calc(100% - 260px);
         }
 
-        .content-card {
+        /* ═══ ADMIN CARD ═══ */
+        .admin-card {
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            padding: 25px;
             border: 1px solid var(--admin-border);
+            overflow: hidden;
+        }
+        .admin-card-body {
+            padding: 25px;
         }
 
         .page-header-block {
@@ -161,46 +168,65 @@
             color: white;
         }
 
-        .table > thead > tr > th {
-            text-transform: uppercase;
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 600;
-            padding: 15px;
-            border-bottom: 2px solid var(--admin-border);
-            background-color: transparent;
-            white-space: nowrap;
+        /* ═══ ADMIN TABLE ═══ */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-
-        .table > tbody > tr > td {
+        .admin-table thead tr {
+            background: #f8fafc;
+        }
+        .admin-table th {
+            text-transform: uppercase;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 700;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--admin-border);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+        .admin-table td {
             vertical-align: middle;
             font-size: 14px;
-            padding: 15px;
+            padding: 14px 16px;
             color: #334155;
             border-bottom: 1px solid var(--admin-border);
+        }
+        .admin-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        .admin-table-hover tbody tr {
+            transition: background-color 0.15s;
+        }
+        .admin-table-hover tbody tr:hover {
+            background-color: #f1f5f9;
         }
 
         .col-nowrap {
             white-space: nowrap;
         }
 
-        .status-badge {
-            padding: 5px 12px;
+        /* ═══ BADGE-STATUS (dạng viên thuốc) ═══ */
+        .badge-status {
+            padding: 5px 14px;
             border-radius: 50px;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 11px;
+            font-weight: 600;
             border: 1px solid transparent;
             display: inline-block;
             white-space: nowrap;
+            letter-spacing: 0.3px;
         }
+        .badge-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+        .badge-confirmed { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .badge-shipping { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
+        .badge-delivered { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+        .badge-cancelled { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
-        .status-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
-        .status-confirmed { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-        .status-shipping { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
-        .status-delivered { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
-        .status-cancelled { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
-
-        .btn-action {
+        /* ═══ ADMIN ACTION BUTTONS ═══ */
+        .admin-action-btn {
             border-radius: 50px;
             padding: 6px 14px;
             font-size: 12px;
@@ -210,22 +236,63 @@
             align-items: center;
             gap: 5px;
             border: 1px solid;
-            transition: 0.2s;
+            transition: all 0.2s;
             white-space: nowrap;
+            cursor: pointer;
+        }
+        .admin-action-btn i {
+            font-size: 13px;
+        }
+        .admin-action-edit {
+            border-color: var(--admin-gold);
+            color: var(--admin-gold);
+        }
+        .admin-action-edit:hover {
+            background: var(--admin-gold);
+            color: white;
+        }
+        .admin-action-delete {
+            border-color: var(--admin-red);
+            color: var(--admin-red);
+        }
+        .admin-action-delete:hover {
+            background: var(--admin-red);
+            color: white;
+        }
+        .admin-action-view {
+            border-color: #64748b;
+            color: #64748b;
+        }
+        .admin-action-view:hover {
+            background: #64748b;
+            color: white;
+        }
+        .admin-action-confirm {
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+        }
+        .admin-action-confirm:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+        .admin-action-shipping {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+        .admin-action-shipping:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+        .admin-action-deliver {
+            border-color: var(--admin-green);
+            color: var(--admin-green);
+        }
+        .admin-action-deliver:hover {
+            background: var(--admin-green);
+            color: white;
         }
 
-        .btn-view { border-color: #64748b; color: #64748b; }
-        .btn-view:hover { background: #64748b; color: white; }
-        .btn-confirm { border-color: #0ea5e9; color: #0ea5e9; }
-        .btn-confirm:hover { background: #0ea5e9; color: white; }
-        .btn-deliver { border-color: #22c55e; color: #22c55e; }
-        .btn-deliver:hover { background: #22c55e; color: white; }
-        .btn-cancel { border-color: #ef4444; color: #ef4444; }
-        .btn-cancel:hover { background: #ef4444; color: white; }
-        .btn-shipping { border-color: #8b5cf6; color: #8b5cf6; }
-        .btn-shipping:hover { background: #8b5cf6; color: white; }
-
-        /* Nút Xem mới */
+        /* Giữ lại action-view cũ cho nút Xem (dùng trong JS) */
         .action-view {
             background: #f1f5f9;
             color: #475569;
@@ -239,7 +306,7 @@
             color: white;
         }
 
-        /* CSS CHO MODAL CHI TIẾT ĐƠN HÀNG */
+        /* ═══ MODAL FORM ═══ */
         .form-card { padding: 25px; }
         .form-section {
             background: #fefefe;
@@ -286,10 +353,9 @@
 
 <div class="admin-layout">
 
-    <%@ include file="sidebar/sidebar.jsp"%>
-
-    <main class="main-content">
-        <div class="content-card">
+    <%@ include file="sidebar/sidebar.jsp"%>                    <main class="main-content">
+                        <div class="admin-card">
+                            <div class="admin-card-body">
             <div class="page-header-block">
                 <h2 class="page-title"><i class="bi bi-receipt"></i> Quản lý đơn hàng</h2>
                 <button class="btn btn-pill"><i class="bi bi-download me-1"></i> Xuất dữ liệu</button>
@@ -330,7 +396,6 @@
 
                    </form>
                 </section>
-            </form>
 
             <c:choose>
                 <c:when test="${empty orders}">
@@ -338,11 +403,11 @@
                 </c:when>
                 <c:otherwise>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
-                                <tr class="text-uppercase small">
+                        <table class="admin-table admin-table-hover">
+                            <thead>
+                                <tr>
                                     <th>Mã ĐH</th>
-                                    <th>Mã Khách hàng</th>
+                                    <th>Khách hàng</th>
                                     <th>Ngày đặt</th>
                                     <th style="width: 15%;">Địa chỉ</th>
                                     <th>Sản phẩm</th>
@@ -359,8 +424,7 @@
                                         <td class="fw-bold col-nowrap" style="color: #0f172a;">#ORD-${ord.id}</td>
 
                                         <td>
-                                            <div class="fw-semibold" style="color: #334155;">${ord.userId}</div>
-                                            <div class="fw-semibold">${customerNameMap[ord.userId]}</div>
+                                            <div class="fw-semibold" style="color: #334155;">${customerNameMap[ord.userId]}</div>
                                             <small class="text-muted">UID: ${ord.userId}</small>
                                         </td>
 
@@ -374,9 +438,13 @@
 
                                         <td>
                                            <c:forEach var="item" items="${ord.items}">
-                                              <div<i class="bi bi-box-seam text-muted me-1"></i>
-                                              <span class="fw-semibold text-dark">${item.product.name}</span>
-                                              <span class="text-danger fw-bold ms-1">x${item.quantity}</span>
+                                              <div class="d-flex align-items-center gap-2 mb-1">
+                                                  <img src="${not empty item.imageUrl ? pageContext.request.contextPath.concat('/uploads/').concat(item.imageUrl) : 'https://placehold.co/40?text=LUX'}"
+                                                       alt="${item.product.name}"
+                                                       style="width: 36px; height: 36px; object-fit: cover; border-radius: 6px; border: 1px solid #e2e8f0; flex-shrink: 0;"
+                                                       onerror="this.src='https://placehold.co/40?text=LUX'">
+                                                  <span class="fw-semibold text-dark" style="font-size:13px;">${item.product.name}</span>
+                                                  <span class="text-danger fw-bold ms-1">x${item.quantity}</span>
                                               </div>
                                            </c:forEach>
                                         </td>
@@ -390,22 +458,22 @@
                                         <td class="col-nowrap" id="status-cell-${ord.id}">
                                             <c:choose>
                                                 <c:when test="${ord.orderStatus == 'PENDING' || ord.orderStatus == 'Đang xử lý'}">
-                                                    <span class="status-badge status-pending">Đang xử lý</span>
+                                                    <span class="badge-status badge-pending">Đang xử lý</span>
                                                 </c:when>
                                                 <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
-                                                    <span class="status-badge status-confirmed">Đã xác nhận</span>
+                                                    <span class="badge-status badge-confirmed">Đã xác nhận</span>
                                                 </c:when>
                                                 <c:when test="${ord.orderStatus == 'SHIPPING' || ord.orderStatus == 'Đang vận chuyển'}">
-                                                    <span class="status-badge status-shipping">Đang vận chuyển</span>
+                                                    <span class="badge-status badge-shipping">Đang vận chuyển</span>
                                                 </c:when>
                                                 <c:when test="${ord.orderStatus == 'DELIVERED' || ord.orderStatus == 'Đã giao'}">
-                                                    <span class="status-badge status-delivered">Đã giao</span>
+                                                    <span class="badge-status badge-delivered">Đã giao</span>
                                                 </c:when>
                                                 <c:when test="${ord.orderStatus == 'CANCELLED' || ord.orderStatus == 'Đã hủy'}">
-                                                    <span class="status-badge status-cancelled">Đã hủy</span>
+                                                    <span class="badge-status badge-cancelled">Đã hủy</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="status-badge status-pending">${ord.orderStatus}</span>
+                                                    <span class="badge-status badge-pending">${ord.orderStatus}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
@@ -413,36 +481,31 @@
                                         <td class="col-nowrap">
                                             <div id="action-buttons-${ord.id}" class="d-flex justify-content-center gap-2 flex-nowrap">
 
-                                                <button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal${ord.id}">
+                                                <button class="admin-action-btn admin-action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal${ord.id}">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
 
                                                 <c:choose>
-                                                <%-- trao nut --%>
                                                     <c:when test="${ord.orderStatus == 'PENDING' || ord.orderStatus == 'Đang xử lý'}">
-                                                        <button type="button" class="btn-action btn-confirm" onclick="updateStatusOrder(event, ${ord.id}, 'CONFIRMED')">
+                                                        <button type="button" class="admin-action-btn admin-action-confirm" onclick="updateStatusOrder(event, ${ord.id}, 'CONFIRMED')">
                                                             <i class="bi bi-check2-circle"></i> Xác nhận
                                                         </button>
-
-
-                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
-                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        <button type="button" class="admin-action-btn admin-action-delete" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Hủy
                                                         </button>
                                                     </c:when>
                                                     <c:when test="${ord.orderStatus == 'CONFIRMED' || ord.orderStatus == 'Đã xác nhận'}">
-                                                        <button type="button" class="btn-action btn-shipping" onclick="updateStatusOrder(event, ${ord.id}, 'SHIPPING')">
-                                                            <i class="bi bi-truck"></i> Giao cho ĐVVC
+                                                        <button type="button" class="admin-action-btn admin-action-shipping" onclick="updateStatusOrder(event, ${ord.id}, 'SHIPPING')">
+                                                            <i class="bi bi-truck"></i> Giao ĐVVC
                                                         </button>
-                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
-                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        <button type="button" class="admin-action-btn admin-action-delete" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Hủy
                                                         </button>
                                                     </c:when>
                                                     <c:when test="${ord.orderStatus == 'SHIPPING' || ord.orderStatus == 'Đang vận chuyển'}">
-                                                        <button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ${ord.id}, 'DELIVERED')">
-                                                            <i class="bi bi-check2-circle"></i> Đã giao
-                                                        </button>
-                                                        <button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
-                                                            <i class="bi bi-x-circle"></i> Cancel
+                                                        <span class="text-muted small" style="font-size:11px;">Đã giao cho ĐVVC</span>
+                                                        <button type="button" class="admin-action-btn admin-action-delete" onclick="updateStatusOrder(event, ${ord.id}, 'CANCELLED')">
+                                                            <i class="bi bi-x-circle"></i> Hủy
                                                         </button>
                                                     </c:when>
                                                 </c:choose>
@@ -455,7 +518,8 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-        </div>
+                        </div>
+                    </div>
 
         <c:forEach var="ord" items="${orders}">
             <div class="modal fade" id="viewOrderModal${ord.id}" tabindex="-1" aria-hidden="true">
@@ -521,7 +585,7 @@
                                               <div class="d-flex align-items-center gap-3">
                                                   <%-- Khối hình ảnh giống order-detail.jsp --%>
                                                   <div style="width: 65px; height: 65px; background: #f8f9fa; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                                     <img src="https://placehold.co/100?text=LUXCAR" alt="${item.product.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                     <img src="${not empty item.imageUrl ? pageContext.request.contextPath.concat('/uploads/').concat(item.imageUrl) : 'https://placehold.co/100?text=LUXCAR'}" alt="${item.product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://placehold.co/100?text=LUXCAR'">
                                                   </div>
 
                                                   <%-- Thông tin tên xe --%>
@@ -603,55 +667,53 @@
 
 
                         actionGroup.innerHTML =
-                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                            '<button class="admin-action-btn admin-action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
                                 '<i class="bi bi-eye"></i>' +
                             '</button>' +
-                            '<button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ' + orderId + ', \'DELIVERED\')">' +
-                                '<i class="bi bi-truck"></i> Đã giao' +
+                            '<button type="button" class="admin-action-btn admin-action-shipping" onclick="updateStatusOrder(event, ' + orderId + ', \'SHIPPING\')">' +
+                                '<i class="bi bi-truck"></i> Giao ĐVVC' +
                             '</button>' +
-                            '<button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
-                                '<i class="bi bi-x-circle"></i> Cancel' +
+                            '<button type="button" class="admin-action-btn admin-action-delete" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
+                                '<i class="bi bi-x-circle"></i> Hủy' +
                             '</button>';
 
-                        trangThai.innerHTML = '<span class="status-badge status-confirmed">Đã xác nhận</span>';
+                        trangThai.innerHTML = '<span class="badge-status badge-confirmed">Đã xác nhận</span>';
 
                     } else if("SHIPPING" === newStatus){
                         document.getElementById("toastMessage").innerText = "Đã bàn giao cho đơn vị vận chuyển!";
 
                         actionGroup.innerHTML =
-                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                            '<button class="admin-action-btn admin-action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
                                 '<i class="bi bi-eye"></i>' +
                             '</button>' +
-                            '<button type="button" class="btn-action btn-deliver" onclick="updateStatusOrder(event, ' + orderId + ', \'DELIVERED\')">' +
-                                '<i class="bi bi-check2-circle"></i> Đã giao' +
-                            '</button>' +
-                            '<button type="button" class="btn-action btn-cancel" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
-                                '<i class="bi bi-x-circle"></i> Cancel' +
+                            '<span class="text-muted small" style="font-size:11px;">Đã giao cho ĐVVC</span>' +
+                            '<button type="button" class="admin-action-btn admin-action-delete" onclick="updateStatusOrder(event, ' + orderId + ', \'CANCELLED\')">' +
+                                '<i class="bi bi-x-circle"></i> Hủy' +
                             '</button>';
 
-                        trangThai.innerHTML = '<span class="status-badge status-shipping">Đang vận chuyển</span>';
+                        trangThai.innerHTML = '<span class="badge-status badge-shipping">Đang vận chuyển</span>';
 
                     } else if("DELIVERED" === newStatus){
                         document.getElementById("toastMessage").innerText = "Đơn hàng #ORD-"+ orderId + " đã được giao!";
 
                         // giu lai nut xem
                         actionGroup.innerHTML =
-                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                            '<button class="admin-action-btn admin-action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
                                 '<i class="bi bi-eye"></i>' +
                             '</button>';
 
-                        trangThai.innerHTML = '<span class="status-badge status-delivered">Đã giao</span>';
+                        trangThai.innerHTML = '<span class="badge-status badge-delivered">Đã giao</span>';
 
                     } else {
                         document.getElementById("toastMessage").innerText = "Đã huỷ đơn hàng: #ORD-"+ orderId + "!";
 
 
                         actionGroup.innerHTML =
-                            '<button class="action-btn action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
+                            '<button class="admin-action-btn admin-action-view" data-bs-toggle="modal" data-bs-target="#viewOrderModal' + orderId + '">' +
                                 '<i class="bi bi-eye"></i>' +
                             '</button>';
 
-                        trangThai.innerHTML = '<span class="status-badge status-cancelled">Đã huỷ đơn</span>';
+                        trangThai.innerHTML = '<span class="badge-status badge-cancelled">Đã huỷ đơn</span>';
                     }
 
                     setTimeout(function(){

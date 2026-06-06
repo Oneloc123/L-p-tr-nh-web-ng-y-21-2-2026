@@ -39,7 +39,7 @@ public class CancelOrderServlet extends HttpServlet {
                     message = "Đơn hàng #" + orderId + " của bạn đã bị hủy. Lý do: " + cancelReason;
                 }
                 NotificationDAO notiDAO = new NotificationDAO();
-                notiDAO.insertNotification(user.getId(), message);
+                notiDAO.insertNotification(user.getId(), message, orderId);
                 request.getSession().setAttribute("toastMessage", "Đã hủy đơn hàng thành công!");
                 request.getSession().setAttribute("toastType", "success");
             } else {
@@ -47,7 +47,7 @@ public class CancelOrderServlet extends HttpServlet {
                 request.getSession().setAttribute("toastType", "error");
             }
             NotificationDAO notiDAO = new NotificationDAO();
-            notiDAO.insertNotification(user.getId(), message);
+            notiDAO.insertNotification(user.getId(), message, orderId);
         }
         response.sendRedirect("order");
     }
