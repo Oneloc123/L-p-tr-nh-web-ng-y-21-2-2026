@@ -329,7 +329,39 @@
                         </div>
                     </div>
 
+                    <!-- SHIPPING METHOD -->
+                    <div class="checkout-card">
+                        <h3><i class="fas fa-shipping-fast"></i> Phương thức giao hàng</h3>
 
+                        <label class="payment-method">
+                            <input type="radio" name="shippingMethod" value="Tiêu chuẩn" checked>
+                            <div class="payment-icon"><i class="fas fa-box"></i></div>
+                            <div class="payment-details">
+                                <h4>Giao hàng tiêu chuẩn</h4>
+                                <p>Nhận hàng từ 5-8 ngày. Phí ship được tính theo khu vực.</p>
+                            </div>
+                        </label>
+
+                        <label class="payment-method">
+                            <input type="radio" name="shippingMethod" value="Nhanh">
+                            <div class="payment-icon"><i class="fas fa-rocket"></i></div>
+                            <div class="payment-details">
+                                <h4>Giao hàng nhanh</h4>
+                                <p>Nhận hàng trong 1-3 ngày. Phí ship cao hơn.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- ORDER NOTE -->
+                    <div class="checkout-card">
+                        <h3><i class="fas fa-sticky-note"></i> Ghi chú đơn hàng</h3>
+                        <div class="form-group">
+                            <label for="note">Lời nhắn cho người bán (không bắt buộc)</label>
+                            <textarea id="note" name="note" class="form-control" rows="3"
+                                      placeholder="VD: Giao hàng trong giờ hành chính, Gọi trước khi giao,..."
+                                      style="resize: vertical;"></textarea>
+                        </div>
+                    </div>
 
                     <div class="checkout-card">
                         <h3><i class="fas fa-wallet"></i> Phương thức thanh toán (Payment Method)</h3>

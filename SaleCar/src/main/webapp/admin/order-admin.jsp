@@ -549,6 +549,12 @@
                                         <label class="form-label text-muted small">Phương thức thanh toán</label>
                                         <input type="text" class="form-control" value="COD (Mặc định)" readonly>
                                     </div>
+                                    <c:if test="${not empty ord.shippingMethod}">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label text-muted small">Phương thức giao hàng</label>
+                                        <input type="text" class="form-control" value="${ord.shippingMethod}" readonly>
+                                    </div>
+                                    </c:if>
                                 </div>
                             </div>
 

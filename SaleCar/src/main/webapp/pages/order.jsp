@@ -409,6 +409,9 @@
                                 </c:otherwise>
                             </c:choose>
                         </p>
+                        <c:if test="${not empty order.shippingMethod}">
+                        <p><i class="fas fa-shipping-fast"></i> Phương thức giao: <strong>${order.shippingMethod}</strong></p>
+                        </c:if>
                         <c:if test="${!fn:contains(order.orderStatus, 'Đã huỷ') && !fn:contains(order.orderStatus, 'Đã hủy') && order.orderStatus != 'CANCELLED' && !fn:contains(order.orderStatus, 'Đã giao') && order.orderStatus != 'DELIVERED' && order.orderStatus != 'COMPLETED'}">
                         <%
                             code.salecar.model.Order ord = (code.salecar.model.Order) pageContext.findAttribute("order");
