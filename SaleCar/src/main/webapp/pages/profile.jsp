@@ -11,59 +11,166 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* Main layout & Sidebar (Dùng chung từ profile.jsp) */
-        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333333; text-align: center; }
-        .sidebar-header h3 { color: #ffffff; font-size: 24px; font-weight: 600; margin: 0; }
-        .sidebar-header p { color: #999999; font-size: 14px; margin-top: 5px; }
-        .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
-        .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333333; color: #ffffff; }
-        .menu-item.active { background-color: #ffffff; color: #000000; }
-        .menu-item.active i { color: #000000; }
-        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6fa;
+        }
 
-        /* Main Content */
-        .main-content { flex: 1; padding: 30px; }
-        .content-header { margin-bottom: 30px; }
-        .content-header h1 { font-size: 28px; font-weight: 600; color: #000000; margin-bottom: 10px; }
-        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; }
-        .breadcrumb-item { margin-right: 10px; }
-        .breadcrumb-item a { color: #666666; text-decoration: none; }
-        .breadcrumb-item.active { color: #000000; font-weight: 500; }
+        /* ── Layout chính (giữ nguyên sidebar) ── */
+        .profile-wrapper {
+            display: flex;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
 
-        /* Profile Card */
+        /* Sidebar (giữ nguyên từ yêu cầu) */
+        .sidebar-menu {
+            width: 280px;
+            background-color: #000;
+            color: #fff;
+            padding: 30px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .menu-items {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .menu-item i {
+            width: 25px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .menu-item span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .menu-item.active {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .menu-item.active i {
+            color: #000;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background-color: #333;
+            margin: 15px 20px;
+        }
+
+        /* ───────────────────────────────────────────── */
+        /* KHU VỰC NỘI DUNG CHÍNH (ĐÃ NÂNG CẤP)          */
+        /* ───────────────────────────────────────────── */
+        .main-content {
+            flex: 1;
+            padding: 32px 40px;
+            background: #f4f6fa;
+        }
+
+        /* Breadcrumb & tiêu đề */
+        .content-header {
+            margin-bottom: 28px;
+        }
+
+        .content-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a0a0a;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            margin: 0 8px;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .breadcrumb-item a {
+            color: #5a6874;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #000;
+        }
+
+        .breadcrumb-item.active {
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Profile Card chính */
         .profile-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            background: #fff;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            margin-bottom: 30px;
+            transition: all 0.2s;
         }
 
+        /* Cover gradient */
         .profile-cover {
-            height: 150px;
-            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            height: 140px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #2d2d2d 100%);
         }
 
+        /* Header avatar & thông tin */
         .profile-header {
-            padding: 0 30px 20px;
+            padding: 0 32px 24px;
             position: relative;
         }
 
         .avatar-section {
-            position: relative;
-            margin-top: -60px;
-            margin-bottom: 20px;
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: -60px;
+            margin-bottom: 20px;
         }
 
         .avatar-wrapper {
@@ -71,423 +178,392 @@
             display: inline-block;
         }
 
-        /* --- CẬP NHẬT CSS AVATAR CHO CHUẨN ĐẸP --- */
         .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #ffffff; /* Thêm viền trắng nổi bật trên nền cover */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Tạo hiệu ứng đổ bóng */
-            background-color: #f8f9fa;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+            background: #f0f2f5;
         }
 
         .edit-avatar-btn {
             position: absolute;
             bottom: 5px;
             right: 5px;
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            color: #000000;
+            background: #fff;
+            border: 2px solid #000;
+            color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-decoration: none;
-            z-index: 2;
+            font-size: 14px;
         }
 
         .edit-avatar-btn:hover {
-            background-color: #000000;
-            color: #ffffff;
+            background: #000;
+            color: #fff;
+            transform: scale(1.05);
         }
 
         .profile-title {
             flex: 1;
-            margin-left: 20px;
         }
 
         .profile-title h2 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #000000;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #111;
         }
 
-        .profile-title .role-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            background-color: #f0f0f0;
-            border: 1px solid #000000;
-            border-radius: 20px;
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 40px;
             font-size: 12px;
-            font-weight: 500;
-            color: #000000;
+            font-weight: 600;
+            color: #1e293b;
         }
 
         .edit-profile-btn {
-            padding: 10px 25px;
-            background-color: #000000;
-            color: #ffffff;
-            border: 2px solid #000000;
-            border-radius: 8px;
-            font-weight: 500;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
             text-decoration: none;
-            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
         }
 
         .edit-profile-btn:hover {
-            background-color: #ffffff;
-            color: #000000;
+            background: #2c2c2c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            color: #fff;
         }
 
-        /* Enhanced Info Sections */
+        /* Info section */
         .info-section {
-            padding: 30px;
-            border-top: 1px solid #eeeeee;
+            padding: 28px 32px;
+            border-top: 1px solid #edf2f7;
         }
 
         .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000000;
-            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 24px;
         }
 
         .section-title i {
             font-size: 20px;
-            color: #000000;
+            color: #000;
         }
 
-        /* Enhanced Info Grid */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            gap: 20px;
         }
 
         .info-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 16px 20px;
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
+            background: #fafcff;
+            border: 1px solid #eef2f8;
+            border-radius: 20px;
+            padding: 18px 20px;
+            transition: all 0.25s ease;
         }
 
         .info-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border-color: #dee2e6;
+            border-color: #cbd5e1;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
         .info-label {
             font-size: 12px;
-            font-weight: 600;
-            color: #6c757d;
+            font-weight: 700;
+            color: #5b6e8c;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .info-label i {
-            font-size: 12px;
+            font-size: 13px;
+            width: 18px;
         }
 
         .info-value {
             font-size: 15px;
             font-weight: 500;
-            color: #212529;
+            color: #1e293b;
             word-break: break-word;
         }
 
         .info-value.description {
             font-size: 14px;
             font-weight: 400;
-            line-height: 1.6;
-            color: #495057;
+            line-height: 1.5;
+            color: #334155;
         }
 
-        /* Status Badge Enhanced */
+        /* Status badge */
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 5px 12px;
-            border-radius: 20px;
+            border-radius: 40px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .status-active {
-            background-color: #e7f3e8;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
+            background: #e3f7ec;
+            color: #1e7b48;
         }
 
         .status-inactive {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
+            background: #feeceb;
+            color: #c2412c;
         }
 
-        .role-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            background-color: #e9ecef;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #495057;
-        }
-
-        /* Description Section */
+        /* Description section riêng */
         .description-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid #e9ecef;
+            margin-top: 24px;
+            background: #fafcff;
+            border-radius: 20px;
+            padding: 20px 24px;
+            border: 1px solid #eef2f8;
         }
 
         .description-section .info-label {
             margin-bottom: 12px;
         }
 
-        /* Address Grid Layout */
+        /* Address grid */
         .address-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+            margin-top: 8px;
         }
 
-        /* Address Card */
+        /* Address card */
         .address-card {
-            background: white;
-            border-radius: 12px;
-            padding: 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #edf2f8;
             overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
         }
 
         .address-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.1);
+            border-color: #dce3ec;
         }
 
         .address-card-main {
-            border-left: 4px solid #ffc107;
-            background: linear-gradient(to right, #fff9e6, white);
+            border-left: 4px solid #f5b042;
         }
 
         .address-card-sub {
-            border-left: 4px solid #17a2b8;
+            border-left: 4px solid #2d9cdb;
         }
 
-        /* Badge Styles */
         .address-badge {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 14px 18px;
+            background: #fefefe;
+            border-bottom: 1px solid #edf2f8;
         }
 
         .badge-main, .badge-sub {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 20px;
+            gap: 8px;
+            padding: 5px 14px;
+            border-radius: 30px;
             font-size: 12px;
             font-weight: 600;
         }
 
         .badge-main {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff2e0;
+            color: #b45f06;
         }
 
         .badge-sub {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #e6f4ff;
+            color: #0c6b9e;
         }
 
-        .badge-main i, .badge-sub i {
-            font-size: 11px;
-        }
-
-        /* Address Content */
         .address-content {
-            padding: 16px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .address-field {
             display: flex;
-            align-items: baseline;
+            align-items: flex-start;
             gap: 12px;
             font-size: 14px;
-            line-height: 1.5;
-            padding: 4px 0;
-            border-bottom: 1px dashed #f0f0f0;
+            border-bottom: 1px dashed #f0f3f8;
+            padding-bottom: 8px;
         }
 
         .address-field:last-child {
             border-bottom: none;
+            padding-bottom: 0;
         }
 
         .field-icon {
-            width: 20px;
-            color: #6c757d;
+            width: 24px;
+            color: #7e8c9e;
             font-size: 14px;
             text-align: center;
+            margin-top: 2px;
         }
 
         .field-label {
             font-weight: 600;
-            color: #495057;
+            color: #334155;
             min-width: 100px;
             font-size: 13px;
         }
 
         .field-value {
-            color: #212529;
+            color: #1e293b;
             flex: 1;
             word-break: break-word;
         }
 
-        /* Empty State */
+        /* Empty state */
         .empty-address {
             text-align: center;
-            padding: 40px 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            margin-top: 15px;
+            padding: 48px 24px;
+            background: #fafcff;
+            border-radius: 24px;
+            margin-top: 12px;
+            border: 1px solid #edf2f8;
         }
 
         .empty-icon {
-            font-size: 48px;
-            color: #adb5bd;
-            margin-bottom: 15px;
+            font-size: 56px;
+            color: #b9c3d0;
+            margin-bottom: 16px;
         }
 
         .empty-address p {
-            color: #6c757d;
-            font-size: 16px;
+            color: #5b6e8c;
+            font-size: 15px;
             margin-bottom: 20px;
         }
 
         .btn-add-address {
-            background: #007bff;
-            color: white;
+            background: #000;
+            color: #fff;
             border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            cursor: pointer;
+            padding: 10px 26px;
+            border-radius: 40px;
+            font-weight: 500;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-add-address:hover {
-            background: #0056b3;
-            transform: translateY(-1px);
+            background: #2c2c2c;
+            transform: translateY(-2px);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .sidebar-menu {
+                display: none;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .profile-header {
+                padding: 0 20px 20px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
             .address-grid {
                 grid-template-columns: 1fr;
             }
-
-            .field-label {
-                min-width: 85px;
+            .avatar-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
-
+            .profile-title {
+                text-align: center;
+            }
+            .edit-profile-btn {
+                align-self: center;
+            }
             .address-field {
                 flex-wrap: wrap;
                 gap: 6px;
             }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .sidebar-menu {
-                width: 0;
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 0;
+            .field-label {
+                min-width: 85px;
             }
         }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
+    <!-- Sidebar (giữ nguyên) -->
     <div class="sidebar-menu">
         <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item">
-                <i class="fas fa-chart-pie"></i>
-                <span>Bảng điều khiển</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item active">
-                <i class="fas fa-user-circle"></i>
-                <span>Thông tin cá nhân</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item">
-                <i class="fas fa-user-edit"></i>
-                <span>Chỉnh sửa thông tin</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item">
-                <i class="fas fa-lock"></i>
-                <span>Đổi mật khẩu</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/order" class="menu-item">
-                <i class="fas fa-shopping-bag"></i>
-                <span>Đơn hàng của tôi</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item">
-                <i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item">
-                <i class="fas fa-heart"></i>
-                <span>Sản phẩm yêu thích</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item">
-                <i class="fas fa-bell"></i>
-                <span>Thông báo</span>
-            </a>
-
+            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span></a>
+            <a href="${pageContext.request.contextPath}/profile" class="menu-item active"><i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span></a>
+            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item"><i class="fas fa-user-edit"></i><span>Chỉnh sửa thông tin</span></a>
+            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item"><i class="fas fa-lock"></i><span>Đổi mật khẩu</span></a>
+            <a href="${pageContext.request.contextPath}/order" class="menu-item"><i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span></a>
+            <a href="${pageContext.request.contextPath}/cart" class="menu-item"><i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span></a>
+            <a href="${pageContext.request.contextPath}/favorites" class="menu-item"><i class="fas fa-heart"></i><span>Sản phẩm yêu thích</span></a>
+            <a href="${pageContext.request.contextPath}/notifications" class="menu-item"><i class="fas fa-bell"></i><span>Thông báo</span></a>
             <div class="menu-divider"></div>
-
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Đăng xuất</span>
-            </a>
+            <a href="${pageContext.request.contextPath}/loggout" class="menu-item"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
         </div>
     </div>
 
+    <!-- Nội dung chính đã nâng cấp -->
     <div class="main-content">
         <div class="content-header">
             <h1>Thông tin cá nhân</h1>
@@ -501,149 +577,100 @@
         </div>
 
         <div class="profile-card">
+            <!-- Cover ảnh nền -->
             <div class="profile-cover"></div>
 
             <div class="profile-header">
                 <div class="avatar-section">
-
                     <div class="avatar-wrapper">
-
                         <img src="${pageContext.request.contextPath}${sessionScope.user.imgURL}" class="profile-avatar" alt="Avatar" />
-
                         <a href="${pageContext.request.contextPath}/profileEdit" class="edit-avatar-btn">
                             <i class="fas fa-camera"></i>
                         </a>
                     </div>
                     <div class="profile-title">
                         <h2>${user.getFullname()}</h2>
-                        <span class="role-badge">${user.getRole()}</span>
+                        <span class="role-badge"><i class="fas fa-user-tag"></i> ${user.getRole()}</span>
                     </div>
-
                     <a href="${pageContext.request.contextPath}/profileEdit" class="edit-profile-btn">
-                        <i class="fas fa-edit"></i> Chỉnh sửa
+                        <i class="fas fa-pen"></i> Chỉnh sửa hồ sơ
                     </a>
                 </div>
             </div>
 
+            <!-- Thông tin tài khoản -->
             <div class="info-section">
-                <h3 class="section-title">
+                <div class="section-title">
                     <i class="fas fa-user-circle"></i>
                     Thông tin tài khoản
-                </h3>
-
+                </div>
                 <div class="info-grid">
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-id-card"></i>
-                            ID người dùng
-                        </div>
+                        <div class="info-label"><i class="fas fa-id-card"></i> ID người dùng</div>
                         <div class="info-value">${user.getId()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-user-tag"></i>
-                            Tên đăng nhập
-                        </div>
+                        <div class="info-label"><i class="fas fa-user-tag"></i> Tên đăng nhập</div>
                         <div class="info-value">${user.getUsername()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-user"></i>
-                            Họ và tên
-                        </div>
+                        <div class="info-label"><i class="fas fa-user"></i> Họ và tên</div>
                         <div class="info-value">${user.getFullname()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-envelope"></i>
-                            Email
-                        </div>
+                        <div class="info-label"><i class="fas fa-envelope"></i> Email</div>
                         <div class="info-value">${user.getEmail()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-phone"></i>
-                            Số điện thoại
-                        </div>
+                        <div class="info-label"><i class="fas fa-phone"></i> Số điện thoại</div>
                         <div class="info-value">${user.getPhonenumber()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-briefcase"></i>
-                            Vai trò
-                        </div>
-                        <div class="info-value">
-                            <span class="role-badge">${user.getRole()}</span>
-                        </div>
+                        <div class="info-label"><i class="fas fa-briefcase"></i> Vai trò</div>
+                        <div class="info-value"><span class="role-badge">${user.getRole()}</span></div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-circle-info"></i>
-                            Trạng thái
-                        </div>
+                        <div class="info-label"><i class="fas fa-circle-info"></i> Trạng thái</div>
                         <div class="info-value">
                             <c:choose>
                                 <c:when test="${user.getStatus()==true}">
-                                    <span class="status-badge status-active">
-                                        <i class="fas fa-check-circle"></i> Hoạt động
-                                    </span>
+                                    <span class="status-badge status-active"><i class="fas fa-check-circle"></i> Hoạt động</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="status-badge status-inactive">
-                                        <i class="fas fa-times-circle"></i> Không hoạt động
-                                    </span>
+                                    <span class="status-badge status-inactive"><i class="fas fa-times-circle"></i> Không hoạt động</span>
                                 </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Địa chỉ mặc định
-                        </div>
+                        <div class="info-label"><i class="fas fa-map-marker-alt"></i> Địa chỉ mặc định</div>
                         <div class="info-value">${user.getAddressid()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-calendar-plus"></i>
-                            Ngày tạo
-                        </div>
+                        <div class="info-label"><i class="fas fa-calendar-plus"></i> Ngày tạo</div>
                         <div class="info-value">${user.getCreatedat()}</div>
                     </div>
-
                     <div class="info-card">
-                        <div class="info-label">
-                            <i class="fas fa-calendar-alt"></i>
-                            Cập nhật lần cuối
-                        </div>
+                        <div class="info-label"><i class="fas fa-calendar-alt"></i> Cập nhật lần cuối</div>
                         <div class="info-value">${user.getUpdatedat()}</div>
                     </div>
                 </div>
 
+                <!-- Mô tả riêng -->
                 <div class="description-section">
-                    <div class="info-label">
-                        <i class="fas fa-align-left"></i>
-                        Mô tả
-                    </div>
+                    <div class="info-label"><i class="fas fa-align-left"></i> Mô tả</div>
                     <div class="info-value description">
                         ${not empty user.getDescription() ? user.getDescription() : 'Chưa có mô tả'}
                     </div>
                 </div>
             </div>
 
+            <!-- Sổ địa chỉ -->
             <div class="info-section">
-                <h3 class="section-title">
-                    <i class="fas fa-map-marker-alt"></i>
+                <div class="section-title">
+                    <i class="fas fa-map-marked-alt"></i>
                     Sổ địa chỉ
-                </h3>
+                </div>
 
                 <c:choose>
                     <c:when test="${not empty listAddress}">
@@ -669,27 +696,27 @@
                                         <div class="address-field">
                                             <i class="fas fa-tag field-icon"></i>
                                             <span class="field-label">Tên địa chỉ:</span>
-                                            <span class="field-value">${a.nameAddress}</span>       <%-- SỬA: name → nameAddress --%>
+                                            <span class="field-value">${a.nameAddress}</span>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-road field-icon"></i>
                                             <span class="field-label">Đường:</span>
-                                            <span class="field-value">${a.addressLine}</span>        <%-- SỬA: street → addressLine --%>
+                                            <span class="field-value">${a.addressLine}</span>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-map-pin field-icon"></i>
                                             <span class="field-label">Xã/Phường:</span>
-                                            <span class="field-value">${a.wardName}</span>           <%-- SỬA: commune → wardName --%>
+                                            <span class="field-value">${a.wardName}</span>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-building field-icon"></i>
                                             <span class="field-label">Quận/Huyện:</span>
-                                            <span class="field-value">${a.districName}</span>        <%-- THÊM MỚI: hiển thị quận/huyện --%>
+                                            <span class="field-value">${a.districName}</span>
                                         </div>
                                         <div class="address-field">
                                             <i class="fas fa-city field-icon"></i>
                                             <span class="field-label">Tỉnh/Thành phố:</span>
-                                            <span class="field-value">${a.provinceName}</span>       <%-- SỬA: province → provinceName --%>
+                                            <span class="field-value">${a.provinceName}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -699,8 +726,10 @@
                     <c:otherwise>
                         <div class="empty-address">
                             <i class="fas fa-map-marker-alt empty-icon"></i>
-                            <p>Chưa có địa chỉ nào</p>
-                            <button class="btn-add-address">Thêm địa chỉ mới</button>
+                            <p>Chưa có địa chỉ nào trong sổ</p>
+                            <a href="${pageContext.request.contextPath}/profileEdit" class="btn-add-address">
+                                <i class="fas fa-plus"></i> Thêm địa chỉ mới
+                            </a>
                         </div>
                     </c:otherwise>
                 </c:choose>

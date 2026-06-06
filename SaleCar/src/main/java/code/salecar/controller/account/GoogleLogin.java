@@ -43,6 +43,5 @@ public class GoogleLogin extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
         response.sendRedirect("/home");
-
     }
 }

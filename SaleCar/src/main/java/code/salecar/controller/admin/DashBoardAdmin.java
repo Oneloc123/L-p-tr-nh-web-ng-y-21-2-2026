@@ -95,7 +95,12 @@ public class DashBoardAdmin extends HttpServlet {
         request.setAttribute("revenueLabels", revenueMap.keySet());
         request.setAttribute("revenueData", revenueMap.values());
 
-        Map<String, Long> paymentMap = listOrder.stream().collect(Collectors.groupingBy(Order::getPaymentMethod, Collectors.counting()));
+        Map<String, Long> paymentMap = listOrder.stream()
+                .filter(o -> o.getPaymentMethod() != null)
+                .collect(Collectors.groupingBy(
+                        Order::getPaymentMethod,
+                        Collectors.counting()
+                ));
         request.setAttribute("paymentLabels", paymentMap.keySet());
         request.setAttribute("paymentData", paymentMap.values());
 
