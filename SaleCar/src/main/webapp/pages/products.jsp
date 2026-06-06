@@ -664,7 +664,7 @@
         border-radius: var(--radius-lg);
         overflow: hidden;
         transition: all var(--transition-slow);
-        height: 100%;
+        height: auto;
         display: flex;
         flex-direction: column;
         background: var(--bg-elevated);
