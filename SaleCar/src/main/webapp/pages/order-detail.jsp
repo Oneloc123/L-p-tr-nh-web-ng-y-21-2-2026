@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -284,6 +283,17 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
                         <span class="status-badge status-shipping">
                             <i class="fas fa-truck"></i> Đang giao hàng
                         </span>
+                        <div style="margin-top:12px;">
+                            <form action="${pageContext.request.contextPath}/confirm-received" method="POST" style="display:inline;">
+                                <input type="hidden" name="id" value="${order.id}">
+                                <button type="submit" class="btn btn-success btn-sm"
+                                        style="border-radius:20px; padding:8px 20px; font-weight:600;
+                                               background:#22c55e; border-color:#22c55e;"
+                                        onclick="return confirm('Bạn xác nhận đã nhận được hàng?')">
+                                    <i class="fas fa-check-circle"></i> Đã nhận được hàng
+                                </button>
+                            </form>
+                        </div>
                     </c:when>
                     <c:when test="${order.orderStatus == 'COMPLETED'}">
                         <span class="status-badge status-completed">
@@ -397,7 +407,7 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
                                     <a href="${pageContext.request.contextPath}/product-detail?id=${item.product.id}"
                                        class="product-link">
                                         <div class="product-img">
-                                            <img src="${item.imageUrl}"
+                                            <img src="${not empty item.imageUrl ? pageContext.request.contextPath.concat('/uploads/').concat(item.imageUrl) : 'https://placehold.co/100?text=LUXCAR'}"
                                                  alt="${item.product.name}"
                                                  onerror="this.src='https://placehold.co/100?text=LUXCAR'">
                                         </div>
@@ -463,5 +473,3 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
 </div>
 </body>
 </html>
-
-

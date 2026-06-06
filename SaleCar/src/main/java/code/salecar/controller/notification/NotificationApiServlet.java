@@ -55,7 +55,8 @@ public class NotificationApiServlet extends HttpServlet {
                 json.append("\"id\":").append(n.getId()).append(",");
                 json.append("\"message\":\"").append(escapeJson(n.getMessage())).append("\",");
                 json.append("\"isRead\":").append(n.isIsRead()).append(",");
-                json.append("\"createdAt\":\"").append(sdf.format(n.getCreatedAt())).append("\"");
+                json.append("\"createdAt\":\"").append(sdf.format(n.getCreatedAt())).append("\",");
+                json.append("\"orderId\":").append(n.getOrderId());
                 json.append("}");
             }
 

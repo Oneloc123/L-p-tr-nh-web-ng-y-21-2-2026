@@ -8,16 +8,18 @@ public class Notification {
     private String message;
     private boolean isRead;
     private Timestamp createdAt;
+    private int orderId;
 
     public Notification() {
     }
 
-    public Notification(int id, int userId, String message, boolean isRead, Timestamp createdAt) {
+    public Notification(int id, int userId, String message, boolean isRead, Timestamp createdAt, int orderId) {
         this.id = id;
         this.userId = userId;
         this.message = message;
         this.isRead = isRead;
         this.createdAt = createdAt;
+        this.orderId = orderId;
     }
 
     public int getId() {
@@ -58,5 +60,13 @@ public class Notification {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

@@ -345,6 +345,15 @@
                                 <span class="order-status status-shipping">
                                     <i class="fas fa-truck"></i> ${order.orderStatus}
                                 </span>
+                                <form action="${pageContext.request.contextPath}/confirm-received" method="POST" style="display:inline; margin-top: 6px;">
+                                    <input type="hidden" name="id" value="${order.id}">
+                                    <button type="submit" class="btn btn-success btn-sm"
+                                            style="border-radius:20px; padding:6px 16px; font-weight:600;
+                                                   background:#22c55e; border-color:#22c55e; font-size:12px;"
+                                            onclick="return confirm('Bạn xác nhận đã nhận được hàng?')">
+                                        <i class="fas fa-check-circle"></i> Đã nhận được hàng
+                                    </button>
+                                </form>
                             </c:when>
 
                             <%-- XÁC NHẬN --%>

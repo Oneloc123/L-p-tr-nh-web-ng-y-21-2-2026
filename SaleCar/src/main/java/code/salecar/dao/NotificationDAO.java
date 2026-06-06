@@ -10,11 +10,20 @@ import java.util.List;
 public class NotificationDAO {
 
     public void insertNotification(int userId, String message) {
-        String sql = "INSERT INTO notification (user_id, message) VALUES (?, ?)";
+        insertNotification(userId, message, 0);
+    }
+
+    public void insertNotification(int userId, String message, int orderId) {
+        String sql = "INSERT INTO notification (user_id, message, order_id) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setString(2, message);
+            if (orderId > 0) {
+                ps.setInt(3, orderId);
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +63,7 @@ public class NotificationDAO {
 
     public List<Notification> getAllNotifications(int userId) {
         List<Notification> list = new ArrayList<>();
-        String sql = "SELECT * FROM notification WHERE user_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT id, user_id, message, is_read, created_at, COALESCE(order_id, 0) AS order_id FROM notification WHERE user_id = ? ORDER BY created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -86,6 +95,7 @@ public class NotificationDAO {
         n.setMessage(rs.getString("message"));
         n.setIsRead(rs.getBoolean("is_read"));
         n.setCreatedAt(rs.getTimestamp("created_at"));
+        n.setOrderId(rs.getInt("order_id")); // 0 nếu NULL
         return n;
     }
 }

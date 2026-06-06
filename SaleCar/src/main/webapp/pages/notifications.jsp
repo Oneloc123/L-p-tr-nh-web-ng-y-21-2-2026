@@ -147,13 +147,7 @@
             </button>
         </div>
 
-        <%-- TABS --%>
-        <div class="custom-tabs">
-            <div class="custom-tab active" onclick="filterNoti('all', this)">Tất cả</div>
-            <div class="custom-tab" onclick="filterNoti('unread', this)">Chưa đọc</div>
-        </div>
-
-        <%-- DANH SÁCH THÔNG BÁO --%>
+        <%-- DANH SÁCH THÔNG BÁO (đã xóa tabs, thêm link điều hướng) --%>
         <div class="noti-list-container">
             <c:choose>
                 <c:when test="${empty notifications}">
@@ -188,7 +182,15 @@
                             </c:when>
                         </c:choose>
 
-                        <%-- RENDER CARD --%>
+                        <%-- RENDER CARD (bọc trong <a> để điều hướng) --%>
+                        <c:choose>
+                            <c:when test="${noti.orderId > 0}">
+                                <a href="${pageContext.request.contextPath}/order-detail?id=${noti.orderId}" class="text-decoration-none">
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/notifications" class="text-decoration-none" onclick="event.preventDefault();">
+                            </c:otherwise>
+                        </c:choose>
                         <div class="noti-card noti-item ${noti.isRead ? 'read' : 'unread'}" data-status="${noti.isRead ? 'read' : 'unread'}">
 
                             <div class="icon-circle ${bgClass}">
@@ -208,6 +210,7 @@
                             </div>
 
                         </div>
+                        </a>
                     </c:forEach>
                 </c:otherwise>
             </c:choose>
@@ -217,23 +220,6 @@
 </div>
 
 <script>
-    // JS Lọc Tab Thông báo
-    function filterNoti(status, clickedTab) {
-        // Cập nhật giao diện tab active
-        document.querySelectorAll('.custom-tab').forEach(tab => tab.classList.remove('active'));
-        clickedTab.classList.add('active');
-
-        // Lọc Card
-        document.querySelectorAll('.noti-item').forEach(card => {
-            const cardStatus = card.getAttribute('data-status');
-            if (status === 'all' || cardStatus === status) {
-                card.style.display = 'flex'; // Dùng flex để giữ bố cục ngang
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
     // JS Đánh dấu đã đọc
     function markAllReadFromPage() {
         fetch('${pageContext.request.contextPath}/api/notifications?action=markRead')
