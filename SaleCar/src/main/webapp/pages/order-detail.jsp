@@ -361,8 +361,8 @@ cat > /mnt/user-data/outputs/order-detail.jsp << 'ENDOFFILE'
             <div class="order-summary">
                 <div class="summary-inner">
                     <div class="summary-row">
-                        <span>Tạm tính (chưa trừ voucher):</span>
-                        <span><fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/> &#8363;</span>
+                        <span>Tạm tính:</span>
+                        <span><fmt:formatNumber value="${order.totalAmount - order.shippingFee}" type="number" groupingUsed="true"/> &#8363;</span>
                     </div>
                     <div class="summary-row">
                         <span>Phí vận chuyển:</span>
