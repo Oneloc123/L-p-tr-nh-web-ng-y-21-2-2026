@@ -796,6 +796,89 @@ public class ProductDAO {
         return 0;
     }
 
+    /**
+     * Lấy sản phẩm gợi ý dựa trên danh sách category (loại trừ các sản phẩm đã mua).
+     * Dùng cho trang thankyou.jsp - gợi ý sản phẩm sau khi đặt hàng.
+     */
+    public List<ProductItemDTO> getSuggestedProducts(List<Long> categoryIds, List<Integer> excludeProductIds) {
+        List<ProductItemDTO> products = new ArrayList<>();
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return getProductNew();
+        }
+
+        StringBuilder query = new StringBuilder(
+                "select pr.id, pr.name, pr.discount_percent, pr.brand_id, pr.category_id, pr.ratio, " +
+                "COALESCE((SELECT MIN(pv.price) FROM product_variants pv WHERE pv.product_id = pr.id), pr.price) AS price, " +
+                "COALESCE((SELECT MIN(COALESCE(pv.final_price, pv.price)) FROM product_variants pv WHERE pv.product_id = pr.id), pr.final_price) AS final_price " +
+                "from product pr where pr.status = 1 " +
+                "and exists (select 1 from product_variants pv where pv.product_id = pr.id) "
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        query.append(" and pr.category_id in (");
+        for (int i = 0; i < categoryIds.size(); i++) {
+            query.append(i > 0 ? ",?" : "?");
+            params.add(categoryIds.get(i));
+        }
+        query.append(") ");
+
+        if (excludeProductIds != null && !excludeProductIds.isEmpty()) {
+            query.append(" and pr.id not in (");
+            for (int i = 0; i < excludeProductIds.size(); i++) {
+                query.append(i > 0 ? ",?" : "?");
+                params.add(excludeProductIds.get(i));
+            }
+            query.append(") ");
+        }
+
+        query.append(" order by pr.discount_percent desc, pr.created_at desc limit 4");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductItemDTO p = new ProductItemDTO.Builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .price(rs.getDouble("price"))
+                        .finalPrice(rs.getDouble("final_price"))
+                        .discountPercent(rs.getDouble("discount_percent"))
+                        .brandId(rs.getInt("brand_id"))
+                        .categoryId(rs.getInt("category_id"))
+                        .ratio(rs.getString("ratio"))
+                        .build();
+                products.add(p);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (products.size() < 4) {
+            List<ProductItemDTO> fallback = getProductNew();
+            for (ProductItemDTO fb : fallback) {
+                if (products.size() >= 4) break;
+                boolean alreadyExists = false;
+                for (ProductItemDTO existing : products) {
+                    if (existing.getId() == fb.getId()) {
+                        alreadyExists = true;
+                        break;
+                    }
+                }
+                if (!alreadyExists) {
+                    products.add(fb);
+                }
+            }
+        }
+
+        return products;
+    }
+
     //Cập nhật thông tin cơ bản của sản phẩm (tên, danh mục, thương hiệu, trạng thái)
     public void updateBasicInfo(ProductDetailDTO product) {
         String query = "update product  " +
