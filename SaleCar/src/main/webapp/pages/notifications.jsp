@@ -17,74 +17,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/common/dark-theme.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
 
-        /* Main layout & Sidebar (Giống dashboard/profile) */
-        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: #000000; color: #ffffff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; flex-shrink: 0; }
-        .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #ffffff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
-        .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333333; color: #ffffff; }
-        .menu-item.active { background-color: #ffffff; color: #000000; }
-        .menu-item.active i { color: #000000; }
-        .menu-divider { height: 1px; background-color: #333333; margin: 15px 20px; }
-
-        /* Main Content */
-        .main-content { flex: 1; padding: 30px; background-color: #f8f9fa; min-height: 100vh; }
-        .content-header { margin-bottom: 25px; }
-        .content-header h2 { font-size: 28px; font-weight: 600; color: #000; margin-bottom: 15px; }
-
-        /* Custom Tabs */
-        .custom-tabs {
-            display: flex;
-            background: #fff;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            overflow: hidden;
-        }
-        .custom-tab {
-            padding: 16px 35px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: #777;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .custom-tab:hover { color: #111; background: #fafafa; }
-        .custom-tab.active {
-            color: #000;
-            border-bottom-color: #000;
-            background: #fff;
-        }
-
-        /* Notification Card */
         .noti-card {
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
             margin-bottom: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform var(--transition-base), box-shadow var(--transition-base);
             display: flex;
             align-items: flex-start;
             padding: 20px;
         }
         .noti-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--border-gold);
         }
         .noti-card.unread {
-            background-color: #f4f9ff;
-            border-color: #dbeafe;
+            background: var(--bg-elevated);
+            border-color: var(--border-gold);
         }
 
         .icon-circle {
@@ -97,46 +51,51 @@
             flex-shrink: 0;
             margin-right: 20px;
         }
-        .bg-success-light { background-color: #d1e7dd; color: #0f5132; }
-        .bg-info-light { background-color: #cff4fc; color: #055160; }
-        .bg-indigo-light { background-color: #e0cffc; color: #4b0082; }
-        .bg-danger-light { background-color: #f8d7da; color: #842029; }
-        .bg-secondary-light { background-color: #e2e3e5; color: #41464b; }
+        .bg-success-light { background: rgba(46, 204, 113, 0.12); color: #2ecc71; }
+        .bg-info-light { background: rgba(23, 162, 184, 0.12); color: #17a2b8; }
+        .bg-indigo-light { background: rgba(105, 0, 199, 0.12); color: #6900c7; }
+        .bg-danger-light { background: rgba(231, 76, 60, 0.12); color: #e74c3c; }
+        .bg-secondary-light { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); }
 
         .noti-content { flex-grow: 1; padding-right: 20px; }
-        .noti-title { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 5px; }
-        .noti-message { font-size: 14px; color: #666; margin-bottom: 0; line-height: 1.5; }
+        .noti-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; }
+        .noti-message { font-size: 14px; color: var(--text-secondary); margin-bottom: 0; line-height: 1.5; }
 
         .noti-meta { text-align: right; min-width: 100px; display: flex; flex-direction: column; align-items: flex-end; }
-        .noti-time { font-size: 13px; color: #888; margin-bottom: 8px; }
-        .unread-dot { width: 10px; height: 10px; background-color: #dc3545; border-radius: 50%; display: inline-block; }
+        .noti-time { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+        .unread-dot { width: 10px; height: 10px; background-color: var(--gold); border-radius: 50%; display: inline-block; box-shadow: 0 0 6px rgba(212, 175, 55, 0.4); }
 
-        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
-        .empty-state i { font-size: 50px; margin-bottom: 15px; color: #ddd; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-state i { font-size: 50px; margin-bottom: 15px; color: rgba(255,255,255,0.08); }
+        .empty-state h5 { color: var(--text-primary); margin-bottom: 8px; }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.15); border-radius: 10px; }
+
+        .btn-outline-secondary {
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-subtle);
+            background: transparent;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all var(--transition-base);
+        }
+        .btn-outline-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
 
     <%-- SIDEBAR --%>
-    <div class="sidebar-menu">
-        <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span></a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item"><i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span></a>
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item"><i class="fas fa-user-edit"></i><span>Chỉnh sửa thông tin</span></a>
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item"><i class="fas fa-lock"></i><span>Đổi mật khẩu</span></a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item"><i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span></a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item"><i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span></a>
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item"><i class="fas fa-heart"></i><span>Sản phẩm yêu thích</span></a>
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item active"><i class="fas fa-bell"></i><span>Thông báo</span></a>
-            <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
-        </div>
-    </div>
+    <!-- Sidebar chung -->
+    <%@ include file="/common/user-sidebar.jsp" %>
 
     <%-- MAIN CONTENT --%>
     <div class="main-content">

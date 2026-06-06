@@ -1,51 +1,65 @@
-/* ================= ALERT ================= */
+/* ================= ALERT - DARK LUXURY ================= */
 .alert-custom {
     position: relative;
-    /*top: 20px;*/
-    /*right: 20px;*/
-    background: linear-gradient(135deg, #fff 0%, #fcf9f0 100%);
-    color: var(--black);
-    border-left: 4px solid var(--gold);
-    border-radius: 8px;
-    padding: 16px 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(197, 160, 40, 0.2);
+    background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+    color: var(--text-primary);
+    border-left: 3px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px 22px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
     z-index: 9999;
     animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     font-family: 'Inter', sans-serif;
-    min-width: 320px;
-    backdrop-filter: blur(10px);
+    min-width: 340px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     cursor: pointer;
     transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 .alert-custom:hover {
-    transform: translateX(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transform: translateX(-4px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(212, 175, 55, 0.2);
 }
 
 .alert-custom i {
     color: var(--gold);
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .alert-custom strong {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
     font-weight: 700;
     color: var(--gold);
     letter-spacing: 0.5px;
 }
 
 .alert-custom span {
-    font-size: 14px;
-    color: #444444;
+    font-size: 13px;
+    color: var(--text-secondary);
     font-weight: 400;
+    line-height: 1.4;
 }
 
-/* Animation hiệu ứng xuất hiện */
+/* ─── PROGRESS BAR ─── */
+.alert-custom .alert-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    transform-origin: left;
+    animation: progress 3s linear;
+    border-radius: 0 0 0 12px;
+}
+
+/* ─── Animations ─── */
 @keyframes slideInRight {
     0% {
-        transform: translateX(100%) scale(0.8);
+        transform: translateX(120%) scale(0.85);
         opacity: 0;
     }
     100% {
@@ -54,20 +68,17 @@
     }
 }
 
-/* Animation hiệu ứng biến mất - GIẢM DẦN */
 @keyframes slideOutRight {
     0% {
         transform: translateX(0) scale(1);
         opacity: 1;
     }
     100% {
-        transform: translateX(100%) scale(0.8);
+        transform: translateX(120%) scale(0.85);
         opacity: 0;
-        display: none;
     }
 }
 
-/* Animation fade out đơn giản */
 @keyframes fadeOut {
     0% {
         opacity: 1;
@@ -80,61 +91,57 @@
     }
 }
 
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(197, 160, 40, 0.4);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(197, 160, 40, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(197, 160, 40, 0);
-    }
-}
-
 @keyframes progress {
-    0% {
-        transform: scaleX(1);
-    }
-    100% {
-        transform: scaleX(0);
-    }
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
 }
 
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+/* ─── SUCCESS ─── */
 .alert-custom.success {
-    background: linear-gradient(135deg, #f7f7f5 0%, #f0f2ef 100%);
-    border-left-color: #1f7a63;
+    border-left-color: #2ecc71;
+    background: linear-gradient(135deg, #1a2320 0%, #1f2a22 100%);
 }
-
 .alert-custom.success i,
 .alert-custom.success strong {
-    color: #1f7a63;
+    color: #2ecc71;
+}
+.alert-custom.success .alert-progress {
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
 }
 
-/* WARNING – vàng amber sang trọng */
-
+/* ─── WARNING ─── */
 .alert-custom.warning {
-    background: linear-gradient(135deg, #fffaf0 0%, #fdf3d7 100%);
-    border-left-color: #c9a227;
+    border-left-color: #f39c12;
+    background: linear-gradient(135deg, #222018 0%, #2a2518 100%);
 }
-
 .alert-custom.warning i,
 .alert-custom.warning strong {
-    color: #c9a227;
+    color: #f39c12;
+}
+.alert-custom.warning .alert-progress {
+    background: linear-gradient(90deg, #f39c12, #e67e22);
 }
 
-/* ERROR – đỏ burgundy (đỡ chói hơn đỏ tươi) */
-
+/* ─── ERROR ─── */
 .alert-custom.error {
-    background: linear-gradient(135deg, #faf5f5 0%, #f4e8e8 100%);
-    border-left-color: #8b2f2f;
+    border-left-color: #e74c3c;
+    background: linear-gradient(135deg, #221818 0%, #2a1c1c 100%);
 }
-
 .alert-custom.error i,
 .alert-custom.error strong {
-    color: #8b2f2f;
+    color: #e74c3c;
+}
+.alert-custom.error .alert-progress {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
 }
 
+/* ─── Gold border glow ─── */
 .alert-custom::before {
     content: '';
     position: absolute;
@@ -142,21 +149,22 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 1px;
-    background: linear-gradient(135deg, var(--gold), var(--light-gold));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), transparent 40%, transparent 60%, rgba(212, 175, 55, 0.08));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
 }
-#alertContainer{
-    position: fixed;
-    top: 90px;   /* chỉnh ở đây */
-    right: 20px;
-    z-index: 9999;
 
+/* ─── Alert container ─── */
+#alertContainer {
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }

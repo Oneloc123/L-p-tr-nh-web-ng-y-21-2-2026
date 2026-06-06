@@ -13,15 +13,31 @@
     :root {
         --black: #000000;
         --gold: #D4AF37;
+        --gold-dark: #b8960f;
         --white: #FFFFFF;
         --light-gold: #f5e7b2;
         --dark-gold: #b8960f;
-        --gray-bg: #f8f9fa;
+        --text-primary: #f0f0f0;
+        --text-secondary: #9f9f9f;
+        --text-muted: #666666;
+        --bg-primary: #101010;
+        --bg-surface: #1a1a1a;
+        --bg-elevated: #222222;
+        --bg-elevated-hover: #2a2a2a;
+        --border-subtle: rgba(255, 255, 255, 0.06);
+        --border-gold: rgba(212, 175, 55, 0.30);
+        --border-gold-strong: rgba(212, 175, 55, 0.55);
+        --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 25px rgba(212, 175, 55, 0.08);
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --transition-base: 0.3s ease;
     }
 
     body {
         font-family: 'Inter', sans-serif;
-        background: var(--gray-bg);
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .section-title {
@@ -30,7 +46,7 @@
         position: relative;
         font-weight: 700;
         font-size: 32px;
-        color: var(--black);
+        color: var(--text-primary);
     }
 
     .section-title:after {
@@ -782,7 +798,7 @@
     /* ==================== CATEGORY SECTION (MODERN GLASS) ==================== */
     .category-section {
         padding: 80px 0;
-        background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
         position: relative;
         overflow: hidden;
     }
@@ -813,7 +829,7 @@
 
     .category-section .section-subtitle {
         text-align: center;
-        color: #888;
+        color: var(--text-muted);
         font-size: 15px;
         margin-top: -35px;
         margin-bottom: 50px;
@@ -829,14 +845,12 @@
 
     .category-card {
         position: relative;
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 24px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
         text-decoration: none;
         transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        box-shadow: var(--shadow-card);
         min-height: 280px;
         display: flex;
         flex-direction: column;
@@ -868,9 +882,9 @@
 
     .category-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.12);
-        border-color: rgba(212, 175, 55, 0.3);
-        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.15), 0 0 35px rgba(212, 175, 55, 0.08);
+        border-color: var(--border-gold);
+        background: var(--bg-elevated-hover);
     }
 
     /* Icon Circle */
@@ -909,7 +923,7 @@
     .category-name {
         font-size: 20px;
         font-weight: 700;
-        color: var(--black);
+        color: var(--text-primary);
         margin: 0 0 10px 0;
         transition: color 0.3s ease;
         letter-spacing: 0.3px;
@@ -922,7 +936,7 @@
     /* Description */
     .category-desc {
         font-size: 13px;
-        color: #999;
+        color: var(--text-muted);
         margin: 0 0 18px 0;
         line-height: 1.6;
         max-width: 220px;
@@ -960,7 +974,7 @@
         height: 1.5px;
         background: linear-gradient(90deg, transparent, var(--gold), transparent);
         margin: 0 auto 16px;
-        opacity: 0.3;
+        opacity: 0.5;
         transition: all 0.5s ease;
     }
 
@@ -1021,15 +1035,16 @@
     /* ==================== PRODUCT CARD ==================== */
     .product-section {
         padding: 80px 0;
+        background: linear-gradient(135deg, #0d0d0d 0%, #151515 100%);
     }
 
     .product-section.bg-white {
-        background: var(--white);
+        background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
     }
 
     .product-section .section-subtitle {
         text-align: center;
-        color: #888;
+        color: var(--text-muted);
         font-size: 15px;
         margin-top: -35px;
         margin-bottom: 50px;
@@ -1042,13 +1057,13 @@
     }
 
     .product-card {
-        background: var(--white);
-        border-radius: 16px;
+        background: var(--bg-elevated);
+        border-radius: var(--radius-lg);
         overflow: hidden;
         transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--border-subtle);
     }
 
     .product-card::before {
@@ -1057,22 +1072,22 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--gold), var(--light-gold), var(--gold));
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.6;
         z-index: 5;
+        transition: opacity 0.5s ease;
     }
 
     .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.12);
-        border-color: rgba(212, 175, 55, 0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 50px rgba(212, 175, 55, 0.12);
+        border-color: var(--border-gold-strong);
+        background: var(--bg-elevated-hover);
     }
 
     .product-card:hover::before {
-        transform: scaleX(1);
+        opacity: 1;
     }
 
     /* ─── Badges ─── */
@@ -1129,7 +1144,7 @@
         position: relative;
         overflow: hidden;
         cursor: pointer;
-        background: #f5f5f5;
+        background: linear-gradient(135deg, #141414 0%, #0d0d0d 50%, #161616 100%);
     }
 
     .product-img {
@@ -1140,7 +1155,7 @@
     }
 
     .product-card:hover .product-img {
-        transform: scale(1.12);
+        transform: scale(1.08);
     }
 
     .product-img-overlay {
@@ -1149,8 +1164,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
-        opacity: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(30, 30, 30, 0.25) 50%, rgba(0, 0, 0, 0.4) 100%);
+        opacity: 0.6;
         transition: opacity 0.4s ease;
         z-index: 1;
     }
@@ -1196,18 +1211,20 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.95);
-        border: none;
-        color: var(--black);
+        background: rgba(212, 175, 55, 0.08);
+        border: 1.5px solid rgba(212, 175, 55, 0.25);
+        color: var(--gold);
         font-size: 16px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         opacity: 0;
         transform: translateX(10px);
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
     .product-card:hover .action-btn {
@@ -1220,14 +1237,16 @@
     }
 
     .product-card:hover .action-btn:hover {
-        background: var(--gold);
-        color: var(--black);
-        transform: scale(1.1);
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        background: rgba(212, 175, 55, 0.18);
+        color: #fff;
+        border-color: var(--gold);
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
     }
 
     .action-btn i {
         pointer-events: none;
+        filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.3));
     }
 
     /* ─── Info Section ─── */
@@ -1249,12 +1268,13 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
+        opacity: 0.8;
     }
 
     .product-scale {
         font-size: 11px;
-        color: #999;
-        background: #f5f5f5;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.06);
         padding: 3px 8px;
         border-radius: 4px;
         font-weight: 500;
@@ -1263,7 +1283,7 @@
     .product-name {
         font-size: 17px;
         font-weight: 700;
-        color: var(--black);
+        color: var(--text-primary);
         margin-bottom: 10px;
         text-decoration: none;
         display: -webkit-box;
@@ -1296,7 +1316,7 @@
 
     .review-count {
         font-size: 11px;
-        color: #aaa;
+        color: var(--text-muted);
     }
 
     .product-price {
@@ -1321,9 +1341,10 @@
 
     .old-price {
         font-size: 14px;
-        color: #ccc;
+        color: var(--text-muted);
         text-decoration: line-through;
         font-weight: 400;
+        opacity: 0.5;
     }
 
     /* ─── View Detail CTA ─── */
@@ -1335,9 +1356,9 @@
         width: 100%;
         padding: 10px 16px;
         background: transparent;
-        color: var(--black);
-        border: 2px solid #eee;
-        border-radius: 10px;
+        color: var(--text-secondary);
+        border: 1.5px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
         font-weight: 600;
         font-size: 13px;
         transition: all 0.3s ease;
@@ -1347,9 +1368,13 @@
 
     .product-card:hover .product-view-detail {
         border-color: var(--gold);
-        background: var(--gold);
-        color: var(--black);
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
         gap: 12px;
+    }
+
+    .product-card:hover .product-view-detail i {
+        transform: translateX(4px);
     }
 
     .product-view-detail i {

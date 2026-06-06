@@ -321,6 +321,22 @@
         // Load on page load
         loadNotifications();
 
+        // ========================
+        // HEADER SCROLL SHRINK EFFECT
+        // ========================
+        var navbar = document.querySelector('.navbar');
+        if (navbar) {
+            function handleScroll() {
+                if (window.scrollY > 80) {
+                    navbar.classList.add('navbar-shrink');
+                } else {
+                    navbar.classList.remove('navbar-shrink');
+                }
+            }
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
+        }
+
         // Mark all as read when dropdown is opened
         var dropdownEl = document.getElementById('notificationDropdown');
         if (dropdownEl) {

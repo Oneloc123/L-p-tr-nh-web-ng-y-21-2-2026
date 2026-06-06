@@ -28,9 +28,9 @@
         :root {
             --black: #0a0a0a;
             --bg-primary: #101010;
-            --bg-surface: #181818;
-            --bg-elevated: #1f1f1f;
-            --bg-elevated-hover: #252525;
+            --bg-surface: #1a1a1a;
+            --bg-elevated: #222222;
+            --bg-elevated-hover: #2a2a2a;
             --gold: #D4AF37;
             --gold-dark: #b8960f;
             --gold-light: #e9d6b0;
@@ -38,10 +38,10 @@
             --text-secondary: #9f9f9f;
             --text-muted: #666666;
             --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-gold: rgba(212, 175, 55, 0.15);
-            --border-gold-strong: rgba(212, 175, 55, 0.25);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+            --border-gold: rgba(212, 175, 55, 0.30);
+            --border-gold-strong: rgba(212, 175, 55, 0.55);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 25px rgba(212, 175, 55, 0.08);
+            --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 45px rgba(212, 175, 55, 0.15);
             --success: #2ecc71;
             --danger: #e74c3c;
             --warning: #f39c12;
