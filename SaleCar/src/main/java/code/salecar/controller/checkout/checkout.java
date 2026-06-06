@@ -4,8 +4,6 @@ import code.salecar.dao.AddressDao;
 import code.salecar.model.Address;
 import code.salecar.model.Cart;
 import code.salecar.model.User;
-import code.salecar.model.product.entity.Voucher;
-import code.salecar.service.product.VoucherService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,11 +45,6 @@ public class checkout extends HttpServlet {
         }
 
         request.setAttribute("checkoutCart", checkoutCart);
-
-        // Voucher
-        VoucherService vs = new VoucherService();
-        List<Voucher> vouchers = vs.getVouchers();
-        request.setAttribute("vouchers", vouchers);
 
 
         AddressDao addrDAO = new AddressDao();

@@ -127,6 +127,21 @@ public class VoucherDAO {
 
     // ==================== LẤY MỘT VOUCHER ====================
 
+    public Voucher getVoucherByCode(String code) {
+        String sql = "SELECT * FROM voucher WHERE code = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapVoucher(rs);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching voucher by code", e);
+        }
+        return null;
+    }
+
     public Voucher getVoucherById(long id) {
         String sql = "SELECT * FROM voucher WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -301,6 +316,19 @@ public class VoucherDAO {
             throw new RuntimeException("Error deleting voucher scopes", e);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    // ==================== TĂNG SỐ LẦN SỬ DỤNG ====================
+
+    public boolean incrementUsedCount(long voucherId) {
+        String sql = "UPDATE voucher SET used_count = used_count + 1 WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, voucherId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            throw new RuntimeException("Error incrementing voucher used count", e);
         }
     }
 
