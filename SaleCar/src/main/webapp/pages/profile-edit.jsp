@@ -15,124 +15,572 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* ── Layout ── */
-        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6fa;
+        }
 
-        /* ── Sidebar ── */
-        .sidebar-menu { width: 280px; background-color: #000; color: #fff; padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: #fff; text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
-        .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333; color: #fff; }
-        .menu-item.active { background-color: #fff; color: #000; }
-        .menu-item.active i { color: #000; }
-        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
+        /* ── Layout chính ── */
+        .profile-wrapper {
+            display: flex;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
 
-        /* ── Main content ── */
-        .main-content { flex: 1; padding: 30px; }
-        .content-header { margin-bottom: 30px; }
-        .content-header h1 { font-size: 28px; font-weight: 600; color: #000; margin-bottom: 10px; }
-        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; }
-        .breadcrumb-item { margin-right: 10px; }
-        .breadcrumb-item a { color: #666; text-decoration: none; }
-        .breadcrumb-item.active { color: #000; font-weight: 500; }
+        /* ── Sidebar (giữ nguyên gốc) ── */
+        .sidebar-menu {
+            width: 280px;
+            background-color: #000;
+            color: #fff;
+            padding: 30px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
 
-        /* ── Form card ── */
-        .form-card { background: #fff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; }
-        .form-section { margin-bottom: 40px; padding: 0 30px; }
-        .form-section:first-of-type { padding-top: 30px; }
-        .form-section-title { font-size: 18px; font-weight: 600; color: #000; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000; }
-        .form-label { font-weight: 500; color: #000; margin-bottom: 8px; }
-        .form-control, .form-select { border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 15px; font-size: 15px; transition: all 0.3s; }
-        .form-control:focus, .form-select:focus { border-color: #000; box-shadow: none; }
-        .form-control.is-invalid { border-color: #dc3545; }
-        .invalid-feedback { font-size: 13px; }
-        textarea.form-control { min-height: 100px; resize: vertical; }
+        .menu-items {
+            padding: 20px 0;
+        }
 
-        /* ── Avatar section ── */
-        .avatar-upload-section { background-color: #f8f9fa; border: 2px dashed #000; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 30px 0; }
-        .current-avatar { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; background-color: #000; display: flex; align-items: center; justify-content: center; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; }
-        .current-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-upload { padding: 10px 25px; background-color: #000; color: #fff; border: 2px solid #000; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: inline-block; }
-        .btn-upload:hover { background-color: #fff; color: #000; }
-        .upload-hint { font-size: 12px; color: #666; margin-top: 10px; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 5px 10px;
+            border-radius: 8px;
+        }
 
-        /* ── Address box ── */
-        .address-box { background-color: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-top: 20px; }
-        .address-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .address-box-header h4 { font-size: 16px; font-weight: 600; margin: 0; }
-        .address-actions { display: flex; align-items: center; gap: 15px; }
-        .btn-remove-address { color: #dc3545; background: none; border: none; cursor: pointer; font-size: 16px; }
-        .btn-set-main { color: #0d6efd; border: 1px solid #0d6efd; background-color: transparent; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.3s; }
-        .btn-set-main:hover { background-color: #0d6efd; color: #fff; }
+        .menu-item i {
+            width: 25px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
 
-        /* ── Status ── */
-        .status-options { display: flex; gap: 20px; margin-top: 10px; }
-        .status-option { display: flex; align-items: center; gap: 8px; }
-        .status-option input[type="radio"] { width: 18px; height: 18px; }
+        .menu-item span {
+            font-size: 15px;
+            font-weight: 500;
+        }
 
-        /* ── Form actions ── */
-        .form-actions { padding: 30px; background-color: #f8f9fa; border-top: 1px solid #eee; display: flex; gap: 15px; justify-content: flex-end; }
-        .btn-save { padding: 12px 30px; background-color: #000; color: #fff; border: 2px solid #000; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s; cursor: pointer; }
-        .btn-save:hover { background-color: #fff; color: #000; }
-        .btn-cancel { padding: 12px 30px; background-color: #fff; color: #000; border: 2px solid #000; border-radius: 8px; font-weight: 600; text-decoration: none; }
-        .btn-cancel:hover { background-color: #f0f0f0; }
+        .menu-item:hover {
+            background-color: #333;
+            color: #fff;
+        }
 
-        /* ── Avatar Modal ── */
+        .menu-item.active {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .menu-item.active i {
+            color: #000;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background-color: #333;
+            margin: 15px 20px;
+        }
+
+        /* ───────────────────────────────────────────── */
+        /* KHU VỰC NỘI DUNG CHÍNH (ĐÃ NÂNG CẤP)           */
+        /* ───────────────────────────────────────────── */
+        .main-content {
+            flex: 1;
+            padding: 32px 40px;
+            background: #f4f6fa;
+        }
+
+        /* Breadcrumb & tiêu đề */
+        .content-header {
+            margin-bottom: 28px;
+        }
+
+        .content-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a0a0a;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            margin: 0 8px;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .breadcrumb-item a {
+            color: #5a6874;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #000;
+        }
+
+        .breadcrumb-item.active {
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Card chính */
+        .form-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* Phần avatar */
+        .avatar-upload-section {
+            background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
+            border-bottom: 1px solid #edf2f7;
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .current-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .current-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-upload {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-upload i {
+            font-size: 14px;
+        }
+
+        .btn-upload:hover {
+            background: #2c2c2c;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #6c7a8a;
+        }
+
+        /* Form section */
+        .form-section {
+            padding: 32px 40px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .form-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .form-section-title i {
+            color: #000;
+            font-size: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1e2a3e;
+            margin-bottom: 8px;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-control, .form-select {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+            outline: none;
+        }
+
+        .form-control.is-invalid {
+            border-color: #e53e3e;
+            background-image: none;
+        }
+
+        .invalid-feedback {
+            font-size: 12px;
+            color: #e53e3e;
+            margin-top: 6px;
+        }
+
+        textarea.form-control {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-text {
+            font-size: 11px;
+            color: #6c7a8a;
+            margin-top: 6px;
+        }
+
+        /* Trạng thái radio */
+        .status-options {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .status-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3a48;
+        }
+
+        .status-option input {
+            width: 16px;
+            height: 16px;
+            accent-color: #000;
+            margin: 0;
+        }
+
+        /* Địa chỉ card */
+        .address-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .address-box {
+            background: #fff;
+            border: 1px solid #e9edf2;
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .address-box:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .address-box.main-address {
+            border-left: 4px solid #000;
+            background: #fefefe;
+        }
+
+        .address-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .address-box-header h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0a0a0a;
+        }
+
+        .badge-main {
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+
+        .address-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-set-main {
+            background: #f1f5f9;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-set-main:hover {
+            background: #e2e8f0;
+            color: #000;
+        }
+
+        .btn-remove-address {
+            background: transparent;
+            border: none;
+            color: #a0aec0;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 32px;
+            height: 32px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove-address:hover {
+            background: #fff0f0;
+            color: #e53e3e;
+        }
+
+        .btn-add-address {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #fff;
+            border: 1.5px dashed #cbd5e0;
+            border-radius: 14px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1e293b;
+            width: 100%;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-add-address:hover {
+            border-color: #000;
+            background: #fafcff;
+            color: #000;
+        }
+
+        /* Form actions */
+        .form-actions {
+            padding: 24px 40px;
+            background: #fff;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .btn-save {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.25s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background: #2c2c2c;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-cancel {
+            background: #fff;
+            color: #4a5568;
+            border: 1.5px solid #e2e8f0;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            border-color: #cbd5e0;
+            color: #000;
+        }
+
+        /* Modal styles (làm đẹp modal có sẵn) */
+        .modal-content {
+            border-radius: 24px;
+            border: none;
+            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Avatar modal riêng (giữ nguyên cấu trúc, chỉ bổ sung style) */
         .avatar-modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: opacity 0.25s ease;
         }
-        .avatar-modal-overlay.open { opacity: 1; }
+
+        .avatar-modal-overlay.open {
+            opacity: 1;
+        }
+
         .avatar-modal {
             background: #fff;
-            border-radius: 16px;
-            width: 480px;
+            border-radius: 32px;
+            width: 500px;
             max-width: calc(100vw - 32px);
             overflow: hidden;
             transform: translateY(20px);
             transition: transform 0.25s ease;
         }
-        .avatar-modal-overlay.open .avatar-modal { transform: translateY(0); }
+
+        .avatar-modal-overlay.open .avatar-modal {
+            transform: translateY(0);
+        }
+
         .avatar-modal-head {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 18px 24px;
-            border-bottom: 1px solid #eee;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #edf2f7;
         }
-        .avatar-modal-head h5 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
+
         .avatar-modal-close {
             background: none;
             border: none;
-            font-size: 24px;
-            line-height: 1;
+            font-size: 26px;
             cursor: pointer;
-            color: #666;
-            padding: 0 6px;
-            border-radius: 6px;
+            color: #718096;
         }
-        .avatar-modal-close:hover { background: #f0f0f0; }
-        .avatar-modal-body { padding: 24px; }
+
+        .avatar-modal-body {
+            padding: 24px;
+        }
+
         .avatar-modal-foot {
             padding: 16px 24px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #edf2f7;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: flex-end;
         }
-        .am-preview-wrap { text-align: center; margin-bottom: 20px; }
+
+        .am-preview-wrap {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .am-preview-ring {
             width: 110px;
             height: 110px;
@@ -140,105 +588,123 @@
             border: 3px solid #000;
             overflow: hidden;
             margin: 0 auto;
-            background: #e9ecef;
+            background: #f1f5f9;
         }
-        .am-preview-ring img { width: 100%; height: 100%; object-fit: cover; }
+
+        .am-preview-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .am-dropzone {
-            border: 2px dashed #ccc;
-            border-radius: 12px;
-            padding: 30px 20px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 20px;
+            padding: 24px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-            background: #fafafa;
+            background: #fafcff;
+            transition: 0.2s;
             position: relative;
         }
-        .am-dropzone:hover { border-color: #000; background: #f0f0f0; }
-        .am-dz-icon { font-size: 32px; color: #aaa; display: block; margin-bottom: 10px; }
-        .am-dz-title { font-size: 14px; font-weight: 500; color: #333; margin-bottom: 5px; }
-        .am-dz-hint { font-size: 12px; color: #999; }
-        .am-dropzone input[type="file"] {
+
+        .am-dropzone:hover {
+            border-color: #000;
+            background: #f8fafc;
+        }
+
+        .am-dz-icon {
+            font-size: 36px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+
+        .am-dz-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .am-dz-hint {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .am-dropzone input {
             position: absolute;
             inset: 0;
             opacity: 0;
             cursor: pointer;
-            width: 100%;
-            height: 100%;
         }
+
         .am-file-row {
             display: none;
             align-items: center;
-            gap: 10px;
-            background: #f4f4f4;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-top: 12px;
+            gap: 12px;
+            background: #f1f5f9;
+            border-radius: 14px;
+            padding: 10px 16px;
+            margin-top: 16px;
         }
-        .am-file-row.show { display: flex; }
-        .am-file-row > i { font-size: 20px; color: #000; flex-shrink: 0; }
-        .am-file-meta { flex: 1; min-width: 0; }
-        .am-file-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000; }
-        .am-file-size { font-size: 12px; color: #666; }
-        .am-err {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            background: #fff3f3;
-            border: 1px solid #f5c6cb;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #842029;
+
+        .am-file-row.show {
+            display: flex;
         }
-        .am-err.show { display: flex; }
-        .am-btn-cancel {
-            padding: 10px 22px;
-            background: #fff;
-            color: #000;
-            border: 2px solid #000;
-            border-radius: 8px;
+
+        .am-btn-cancel, .am-btn-save {
+            padding: 10px 24px;
+            border-radius: 40px;
             font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
+            font-size: 13px;
+            border: none;
         }
-        .am-btn-cancel:hover { background: #f0f0f0; }
+
+        .am-btn-cancel {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+        }
+
         .am-btn-save {
-            padding: 10px 22px;
             background: #000;
             color: #fff;
-            border: 2px solid #000;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .am-btn-save:hover:not(:disabled) { background: #333; }
-        .am-btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
-
-        /* Toast tùy chỉnh */
-        .address-toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 2100;
-            min-width: 250px;
         }
 
+        .am-btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .sidebar-menu { display: none; }
-            .form-actions { flex-direction: column; }
-            .btn-save, .btn-cancel { width: 100%; text-align: center; }
+            .sidebar-menu {
+                display: none;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .form-section, .avatar-upload-section, .form-actions {
+                padding: 20px;
+            }
+            .address-box-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .address-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn-save, .btn-cancel {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
 
-    <!-- Sidebar -->
+    <!-- Sidebar (giữ nguyên) -->
     <div class="sidebar-menu">
         <div class="menu-items">
             <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span></a>
@@ -254,7 +720,7 @@
         </div>
     </div>
 
-    <!-- Main content -->
+    <!-- Nội dung chính đã nâng cấp -->
     <div class="main-content">
         <div class="content-header">
             <h1>Chỉnh sửa thông tin</h1>
@@ -271,7 +737,7 @@
         <div class="form-card">
             <form action="${pageContext.request.contextPath}/profileEdit" method="post">
 
-                <!-- Avatar -->
+                <!-- Khu vực Avatar -->
                 <div class="avatar-upload-section">
                     <div class="current-avatar">
                         <c:choose>
@@ -283,222 +749,213 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <button type="button" class="btn-upload" onclick="openAvatarModal()">
-                        <i class="fas fa-camera"></i> Thay đổi ảnh đại diện
-                    </button>
-                    <div class="upload-hint">Hỗ trợ: JPG, PNG, GIF, WEBP · Tối đa 2MB · Ảnh vuông hiển thị đẹp nhất.</div>
+                    <div class="avatar-controls">
+                        <button type="button" class="btn-upload" onclick="openAvatarModal()">
+                            <i class="fas fa-camera"></i> Thay đổi ảnh đại diện
+                        </button>
+                        <div class="upload-hint">Hỗ trợ JPG, PNG, jpeg, webp. Dung lượng tối đa 2MB.</div>
+                    </div>
                 </div>
 
-                <!-- Thông tin tài khoản -->
-                <div class="form-section" style="margin-top: 30px;">
-                    <h3 class="form-section-title"><i class="fas fa-user"></i> Thông tin tài khoản</h3>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                <!-- Thông tin cơ bản -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-user-circle"></i>
+                        Thông tin cơ bản
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6">
                             <label class="form-label">ID người dùng</label>
                             <input type="text" class="form-control" value="${user.getId()}" readonly disabled>
-                            <small class="text-muted">ID không thể thay đổi</small>
+                            <div class="form-text">ID cố định, không thể thay đổi</div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Tên đăng nhập</label>
                             <input type="text" class="form-control" value="${user.getUsername()}" readonly disabled>
-                            <small class="text-muted">Tên đăng nhập không thể thay đổi</small>
+                            <div class="form-text">Tên đăng nhập không thể thay đổi</div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control ${not empty fullnameError ? 'is-invalid' : ''}" name="fullname" value="${fn:escapeXml(param.fullname != null ? param.fullname : user.fullname)}" required>
-                            <small class="form-text text-muted">Nhập họ và tên đầy đủ (không dùng ký tự đặc biệt, tối thiểu 2 từ)</small>
+                            <input type="text" class="form-control ${not empty fullnameError ? 'is-invalid' : ''}"
+                                   name="fullname" value="${fn:escapeXml(param.fullname != null ? param.fullname : user.fullname)}" required>
                             <c:if test="${not empty fullnameError}"><div class="invalid-feedback">${fullnameError}</div></c:if>
+                            <div class="form-text">Ví dụ: Nguyễn Văn A (không dùng ký tự đặc biệt)</div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control ${not empty emailError ? 'is-invalid' : ''}" name="email" value="${fn:escapeXml(param.email != null ? param.email : user.email)}" required>
-                            <small class="form-text text-muted">Nhập email hợp lệ (VD: tenban@gmail.com)</small>
+                            <input type="email" class="form-control ${not empty emailError ? 'is-invalid' : ''}"
+                                   name="email" value="${fn:escapeXml(param.email != null ? param.email : user.email)}" required>
                             <c:if test="${not empty emailError}"><div class="invalid-feedback">${emailError}</div></c:if>
+                            <div class="form-text">Địa chỉ email hợp lệ, dùng để nhận thông báo</div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control ${not empty phonenumberError ? 'is-invalid' : ''}" name="phoneNumber" value="${fn:escapeXml(param.phoneNumber != null ? param.phoneNumber : user.phonenumber)}">
-                            <small class="form-text text-muted">10–11 số, bắt đầu bằng 0 hoặc +84</small>
+                            <input type="text" class="form-control ${not empty phonenumberError ? 'is-invalid' : ''}"
+                                   name="phoneNumber" value="${fn:escapeXml(param.phoneNumber != null ? param.phoneNumber : user.phonenumber)}">
                             <c:if test="${not empty phonenumberError}"><div class="invalid-feedback">${phonenumberError}</div></c:if>
+                            <div class="form-text">Số điện thoại liên lạc (không bắt buộc)</div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Vai trò</label>
                             <select class="form-select" name="role" disabled>
-                                <option value="ROLE_USER" ${(param.role != null ? param.role : user.role) == 'ROLE_USER' ? 'selected' : ''}>ROLE_USER</option>
-                                <option value="ROLE_ADMIN" ${(param.role != null ? param.role : user.role) == 'ROLE_ADMIN' ? 'selected' : ''}>ROLE_ADMIN</option>
+                                <option value="ROLE_USER" ${(param.role != null ? param.role : user.role) == 'ROLE_USER' ? 'selected' : ''}>Khách hàng (ROLE_USER)</option>
+                                <option value="ROLE_ADMIN" ${(param.role != null ? param.role : user.role) == 'ROLE_ADMIN' ? 'selected' : ''}>Quản trị viên (ROLE_ADMIN)</option>
                             </select>
-                            <small class="text-muted">Vai trò chỉ được thay đổi bởi Admin</small>
+                            <div class="form-text">Chỉ Admin mới có thể thay đổi vai trò</div>
                         </div>
-                        <div class="col-12 mb-3">
-                            <label class="form-label">Mô tả</label>
-                            <textarea class="form-control" name="description">${fn:escapeXml(param.description != null ? param.description : user.description)}</textarea>
+                        <div class="col-12">
+                            <label class="form-label">Mô tả bản thân / Ghi chú</label>
+                            <textarea class="form-control" name="description" placeholder="Thông tin thêm về bạn...">${fn:escapeXml(param.description != null ? param.description : user.description)}</textarea>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Trạng thái</label>
+                        <div class="col-12">
+                            <label class="form-label">Trạng thái tài khoản</label>
                             <div class="status-options">
                                 <label class="status-option"><input type="radio" name="status" value="active" ${(param.status != null ? param.status : user.status) == 'active' ? 'checked' : ''}> <span>Hoạt động</span></label>
-                                <label class="status-option"><input type="radio" name="status" value="inactive" ${(param.status != null ? param.status : user.status) == 'inactive' ? 'checked' : ''}> <span>Không hoạt động</span></label>
+                                <label class="status-option"><input type="radio" name="status" value="inactive" ${(param.status != null ? param.status : user.status) == 'inactive' ? 'checked' : ''}> <span>Tạm khóa</span></label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Danh sách địa chỉ -->
+
+                <!-- Sổ địa chỉ -->
                 <div class="form-section">
-                    <h3 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Thông tin địa chỉ</h3>
-                    <c:choose>
-                        <c:when test="${not empty listAddress}">
-                            <%-- Địa chỉ chính --%>
-                            <c:forEach var="a" items="${listAddress}">
-                                <c:if test="${a.type == 'main'}">
-                                    <div class="address-box" style="border-color: #000; box-shadow: 0 0 5px rgba(0,0,0,0.1);">
-                                        <div class="address-box-header">
-                                            <h4><i class="fas fa-star text-warning"></i> Địa chỉ chính: ${fn:escapeXml(a.nameAddress)}</h4>  <%-- SỬA --%>
-                                            <div class="address-actions">
-                                                <button type="button" class="btn-remove-address"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#confirmDeleteModal${a.id}">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Số nhà, tên đường</label>
-                                                <input type="text" class="form-control" name="street${a.id}"
-                                                       value="${fn:escapeXml(a.addressLine)}">       <%-- SỬA --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Xã/Phường</label>
-                                                <input type="text" class="form-control" name="commune${a.id}"
-                                                       value="${fn:escapeXml(a.wardName)}">          <%-- SỬA --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Quận/Huyện</label>
-                                                <input type="text" class="form-control" name="district${a.id}"
-                                                       value="${fn:escapeXml(a.districName)}">       <%-- THÊM MỚI --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Tỉnh/Thành phố</label>
-                                                <input type="text" class="form-control" name="province${a.id}"
-                                                       value="${fn:escapeXml(a.provinceName)}">      <%-- SỬA --%>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="addressId" value="${a.id}">
-                                    </div>
+                    <div class="form-section-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Sổ địa chỉ nhận hàng
+                    </div>
 
+                    <div class="address-grid">
+                        <c:choose>
+                            <c:when test="${not empty listAddress}">
+                                <%-- Địa chỉ chính --%>
+                                <c:forEach var="a" items="${listAddress}">
+                                    <c:if test="${a.type == 'main'}">
+                                        <div class="address-box main-address">
+                                            <div class="address-box-header">
+                                                <h4><i class="fas fa-home"></i> ${fn:escapeXml(a.nameAddress)} <span class="badge-main"><i class="fas fa-check-circle"></i> Mặc định</span></h4>
+                                                <div class="address-actions">
+                                                    <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}" title="Xóa địa chỉ">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Số nhà, tên đường</label>
+                                                    <input type="text" class="form-control" name="street${a.id}" value="${fn:escapeXml(a.addressLine)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Xã / Phường</label>
+                                                    <input type="text" class="form-control" name="commune${a.id}" value="${fn:escapeXml(a.wardName)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Quận / Huyện</label>
+                                                    <input type="text" class="form-control" name="district${a.id}" value="${fn:escapeXml(a.districName)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Tỉnh / Thành phố</label>
+                                                    <input type="text" class="form-control" name="province${a.id}" value="${fn:escapeXml(a.provinceName)}">
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="addressId" value="${a.id}">
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+
+                                <%-- Địa chỉ phụ --%>
+                                <c:forEach var="a" items="${listAddress}">
+                                    <c:if test="${a.type != 'main'}">
+                                        <div class="address-box">
+                                            <div class="address-box-header">
+                                                <h4><i class="fas fa-location-dot"></i> ${fn:escapeXml(a.nameAddress)}</h4>
+                                                <div class="address-actions">
+                                                    <a href="${pageContext.request.contextPath}/setMainAddress?id=${a.id}" class="btn-set-main"><i class="fas fa-star"></i> Đặt mặc định</a>
+                                                    <button type="button" class="btn-remove-address" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal${a.id}" title="Xóa địa chỉ">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Số nhà, tên đường</label>
+                                                    <input type="text" class="form-control" name="street${a.id}" value="${fn:escapeXml(a.addressLine)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Xã / Phường</label>
+                                                    <input type="text" class="form-control" name="commune${a.id}" value="${fn:escapeXml(a.wardName)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Quận / Huyện</label>
+                                                    <input type="text" class="form-control" name="district${a.id}" value="${fn:escapeXml(a.districName)}">
+                                                </div>
+                                                <div class="col-md-6 col-lg-3">
+                                                    <label class="form-label text-muted small">Tỉnh / Thành phố</label>
+                                                    <input type="text" class="form-control" name="province${a.id}" value="${fn:escapeXml(a.provinceName)}">
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="addressId" value="${a.id}">
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+
+                                <!-- Modal xác nhận xóa cho từng địa chỉ (giữ nguyên) -->
+                                <c:forEach var="a" items="${listAddress}">
                                     <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
-                                        <div class="modal-dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                    <h5 class="modal-title">Xác nhận xóa địa chỉ</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
-                                                <div class="modal-body">Bạn có chắc muốn xóa địa chỉ chính này không?</div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa địa chỉ <strong>${fn:escapeXml(a.nameAddress)}</strong>? Hành động này không thể hoàn tác.
+                                                </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                    <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-danger">Xóa</a>
+                                                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy bỏ</button>
+                                                    <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-dark">Xóa địa chỉ</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </c:if>
-                            </c:forEach>
+                                </c:forEach>
 
-                            <%-- Địa chỉ phụ --%>
-                            <c:forEach var="a" items="${listAddress}">
-                                <c:if test="${a.type != 'main'}">
-                                    <div class="address-box">
-                                        <div class="address-box-header">
-                                            <h4>Địa chỉ phụ: ${fn:escapeXml(a.nameAddress)}</h4>   <%-- SỬA --%>
-                                            <div class="address-actions">
-                                                <a href="${pageContext.request.contextPath}/setMainAddress?id=${a.id}" class="btn-set-main">
-                                                    <i class="fas fa-check-circle"></i> Đặt làm mặc định
-                                                </a>
-                                                <button type="button" class="btn-remove-address"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#confirmDeleteModal${a.id}">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Số nhà, tên đường</label>
-                                                <input type="text" class="form-control" name="street${a.id}"
-                                                       value="${fn:escapeXml(a.addressLine)}">       <%-- SỬA --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Xã/Phường</label>
-                                                <input type="text" class="form-control" name="commune${a.id}"
-                                                       value="${fn:escapeXml(a.wardName)}">          <%-- SỬA --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Quận/Huyện</label>
-                                                <input type="text" class="form-control" name="district${a.id}"
-                                                       value="${fn:escapeXml(a.districName)}">       <%-- THÊM MỚI --%>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <label class="form-label">Tỉnh/Thành phố</label>
-                                                <input type="text" class="form-control" name="province${a.id}"
-                                                       value="${fn:escapeXml(a.provinceName)}">      <%-- SỬA --%>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="addressId" value="${a.id}">
-                                    </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="text-center py-5 bg-light rounded-3">
+                                    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                                    <p class="mb-0 text-secondary">Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ đầu tiên.</p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
-                                    <div class="modal fade" id="confirmDeleteModal${a.id}" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Xác nhận xóa</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">Bạn có chắc muốn xóa địa chỉ này không?</div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                    <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-danger">Xóa</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:if>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="address-box"><div class="address-box-header"><h4>Chưa có địa chỉ nào</h4></div></div>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <button type="button" class="btn btn-dark mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                        <i class="fas fa-plus"></i> Thêm địa chỉ mới
+                    <button type="button" class="btn-add-address" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus-circle"></i> Thêm địa chỉ mới
                     </button>
                 </div>
 
-                <!-- Form actions -->
+                <!-- Nút hành động -->
                 <div class="form-actions">
                     <a href="${pageContext.request.contextPath}/profile" class="btn-cancel"><i class="fas fa-times"></i> Hủy bỏ</a>
                     <button type="submit" class="btn-save"><i class="fas fa-save"></i> Lưu thay đổi</button>
                 </div>
             </form>
 
-            <!-- ========= MODAL THÊM ĐỊA CHỈ MỚI (ĐÃ SỬA API) ========= -->
+            <!-- Modal thêm địa chỉ (giữ nguyên logic JS hiện tại) -->
             <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content" style="border-radius: 12px; border: none;">
-                        <div class="modal-header" style="border-bottom: 1px solid #eee;">
-                            <h5 class="modal-title fw-bold" id="addAddressModalLabel" style="color: #000;">
-                                <i class="fas fa-map-marked-alt me-2"></i> Thêm địa chỉ mới
-                            </h5>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAddressModalLabel"><i class="fas fa-plus-circle me-2"></i>Thêm địa chỉ mới</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body" style="padding: 25px;">
-                            <!-- Thông báo lỗi AJAX -->
+                        <div class="modal-body">
                             <div id="addressModalError" class="alert alert-danger d-none" role="alert"></div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Tên địa chỉ <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="addressName" placeholder="VD: Nhà riêng, Văn phòng, Công ty...">
-                                <small class="text-muted">Đặt tên để dễ phân biệt các địa chỉ</small>
+                                <div class="form-text">Đặt tên để dễ phân biệt các địa chỉ</div>
                             </div>
 
                             <div class="mb-3">
@@ -524,35 +981,32 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Số nhà, tên đường <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="streetAddress" placeholder="VD: Số 120, đường Yên Lãng">
+                                <input type="text" class="form-control" id="streetAddress" placeholder="VD: 123 Đường Lê Lợi">
                             </div>
                         </div>
-                        <div class="modal-footer" style="border-top: none; gap: 10px;">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
-                            <button type="button" class="btn btn-dark" id="saveAddressBtn" style="border-radius: 8px; min-width: 120px;">
-                                <i class="fas fa-save me-1"></i> Lưu địa chỉ
-                            </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="button" class="btn btn-dark" id="saveAddressBtn"><i class="fas fa-save me-1"></i> Lưu địa chỉ</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- ========= END MODAL THÊM ĐỊA CHỈ ========= -->
 
-        </div><!-- end .form-card -->
-    </div><!-- end .main-content -->
-</div><!-- end .profile-wrapper -->
+        </div> <!-- end form-card -->
+    </div> <!-- end main-content -->
+</div> <!-- end profile-wrapper -->
 
-<!-- Avatar Modal -->
+<!-- Modal thay đổi avatar (giữ nguyên HTML & logic) -->
 <div class="avatar-modal-overlay" id="avatarModalOverlay">
-    <div class="avatar-modal" role="dialog" aria-modal="true" aria-labelledby="avatarModalTitle">
+    <div class="avatar-modal">
         <div class="avatar-modal-head">
-            <h5 id="avatarModalTitle"><i class="fas fa-camera me-2"></i> Thay đổi ảnh đại diện</h5>
-            <button type="button" class="avatar-modal-close" onclick="closeAvatarModal()" aria-label="Đóng">&times;</button>
+            <h5><i class="fas fa-camera me-2"></i> Thay đổi ảnh đại diện</h5>
+            <button type="button" class="avatar-modal-close" onclick="closeAvatarModal()">&times;</button>
         </div>
         <form action="${pageContext.request.contextPath}/avatarEdit" method="post" enctype="multipart/form-data">
             <div class="avatar-modal-body">
                 <c:if test="${not empty avatarError}">
-                    <div class="am-err show"><i class="fas fa-exclamation-circle"></i><span>${fn:escapeXml(avatarError)}</span></div>
+                    <div class="am-err show"><i class="fas fa-exclamation-circle"></i> <span>${fn:escapeXml(avatarError)}</span></div>
                 </c:if>
                 <div class="am-preview-wrap">
                     <div class="am-preview-ring">
@@ -562,7 +1016,7 @@
                 <div class="am-dropzone">
                     <i class="fas fa-cloud-upload-alt am-dz-icon"></i>
                     <div class="am-dz-title">Nhấn để chọn ảnh</div>
-                    <div class="am-dz-hint">JPG, PNG, GIF, WEBP &nbsp;·&nbsp; Tối đa 2MB</div>
+                    <div class="am-dz-hint">Hỗ trợ JPG, PNG, jpeg, webp. Dung lượng tối đa 2MB.</div>
                     <input type="file" name="avatar" id="amFileInput" accept="image/jpeg,image/png,image/gif,image/webp">
                 </div>
                 <div class="am-file-row" id="amFileRow">
@@ -582,7 +1036,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // ======================= AVATAR MODAL (giữ nguyên) =======================
+    // ======================= AVATAR MODAL =======================
     function openAvatarModal() {
         var overlay = document.getElementById('avatarModalOverlay');
         overlay.style.display = 'flex';
@@ -593,8 +1047,12 @@
         overlay.classList.remove('open');
         setTimeout(function() { overlay.style.display = 'none'; }, 250);
     }
-    document.getElementById('avatarModalOverlay').addEventListener('click', function(e) { if (e.target === this) closeAvatarModal(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAvatarModal(); });
+    document.getElementById('avatarModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeAvatarModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeAvatarModal();
+    });
     document.getElementById('amFileInput').addEventListener('change', function() {
         var file = this.files[0];
         if (!file) return;
@@ -608,11 +1066,9 @@
     });
     <c:if test="${not empty avatarError}"> openAvatarModal(); </c:if>
 
-    // ======================= MODAL THÊM ĐỊA CHỈ - DÙNG JSON TỪ GITHUB =======================
+    // ======================= THÊM ĐỊA CHỈ (GIỮ NGUYÊN LOGIC CŨ) =======================
     const contextPath = "${pageContext.request.contextPath}";
-    let addressData = [];           // Lưu toàn bộ dữ liệu tỉnh/huyện/xã
-
-    // DOM elements
+    let addressData = [];
     const provinceSelect = document.getElementById("provinceSelect");
     const districtSelect = document.getElementById("districtSelect");
     const wardSelect = document.getElementById("wardSelect");
@@ -627,9 +1083,8 @@
         setTimeout(() => { addressModalError.classList.add("d-none"); }, 4000);
     }
 
-    // Reset form khi mở modal
-    const addAddressModal = document.getElementById("addAddressModal");
-    addAddressModal.addEventListener("show.bs.modal", function () {
+    const addAddressModalEl = document.getElementById("addAddressModal");
+    addAddressModalEl.addEventListener("show.bs.modal", function () {
         addressNameInput.value = "";
         streetInput.value = "";
         provinceSelect.innerHTML = '<option value="" selected disabled>-- Chọn Tỉnh / Thành phố --</option>';
@@ -638,53 +1093,41 @@
         districtSelect.disabled = true;
         wardSelect.disabled = true;
         addressModalError.classList.add("d-none");
-
-        // Nếu chưa có dữ liệu thì tải về
-        if (addressData.length === 0) {
-            loadAddressData();
-        } else {
-            renderProvinces();
-        }
+        if (addressData.length === 0) loadAddressData();
+        else renderProvinces();
     });
 
-    // Tải file JSON từ GitHub
     async function loadAddressData() {
         try {
             const response = await fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
-            if (!response.ok) throw new Error("Không thể tải dữ liệu địa chỉ");
+            if (!response.ok) throw new Error("Không thể tải dữ liệu");
             addressData = await response.json();
             renderProvinces();
         } catch (error) {
-            console.error("Lỗi tải dữ liệu:", error);
-            showModalError("Không thể tải danh sách tỉnh/thành phố. Vui lòng thử lại sau.");
+            console.error(error);
+            showModalError("Không thể tải danh sách tỉnh/thành phố.");
         }
     }
 
-    // Hiển thị danh sách tỉnh/thành phố
     function renderProvinces() {
         provinceSelect.innerHTML = '<option value="" selected disabled>-- Chọn Tỉnh / Thành phố --</option>';
         addressData.forEach(province => {
             let option = document.createElement('option');
-            option.value = province.Name;          // gán value = tên tỉnh
+            option.value = province.Name;
             option.text = province.Name;
-            option.dataset.id = province.Id;       // lưu mã tỉnh để tra cứu
+            option.dataset.id = province.Id;
             provinceSelect.appendChild(option);
         });
     }
 
-    // Khi chọn tỉnh -> load danh sách quận/huyện
     provinceSelect.addEventListener('change', function() {
-        // Xóa dữ liệu cũ của huyện và xã
         districtSelect.innerHTML = '<option value="" selected disabled>-- Chọn Quận / Huyện --</option>';
         wardSelect.innerHTML = '<option value="" selected disabled>-- Chọn Phường / Xã --</option>';
         wardSelect.disabled = true;
         districtSelect.disabled = false;
-
         const selectedOption = this.options[this.selectedIndex];
         if (!selectedOption.dataset.id) return;
-
-        const provinceId = selectedOption.dataset.id;
-        const province = addressData.find(p => p.Id === provinceId);
+        const province = addressData.find(p => p.Id === selectedOption.dataset.id);
         if (province && province.Districts) {
             province.Districts.forEach(district => {
                 let option = document.createElement('option');
@@ -696,20 +1139,13 @@
         }
     });
 
-    // Khi chọn quận/huyện -> load danh sách phường/xã
     districtSelect.addEventListener('change', function() {
         wardSelect.innerHTML = '<option value="" selected disabled>-- Chọn Phường / Xã --</option>';
         wardSelect.disabled = false;
-
-        const provinceSelectElem = document.getElementById('provinceSelect');
-        const selectedProvOption = provinceSelectElem.options[provinceSelectElem.selectedIndex];
-        if (!selectedProvOption.dataset.id) return;
-
-        const province = addressData.find(p => p.Id === selectedProvOption.dataset.id);
+        const provinceId = provinceSelect.options[provinceSelect.selectedIndex].dataset.id;
+        const province = addressData.find(p => p.Id === provinceId);
         if (!province) return;
-
-        const selectedDistOption = this.options[this.selectedIndex];
-        const districtId = selectedDistOption.dataset.id;
+        const districtId = this.options[this.selectedIndex].dataset.id;
         const district = province.Districts.find(d => d.Id === districtId);
         if (district && district.Wards) {
             district.Wards.forEach(ward => {
@@ -721,7 +1157,6 @@
         }
     });
 
-    // Lưu địa chỉ mới (AJAX)
     saveAddressBtn.addEventListener("click", async function () {
         const name = addressNameInput.value.trim();
         const provinceText = provinceSelect.value;
@@ -754,25 +1189,21 @@
                 window.location.reload();
             } else {
                 const errorText = await response.text();
-                console.error("Server error:", errorText);
-                showModalError("Lưu địa chỉ thất bại. Vui lòng thử lại sau.");
+                console.error(errorText);
+                showModalError("Lưu địa chỉ thất bại. Vui lòng thử lại.");
                 saveAddressBtn.disabled = false;
                 saveAddressBtn.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
             }
         } catch (error) {
-            console.error("Network error:", error);
+            console.error(error);
             showModalError("Lỗi kết nối đến máy chủ.");
             saveAddressBtn.disabled = false;
             saveAddressBtn.innerHTML = '<i class="fas fa-save me-1"></i> Lưu địa chỉ';
         }
     });
 
-    // Tải dữ liệu khi trang load
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadAddressData);
-    } else {
-        loadAddressData();
-    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadAddressData);
+    else loadAddressData();
 </script>
 </body>
 </html>

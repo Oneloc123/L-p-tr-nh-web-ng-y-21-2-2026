@@ -12,6 +12,33 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        /* PAGINATION STYLES */
+        .pagination .page-link {
+            color: #5a6e7c;
+            border-color: #e9edf2;
+            margin: 0 3px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #2c7da0;
+            border-color: #2c7da0;
+            color: white;
+            box-shadow: 0 2px 4px rgba(44,125,160,0.2);
+        }
+
+        .pagination .page-link:hover {
+            background-color: #f0f9ff;
+            color: #2c7da0;
+            border-color: #2c7da0;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #f8fafc;
+            color: #cbd5e1;
+            border-color: #e9edf2;
+        }
         /* FORM CARD */
         .form-card {
             padding: 25px;
@@ -597,6 +624,44 @@
                             </c:forEach>
                             </tbody>
                         </table>
+                        <section class="blog-table mt-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                        </table>
+                                    </div>
+
+                                    <div class="card-footer bg-white border-0 py-3">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-center mb-0">
+
+                                                <li class="page-item ${currentPage == 1 || currentPage == null ? 'disabled' : ''}">
+                                                    <a class="page-link" href="?page=${currentPage - 1}&keyword=${param.keyword}&role=${param.role}&status=${param.status}" tabindex="-1">
+                                                        <i class="bi bi-chevron-left"></i> Trước
+                                                    </a>
+                                                </li>
+
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                                        <a class="page-link" href="?page=${i}&keyword=${param.keyword}&role=${param.role}&status=${param.status}">
+                                                                ${i}
+                                                        </a>
+                                                    </li>
+                                                </c:forEach>
+
+                                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                    <a class="page-link" href="?page=${currentPage + 1}&keyword=${param.keyword}&role=${param.role}&status=${param.status}">
+                                                        Sau <i class="bi bi-chevron-right"></i>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>

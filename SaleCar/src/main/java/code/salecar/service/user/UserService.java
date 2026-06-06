@@ -54,4 +54,12 @@ public class UserService {
         }
         return ud.fileUser(role,stat);
     }
+
+    public List<User> getUsersWithPagination(int offset, int limit){
+        return ud.getUsersWithPagination(offset,limit);
+    }
+
+    public int getTotalUsersCount() {
+       return ud.getTotalUsersCount();
+    }
 }
