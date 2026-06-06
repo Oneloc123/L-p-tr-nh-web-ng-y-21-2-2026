@@ -9,40 +9,55 @@ import java.util.List;
 import java.util.Set;
 
 public class FavoritesService {
-    private FavoriesDAO favoriesDAO = new FavoriesDAO();
-    private ProductService productService = new ProductService();
+    private final FavoriesDAO favoriesDAO = new FavoriesDAO();
+    private final ProductService productService = new ProductService();
 
+    /**
+     * Thêm sản phẩm vào wishlist. Trả về true nếu thành công, false nếu đã tồn tại.
+     */
     public boolean addProduct(int productId, int userId) {
-        List<Integer> favoritesList = favoriesDAO.getFavorites(userId);
-        for (Integer favoriteId : favoritesList) {
-            if (favoriteId == productId) {
-                return false;
-            }
+        if (favoriesDAO.hasDuplicate(productId, userId)) {
+            return false;
         }
         return favoriesDAO.addProduct(productId, userId);
-
     }
 
+    /**
+     * Lấy danh sách sản phẩm yêu thích của user.
+     * Sản phẩm đã bị xóa hoặc không tồn tại sẽ được bỏ qua (không add vào list).
+     */
     public List<ProductDetailDTO> getFavorites(int userId) {
         List<Integer> favoritesList = favoriesDAO.getFavorites(userId);
         List<ProductDetailDTO> products = new ArrayList<>();
         for (Integer favoriteId : favoritesList) {
-            products.add(productService.getProductByID(favoriteId));
+            ProductDetailDTO product = productService.getProductByID(favoriteId);
+            if (product != null) {
+                products.add(product);
+            }
         }
         return products;
     }
 
-    public boolean removeFavoritesProduct(int prid) {
-        return favoriesDAO.removeFavoritesProduct(prid);
+    /**
+     * Xóa sản phẩm khỏi wishlist. Filter theo cả productId và userId.
+     */
+    public boolean removeFavoritesProduct(int productId, int userId) {
+        return favoriesDAO.removeFavoritesProduct(productId, userId);
     }
 
-
-
+    /**
+     * Kiểm tra sản phẩm đã có trong wishlist của user chưa.
+     */
+    public boolean isInWishlist(int productId, int userId) {
+        return favoriesDAO.isInWishlist(productId, userId);
+    }
 
     public Set<String> getFavoritesBrand(List<ProductDetailDTO> favoritesProducts) {
         Set<String> favoritesBrands = new HashSet<>();
         for (ProductDetailDTO product : favoritesProducts) {
-            favoritesBrands.add(product.getBrand().getName());
+            if (product.getBrand() != null) {
+                favoritesBrands.add(product.getBrand().getName());
+            }
         }
         return favoritesBrands;
     }
@@ -50,7 +65,9 @@ public class FavoritesService {
     public Set<String> getFavoritesCategory(List<ProductDetailDTO> favoritesProducts) {
         Set<String> favoritesCategory = new HashSet<>();
         for (ProductDetailDTO product : favoritesProducts) {
-            favoritesCategory.add(product.getCategory().getName());
+            if (product.getCategory() != null) {
+                favoritesCategory.add(product.getCategory().getName());
+            }
         }
         return favoritesCategory;
     }

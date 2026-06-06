@@ -19,16 +19,18 @@ import java.util.Set;
 
 @WebServlet(name = "favorites", value = "/favorites")
 public class favorites extends HttpServlet {
-    private FavoritesService favoritesService = new FavoritesService();
+    private final FavoritesService favoritesService = new FavoritesService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
-            response.sendRedirect("/login");
+            request.getSession().setAttribute("toastMessage", "Vui lòng đăng nhập để xem sản phẩm yêu thích");
+            request.getSession().setAttribute("toastType", "warning");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+
         List<ProductDetailDTO> favoritesProducts = favoritesService.getFavorites(user.getId());
         Set<String> favoritesBrands = favoritesService.getFavoritesBrand(favoritesProducts);
         Set<String> favoritesCategory = favoritesService.getFavoritesCategory(favoritesProducts);
@@ -43,22 +45,16 @@ public class favorites extends HttpServlet {
 
         ProductFilter filter = new ProductFilter();
         filter.setKeyword(keyWord);
-        filter.setCategories(category == null ? new ArrayList<>() : List.of(category));
-        filter.setBrands(brand == null ? new ArrayList<>() : List.of(brand));
-        if (priceParam != null && !priceParam.isEmpty()) {
-            int price = Integer.parseInt(priceParam);
-            filter.setMaxPrice(new BigDecimal(price));
+        filter.setCategories(category == null || category.equals("all") ? new ArrayList<>() : List.of(category));
+        filter.setBrands(brand == null || brand.equals("all") ? new ArrayList<>() : List.of(brand));
+        if (priceParam != null && !priceParam.isEmpty() && !priceParam.equals("-1")) {
+            try {
+                int price = Integer.parseInt(priceParam);
+                filter.setMaxPrice(new BigDecimal(price));
+            } catch (NumberFormatException ignored) {}
         }
-        boolean highest = false;
-        if (discountpr != null && !discountpr.isEmpty()) {
-            highest = true;
-        }
-        filter.setSortByHighestDiscount(highest);
-        boolean newest = false;
-        if (newestpr != null && !newestpr.isEmpty()) {
-            newest = true;
-        }
-        filter.setSortByNewestDiscount(newest);
+        filter.setSortByHighestDiscount(discountpr != null && !discountpr.isEmpty());
+        filter.setSortByNewestDiscount(newestpr != null && !newestpr.isEmpty());
 
         ProductService productService = new ProductService();
         List<ProductDetailDTO> products = productService.sortProducFilter(favoritesProducts, filter);
@@ -66,39 +62,72 @@ public class favorites extends HttpServlet {
         // Voucher
         VoucherService vs = new VoucherService();
         List<Voucher> vouchers = vs.getVouchers();
-        request.setAttribute("vouchers", vouchers);
 
         request.setAttribute("favorites", products);
         request.setAttribute("brand", favoritesBrands);
         request.setAttribute("category", favoritesCategory);
+        request.setAttribute("vouchers", vouchers);
         request.getRequestDispatcher("/pages/favorites.jsp").forward(request, response);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
-        // Add favorites
-        String add = request.getParameter("productid");
-        User user = (User) request.getSession().getAttribute("user");
+        // Auth check
         if (user == null) {
-            response.sendRedirect("/login");
+            session.setAttribute("toastMessage", "Vui lòng đăng nhập để thêm sản phẩm vào yêu thích");
+            session.setAttribute("toastType", "warning");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        if (add != null && !add.isEmpty()) {
-            int productId = Integer.parseInt(add);
-            favoritesService.addProduct(productId, user.getId());
+
+        String referer = request.getHeader("Referer");
+
+        // Add to wishlist
+        String addParam = request.getParameter("productid");
+        if (addParam != null && !addParam.isEmpty()) {
+            try {
+                int productId = Integer.parseInt(addParam);
+                boolean added = favoritesService.addProduct(productId, user.getId());
+                if (added) {
+                    session.setAttribute("toastMessage", "Đã thêm vào danh sách yêu thích");
+                    session.setAttribute("toastType", "success");
+                } else {
+                    session.setAttribute("toastMessage", "Sản phẩm đã có trong danh sách yêu thích");
+                    session.setAttribute("toastType", "warning");
+                }
+            } catch (NumberFormatException e) {
+                session.setAttribute("toastMessage", "Mã sản phẩm không hợp lệ");
+                session.setAttribute("toastType", "error");
+            }
         }
 
-
-        // Remove favorites
-        String parameter = request.getParameter("remove");
-        if (parameter != null && !parameter.isEmpty()) {
-            int favoriteProductId = Integer.parseInt(parameter);
-            favoritesService.removeFavoritesProduct(favoriteProductId);
+        // Remove from wishlist
+        String removeParam = request.getParameter("remove");
+        if (removeParam != null && !removeParam.isEmpty()) {
+            try {
+                int productId = Integer.parseInt(removeParam);
+                boolean removed = favoritesService.removeFavoritesProduct(productId, user.getId());
+                if (removed) {
+                    session.setAttribute("toastMessage", "Đã xóa khỏi danh sách yêu thích");
+                    session.setAttribute("toastType", "success");
+                } else {
+                    session.setAttribute("toastMessage", "Không tìm thấy sản phẩm trong danh sách yêu thích");
+                    session.setAttribute("toastType", "warning");
+                }
+            } catch (NumberFormatException e) {
+                session.setAttribute("toastMessage", "Mã sản phẩm không hợp lệ");
+                session.setAttribute("toastType", "error");
+            }
         }
 
-
-        response.sendRedirect("/favorites");
+        // Redirect: về trang referer nếu có, nếu không thì về /favorites
+        if (referer != null && !referer.isEmpty() && !referer.contains("/favorites")) {
+            response.sendRedirect(referer);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/favorites");
+        }
     }
 }
