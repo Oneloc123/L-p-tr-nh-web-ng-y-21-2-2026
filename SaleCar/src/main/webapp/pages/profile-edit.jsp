@@ -810,8 +810,17 @@
                         <div class="col-12">
                             <label class="form-label">Trạng thái tài khoản</label>
                             <div class="status-options">
-                                <label class="status-option"><input type="radio" name="status" value="active" ${(param.status != null ? param.status : user.status) == 'active' ? 'checked' : ''}> <span>Hoạt động</span></label>
-                                <label class="status-option"><input type="radio" name="status" value="inactive" ${(param.status != null ? param.status : user.status) == 'inactive' ? 'checked' : ''}> <span>Tạm khóa</span></label>
+                                <label class="status-option">
+                                    <input type="radio" name="status" value="true"
+                                    ${ (param.status != null ? param.status : user.status) == true || (param.status == 'true') ? 'checked' : '' }>
+                                    <span>Hoạt động</span>
+                                </label>
+
+                                <label class="status-option">
+                                    <input type="radio" name="status" value="false"
+                                    ${ (param.status != null ? param.status : user.status) == false || (param.status == 'false') ? 'checked' : '' }>
+                                    <span>Tạm khóa</span>
+                                </label>
                             </div>
                         </div>
                     </div>
