@@ -14,293 +14,66 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/common/dark-theme.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f6fa;
-        }
-
-        /* ── Layout chính ── */
-        .profile-wrapper {
-            display: flex;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        /* ── Sidebar (giữ nguyên gốc) ── */
-        .sidebar-menu {
-            width: 280px;
-            background-color: #000;
-            color: #fff;
-            padding: 30px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .menu-items {
-            padding: 20px 0;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 25px;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin: 5px 10px;
-            border-radius: 8px;
-        }
-
-        .menu-item i {
-            width: 25px;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .menu-item span {
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        .menu-item:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .menu-item.active {
-            background-color: #fff;
-            color: #000;
-        }
-
-        .menu-item.active i {
-            color: #000;
-        }
-
-        .menu-divider {
-            height: 1px;
-            background-color: #333;
-            margin: 15px 20px;
-        }
-
-        /* ───────────────────────────────────────────── */
-        /* KHU VỰC NỘI DUNG CHÍNH (ĐÃ NÂNG CẤP)           */
-        /* ───────────────────────────────────────────── */
-        .main-content {
-            flex: 1;
-            padding: 32px 40px;
-            background: #f4f6fa;
-        }
-
-        /* Breadcrumb & tiêu đề */
-        .content-header {
-            margin-bottom: 28px;
-        }
-
-        .content-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0a0a0a;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-
-        .breadcrumb {
-            background: transparent;
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            font-size: 13px;
-        }
-
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "›";
-            margin: 0 8px;
-            color: #aaa;
-            font-size: 16px;
-        }
-
-        .breadcrumb-item a {
-            color: #5a6874;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .breadcrumb-item a:hover {
-            color: #000;
-        }
-
-        .breadcrumb-item.active {
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* Card chính */
         .form-card {
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
-            transition: all 0.2s;
         }
 
-        /* Phần avatar */
         .avatar-upload-section {
-            background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
-            border-bottom: 1px solid #edf2f7;
             padding: 32px 40px;
             display: flex;
             align-items: center;
             gap: 32px;
             flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .current-avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: #eef2f6;
+            background: var(--bg-elevated);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid #fff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 3px solid var(--bg-surface);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
             flex-shrink: 0;
         }
+        .current-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .current-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .avatar-controls { display: flex; flex-direction: column; gap: 8px; }
+        .upload-hint { font-size: 12px; color: var(--text-muted); }
 
-        .avatar-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .btn-upload {
-            background: #000;
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.25s;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .btn-upload i {
-            font-size: 14px;
-        }
-
-        .btn-upload:hover {
-            background: #2c2c2c;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-        }
-
-        .upload-hint {
-            font-size: 12px;
-            color: #6c7a8a;
-        }
-
-        /* Form section */
-        .form-section {
-            padding: 32px 40px;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        .form-section:last-of-type {
-            border-bottom: none;
-        }
+        .form-section { padding: 32px 40px; border-bottom: 1px solid var(--border-subtle); }
+        .form-section:last-of-type { border-bottom: none; }
 
         .form-section-title {
             font-size: 20px;
             font-weight: 700;
-            color: #111;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 28px;
         }
+        .form-section-title i { color: var(--gold); font-size: 20px; }
 
-        .form-section-title i {
-            color: #000;
-            font-size: 20px;
-        }
+        .invalid-feedback { font-size: 12px; color: #e74c3c; margin-top: 6px; }
 
-        .form-label {
-            font-weight: 600;
-            color: #1e2a3e;
-            margin-bottom: 8px;
-            font-size: 13px;
-            letter-spacing: 0.3px;
-        }
-
-        .form-control, .form-select {
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 14px;
-            transition: all 0.2s;
-            background-color: #fff;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #000;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-            outline: none;
-        }
-
-        .form-control.is-invalid {
-            border-color: #e53e3e;
-            background-image: none;
-        }
-
-        .invalid-feedback {
-            font-size: 12px;
-            color: #e53e3e;
-            margin-top: 6px;
-        }
-
-        textarea.form-control {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        .form-text {
-            font-size: 11px;
-            color: #6c7a8a;
-            margin-top: 6px;
-        }
-
-        /* Trạng thái radio */
         .status-options {
             display: flex;
             gap: 28px;
             align-items: center;
             margin-top: 8px;
         }
-
         .status-option {
             display: flex;
             align-items: center;
@@ -308,42 +81,21 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            color: #2d3a48;
+            color: var(--text-secondary);
         }
+        .status-option input { width: 16px; height: 16px; accent-color: var(--gold); margin: 0; }
 
-        .status-option input {
-            width: 16px;
-            height: 16px;
-            accent-color: #000;
-            margin: 0;
-        }
-
-        /* Địa chỉ card */
-        .address-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
+        .address-grid { display: flex; flex-direction: column; gap: 24px; margin-bottom: 24px; }
 
         .address-box {
-            background: #fff;
-            border: 1px solid #e9edf2;
-            border-radius: 20px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             padding: 24px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            transition: all var(--transition-base);
         }
-
-        .address-box:hover {
-            border-color: #cbd5e0;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-        }
-
-        .address-box.main-address {
-            border-left: 4px solid #000;
-            background: #fefefe;
-        }
+        .address-box:hover { border-color: var(--border-gold); }
+        .address-box.main-address { border-left: 4px solid var(--gold); }
 
         .address-box-header {
             display: flex;
@@ -353,7 +105,6 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-
         .address-box-header h4 {
             font-size: 16px;
             font-weight: 700;
@@ -361,12 +112,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #0a0a0a;
+            color: var(--text-primary);
         }
 
         .badge-main {
-            background: #000;
-            color: #fff;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
             font-size: 10px;
             font-weight: 700;
             padding: 4px 10px;
@@ -374,39 +125,31 @@
             letter-spacing: 0.3px;
         }
 
-        .address-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .address-actions { display: flex; align-items: center; gap: 12px; }
 
         .btn-set-main {
-            background: #f1f5f9;
+            background: rgba(255,255,255,0.06);
             border: none;
             padding: 6px 14px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all var(--transition-fast);
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
-
-        .btn-set-main:hover {
-            background: #e2e8f0;
-            color: #000;
-        }
+        .btn-set-main:hover { background: rgba(212,175,55,0.1); color: var(--gold); }
 
         .btn-remove-address {
             background: transparent;
             border: none;
-            color: #a0aec0;
+            color: var(--text-muted);
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all var(--transition-fast);
             width: 32px;
             height: 32px;
             border-radius: 30px;
@@ -414,241 +157,219 @@
             align-items: center;
             justify-content: center;
         }
-
-        .btn-remove-address:hover {
-            background: #fff0f0;
-            color: #e53e3e;
-        }
+        .btn-remove-address:hover { background: rgba(231,76,60,0.12); color: #e74c3c; }
 
         .btn-add-address {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: #fff;
-            border: 1.5px dashed #cbd5e0;
-            border-radius: 14px;
+            background: var(--bg-elevated);
+            border: 1.5px dashed var(--border-gold);
+            border-radius: var(--radius-md);
             padding: 12px 20px;
             font-weight: 600;
             font-size: 14px;
-            color: #1e293b;
+            color: var(--text-secondary);
             width: 100%;
-            transition: all 0.2s;
+            transition: all var(--transition-base);
             cursor: pointer;
         }
+        .btn-add-address:hover { border-color: var(--gold); background: rgba(212,175,55,0.04); color: var(--gold); }
 
-        .btn-add-address:hover {
-            border-color: #000;
-            background: #fafcff;
-            color: #000;
-        }
-
-        /* Form actions */
         .form-actions {
             padding: 24px 40px;
-            background: #fff;
-            border-top: 1px solid #edf2f7;
+            border-top: 1px solid var(--border-subtle);
             display: flex;
             justify-content: flex-end;
             gap: 16px;
         }
 
         .btn-save {
-            background: #000;
-            color: #fff;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
             border: none;
             padding: 12px 32px;
             border-radius: 40px;
             font-weight: 700;
             font-size: 14px;
-            transition: all 0.25s;
+            transition: all var(--transition-base);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-
-        .btn-save:hover {
-            background: #2c2c2c;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(212,175,55,0.25); }
 
         .btn-cancel {
-            background: #fff;
-            color: #4a5568;
-            border: 1.5px solid #e2e8f0;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-subtle);
             padding: 12px 28px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 14px;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all var(--transition-fast);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
+        .btn-cancel:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); color: var(--gold); }
 
-        .btn-cancel:hover {
-            background: #f8fafc;
-            border-color: #cbd5e0;
-            color: #000;
-        }
-
-        /* Modal styles (làm đẹp modal có sẵn) */
         .modal-content {
-            border-radius: 24px;
-            border: none;
-            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.15);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
         }
-
         .modal-header {
             padding: 20px 24px;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid var(--border-subtle);
         }
-
         .modal-footer {
             padding: 16px 24px;
-            border-top: 1px solid #edf2f7;
+            border-top: 1px solid var(--border-subtle);
         }
+        .modal-title { font-weight: 700; font-size: 18px; color: var(--text-primary); }
+        .modal .btn-close { filter: invert(1); }
 
-        .modal-title {
+        .modal-btn-cancel {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-subtle);
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+        .modal-btn-cancel:hover { border-color: var(--gold); color: var(--gold); }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 14px;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+        .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(212,175,55,0.25); }
+        .modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .modal-btn-danger {
+            background: rgba(231,76,60,0.12);
+            color: #e74c3c;
+            border: 1.5px solid rgba(231,76,60,0.2);
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .modal-btn-danger:hover { background: rgba(231,76,60,0.2); color: #e74c3c; }
+        .modal .alert-danger {
+            background: rgba(231,76,60,0.12);
+            border: 1px solid rgba(231,76,60,0.2);
+            color: #e74c3c;
         }
 
-        /* Avatar modal riêng (giữ nguyên cấu trúc, chỉ bổ sung style) */
         .avatar-modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0,0,0,0.7);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: opacity 0.25s ease;
         }
-
-        .avatar-modal-overlay.open {
-            opacity: 1;
-        }
+        .avatar-modal-overlay.open { opacity: 1; }
 
         .avatar-modal {
-            background: #fff;
-            border-radius: 32px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
             width: 500px;
             max-width: calc(100vw - 32px);
             overflow: hidden;
             transform: translateY(20px);
             transition: transform 0.25s ease;
         }
-
-        .avatar-modal-overlay.open .avatar-modal {
-            transform: translateY(0);
-        }
+        .avatar-modal-overlay.open .avatar-modal { transform: translateY(0); }
 
         .avatar-modal-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid var(--border-subtle);
         }
-
+        .avatar-modal-head h5 { color: var(--text-primary); margin: 0; }
         .avatar-modal-close {
             background: none;
             border: none;
             font-size: 26px;
             cursor: pointer;
-            color: #718096;
+            color: var(--text-muted);
         }
-
-        .avatar-modal-body {
-            padding: 24px;
-        }
-
+        .avatar-modal-body { padding: 24px; }
         .avatar-modal-foot {
             padding: 16px 24px;
-            border-top: 1px solid #edf2f7;
+            border-top: 1px solid var(--border-subtle);
             display: flex;
             gap: 12px;
             justify-content: flex-end;
         }
 
-        .am-preview-wrap {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
+        .am-preview-wrap { text-align: center; margin-bottom: 20px; }
         .am-preview-ring {
             width: 110px;
             height: 110px;
             border-radius: 50%;
-            border: 3px solid #000;
+            border: 3px solid var(--gold);
             overflow: hidden;
             margin: 0 auto;
-            background: #f1f5f9;
+            background: var(--bg-elevated);
         }
-
-        .am-preview-ring img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .am-preview-ring img { width: 100%; height: 100%; object-fit: cover; }
 
         .am-dropzone {
-            border: 2px dashed #cbd5e0;
-            border-radius: 20px;
+            border: 2px dashed var(--border-gold);
+            border-radius: var(--radius-md);
             padding: 24px;
             text-align: center;
             cursor: pointer;
-            background: #fafcff;
-            transition: 0.2s;
+            background: var(--bg-elevated);
+            transition: all var(--transition-fast);
             position: relative;
         }
-
-        .am-dropzone:hover {
-            border-color: #000;
-            background: #f8fafc;
-        }
-
-        .am-dz-icon {
-            font-size: 36px;
-            color: #718096;
-            margin-bottom: 8px;
-        }
-
-        .am-dz-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .am-dz-hint {
-            font-size: 12px;
-            color: #718096;
-        }
-
-        .am-dropzone input {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
+        .am-dropzone:hover { border-color: var(--gold); background: rgba(212,175,55,0.04); }
+        .am-dz-icon { font-size: 36px; color: var(--gold); margin-bottom: 8px; }
+        .am-dz-title { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+        .am-dz-hint { font-size: 12px; color: var(--text-muted); }
+        .am-dropzone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
         .am-file-row {
             display: none;
             align-items: center;
             gap: 12px;
-            background: #f1f5f9;
-            border-radius: 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             padding: 10px 16px;
             margin-top: 16px;
         }
-
-        .am-file-row.show {
-            display: flex;
-        }
+        .am-file-row.show { display: flex; }
 
         .am-btn-cancel, .am-btn-save {
             padding: 10px 24px;
@@ -657,68 +378,111 @@
             font-size: 13px;
             border: none;
         }
-
         .am-btn-cancel {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-subtle);
         }
-
+        .am-btn-cancel:hover { border-color: var(--gold); color: var(--gold); }
         .am-btn-save {
-            background: #000;
-            color: #fff;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+        }
+        .am-btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ================= DARK BOOTSTRAP OVERRIDES ================= */
+        .form-control, .form-select, textarea.form-control {
+            background: var(--bg-elevated) !important;
+            border: 1.5px solid var(--border-subtle) !important;
+            border-radius: var(--radius-sm) !important;
+            color: var(--text-primary) !important;
+            font-size: 14px;
+            padding: 10px 14px;
+            transition: all var(--transition-fast);
+        }
+        .form-control:focus, .form-select:focus, textarea.form-control:focus {
+            border-color: var(--border-gold-strong) !important;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.06) !important;
+            outline: none !important;
+        }
+        .form-control::placeholder, textarea.form-control::placeholder {
+            color: var(--text-muted) !important;
+        }
+        .form-control:disabled, .form-select:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+        }
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #e74c3c !important;
         }
 
-        .am-btn-save:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .form-label {
+            font-weight: 600 !important;
+            color: var(--text-secondary) !important;
+            margin-bottom: 8px !important;
+            font-size: 13px !important;
+            letter-spacing: 0.3px;
         }
 
-        /* Responsive */
+        .form-text {
+            font-size: 11px !important;
+            color: var(--text-muted) !important;
+            margin-top: 6px !important;
+        }
+
+        /* ================= EMPTY STATE DARK ================= */
+        .empty-address {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+        }
+        .empty-address i { font-size: 48px; color: rgba(255,255,255,0.08); margin-bottom: 16px; }
+        .empty-address p { color: var(--text-muted); font-size: 15px; margin-bottom: 0; }
+
+        /* ================= BTN-UPLOAD ================= */
+        .btn-upload {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+        .btn-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(212,175,55,0.25);
+        }
+
+        /* ================= SELECT OPTIONS DARK ================= */
+        .form-select option {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+        }
+
         @media (max-width: 768px) {
-            .sidebar-menu {
-                display: none;
-            }
-            .main-content {
-                padding: 20px;
-            }
-            .form-section, .avatar-upload-section, .form-actions {
-                padding: 20px;
-            }
-            .address-box-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .address-actions {
-                width: 100%;
-                justify-content: flex-start;
-            }
-            .form-actions {
-                flex-direction: column;
-            }
-            .btn-save, .btn-cancel {
-                justify-content: center;
-            }
+            .sidebar-menu { display: none; }
+            .main-content { padding: 20px; }
+            .form-section, .avatar-upload-section, .form-actions { padding: 20px; }
+            .address-box-header { flex-direction: column; align-items: flex-start; }
+            .address-actions { width: 100%; justify-content: flex-start; }
+            .form-actions { flex-direction: column; }
+            .btn-save, .btn-cancel { justify-content: center; }
         }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
 
-    <!-- Sidebar (giữ nguyên) -->
-    <div class="sidebar-menu">
-        <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="fas fa-chart-pie"></i><span>Bảng điều khiển</span></a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item"><i class="fas fa-user-circle"></i><span>Thông tin cá nhân</span></a>
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item active"><i class="fas fa-user-edit"></i><span>Chỉnh sửa thông tin</span></a>
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item"><i class="fas fa-lock"></i><span>Đổi mật khẩu</span></a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item"><i class="fas fa-shopping-bag"></i><span>Đơn hàng của tôi</span></a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item"><i class="fas fa-shopping-cart"></i><span>Giỏ hàng</span></a>
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item"><i class="fas fa-heart"></i><span>Sản phẩm yêu thích</span></a>
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item"><i class="fas fa-bell"></i><span>Thông báo</span></a>
-            <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
-        </div>
-    </div>
+    <!-- Sidebar chung -->
+    <%@ include file="/common/user-sidebar.jsp" %>
 
     <!-- Nội dung chính đã nâng cấp -->
     <div class="main-content">
@@ -810,8 +574,17 @@
                         <div class="col-12">
                             <label class="form-label">Trạng thái tài khoản</label>
                             <div class="status-options">
-                                <label class="status-option"><input type="radio" name="status" value="active" ${(param.status != null ? param.status : user.status) == 'active' ? 'checked' : ''}> <span>Hoạt động</span></label>
-                                <label class="status-option"><input type="radio" name="status" value="inactive" ${(param.status != null ? param.status : user.status) == 'inactive' ? 'checked' : ''}> <span>Tạm khóa</span></label>
+                                <label class="status-option">
+                                    <input type="radio" name="status" value="true"
+                                    ${ (param.status != null ? param.status : user.status) == true || (param.status == 'true') ? 'checked' : '' }>
+                                    <span>Hoạt động</span>
+                                </label>
+
+                                <label class="status-option">
+                                    <input type="radio" name="status" value="false"
+                                    ${ (param.status != null ? param.status : user.status) == false || (param.status == 'false') ? 'checked' : '' }>
+                                    <span>Tạm khóa</span>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -911,8 +684,8 @@
                                                     Bạn có chắc chắn muốn xóa địa chỉ <strong>${fn:escapeXml(a.nameAddress)}</strong>? Hành động này không thể hoàn tác.
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy bỏ</button>
-                                                    <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="btn btn-dark">Xóa địa chỉ</a>
+                                                    <button type="button" class="modal-btn-cancel" data-bs-dismiss="modal">Hủy bỏ</button>
+                                                    <a href="${pageContext.request.contextPath}/removeAddress?id=${a.id}" class="modal-btn-danger">Xóa địa chỉ</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -921,9 +694,9 @@
 
                             </c:when>
                             <c:otherwise>
-                                <div class="text-center py-5 bg-light rounded-3">
-                                    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
-                                    <p class="mb-0 text-secondary">Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ đầu tiên.</p>
+                                <div class="empty-address">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <p>Bạn chưa có địa chỉ nào. Hãy thêm địa chỉ đầu tiên.</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
@@ -985,8 +758,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy bỏ</button>
-                            <button type="button" class="btn btn-dark" id="saveAddressBtn"><i class="fas fa-save me-1"></i> Lưu địa chỉ</button>
+                            <button type="button" class="modal-btn-cancel" data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="button" class="modal-btn-primary" id="saveAddressBtn"><i class="fas fa-save me-1"></i> Lưu địa chỉ</button>
                         </div>
                     </div>
                 </div>

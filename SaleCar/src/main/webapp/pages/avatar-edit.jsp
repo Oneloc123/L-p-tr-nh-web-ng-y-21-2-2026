@@ -9,228 +9,115 @@
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/common/dark-theme.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-            padding: 40px 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        body { padding: 40px 0; }
 
         .avatar-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
         }
 
         .avatar-header {
             padding: 25px 30px;
-            border-bottom: 1px solid #eeeeee;
-            background-color: #000000;
-            color: #ffffff;
+            border-bottom: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, #0a0a0a, #1f1f1f);
         }
-
         .avatar-header h2 {
             font-size: 24px;
             font-weight: 600;
             margin: 0;
+            font-family: 'Playfair Display', serif;
         }
+        .avatar-header p { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
 
-        .avatar-header p {
-            color: #cccccc;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .avatar-body {
-            padding: 30px;
-            text-align: center;
-        }
+        .avatar-body { padding: 30px; text-align: center; }
 
         .current-avatar-large {
             width: 200px;
             height: 200px;
             border-radius: 50%;
             margin: 0 auto 30px;
-            background-color: #000000;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 72px;
-            font-weight: 600;
-            border: 4px solid #ffffff;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 4px solid var(--bg-surface);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
+            background: var(--bg-elevated);
         }
-
-        .current-avatar-large img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+        .current-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
 
         .upload-area {
-            border: 3px dashed #000000;
-            border-radius: 12px;
+            border: 3px dashed var(--border-gold);
+            border-radius: var(--radius-md);
             padding: 40px;
-            background-color: #f8f9fa;
+            background: var(--bg-elevated);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all var(--transition-base);
             margin-bottom: 20px;
         }
-
-        .upload-area:hover {
-            background-color: #f0f0f0;
-        }
-
-        .upload-area i {
-            font-size: 48px;
-            color: #000000;
-            margin-bottom: 15px;
-        }
-
-        .upload-area h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #000000;
-            margin-bottom: 10px;
-        }
-
-        .upload-area p {
-            color: #666666;
-            margin: 0;
-        }
+        .upload-area:hover { background: rgba(212,175,55,0.04); }
+        .upload-area i { font-size: 48px; color: var(--gold); margin-bottom: 15px; }
+        .upload-area h4 { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; }
+        .upload-area p { color: var(--text-muted); margin: 0; }
 
         .file-info {
-            background-color: #f0f0f0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             margin: 20px 0;
             text-align: left;
         }
+        .file-info-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .file-info-label { font-weight: 500; color: var(--text-secondary); }
+        .file-info-value { color: var(--text-muted); }
 
-        .file-info-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .file-info-label {
-            font-weight: 500;
-            color: #000000;
-        }
-
-        .file-info-value {
-            color: #666666;
-        }
-
-        .avatar-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
+        .avatar-actions { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
 
         .btn-save {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+            border: none;
+            border-radius: 40px;
             padding: 12px 30px;
-            background-color: #000000;
-            color: #ffffff;
-            border: 2px solid #000000;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
+            font-weight: 700;
             font-size: 16px;
-        }
-
-        .btn-save:hover {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .btn-save:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-cancel {
-            padding: 12px 30px;
-            background-color: #ffffff;
-            color: #000000;
-            border: 2px solid #000000;
-            border-radius: 8px;
-            font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .btn-cancel:hover {
-            background-color: #f0f0f0;
-        }
-
-        .btn-remove {
-            padding: 12px 30px;
-            background-color: #ffffff;
-            color: #dc3545;
-            border: 2px solid #dc3545;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--transition-base);
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        .btn-remove:hover {
-            background-color: #dc3545;
-            color: #ffffff;
-        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(212,175,55,0.25); }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .back-link {
             display: block;
             text-align: center;
             margin-top: 20px;
-            color: #000000;
+            color: var(--text-muted);
             text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        .back-link:hover { color: var(--gold); text-decoration: none; }
+
+        .breadcrumb-nav { margin-bottom: 20px; }
+
+        .error-message {
+            display: block;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: rgba(231,76,60,0.12);
+            border: 1px solid rgba(231,76,60,0.2);
+            color: #e74c3c;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .breadcrumb-nav {
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb {
-            background: none;
-            padding: 0;
-        }
-
-        .breadcrumb-item a {
-            color: #666666;
-            text-decoration: none;
-        }
-
-        .breadcrumb-item.active {
-            color: #000000;
-            font-weight: 500;
-        }
+        #imageUpload { display: none; }
     </style>
 </head>
 <body>

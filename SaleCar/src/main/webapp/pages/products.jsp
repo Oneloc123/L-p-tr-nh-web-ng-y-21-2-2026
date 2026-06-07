@@ -35,23 +35,20 @@
 
     /* ================= DESIGN TOKENS ================= */
     :root {
-        --black: #0a0a0a;
-        --bg-primary: #101010;
-        --bg-surface: #181818;
-        --bg-elevated: #1f1f1f;
-        --bg-elevated-hover: #252525;
+        --black: #0a0a0a;        --bg-primary: #101010;
+            --bg-surface: #1a1a1a;
+            --bg-elevated: #222222;
+            --bg-elevated-hover: #2a2a2a;
         --bg-image: #111111;
         --gold: #D4AF37;
         --gold-dark: #b8960f;
         --gold-light: #e9d6b0;
         --text-primary: #f0f0f0;
         --text-secondary: #9f9f9f;
-        --text-muted: #666666;
-        --border-subtle: rgba(255, 255, 255, 0.06);
-        --border-gold: rgba(212, 175, 55, 0.15);
-        --border-gold-strong: rgba(212, 175, 55, 0.25);
-        --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-        --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5);
+        --text-muted: #666666;        --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-gold: rgba(212, 175, 55, 0.30);
+            --border-gold-strong: rgba(212, 175, 55, 0.55);        --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 25px rgba(212, 175, 55, 0.08);
+            --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 45px rgba(212, 175, 55, 0.15);
         --shadow-gold: rgba(212, 175, 55, 0.12);
         --radius-sm: 8px;
         --radius-md: 14px;
@@ -90,14 +87,15 @@
         margin: 0;
     }
 
-    /* ================= SIDEBAR (DARK SURFACE) ================= */
+    /* ================= SIDEBAR (DARK SURFACE — MATCHES PROFILE SIDEBAR) ================= */
     .sidebar {
-        background: var(--bg-surface);
-        padding: 0;
+        background-color: #0a0a0a;
+        padding: 30px 0;
         border-right: 1px solid var(--border-subtle);
         height: 100%;
         overflow-y: auto;
-        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        flex-shrink: 0;
         display: flex;
         flex-direction: column;
     }
@@ -115,17 +113,18 @@
 
     /* ================= FILTER HEADER ================= */
     .filter-header {
-        padding: 22px 22px 16px;
+        padding: 0 20px 20px;
         border-bottom: 1px solid var(--border-subtle);
+        text-align: center;
         flex-shrink: 0;
     }
     .filter-header h5 {
         font-family: 'Playfair Display', serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--text-primary);
+        font-size: 24px;
+        font-weight: 600;
+        color: #fff;
         margin: 0;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
     }
     .filter-header h5 i {
         color: var(--gold);
@@ -147,7 +146,7 @@
 
     /* ================= SEARCH ================= */
     .filter-search {
-        padding: 14px 22px;
+        padding: 14px 20px;
         border-bottom: 1px solid var(--border-subtle);
         flex-shrink: 0;
     }
@@ -202,7 +201,7 @@
 
     /* ================= FILTER SECTION ================= */
     .filter-section {
-        border-bottom: 1px solid var(--border-subtle);
+        border-bottom: none;
         transition: background var(--transition-fast);
     }
     .filter-section:last-child {
@@ -213,14 +212,17 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 14px 20px;
+        padding: 12px 25px;
+        margin: 5px 10px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         transition: all var(--transition-fast);
         user-select: none;
         gap: 12px;
     }
     .filter-title:hover {
-        background: rgba(212, 175, 55, 0.04);
+        background-color: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
     }
     .filter-title .title-left {
         display: flex;
@@ -291,11 +293,11 @@
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.35s ease, padding 0.35s ease;
-        padding: 0 20px;
+        padding: 0 25px;
     }
     .filter-content.open {
         max-height: 280px;
-        padding: 0 20px 14px;
+        padding: 0 25px 14px;
         overflow-y: auto;
     }
     .filter-content.open::-webkit-scrollbar {
@@ -447,9 +449,9 @@
     /* ================= SIDEBAR FOOTER ================= */
     .sidebar-footer {
         flex-shrink: 0;
-        padding: 16px 22px;
+        padding: 16px 20px;
         border-top: 1px solid var(--border-subtle);
-        background: var(--bg-surface);
+        background: transparent;
     }
     .sidebar-footer .btn-apply {
         flex: 1;
@@ -658,13 +660,12 @@
         margin-bottom: 30px;
     }
 
-    /* ================= PRODUCT CARD (DARK LUXURY) ================= */
-    .product-card {
-        border: 1px solid var(--border-subtle);
+    /* ================= PRODUCT CARD (DARK LUXURY) ================= */        .product-card {
+        border: 1px solid var(--border-gold);
         border-radius: var(--radius-lg);
         overflow: hidden;
         transition: all var(--transition-slow);
-        height: 100%;
+        height: auto;
         display: flex;
         flex-direction: column;
         background: var(--bg-elevated);
@@ -679,14 +680,13 @@
         right: 0;
         height: 1px;
         background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        opacity: 0.3;
+        opacity: 0.6;
         z-index: 5;
         transition: opacity 0.5s ease;
-    }
-    .product-card:hover {
+    }        .product-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 50px rgba(212, 175, 55, 0.06);
-        border-color: rgba(212, 175, 55, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 50px rgba(212, 175, 55, 0.12);
+        border-color: var(--border-gold-strong);
         background: var(--bg-elevated-hover);
     }
     .product-card:hover::before {
@@ -862,19 +862,23 @@
     }
     .btn-action {
         flex: 1;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text-secondary);
-        border: 1px solid var(--border-subtle);
+        background: rgba(212, 175, 55, 0.06);
+        color: var(--gold);
+        border: 1.5px solid rgba(212, 175, 55, 0.2);
         padding: 8px 0;
         border-radius: 30px;
         transition: all var(--transition-base);
         cursor: pointer;
+        box-shadow: 0 0 8px rgba(212, 175, 55, 0.06);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
     .btn-action:hover {
-        background: rgba(212, 175, 55, 0.1);
-        color: var(--gold);
-        border-color: rgba(212, 175, 55, 0.3);
-        transform: translateY(-1px);
+        background: rgba(212, 175, 55, 0.16);
+        color: #fff;
+        border-color: var(--gold);
+        transform: translateY(-2px);
+        box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
     }
 
     /* ================= RATING (DARK) ================= */
