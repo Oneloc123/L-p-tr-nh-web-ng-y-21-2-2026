@@ -31,6 +31,10 @@ public class ReviewsService {
         return reviewsDAO.getRates( id);
     }
 
+    public boolean hasUserReviewedProduct(int userId, long productId) {
+        return reviewsDAO.hasUserReviewedProduct(userId, productId);
+    }
+
     public List<String> getComments(int id) {
         return reviewsDAO.getComments(id);
     }
