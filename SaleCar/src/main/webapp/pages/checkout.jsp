@@ -12,216 +12,214 @@
     <%-- Include header --%>
     <%@ include file="/common/header.jsp" %>
 
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/common/dark-theme.css">
     <style>
-        :root {
-            --black: #000000;
-            --gold: #D4AF37;
-            --white: #FFFFFF;
-            --dark-gold: #b8960f;
-            --gray-dark: #2c2c2c;
-            --gray-medium: #666666;
-            --gray-light: #f5f5f5;
-            --border-light: #e5e5e5;
-            --danger: #dc3545;
-            --success: #28a745;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f4f6fa; }
-
-        /* Main layout & Sidebar */
-        .profile-wrapper { display: flex; align-items: flex-start; min-height: 100vh; }
-        .sidebar-menu { width: 280px; background-color: var(--black); color: var(--white); padding: 30px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 1000; }
-        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #333; text-align: center; }
-        .sidebar-header h3 { color: var(--white); font-size: 24px; font-weight: 600; margin: 0; }
-        .sidebar-header p { color: #999; font-size: 14px; margin-top: 5px; }
-        .menu-items { padding: 20px 0; }
-        .menu-item { display: flex; align-items: center; padding: 12px 25px; color: var(--white); text-decoration: none; transition: all 0.3s; margin: 5px 10px; border-radius: 8px; }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 18px; }
-        .menu-item span { font-size: 15px; font-weight: 500; }
-        .menu-item:hover { background-color: #333; color: var(--white); transform: translateX(4px); }
-        .menu-item.active { background-color: var(--white); color: var(--black); }
-        .menu-item.active i { color: var(--black); }
-        .menu-divider { height: 1px; background-color: #333; margin: 15px 20px; }
-
-        /* Main Content */
-        .main-content { flex: 1; padding: 30px; background: #f4f6fa; }
-        .content-header { margin-bottom: 30px; }
-        .content-header h1 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 10px; letter-spacing: -0.3px; }
-        .breadcrumb { background: none; padding: 0; margin: 0; list-style: none; display: flex; flex-wrap: wrap; font-size: 13px; }
-        .breadcrumb-item { margin-right: 10px; }
-        .breadcrumb-item a { color: #5a6874; text-decoration: none; transition: color 0.2s; }
-        .breadcrumb-item a:hover { color: var(--gold); }
-        .breadcrumb-item.active { color: var(--black); font-weight: 600; }
-
-        /* Checkout Layout */
+        /* ================= CHECKOUT LAYOUT ================= */
         .checkout-container { display: flex; gap: 30px; align-items: flex-start; }
         .checkout-form-section { flex: 2; }
         .checkout-summary-section { flex: 1; position: sticky; top: 30px; }
 
-        /* Form & Cards */
+        /* ================= CHECKOUT CARDS ================= */
         .checkout-card {
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 8px 25px -8px rgba(0,0,0,0.06);
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
             padding: 30px;
             margin-bottom: 25px;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s;
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-base);
         }
-        .checkout-card:hover {
-            border-color: #ddd;
-        }
+        .checkout-card:hover { border-color: var(--border-gold); }
         .checkout-card h3 {
             font-size: 18px;
             font-weight: 700;
+            font-family: 'Playfair Display', serif;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--black);
+            border-bottom: 2px solid rgba(212,175,55,0.2);
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--black);
+            color: var(--text-primary);
         }
+        .checkout-card h3 i { color: var(--gold); }
 
+        /* ================= FORM ================= */
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #333; text-transform: uppercase; letter-spacing: 0.3px; }
-        .form-control { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border-light); border-radius: 10px; font-size: 14px; transition: border-color 0.3s, box-shadow 0.3s; }
-        .form-control:focus { outline: none; border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 0.3px; }
+        .form-control, textarea.form-control {
+            width: 100%; padding: 12px 16px;
+            border: 1.5px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: all var(--transition-fast);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+        .form-control:focus, textarea.form-control:focus {
+            outline: none;
+            border-color: var(--border-gold-strong);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.06);
+        }
+        .form-control::placeholder, textarea.form-control::placeholder { color: var(--text-muted); }
         textarea.form-control { resize: vertical; min-height: 80px; }
 
-        /* Payment Methods */
+        /* ================= PAYMENT METHODS ================= */
         .payment-method {
-            border: 1.5px solid var(--border-light);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             padding: 16px 18px;
             margin-bottom: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 15px;
-            transition: all 0.3s;
-            background: var(--white);
+            transition: all var(--transition-base);
+            background: var(--bg-elevated);
         }
         .payment-method:hover {
-            border-color: var(--black);
+            border-color: var(--gold);
             transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            background: rgba(212,175,55,0.04);
         }
-        .payment-method input[type="radio"] { width: 18px; height: 18px; accent-color: var(--black); }
-        .payment-icon { font-size: 24px; color: var(--black); width: 40px; text-align: center; }
-        .payment-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--black); }
-        .payment-details p { font-size: 13px; color: var(--gray-medium); margin: 0; }
+        .payment-method input[type="radio"] { width: 18px; height: 18px; accent-color: var(--gold); }
+        .payment-icon { font-size: 24px; color: var(--gold); width: 40px; text-align: center; }
+        .payment-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary); }
+        .payment-details p { font-size: 13px; color: var(--text-muted); margin: 0; }
 
-        /* Order Summary */
-        .summary-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px dashed var(--border-light); transition: all 0.2s; }
-        .summary-item:hover { background: #fafafa; margin-left: -8px; margin-right: -8px; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
-        .summary-item-info { display: flex; align-items: center; gap: 15px; }
-        .summary-img { width: 60px; height: 45px; background: var(--gray-light); border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-light); }
-        .summary-img img { width: 100%; height: 100%; object-fit: cover; }
-        .summary-name { font-size: 14px; font-weight: 600; color: var(--black); }
-        .summary-qty { font-size: 12px; color: var(--gray-medium); }
-        .summary-price { font-size: 14px; font-weight: 600; color: var(--black); }
+        /* ================= ORDER SUMMARY ================= */
+        .summary-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 15px; margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-subtle);
+            transition: all var(--transition-fast);
+        }
+        .summary-item:hover {
+            background: var(--bg-elevated);
+            margin-left: -8px; margin-right: -8px;
+            padding-left: 8px; padding-right: 8px;
+            border-radius: var(--radius-sm);
+        }
+        .summary-item-info { display: flex; align-items: center; gap: 12px; }
+        .summary-item-info img {
+            width: 50px; height: 50px; border-radius: var(--radius-sm);
+            object-fit: cover; border: 1px solid var(--border-subtle);
+            background: var(--bg-elevated);
+        }
+        .summary-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .summary-qty { font-size: 12px; color: var(--text-muted); }
+        .summary-price { font-size: 14px; font-weight: 600; color: var(--gold); }
 
         .summary-calc { margin-top: 20px; }
-        .calc-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; color: var(--gray-medium); padding: 3px 0; }
+        .calc-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 15px; font-size: 14px;
+            color: var(--text-secondary); padding: 3px 0;
+        }
         .calc-row.total {
-            border-top: 2px solid var(--black);
+            border-top: 1px solid var(--border-gold);
             padding-top: 15px;
             font-size: 18px;
             font-weight: 700;
-            color: var(--danger);
+            color: var(--gold);
             margin-bottom: 25px;
         }
 
+        /* ================= BUTTONS ================= */
         .btn-submit-order {
             width: 100%;
-            background-color: var(--black);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
             padding: 15px;
-            border: 2px solid transparent;
+            border: none;
             border-radius: 40px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all var(--transition-base);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
         .btn-submit-order:hover {
-            background-color: var(--gold);
-            border-color: var(--black);
-            color: var(--black);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(212,175,55,0.3);
         }
         .btn-submit-order:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
             box-shadow: none !important;
         }
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .checkout-container { flex-direction: column; }
-            .checkout-summary-section { position: static; width: 100%; }
-        }
-
-        /* Address slots */
+        /* ================= ADDRESS SLOTS ================= */
         .address-slot {
-            border: 1.5px solid var(--border-light);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             padding: 16px 18px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all var(--transition-fast);
             position: relative;
             display: block;
-            background: var(--white);
+            background: var(--bg-elevated);
         }
         .address-slot:hover {
-            border-color: var(--black);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border-color: var(--gold);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.04);
             transform: translateX(4px);
         }
         .address-slot.selected {
-            border-color: var(--black);
-            background-color: #fafafa;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border-color: var(--gold);
+            background: rgba(212,175,55,0.04);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.06);
         }
-        .address-radio-hidden {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .address-name { font-weight: 700; color: var(--black); margin-bottom: 5px; font-size: 15px; }
-        .address-phone { font-size: 13px; color: #555; margin-bottom: 5px; }
-        .address-detail { font-size: 13px; color: var(--gray-medium); margin-bottom: 0; line-height: 1.4; }
+        .address-radio-hidden { position: absolute; opacity: 0; width: 0; height: 0; }
+        .address-name { font-weight: 700; color: var(--text-primary); margin-bottom: 4px; font-size: 15px; }
+        .address-detail { font-size: 13px; color: var(--text-muted); margin-bottom: 0; line-height: 1.4; }
         .badge-default {
-            background: var(--black); color: var(--white); font-size: 10px;
-            padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle;
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010; font-size: 10px;
+            padding: 3px 10px; border-radius: 12px; margin-left: 8px;
+            font-weight: 700;
         }
 
-        /* Voucher */
-        .voucher-input-group { transition: all 0.3s; }
-        .input-row { display: flex; align-items: stretch; }
-        .input-row .form-control:focus { border-color: var(--black); box-shadow: none; }
-        .input-row .btn-dark { border: 1px solid var(--black); border-left: none; }
-        .input-row .btn-dark:hover { background: var(--gray-dark); }
+        /* ================= ADD ADDRESS BUTTON ================= */
+        .btn-add-address {
+            border: 2px dashed var(--border-gold);
+            background: transparent;
+            color: var(--text-muted);
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            text-align: center;
+            cursor: pointer;
+        }
+        .btn-add-address:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212,175,55,0.04);
+            transform: translateY(-2px);
+        }
 
-        .voucher-msg { font-size: 13px; padding: 8px 12px; border-radius: 8px; }
-        .voucher-msg.success { color: #155724; background: #d4edda; border: 1px solid #c3e6cb; }
-        .voucher-msg.error { color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; }
+        /* ================= VOUCHER ================= */
+        .voucher-input-group { transition: all var(--transition-base); }
+        .input-row { display: flex; align-items: stretch; }
+        .input-row .form-control:focus { border-color: var(--border-gold-strong); box-shadow: none; }
+
+        .voucher-msg { font-size: 13px; padding: 8px 12px; border-radius: var(--radius-sm); }
+        .voucher-msg.success { color: #2ecc71; background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.2); }
+        .voucher-msg.error { color: #e74c3c; background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.2); }
 
         .voucher-applied {
             display: flex; align-items: center; justify-content: space-between;
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border: 1px solid #a5d6a7; border-radius: 12px;
+            background: rgba(46,204,113,0.08);
+            border: 1px solid rgba(46,204,113,0.2);
+            border-radius: var(--radius-md);
             padding: 14px 18px; margin-top: 10px;
             animation: slideIn 0.3s ease;
         }
@@ -230,64 +228,93 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .voucher-applied-left { display: flex; align-items: center; gap: 12px; }
-        .voucher-applied-left i { font-size: 24px; color: #2e7d32; }
-        .voucher-applied-code { font-weight: 700; font-size: 15px; color: #1b5e20; }
-        .voucher-applied-desc { font-size: 12px; color: #388e3c; margin-top: 2px; }
+        .voucher-applied-left i { font-size: 24px; color: #2ecc71; }
+        .voucher-applied-code { font-weight: 700; font-size: 15px; color: #2ecc71; }
+        .voucher-applied-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
         .voucher-remove-btn {
-            background: transparent; border: 1px solid #a5d6a7;
-            color: #2e7d32; padding: 8px 16px; border-radius: 8px;
+            background: transparent; border: 1px solid rgba(46,204,113,0.3);
+            color: #2ecc71; padding: 8px 16px; border-radius: var(--radius-sm);
             font-size: 12px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
+            transition: all var(--transition-fast);
         }
         .voucher-remove-btn:hover {
-            background: #2e7d32; color: var(--white); border-color: #2e7d32;
+            background: rgba(46,204,113,0.15); color: #2ecc71;
         }
 
         .loading-spinner {
             display: inline-block; width: 14px; height: 14px;
-            border: 2px solid var(--white); border-top-color: transparent;
+            border: 2px solid #101010; border-top-color: transparent;
             border-radius: 50%; animation: spin 0.6s linear infinite;
         }
         .spin { animation: spin 0.6s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Add address button */
-        .btn-add-address {
-            border: 2px dashed var(--border-light);
-            background: transparent;
-            color: var(--gray-medium);
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.25s;
-            text-align: center;
-            cursor: pointer;
+        /* ================= OVERRIDES ================= */
+        .main-content { flex: 1; padding: 30px 40px; background: var(--bg-primary); }
+        .content-header h1 { font-family: 'Playfair Display', serif; }
+
+        .input-row .btn-dark {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            padding: 12px 20px;
+            font-weight: 700;
         }
-        .btn-add-address:hover {
-            border-color: var(--black);
-            color: var(--black);
-            background: #fafafa;
-            transform: translateY(-2px);
+        .input-row .btn-dark:hover {
+            box-shadow: 0 4px 12px rgba(212,175,55,0.25);
+        }
+
+        /* ================= FORM SELECT & LABEL OVERRIDES ================= */
+        .form-select {
+            background: var(--bg-elevated) !important;
+            border: 1.5px solid var(--border-subtle) !important;
+            border-radius: var(--radius-sm) !important;
+            color: var(--text-primary) !important;
+            padding: 12px 16px;
+        }
+        .form-select:focus {
+            border-color: var(--border-gold-strong) !important;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.06) !important;
+            outline: none !important;
+        }
+        .form-select option {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+        }
+        .form-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-label {
+            color: var(--text-secondary) !important;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .form-text {
+            color: var(--text-muted) !important;
+            font-size: 11px;
+        }
+
+        .btn-close { filter: invert(1); }
+
+        .alert-warning {
+            background: rgba(255,193,7,0.1) !important;
+            border: 1px solid rgba(255,193,7,0.2) !important;
+            color: #ffc107 !important;
+        }
+
+        @media (max-width: 992px) {
+            .checkout-container { flex-direction: column; }
+            .checkout-summary-section { position: static; width: 100%; }
         }
     </style>
 </head>
 <body>
 <div class="profile-wrapper">
-    <div class="sidebar-menu">
-        <div class="menu-items">
-            <a href="${pageContext.request.contextPath}/dashboard" class="menu-item"><i class="bi bi-speedometer2"></i><span>Bảng điều khiển</span></a>
-            <a href="${pageContext.request.contextPath}/profile" class="menu-item "><i class="bi bi-person-circle"></i><span>Thông tin cá nhân</span></a>
-            <a href="${pageContext.request.contextPath}/profileEdit" class="menu-item"><i class="bi bi-person-gear"></i><span>Chỉnh sửa thông tin</span></a>
-            <a href="${pageContext.request.contextPath}/changePassword" class="menu-item"><i class="bi bi-lock"></i><span>Đổi mật khẩu</span></a>
-            <a href="${pageContext.request.contextPath}/order" class="menu-item"><i class="bi bi-bag"></i><span>Đơn hàng của tôi</span></a>
-            <a href="${pageContext.request.contextPath}/cart" class="menu-item active"><i class="bi bi-cart3"></i><span>Giỏ hàng</span></a>
-            <a href="${pageContext.request.contextPath}/favorites" class="menu-item"><i class="bi bi-heart"></i><span>Sản phẩm yêu thích</span></a>
-            <a href="${pageContext.request.contextPath}/notifications" class="menu-item"><i class="bi bi-bell"></i><span>Thông báo</span></a>
-            <div class="menu-divider"></div>
-            <a href="${pageContext.request.contextPath}/loggout" class="menu-item"><i class="bi bi-box-arrow-right"></i><span>Đăng xuất</span></a>
-        </div>
-    </div>
+    <!-- Sidebar chung -->
+    <%@ include file="/common/user-sidebar.jsp" %>
 
 
 
@@ -329,8 +356,7 @@
 
                             <div id="address-slots-container">
                             <c:choose>
-                        <c:when test="${empty listAddress}">
-                            <div class="alert alert-warning py-2 mb-3" style="font-size: 14px; border-radius: 8px;">
+                        <c:when test="${empty listAddress}">                             <div class="alert alert-warning py-2 mb-3" style="font-size: 14px;">
                                 <i class="bi bi-exclamation-triangle-fill"></i> Bạn chưa có địa chỉ nào, hãy thêm mới để đặt hàng!
                             </div>
                         </c:when>
@@ -518,15 +544,15 @@
 <%-- Modal dia chi --%>
 <div class="modal fade" id="addAddressModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 12px; border: none;">
-            <div class="modal-header" style="border-bottom: 1px solid #eee;">
-                <h5 class="modal-title fw-bold" style="color: #000;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
                     <i class="bi bi-geo-alt-fill me-2"></i> Thêm địa chỉ giao hàng
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body" style="padding: 25px;">
+            <div class="modal-body">
                 <form id="newAddressForm">
                     <div class="mb-3">
                         <label class="form-label fw-bold small">Tên người nhận</label>
@@ -562,12 +588,9 @@
                 </form>
             </div>
 
-            <div class="modal-footer" style="border-top: none;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
-
-                <button type="button" class="btn btn-dark" id="btnSaveAddress" style="border-radius: 8px;">
-                    <i class="bi bi-save me-1"></i> Lưu địa chỉ
-                </button>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn-cancel" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="modal-btn-primary" id="btnSaveAddress"><i class="bi bi-save me-1"></i> Lưu địa chỉ</button>
             </div>
         </div>
     </div>
