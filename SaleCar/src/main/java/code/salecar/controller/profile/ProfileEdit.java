@@ -76,6 +76,7 @@ public class ProfileEdit extends HttpServlet {
         }
 
         boolean status= false;
+
         if(statuss.equals("active")){
             status = true;
         }

@@ -2,6 +2,7 @@ package code.salecar.controller.admin.user;
 
 import code.salecar.model.Addresses;
 import code.salecar.model.User;
+import code.salecar.model.UserFilter;
 import code.salecar.service.address.AddressesService;
 import code.salecar.service.user.UserService;
 import jakarta.servlet.*;
@@ -28,8 +29,6 @@ public class UserAdmin extends HttpServlet {
         }
 
         int page = 1;
-        int pageSize = 10;
-
         String pageParam = request.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -40,15 +39,21 @@ public class UserAdmin extends HttpServlet {
             }
         }
 
-        int offset = (page - 1) * pageSize;
+        UserFilter filter = new UserFilter();
+        filter.setSortBy("id");
+        filter.setSortDir("desc");
+        filter.setPage(page);
+        filter.setPageSize(20);
 
         UserService us = new UserService();
 
-        List<User> listUser = us.getUsersWithPagination(offset, pageSize);
+        List<User> listUser = us.searchUsers(filter);
 
-        int totalUsers = us.getTotalUsersCount();
-        int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
-
+        int totalUsers = us.countUsers(filter);
+        int totalPages = (int) Math.ceil((double) totalUsers / filter.getPageSize());
+        if (totalPages < 1) {
+            totalPages = 1;
+        }
 
         AddressesService as = new AddressesService();
         List<Addresses> listAddress = as.getListAddress();

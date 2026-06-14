@@ -2,6 +2,7 @@ package code.salecar.service.user;
 
 import code.salecar.dao.UserDao;
 import code.salecar.model.User;
+import code.salecar.model.UserFilter;
 
 import java.util.List;
 
@@ -40,26 +41,12 @@ public class UserService {
         ud.deleteUserById(id);
     }
 
-    public List<User> getUserBykeyWord(String keyword) {
-        return ud.getUserByKeyWord(keyword);
+    public List<User> searchUsers(UserFilter filter) {
+        return ud.searchUsers(filter);
     }
 
-    public List<User> filterUser(String role, String status) {
-        boolean stat = true;
-        if(status.equals("")){
-            return ud.filterByRole(role);
-        }
-        if(status.equals("false")){
-            stat = false;
-        }
-        return ud.fileUser(role,stat);
+    public int countUsers(UserFilter filter) {
+        return ud.countUsers(filter);
     }
 
-    public List<User> getUsersWithPagination(int offset, int limit){
-        return ud.getUsersWithPagination(offset,limit);
-    }
-
-    public int getTotalUsersCount() {
-       return ud.getTotalUsersCount();
-    }
 }
