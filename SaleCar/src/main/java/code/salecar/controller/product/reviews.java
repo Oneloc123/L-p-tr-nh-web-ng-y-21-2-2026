@@ -38,7 +38,18 @@ public class reviews extends HttpServlet {
 
         ReviewsService reviewsService = new ReviewsService();
         reviewsService.addReviews(reviews);
-        response.sendRedirect("/product-detail?id=" + productId);
+
+        // Set toast thông báo thành công
+        request.getSession().setAttribute("toastMessage", "Cảm ơn bạn! Đánh giá sản phẩm đã được gửi thành công.");
+        request.getSession().setAttribute("toastType", "success");
+
+        // Nếu có orderId, redirect về order-detail, ngược lại về product-detail
+        String orderId = request.getParameter("orderId");
+        if (orderId != null && !orderId.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/order-detail?id=" + orderId);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/product-detail?id=" + productId);
+        }
 
     }
 }

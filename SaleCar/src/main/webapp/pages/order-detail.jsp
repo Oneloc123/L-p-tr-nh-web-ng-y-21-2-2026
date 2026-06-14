@@ -206,6 +206,125 @@
             color: #22c55e !important;
         }
         .breadcrumb-item i { color: var(--text-muted); font-size: 9px; }
+
+        /* ================= REVIEW ================= */
+        .review-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .review-badge.done {
+            background: rgba(46,204,113,0.12);
+            color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.2);
+        }
+        .review-badge.pending {
+            background: rgba(212,175,55,0.12);
+            color: var(--gold);
+            border: 1px solid rgba(212,175,55,0.2);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .review-badge.pending:hover {
+            background: rgba(212,175,55,0.2);
+            transform: translateY(-1px);
+        }
+        .review-badge.na {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Inline review form */
+        .review-inline {
+            margin-top: 12px;
+            padding: 14px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .review-inline.open { display: block; }
+        .review-inline .star-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .review-inline .star-input input { display: none; }
+        .review-inline .star-input label {
+            font-size: 22px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        .review-inline .star-input label:hover,
+        .review-inline .star-input label:hover ~ label,
+        .review-inline .star-input input:checked ~ label {
+            color: #f0c040;
+        }
+        .review-inline textarea {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: 'Inter', sans-serif;
+        }
+        .review-inline textarea:focus {
+            outline: none;
+            border-color: var(--border-gold-strong);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.06);
+        }
+        .review-inline .review-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-review-submit {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #101010;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        .btn-review-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212,175,55,0.25);
+        }
+        .btn-review-cancel {
+            padding: 8px 20px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .btn-review-cancel:hover {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -373,6 +492,7 @@
                             <th style="text-align:center;">Đơn giá</th>
                             <th style="text-align:center;">Số lượng</th>
                             <th style="text-align:right; padding-right:24px;">Thành tiền</th>
+                            <th style="text-align:center;">Đánh giá</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -400,6 +520,63 @@
                                 </td>
                                 <td class="total-cell" style="text-align:right; padding-right:24px;">
                                     <fmt:formatNumber value="${item.totalPrice}" type="number" groupingUsed="true"/> &#8363;
+                                </td>
+                                <td style="text-align:center; vertical-align:middle; min-width:130px;">
+                                    <%-- Kiểm tra đơn hàng đã giao thành công --%>
+                                    <c:set var="isDelivered" value="${order.orderStatus == 'DELIVERED' || order.orderStatus == 'COMPLETED' || fn:contains(order.orderStatus, 'Đã giao')}" />
+                                    
+                                    <c:choose>
+                                        <%-- Đã giao và chưa đánh giá --%>
+                                        <c:when test="${isDelivered and not reviewedProductIds.contains(item.productId)}">
+                                            <span class="review-badge pending" 
+                                                  onclick="toggleReviewForm('review-form-${item.productId}')">
+                                                <i class="bi bi-star"></i> Đánh giá
+                                            </span>
+                                            <div class="review-inline" id="review-form-${item.productId}">
+                                                <form action="${pageContext.request.contextPath}/reviews" method="post">
+                                                    <input type="hidden" name="productId" value="${item.product.id}">
+                                                    <input type="hidden" name="orderId" value="${order.id}">
+                                                    
+                                                    <div class="star-input">
+                                                        <input type="radio" name="rating" value="5" id="star5-${item.productId}" required>
+                                                        <label for="star5-${item.productId}" title="5 sao">★</label>
+                                                        <input type="radio" name="rating" value="4" id="star4-${item.productId}">
+                                                        <label for="star4-${item.productId}" title="4 sao">★</label>
+                                                        <input type="radio" name="rating" value="3" id="star3-${item.productId}">
+                                                        <label for="star3-${item.productId}" title="3 sao">★</label>
+                                                        <input type="radio" name="rating" value="2" id="star2-${item.productId}">
+                                                        <label for="star2-${item.productId}" title="2 sao">★</label>
+                                                        <input type="radio" name="rating" value="1" id="star1-${item.productId}">
+                                                        <label for="star1-${item.productId}" title="1 sao">★</label>
+                                                    </div>
+                                                    
+                                                    <textarea name="comment" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." rows="2"></textarea>
+                                                    
+                                                    <div class="review-actions">
+                                                        <button type="submit" class="btn-review-submit">
+                                                            <i class="bi bi-send"></i> Gửi đánh giá
+                                                        </button>
+                                                        <button type="button" class="btn-review-cancel" 
+                                                                onclick="toggleReviewForm('review-form-${item.productId}')">
+                                                            Hủy
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </c:when>
+                                        <%-- Đã giao và đã đánh giá --%>
+                                        <c:when test="${isDelivered and reviewedProductIds.contains(item.productId)}">
+                                            <span class="review-badge done">
+                                                <i class="bi bi-check-circle-fill"></i> Đã đánh giá
+                                            </span>
+                                        </c:when>
+                                        <%-- Chưa giao hàng --%>
+                                        <c:otherwise>
+                                            <span class="review-badge na">
+                                                <i class="bi bi-clock"></i> Chờ giao
+                                            </span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -446,5 +623,28 @@
 
     </div>
 </div>
+
+<script>
+function toggleReviewForm(formId) {
+    var targetForm = document.getElementById(formId);
+    if (!targetForm) return;
+
+    // Nếu form target đang mở → đóng nó lại
+    if (targetForm.classList.contains('open')) {
+        targetForm.classList.remove('open');
+        return;
+    }
+
+    // Đóng tất cả các form khác trước khi mở form mới
+    var allForms = document.querySelectorAll('.review-inline.open');
+    allForms.forEach(function(f) {
+        f.classList.remove('open');
+    });
+
+    // Mở form target
+    targetForm.classList.add('open');
+}
+</script>
+
 </body>
 </html>

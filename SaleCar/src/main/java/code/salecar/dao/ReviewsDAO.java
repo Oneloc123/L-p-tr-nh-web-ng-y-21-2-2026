@@ -79,6 +79,22 @@ public class ReviewsDAO {
         return list;
     }
 
+    public boolean hasUserReviewedProduct(int userId, long productId) {
+        String query = "SELECT COUNT(*) FROM reviews WHERE user_id = ? AND product_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ps.setLong(2, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
     public List<String> getComments(int id) {
         List<String> list = new ArrayList<>();
         String query = "select r.comment from reviews r join product p on r.product_id = p.id where p.id = ? ";

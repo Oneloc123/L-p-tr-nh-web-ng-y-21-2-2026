@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -529,34 +530,79 @@
             </div>
         </header>
 
-        <!-- SEARCH + FILTERS -->
-        <form class="input-group mb-4" action="/filterUser" method="get">
-            <input type="text" class="form-control" name="keyword"
-                   placeholder="🔍 Tìm kiếm theo tên, email, số điện thoại..." value="">
-            <button class="btn btn-outline-secondary"><i class="bi bi-search"></i> Tìm</button>
-        </form>
-
+        <!-- SEARCH + FILTERS + SORT (unified form) -->
         <section class="filters mt-2 mb-4">
-            <form action="/filterUser" method="post" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <select class="form-select" name="role">
-                        <option value="">📌 Tất cả vai trò</option>
-                        <option value="admin">👑 Admin</option>
-                        <option value="user">👤 User</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select" name="status">
-                        <option value="">⚡ Tất cả trạng thái</option>
-                        <option value="true">🟢 Hoạt động</option>
-                        <option value="false">🔴 Đã khóa</option>
-                    </select>
-                </div>
-                <input type="hidden" name="keyword" value=""/>
-                <div class="col-md-4 text-md-end">
-                    <button class="btn btn-primary w-100 w-md-auto"><i class="bi bi-funnel"></i> Lọc dữ liệu</button>
+            <form action="${pageContext.request.contextPath}/filterUser" method="get" class="card">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <!-- Keyword -->
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold text-muted">Từ khóa</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="keyword"
+                                       placeholder="🔍 Tìm theo tên đăng nhập, họ tên, email, số điện thoại..."
+                                       value="${fn:escapeXml(keyword)}">
+                                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Tìm</button>
+                            </div>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Vai trò</label>
+                            <select class="form-select" name="role">
+                                <option value="" ${empty role ? 'selected' : ''}>📌 Tất cả vai trò</option>
+                                <option value="admin" ${role == 'admin' ? 'selected' : ''}>👑 Admin</option>
+                                <option value="user" ${role == 'user' ? 'selected' : ''}>👤 User</option>
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Trạng thái</label>
+                            <select class="form-select" name="status">
+                                <option value="" ${empty status ? 'selected' : ''}>⚡ Tất cả trạng thái</option>
+                                <option value="true" ${status == 'true' ? 'selected' : ''}>🟢 Hoạt động</option>
+                                <option value="false" ${status == 'false' ? 'selected' : ''}>🔴 Đã khóa</option>
+                            </select>
+                        </div>
+
+                        <!-- Date range -->
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Ngày tạo từ</label>
+                            <input type="date" class="form-control" name="dateFrom" value="${fn:escapeXml(dateFrom)}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Đến ngày</label>
+                            <input type="date" class="form-control" name="dateTo" value="${fn:escapeXml(dateTo)}">
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Sắp xếp theo</label>
+                            <select class="form-select" name="sortBy">
+                                <option value="id" ${sortBy == 'fullname' ? '' : 'selected'}>🆔 ID</option>
+                                <option value="fullname" ${sortBy == 'fullname' ? 'selected' : ''}>🔤 Họ tên</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Thứ tự</label>
+                            <select class="form-select" name="sortDir">
+                                <option value="desc" ${sortDir == 'asc' ? '' : 'selected'}>⬇️ Giảm dần</option>
+                                <option value="asc" ${sortDir == 'asc' ? 'selected' : ''}>⬆️ Tăng dần</option>
+                            </select>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="col-md-6 d-flex gap-2 align-items-end">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Lọc dữ liệu</button>
+                            <a class="btn btn-outline-secondary" href="${pageContext.request.contextPath}/filterUser"><i class="bi bi-arrow-counterclockwise"></i> Đặt lại</a>
+                        </div>
+                    </div>
                 </div>
             </form>
+            <c:if test="${not empty totalUsers}">
+                <div class="text-muted small mt-2">Tìm thấy <strong>${totalUsers}</strong> người dùng.</div>
+            </c:if>
         </section>
 
         <!-- Bảng người dùng -->
@@ -624,52 +670,44 @@
                             </c:forEach>
                             </tbody>
                         </table>
-                        <section class="blog-table mt-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover align-middle mb-0">
-                                        </table>
-                                    </div>
+                    </div>
 
-                                    <div class="card-footer bg-white border-0 py-3">
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center mb-0">
+                    <%-- Build the shared query string for pagination links (all filters preserved, page excluded) --%>
+                    <c:set var="qs" value="keyword=${fn:escapeXml(param.keyword)}&role=${fn:escapeXml(param.role)}&status=${fn:escapeXml(param.status)}&dateFrom=${fn:escapeXml(param.dateFrom)}&dateTo=${fn:escapeXml(param.dateTo)}&sortBy=${fn:escapeXml(param.sortBy)}&sortDir=${fn:escapeXml(param.sortDir)}"/>
 
-                                                <li class="page-item ${currentPage == 1 || currentPage == null ? 'disabled' : ''}">
-                                                    <a class="page-link" href="?page=${currentPage - 1}&keyword=${param.keyword}&role=${param.role}&status=${param.status}" tabindex="-1">
-                                                        <i class="bi bi-chevron-left"></i> Trước
-                                                    </a>
-                                                </li>
+                    <div class="card-footer bg-white border-0 py-3">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center mb-0">
 
-                                                <c:forEach begin="1" end="${totalPages}" var="i">
-                                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                                        <a class="page-link" href="?page=${i}&keyword=${param.keyword}&role=${param.role}&status=${param.status}">
-                                                                ${i}
-                                                        </a>
-                                                    </li>
-                                                </c:forEach>
+                                <li class="page-item ${currentPage <= 1 || currentPage == null ? 'disabled' : ''}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/filterUser?page=${currentPage - 1}&${qs}" tabindex="-1">
+                                        <i class="bi bi-chevron-left"></i> Trước
+                                    </a>
+                                </li>
 
-                                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                                    <a class="page-link" href="?page=${currentPage + 1}&keyword=${param.keyword}&role=${param.role}&status=${param.status}">
-                                                        Sau <i class="bi bi-chevron-right"></i>
-                                                    </a>
-                                                </li>
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                        <a class="page-link" href="${pageContext.request.contextPath}/filterUser?page=${i}&${qs}">
+                                                ${i}
+                                        </a>
+                                    </li>
+                                </c:forEach>
 
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/filterUser?page=${currentPage + 1}&${qs}">
+                                        Sau <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+    <!-- MODAL VIEW USER  -->
     <c:forEach items="${listUser}" var="u">
-        <!-- MODAL VIEW USER  -->
-        <c:forEach items="${listUser}" var="u">
             <div class="modal fade" id="viewUserModal${u.id}" tabindex="-1">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
@@ -844,7 +882,6 @@
                     </div>
                 </div>
             </div>
-        </c:forEach>
     </c:forEach>
 </div>
 
