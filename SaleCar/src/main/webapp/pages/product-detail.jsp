@@ -547,27 +547,6 @@
         .review-date { font-size: 12px; color: var(--text-muted); }
         .review-comment { color: var(--text-secondary); line-height: 1.6; margin-top: 8px; }
 
-        .review-form {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-subtle);
-        }
-        .review-form h4 { color: var(--text-primary); margin-bottom: 20px; }
-        .review-form .form-label { color: var(--text-secondary); }
-        .review-form .form-select,
-        .review-form .form-control {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            border-radius: var(--radius-sm);
-        }
-        .review-form .form-select:focus,
-        .review-form .form-control:focus {
-            outline: none;
-            border-color: var(--border-gold-strong);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.06);
-        }
-
         /* Empty reviews */
         .text-center.py-5 i { font-size: 48px; color: rgba(255,255,255,0.08); }
         .text-center.py-5 p { color: var(--text-muted); }
@@ -1156,43 +1135,10 @@
                 <c:otherwise>
                     <div class="text-center py-5">
                         <i class="bi bi-chat-dots" style="font-size: 48px; color: #ddd;"></i>
-                        <p class="mt-3 text-muted">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm
-                            này!</p>
+                        <p class="mt-3 text-muted">Chưa có đánh giá nào.</p>
                     </div>
                 </c:otherwise>
             </c:choose>
-
-            <!-- Review Form -->
-            <div class="review-form">
-                <h4 style="margin-bottom: 20px;">Viết đánh giá của bạn</h4>
-                <form action="${pageContext.request.contextPath}/reviews" method="post">
-                    <input type="hidden" name="productId" value="${product.productId}">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Đánh giá</label>
-                            <select name="rating" class="form-select" style="border-radius: 8px;">
-                                <option value="5">5 ⭐ - Tuyệt vời</option>
-                                <option value="4">4 ⭐ - Tốt</option>
-                                <option value="3">3 ⭐ - Trung bình</option>
-                                <option value="2">2 ⭐ - Tạm được</option>
-                                <option value="1">1 ⭐ - Không hài lòng</option>
-                            </select>
-                        </div>
-                        <div class="col-md-9">
-                            <label class="form-label">Nội dung</label>
-                            <textarea name="comment" class="form-control" rows="3"
-                                      placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."
-                                      style="border-radius: 8px;"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn-action btn-buy-now"
-                                    style="width: auto; padding: 10px 28px;">
-                                <i class="bi bi-send"></i> Gửi đánh giá
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 
